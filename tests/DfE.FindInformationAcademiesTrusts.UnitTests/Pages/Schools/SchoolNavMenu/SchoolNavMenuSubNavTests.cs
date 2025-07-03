@@ -46,6 +46,7 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             nameof(InSchoolModel) => "Contacts",
             nameof(SenModel) => "Overview",
             nameof(FederationModel) => "Overview",
+            nameof(ReferenceNumbersModel) => "Overview",
             _ => throw new ArgumentException("Couldn't get expected name for given page type", nameof(pageType))
         };
     }
@@ -89,6 +90,7 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             nameof(InSchoolModel) => "/Schools/Contacts/InSchool",
             nameof(SenModel) => "/Schools/Overview/Sen",
             nameof(FederationModel) => "/Schools/Overview/Federation",
+            nameof(ReferenceNumbersModel) => "/Schools/Overview/ReferenceNumbers",
             _ => throw new ArgumentException("Couldn't get expected sub page nav asp link for given page type",
                 nameof(pageType))
         };
@@ -97,7 +99,8 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
     [Theory]
     [InlineData(SchoolCategory.LaMaintainedSchool, "School details")]
     [InlineData(SchoolCategory.Academy, "Academy details")]
-    public async Task GetSubNavLinksAsync_should_return_expected_links_for_overview_when_federation(SchoolCategory schoolCategory,
+    public async Task GetSubNavLinksAsync_should_return_expected_links_for_overview_when_federation(
+        SchoolCategory schoolCategory,
         string expectedText)
     {
         var activePage = GetMockSchoolPage(typeof(DetailsModel), schoolCategory: schoolCategory);
@@ -116,6 +119,12 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
                 l.LinkDisplayText.Should().Be("Federation details");
                 l.AspPage.Should().Be("/Schools/Overview/Federation");
                 l.TestId.Should().Be("overview-federation-subnav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Reference numbers");
+                l.AspPage.Should().Be("/Schools/Overview/ReferenceNumbers");
+                l.TestId.Should().Be("overview-reference-numbers-subnav");
             },
             l =>
             {
@@ -143,6 +152,12 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
                 l.LinkDisplayText.Should().Be(expectedText);
                 l.AspPage.Should().Be("/Schools/Overview/Details");
                 l.TestId.Should().Be("overview-details-subnav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Reference numbers");
+                l.AspPage.Should().Be("/Schools/Overview/ReferenceNumbers");
+                l.TestId.Should().Be("overview-reference-numbers-subnav");
             },
             l =>
             {

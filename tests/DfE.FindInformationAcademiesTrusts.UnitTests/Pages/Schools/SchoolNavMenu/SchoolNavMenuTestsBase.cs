@@ -24,6 +24,7 @@ public abstract class SchoolNavMenuTestsBase
         typeof(DetailsModel),
         typeof(SenModel),
         typeof(FederationModel),
+        typeof(ReferenceNumbersModel),
         //Contacts
         typeof(InSchoolModel)
     ];
@@ -33,6 +34,7 @@ public abstract class SchoolNavMenuTestsBase
         //Overview
         typeof(DetailsModel),
         typeof(SenModel),
+        typeof(ReferenceNumbersModel),
         //Contacts
         typeof(InDfeModel),
         typeof(InSchoolModel)

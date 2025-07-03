@@ -75,6 +75,14 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
             ));
         }
 
+        links.Add(GetSubNavLinkTo<ReferenceNumbersModel>(
+            OverviewAreaModel.PageName,
+            ReferenceNumbersModel.SubPageName,
+            "/Schools/Overview/ReferenceNumbers",
+            activePage,
+            "overview-reference-numbers-subnav"
+        ));
+
         links.Add(GetSubNavLinkTo<SenModel>(
             OverviewAreaModel.PageName,
             SenModel.SubPageName,
