@@ -252,6 +252,30 @@ describe('Schools Navigation Tests', () => {
                     .checkAcademyDetailsHeaderPresent();
             });
         });
+
+        // school details --> Reference Numbers (school)
+        it('Should check that the school details navigation button takes me to the correct page for a schools type subnav', () => {
+            cy.visit(`/schools/overview/details?urn=${navTestSchool.schoolURN}`);
+            navigation
+                .clickSchoolsReferenceNumberButton()
+                .checkCurrentURLIsCorrect(`/schools/overview/referencenumbers?urn=${navTestSchool.schoolURN}`)
+                .checkAllSchoolServiceNavItemsPresent()
+                .checkAllSchoolOverviewSubNavItemsPresent();
+            schoolsPage
+                .checkSchoolReferenceNumbersHeaderPresent();
+        });
+
+        // Reference Numbers --> school details (academy)
+        it('Should check that the school details navigation button takes me to the details page for a schools type subnav', () => {
+            cy.visit(`/schools/overview/referencenumbers?urn=${navTestSchool.schoolURN}`);
+            navigation
+                .clickSchoolsDetailsButton()
+                .checkCurrentURLIsCorrect(`/schools/overview/details?urn=${navTestSchool.schoolURN}`)
+                .checkAllSchoolServiceNavItemsPresent()
+                .checkAllSchoolOverviewSubNavItemsPresent();
+            schoolsPage
+                .checkSchoolDetailsHeaderPresent();
+        });
     });
 
     describe("School contacts edit navigation tests", () => {

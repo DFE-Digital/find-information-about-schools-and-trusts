@@ -33,6 +33,12 @@ class SchoolsPage {
                 senProvisionTypeKey: () => cy.get('[data-testid="sen-provision-type-key"]'),
                 senProvisionType: () => cy.get('[data-testid="sen-provision-type"]'),
             },
+             referenceNumbersTab: {
+                tabName: () => cy.get('[data-testid="overview-reference-numbers-subnav]'),
+                urnHeader: () => cy.get('[data-testid="reference-numbers-urn-header"]'),
+                laestabHeader: () => cy.get('[data-testid="reference-numbers-laestab-header"]'),
+                ukprnHeader: () => cy.get('[data-testid="reference-numbers-ukprn-header"]')
+            },
         },
         schoolContacts: {
             internalUseWarning: () => cy.get('[data-testid="internal-use-only-warning"]'),
@@ -460,6 +466,21 @@ class SchoolsPage {
         this.elements.schoolContacts.inDfEContacts.sfsoLeadCard().should('not.contain', 'Edit');
         return this;
     }
+
+        // #region school reference numbers
+
+    public checkSchoolReferenceNumbersHeaderPresent(): this {
+        this.elements.subpageHeader().should('contain', 'Reference numbers');
+        return this;
+    }
+
+    public checkReferenceNumbersCardItemsPresent(): this {
+        this.elements.overview.referenceNumbersTab.urnHeader().should('be.visible').and('contain.text', 'URN (Unique Reference Number)');
+        this.elements.overview.referenceNumbersTab.laestabHeader().should('be.visible').and('contain.text', 'LAESTAB (local authority establishment number)');
+        this.elements.overview.referenceNumbersTab.ukprnHeader().should('be.visible').and('contain.text', 'UKPRN (UK provider reference number)');
+        return this;
+    }
+        // #endregion
 }
 
 const schoolsPage = new SchoolsPage();
