@@ -347,4 +347,71 @@ public class SchoolRepositoryTests
 
         result.Should().BeTrue();
     }
+
+    [Fact]
+    public async Task GetReferenceNumbersAsync_should_return_null_if_not_found()
+    {
+        var urn = 123456;
+
+        var result = await _sut.GetReferenceNumbersAsync(urn);
+
+        result.Should().BeNull();
+    }
+
+    [Theory]
+    [InlineData(123456, "123", "4567", "10012345", "Academy converter", "Academies")]
+    [InlineData(234567, "234", "5678", "10023456", "Sixth form centres", "Colleges")]
+    [InlineData(345678, "345", "6789", "10034567", "Free schools special", "Free Schools")]
+    [InlineData(456789, "456", "7890", "10045678", "Foundation school", "Local authority maintained schools")]
+    [InlineData(567890, "567", "8901", "10056789", "Non-maintained special school", "Special schools")]
+    public async Task GetReferenceNumbersAsync_should_return_reference_numbers_if_found(int urn, string laCode,
+        string establishmentNumber, string ukprn, string type, string typeGroup)
+    {
+        var name = $"School {urn}";
+
+        _mockAcademiesDbContext.GiasEstablishments.AddRange([
+            new GiasEstablishment
+            {
+                Urn = urn,
+                LaCode = laCode,
+                EstablishmentNumber = establishmentNumber,
+                Ukprn = ukprn,
+                EstablishmentName = name,
+                TypeOfEstablishmentName = type,
+                EstablishmentTypeGroupName = typeGroup,
+                EstablishmentStatusName = "Open"
+            }
+        ]);
+
+        var result = await _sut.GetReferenceNumbersAsync(urn);
+
+        result.Should().NotBeNull();
+        result!.LaCode.Should().Be(laCode);
+        result.EstablishmentNumber.Should().Be(establishmentNumber);
+        result.Ukprn.Should().Be(ukprn);
+    }
+
+    [Theory]
+    [InlineData("City technology college", "Independent schools")]
+    [InlineData("Online provider", "Online provider")]
+    [InlineData("Miscellaneous", "Other types")]
+    [InlineData("Higher education institutions", "Universities")]
+    public async Task GetReferenceNumbersAsync_should_not_return_reference_numbers_for_unsupported_establishment_types(
+        string type, string typeGroup)
+    {
+        _mockAcademiesDbContext.GiasEstablishments.Add(new GiasEstablishment
+        {
+            Urn = 123456,
+            LaCode = "123",
+            EstablishmentNumber = "4567",
+            Ukprn = "10012345",
+            EstablishmentName = "Unsupported Establishment",
+            TypeOfEstablishmentName = type,
+            EstablishmentTypeGroupName = typeGroup,
+            EstablishmentStatusName = "Open"
+        });
+
+        var result = await _sut.GetReferenceNumbersAsync(123456);
+        result.Should().BeNull();
+    }
 }

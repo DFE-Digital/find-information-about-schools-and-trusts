@@ -1,6 +1,4 @@
-﻿@model EditContactModel
-
-<partial name="Trusts/_TrustBanner" model="@Model"/>
+@model EditContactFormModel
 
 <div class="govuk-main-wrapper govuk-!-padding-top-6">
   <div class="dfe-width-container">
@@ -19,34 +17,37 @@
                 <label class="govuk-label govuk-label--m" for="Name">
                   Full name
                 </label>
-                @foreach (var error in Model.GetErrorList(EditContactModel.NameField))
+                @foreach (var error in Model.GetErrorList(nameof(Model.Name)))
                 {
-                  <p id="error-@EditContactModel.NameField-@error.index" class="govuk-error-message">
+                  <p id="error-@nameof(Model.Name)-@error.index" class="govuk-error-message">
                     <span class="govuk-visually-hidden">Error:</span> @error.errorMessage
                   </p>
                 }
-                <input asp-for="@Model.Name" class="govuk-input govuk-!-width-two-thirds" id="Name" type="text" spellcheck="false" aria-describedby="@Model.GenerateErrorAriaDescribedBy(EditContactModel.NameField)"/>
+                <input asp-for="@Model.Name" class="govuk-input govuk-!-width-two-thirds" id="Name" type="text"
+                       spellcheck="false" aria-describedby="@Model.GenerateErrorAriaDescribedBy(nameof(Model.Name))"/>
               </div>
-              <div class="govuk-form-group @Model.GetErrorClass(EditContactModel.EmailField)">
-                <label class="govuk-label govuk-label--m" for="@EditContactModel.EmailField">
+              <div class="govuk-form-group @Model.GetErrorClass(nameof(Model.Email))">
+                <label class="govuk-label govuk-label--m" for="@nameof(Model.Email)">
                   Email address
                 </label>
                 <div id="email-hint" class="govuk-hint">
                   Only valid DfE email addresses can be used e.g. joe.bloggs@education.gov.uk
                 </div>
-                @foreach (var error in Model.GetErrorList(EditContactModel.EmailField))
+                @foreach (var error in Model.GetErrorList(nameof(Model.Email)))
                 {
-                  <p id="error-@EditContactModel.EmailField-@error.index" class="govuk-error-message">
+                  <p id="error-@nameof(Model.Email)-@error.index" class="govuk-error-message">
                     <span class="govuk-visually-hidden">Error:</span> @error.errorMessage
                   </p>
                 }
-                <input asp-for="@Model.Email" class="govuk-input govuk-!-width-two-thirds" id="Email" type="email" spellcheck="false" autocomplete="email" aria-describedby="email-hint @Model.GenerateErrorAriaDescribedBy(EditContactModel.EmailField)"/>
+                <input asp-for="@Model.Email" class="govuk-input govuk-!-width-two-thirds" id="Email" type="email"
+                       spellcheck="false" autocomplete="email"
+                       aria-describedby="email-hint @Model.GenerateErrorAriaDescribedBy(nameof(Model.Email))"/>
               </div>
               <div class="govuk-button-group">
                 <button type="submit" class="govuk-button" data-module="govuk-button" formnovalidate>
                   Save and continue
                 </button>
-                <a class="govuk-link" asp-page="/Trusts/Contacts/InDfE" asp-route-uid="@Model.Uid">
+                <a class="govuk-link" asp-page="@Model.CancelUrl" asp-all-route-data="@(new Dictionary<string, string> {{ Model.IdName, Model.Id }})">
                   Cancel
                 </a>
               </div>

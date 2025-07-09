@@ -1,0 +1,25 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+@cypress
+@refactor
+@flaky
+@test-hygiene
+
+This rule is used to refactor and improve existing Cypress tests for clarity, maintainability, and resilience. It should be applied when cleaning up fragile test code or reviewing AI-generated output.
+
+## Refactor Guidelines
+
+- Replace any use of raw `cy.get()` selectors with methods from the appropriate Page Object. If no Page Object exists, create one.
+- Remove all uses of `cy.wait()` with hardcoded timeouts. Instead, wait on element visibility or application state.
+- Collapse duplicated logic into helper functions or page object methods.
+- Extract any overly long `it()` blocks (>15–20 lines) into smaller, focused tests.
+- Use consistent and descriptive naming for all test blocks. e.g., `it('displays trust details when the trust exists')`.
+- Ensure each test has meaningful failure messages via `.should()` expectations or custom assertions.
+- Stub/mask out unstable or unrelated network calls using `cy.intercept()` where appropriate.
+- Ensure selectors rely on `data-testid` where possible; avoid brittle `.class` or `nth-child` selectors.
+- Eliminate magic strings and numbers — extract to constants or variables for reusability.
+- Where appropriate, add missing negative cases or edge cases (e.g. "what if trust ID is invalid?").
+

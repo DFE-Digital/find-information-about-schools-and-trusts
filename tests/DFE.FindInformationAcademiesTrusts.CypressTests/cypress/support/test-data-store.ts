@@ -53,6 +53,7 @@ export class TestDataStore {
                 subpages: [
                     { subpageName: "School details", url: `/schools/overview/details?urn=${urn}` },
                     { subpageName: "Federation details", url: `/schools/overview/federation?urn=${urn}` },
+                    { subpageName: "Reference numbers", url: `/schools/overview/referencenumbers?urn=${urn}` },
                     { subpageName: "SEN (special educational needs)", url: `/schools/overview/sen?urn=${urn}` },
                 ]
             },
@@ -71,6 +72,7 @@ export class TestDataStore {
                 pageName: "Overview",
                 subpages: [
                     { subpageName: "Academy details", url: `/schools/overview/details?urn=${urn}` },
+                    { subpageName: "Reference numbers", url: `/schools/overview/referencenumbers?urn=${urn}` },
                     { subpageName: "SEN (special educational needs)", url: `/schools/overview/sen?urn=${urn}` },
                 ]
             },
@@ -262,3 +264,14 @@ export const testPaginationData = {
     academiesInTrustUid: 5143,
     ofstedRatingsUid: 5143
 };
+
+export const referenceNumbersTestData = [
+    {
+        urn: 122957,
+        description: 'local authority maintained school'
+    },
+    {
+        urn: 136354,
+        description: 'school in a trust'
+    }
+];

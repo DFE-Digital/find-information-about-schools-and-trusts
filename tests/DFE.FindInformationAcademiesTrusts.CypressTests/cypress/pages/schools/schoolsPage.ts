@@ -33,6 +33,12 @@ class SchoolsPage {
                 senProvisionTypeKey: () => cy.get('[data-testid="sen-provision-type-key"]'),
                 senProvisionType: () => cy.get('[data-testid="sen-provision-type"]'),
             },
+             referenceNumbersTab: {
+                tabName: () => cy.get('[data-testid="overview-reference-numbers-subnav]'),
+                urnHeader: () => cy.get('[data-testid="reference-numbers-urn-header"]'),
+                laestabHeader: () => cy.get('[data-testid="reference-numbers-laestab-header"]'),
+                ukprnHeader: () => cy.get('[data-testid="reference-numbers-ukprn-header"]')
+            },
         },
         schoolContacts: {
             internalUseWarning: () => cy.get('[data-testid="internal-use-only-warning"]'),
@@ -47,6 +53,7 @@ class SchoolsPage {
                 regionsGroupLaLeadTitle: () => cy.get('[data-testid="contact-card-title-regions-group-la-lead"]'),
                 regionsGroupLaLeadName: () => cy.get('[data-testid="contact-card-regions-group-la-lead"] [data-testid="contact-name"]'),
                 regionsGroupLaLeadEmail: () => cy.get('[data-testid="contact-card-regions-group-la-lead"] [data-testid="contact-email"]'),
+                regionsGroupLaLeadEditLink: () => cy.get('[data-testid="contact-card-regions-group-la-lead"] [class="govuk-summary-card__actions"] > a'),
                 trustRelationshipManagerCard: () => cy.get('[data-testid="contact-card-trust-relationship-manager"]'),
                 trustRelationshipManagerTitle: () => cy.get('[data-testid="contact-card-title-trust-relationship-manager"]'),
                 trustRelationshipManagerName: () => cy.get('[data-testid="contact-card-trust-relationship-manager"] [data-testid="contact-name"]'),
@@ -55,6 +62,12 @@ class SchoolsPage {
                 sfsoLeadTitle: () => cy.get('[data-testid="contact-card-title-sfso-lead"]'),
                 sfsoLeadName: () => cy.get('[data-testid="contact-card-sfso-lead"] [data-testid="contact-name"]'),
                 sfsoLeadEmail: () => cy.get('[data-testid="contact-card-sfso-lead"] [data-testid="contact-email"]'),
+            },
+            editContacts: {
+                nameInput: () => cy.get('[name="Name"]'),
+                emailInput: () => cy.get('[name="Email"]'),
+                saveButton: () => cy.contains('Save and continue'),
+                cancelButton: () => cy.contains('Cancel')
             },
         },
         federation: {
@@ -386,6 +399,65 @@ class SchoolsPage {
     }
     // #endregion
 
+    // #region School contact edit functionality methods
+    public checkRegionsGroupLaLeadEditLinkPresent(): this {
+        this.elements.schoolContacts.inDfEContacts.regionsGroupLaLeadEditLink().should('be.visible').and('contain', 'Change');
+        return this;
+    }
+
+    public checkRegionsGroupLaLeadEditLinkNotPresent(): this {
+        this.elements.schoolContacts.inDfEContacts.regionsGroupLaLeadCard().should('not.contain', 'Change');
+        this.elements.schoolContacts.inDfEContacts.regionsGroupLaLeadCard().should('not.contain', 'Edit');
+        return this;
+    }
+
+    public editRegionsGroupLaLead(name: string, email: string): this {
+        const { inDfEContacts, editContacts } = this.elements.schoolContacts;
+        inDfEContacts.regionsGroupLaLeadEditLink().click();
+        editContacts.nameInput().clear();
+        if (name) {
+            editContacts.nameInput().type(name);
+        }
+        editContacts.emailInput().clear();
+        if (email) {
+            editContacts.emailInput().type(email);
+        }
+        editContacts.saveButton().click();
+        return this;
+    }
+
+    public editRegionsGroupLaLeadWithoutSaving(name: string, email: string): this {
+        const { inDfEContacts, editContacts } = this.elements.schoolContacts;
+        inDfEContacts.regionsGroupLaLeadEditLink().click();
+        editContacts.nameInput().clear();
+        if (name) {
+            editContacts.nameInput().type(name);
+        }
+        editContacts.emailInput().clear();
+        if (email) {
+            editContacts.emailInput().type(email);
+        }
+        return this;
+    }
+
+    public clickContactUpdateCancelButton(): this {
+        this.elements.schoolContacts.editContacts.cancelButton().click();
+        return this;
+    }
+
+    public checkRegionsGroupLaLeadIsSuccessfullyUpdated(name: string, email: string): this {
+        this.elements.schoolContacts.inDfEContacts.regionsGroupLaLeadName().should('contain.text', name);
+        this.elements.schoolContacts.inDfEContacts.regionsGroupLaLeadEmail().should('contain.text', email);
+        return this;
+    }
+
+    public checkRegionsGroupLaLeadIsNotUpdated(dontDisplayName: string, dontDisplayEmail: string): this {
+        this.elements.schoolContacts.inDfEContacts.regionsGroupLaLeadName().should('not.contain.text', dontDisplayName);
+        this.elements.schoolContacts.inDfEContacts.regionsGroupLaLeadEmail().should('not.contain.text', dontDisplayEmail);
+        return this;
+    }
+    // #endregion
+
     public checkNoChangeLinksPresent(): this {
         // Verify no "Change" or "Edit" links are present in the academy contacts section
         this.elements.schoolContacts.inDfEContacts.trustRelationshipManagerCard().should('not.contain', 'Change');
@@ -394,6 +466,21 @@ class SchoolsPage {
         this.elements.schoolContacts.inDfEContacts.sfsoLeadCard().should('not.contain', 'Edit');
         return this;
     }
+
+        // #region school reference numbers
+
+    public checkSchoolReferenceNumbersHeaderPresent(): this {
+        this.elements.subpageHeader().should('contain', 'Reference numbers');
+        return this;
+    }
+
+    public checkReferenceNumbersCardItemsPresent(): this {
+        this.elements.overview.referenceNumbersTab.urnHeader().should('be.visible').and('contain.text', 'URN (Unique Reference Number)');
+        this.elements.overview.referenceNumbersTab.laestabHeader().should('be.visible').and('contain.text', 'LAESTAB (local authority establishment number)');
+        this.elements.overview.referenceNumbersTab.ukprnHeader().should('be.visible').and('contain.text', 'UKPRN (UK provider reference number)');
+        return this;
+    }
+        // #endregion
 }
 
 const schoolsPage = new SchoolsPage();

@@ -252,5 +252,61 @@ describe('Schools Navigation Tests', () => {
                     .checkAcademyDetailsHeaderPresent();
             });
         });
+
+        // school details --> Reference Numbers (school)
+        it('Should check that the school details navigation button takes me to the correct page for a schools type subnav', () => {
+            cy.visit(`/schools/overview/details?urn=${navTestSchool.schoolURN}`);
+            navigation
+                .clickSchoolsReferenceNumberButton()
+                .checkCurrentURLIsCorrect(`/schools/overview/referencenumbers?urn=${navTestSchool.schoolURN}`)
+                .checkAllSchoolServiceNavItemsPresent()
+                .checkAllSchoolOverviewSubNavItemsPresent();
+            schoolsPage
+                .checkSchoolReferenceNumbersHeaderPresent();
+        });
+
+        // Reference Numbers --> school details (academy)
+        it('Should check that the school details navigation button takes me to the details page for a schools type subnav', () => {
+            cy.visit(`/schools/overview/referencenumbers?urn=${navTestSchool.schoolURN}`);
+            navigation
+                .clickSchoolsDetailsButton()
+                .checkCurrentURLIsCorrect(`/schools/overview/details?urn=${navTestSchool.schoolURN}`)
+                .checkAllSchoolServiceNavItemsPresent()
+                .checkAllSchoolOverviewSubNavItemsPresent();
+            schoolsPage
+                .checkSchoolDetailsHeaderPresent();
+        });
+    });
+
+    describe("School contacts edit navigation tests", () => {
+        context('School contact edit page navigation', () => {
+            it('Should check that the browser title is correct on the in DfE contacts page', () => {
+                cy.visit(`/schools/contacts/in-dfe?urn=${navTestSchool.schoolURN}`);
+                commonPage
+                    .checkThatBrowserTitleMatches('In DfE - Contacts - Abbey Green Nursery School - Find information about academies and trusts');
+            });
+
+            it('Should check that the browser title is correct on the edit Regions group LA lead contact page', () => {
+                cy.visit(`/schools/contacts/editregionsgrouplocalauthoritylead?urn=${navTestSchool.schoolURN}`);
+                commonPage
+                    .checkThatBrowserTitleMatches('Edit Regions group local authority lead details - Contacts - Abbey Green Nursery School - Find information about academies and trusts');
+            });
+
+            it('Should check that cancelling the edit returns to the correct page', () => {
+                cy.visit(`/schools/contacts/in-dfe?urn=${navTestSchool.schoolURN}`);
+                schoolsPage
+                    .editRegionsGroupLaLeadWithoutSaving("Should Notbe Seen", "exittest@education.gov.uk")
+                    .clickContactUpdateCancelButton();
+
+                navigation
+                    .checkCurrentURLIsCorrect(`/schools/contacts/in-dfe?urn=${navTestSchool.schoolURN}`);
+            });
+
+            it('Should check breadcrumb navigation is correct on the in DfE contacts page', () => {
+                cy.visit(`/schools/contacts/in-dfe?urn=${navTestSchool.schoolURN}`);
+                navigation
+                    .checkPageNameBreadcrumbPresent("Contacts");
+            });
+        });
     });
 });

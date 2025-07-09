@@ -1,4 +1,5 @@
 import schoolsPage from '../../../../pages/schools/schoolsPage';
+import commonPage from '../../../../pages/commonPage';
 import { testSchoolData } from '../../../../support/test-data-store';
 
 // Test data constants
@@ -81,6 +82,11 @@ describe('Testing the components of the School "in DfE" contacts page', () => {
         schoolsPage
             .checkNoInternalUseWarningPresent();
     });
+
+    it('Checks that edit link is present for Regions group LA lead contact (LA maintained schools can edit their contacts)', () => {
+        schoolsPage
+            .checkRegionsGroupLaLeadEditLinkPresent();
+    });
 });
 
 describe('Testing the components of the Academy "in DfE" contacts page', () => {
@@ -141,5 +147,124 @@ describe('Testing the components of the Academy "in DfE" contacts page', () => {
     it('Checks no Change/Edit links are present for academy contacts (editing should be done at trust level only)', () => {
         schoolsPage
             .checkNoChangeLinksPresent();
+    });
+});
+
+// Helper to generate random name and email for testing
+function generateNameAndEmail() {
+    const randomNumber = Math.floor(Math.random() * 9999);
+    return {
+        name: `Name${randomNumber}`,
+        email: `email${randomNumber}@education.gov.uk`
+    };
+}
+
+describe('Testing the school contact edit functionality', () => {
+    describe('On the LA maintained school "in DfE" contacts page with edit functionality', () => {
+        beforeEach(() => {
+            cy.visit(getInDfeContactsUrl(TEST_SCHOOL_URN));
+        });
+
+        it('Can edit Regions group LA lead contact details successfully', () => {
+            const { name, email } = generateNameAndEmail();
+
+            schoolsPage
+                .editRegionsGroupLaLead(name, email)
+                .checkRegionsGroupLaLeadIsSuccessfullyUpdated(name, email);
+
+            commonPage
+                .checkSuccessPopup('Changes made to the Regions group local authority lead name and email were updated')
+                .checkErrorPopupNotPresent();
+        });
+
+        it('Checks that when cancelling the edit of a Regions group LA lead contact that I am taken back to the previous page and that entered data is not saved', () => {
+            schoolsPage
+                .editRegionsGroupLaLeadWithoutSaving("Should Notbe Seen", "exittest@education.gov.uk")
+                .clickContactUpdateCancelButton()
+                .checkRegionsGroupLaLeadIsNotUpdated("Should Notbe Seen", "exittest@education.gov.uk");
+        });
+    });
+
+    describe('Testing validation error handling for school contact edits', () => {
+        beforeEach(() => {
+            cy.visit(getInDfeContactsUrl(TEST_SCHOOL_URN));
+        });
+
+        it('Checks that a full non DfE email entered returns the correct error message', () => {
+            schoolsPage
+                .editRegionsGroupLaLead("Name", "email@hotmail.co.uk");
+            commonPage
+                .checkErrorPopup('Enter a DfE email address without any spaces');
+        });
+
+        it('Checks that an incorrect email entered returns the correct error message', () => {
+            schoolsPage
+                .editRegionsGroupLaLead("Name", "email");
+            commonPage
+                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+        });
+
+        it('Checks that illegal characters entered returns the correct error message', () => {
+            schoolsPage
+                .editRegionsGroupLaLead("Name", "@£$$^&");
+            commonPage
+                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+        });
+
+        it('Checks that whitespace entered returns the correct error message', () => {
+            schoolsPage
+                .editRegionsGroupLaLead("Name", "a     b");
+            commonPage
+                .checkErrorPopup('Enter a DfE email address without any spaces')
+                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+        });
+
+        it('Checks that an email address without the prefix entered returns the correct error message', () => {
+            schoolsPage
+                .editRegionsGroupLaLead("Name", "@education.gov.uk");
+            commonPage
+                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+        });
+
+
+    });
+
+    describe('Testing that LA maintained schools show edit links but academies do not', () => {
+        it('Verifies LA maintained school has edit link for Regions group LA lead', () => {
+            cy.visit(getInDfeContactsUrl(TEST_SCHOOL_URN));
+            schoolsPage
+                .checkRegionsGroupLaLeadContactCardPresent()
+                .checkRegionsGroupLaLeadEditLinkPresent();
+        });
+
+        it('Verifies academy has no edit links for any contacts', () => {
+            cy.visit(getInDfeContactsUrl(TEST_ACADEMY_URN));
+            schoolsPage
+                .checkTrustRelationshipManagerContactCardPresent()
+                .checkSfsoLeadContactCardPresent()
+                .checkNoChangeLinksPresent();
+        });
+
+        it('Verifies that LA maintained school does not show trust-level contacts', () => {
+            cy.visit(getInDfeContactsUrl(TEST_SCHOOL_URN));
+            // Verify only regions group LA lead is shown, not trust contacts
+            schoolsPage
+                .checkRegionsGroupLaLeadContactCardPresent();
+
+            // Verify trust contacts are not present
+            cy.get('[data-testid="contact-card-trust-relationship-manager"]').should('not.exist');
+            cy.get('[data-testid="contact-card-sfso-lead"]').should('not.exist');
+        });
+
+        it('Verifies that academy shows trust-level contacts without edit links', () => {
+            cy.visit(getInDfeContactsUrl(TEST_ACADEMY_URN));
+            // Verify trust contacts are shown but regions group LA lead is not
+            schoolsPage
+                .checkTrustRelationshipManagerContactCardPresent()
+                .checkSfsoLeadContactCardPresent();
+
+            // Verify regions group LA lead is not present
+            cy.get('[data-testid="contact-card-regions-group-la-lead"]').should('not.exist');
+        });
     });
 });

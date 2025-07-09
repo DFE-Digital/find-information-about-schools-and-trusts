@@ -22,6 +22,7 @@ module "azure_container_apps_hosting" {
   mssql_azuread_admin_username       = local.mssql_azuread_admin_username
   mssql_azuread_admin_object_id      = local.mssql_azuread_admin_object_id
   mssql_managed_identity_assign_role = local.mssql_managed_identity_assign_role
+  mssql_sku_name                     = local.mssql_sku_name
 
   image_name = local.image_name
 

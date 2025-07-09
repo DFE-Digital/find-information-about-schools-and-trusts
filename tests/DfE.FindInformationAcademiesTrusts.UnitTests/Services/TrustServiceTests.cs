@@ -312,7 +312,7 @@ public class TrustServiceTests
     [InlineData(false, false)]
     public async Task UpdateContactsAsync_returns_the_correct_values_changed(bool emailUpdated, bool nameUpdated)
     {
-        var expected = new TrustContactUpdated(emailUpdated, nameUpdated);
+        var expected = new InternalContactUpdated(emailUpdated, nameUpdated);
         _mockContactRepository.UpdateTrustInternalContactsAsync(1234, "Name", "Email", TrustContactRole.SfsoLead)
             .Returns(Task.FromResult(expected));
         var result = await _sut.UpdateContactAsync(1234, "Name", "Email", TrustContactRole.SfsoLead);

@@ -1,7 +1,9 @@
 using DfE.FindInformationAcademiesTrusts.Data;
+using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.FiatDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Contacts;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using FluentAssertions.Execution;
@@ -154,5 +156,23 @@ public class SchoolContactsServiceTests
             result.TrustRelationshipManager.Should().BeEquivalentTo(trmPerson);
             result.SfsoLead.Should().BeNull();
         }
+    }
+
+    [Theory]
+    [InlineData(true, true)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(false, false)]
+    public async Task UpdateContactsAsync_returns_the_correct_values_changed(bool emailUpdated, bool nameUpdated)
+    {
+        var expected = new InternalContactUpdated(emailUpdated, nameUpdated);
+        _mockContactsRepository
+            .UpdateSchoolInternalContactsAsync(123456, "Name", "Email",
+                SchoolContactRole.RegionsGroupLocalAuthorityLead).Returns(Task.FromResult(expected));
+
+        var result =
+            await _sut.UpdateContactAsync(123456, "Name", "Email", SchoolContactRole.RegionsGroupLocalAuthorityLead);
+
+        result.Should().BeEquivalentTo(expected);
     }
 }

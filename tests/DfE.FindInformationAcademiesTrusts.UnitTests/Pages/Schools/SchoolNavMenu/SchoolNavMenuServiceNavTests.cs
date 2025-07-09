@@ -145,6 +145,7 @@ public class SchoolNavMenuServiceNavTests : SchoolNavMenuTestsBase
             nameof(InSchoolModel) => contactLink,
             nameof(SenModel) => "/Schools/Overview/Details",
             nameof(FederationModel) => "/Schools/Overview/Details",
+            nameof(ReferenceNumbersModel) => "/Schools/Overview/Details",
             _ => throw new ArgumentException("Couldn't get expected service nav asp link for given page type",
                 nameof(pageType))
         };

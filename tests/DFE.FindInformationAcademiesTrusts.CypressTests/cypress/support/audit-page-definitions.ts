@@ -67,7 +67,8 @@ export class AuditPageDefinitions {
      * Audit all school-related pages
      */
     auditSchoolPages(): void {
-        const schoolUrn = testSchoolData[1].urn;
+        const schoolUrn = testSchoolData[1].urn; // Academy
+        const laMaintainedSchoolUrn = testSchoolData[0].urn; // LA maintained school
         const senSchoolUrn = testSchoolData[0].urn;
         const federationSchoolUrn = testFederationData.schoolWithFederationDetails.urn;
 
@@ -76,7 +77,15 @@ export class AuditPageDefinitions {
         this.auditHelper.auditPage('School Overview - SEN Provision', 'Schools', `/schools/overview/sen?urn=${senSchoolUrn}`);
         this.auditHelper.auditPage('School Overview - Federation Details', 'Schools', `/schools/overview/federation?urn=${federationSchoolUrn}`);
 
-        // School Contacts (sensitive data - no screenshots)
-        this.auditHelper.auditPageWithoutScreenshots('School Contacts - In School', 'Schools', `/schools/contacts/in-the-school?urn=${schoolUrn}`);
+        // School Contacts - In School/Academy (sensitive data - no screenshots)
+        this.auditHelper.auditPageWithoutScreenshots('LA Maintained School Contacts - In School', 'Schools', `/schools/contacts/in-the-school?urn=${laMaintainedSchoolUrn}`);
+        this.auditHelper.auditPageWithoutScreenshots('Academy Contacts - In Academy', 'Schools', `/schools/contacts/in-the-school?urn=${schoolUrn}`);
+
+        // School Contacts - In DfE (sensitive data - no screenshots)
+        this.auditHelper.auditPageWithoutScreenshots('LA Maintained School Contacts - In DfE', 'Schools', `/schools/contacts/in-dfe?urn=${laMaintainedSchoolUrn}`);
+        this.auditHelper.auditPageWithoutScreenshots('Academy Contacts - In DfE', 'Schools', `/schools/contacts/in-dfe?urn=${schoolUrn}`);
+
+        // School Contact Edit Pages (sensitive data - no screenshots, LA maintained schools only)
+        this.auditHelper.auditPageWithoutScreenshots('Edit Regions Group LA Lead Contact', 'Schools', `/schools/contacts/editregionsgrouplocalauthoritylead?urn=${laMaintainedSchoolUrn}`);
     }
 } 

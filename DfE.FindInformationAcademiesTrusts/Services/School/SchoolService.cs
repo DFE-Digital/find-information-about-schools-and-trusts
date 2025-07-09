@@ -8,6 +8,8 @@ public interface ISchoolService
     Task<SchoolSummaryServiceModel?> GetSchoolSummaryAsync(int urn);
 
     Task<bool> IsPartOfFederationAsync(int urn);
+
+    Task<SchoolReferenceNumbersServiceModel> GetReferenceNumbersAsync(int urn);
 }
 
 public class SchoolService(IMemoryCache memoryCache, ISchoolRepository schoolRepository) : ISchoolService
@@ -40,5 +42,18 @@ public class SchoolService(IMemoryCache memoryCache, ISchoolRepository schoolRep
             new MemoryCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(10) });
 
         return schoolSummaryServiceModel;
+    }
+
+    public async Task<SchoolReferenceNumbersServiceModel> GetReferenceNumbersAsync(int urn)
+    {
+        var referenceNumbers = await schoolRepository.GetReferenceNumbersAsync(urn);
+
+        if (referenceNumbers is null) return new SchoolReferenceNumbersServiceModel(urn);
+
+        var laestab = referenceNumbers.LaCode is not null && referenceNumbers.EstablishmentNumber is not null
+            ? $"{referenceNumbers.LaCode}/{referenceNumbers.EstablishmentNumber}"
+            : null;
+
+        return new SchoolReferenceNumbersServiceModel(urn, laestab, referenceNumbers.Ukprn);
     }
 }

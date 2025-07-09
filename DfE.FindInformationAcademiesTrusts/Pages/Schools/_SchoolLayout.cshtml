@@ -12,6 +12,7 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
         <main id="main-content">
+          @await RenderSectionAsync("SchoolPageMessage", false)
           <header>
             <h1 class="govuk-heading-l" data-testid="page-name">@Model.PageMetadata.PageName</h1>
           </header>

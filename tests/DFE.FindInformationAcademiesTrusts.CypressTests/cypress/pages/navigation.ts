@@ -47,6 +47,7 @@ class Navigation {
             schoolsDetailsButton: () => cy.get('[data-testid="overview-details-subnav"]'),
             schoolsSENButton: () => cy.get('[data-testid="overview-sen-subnav"]'),
             schoolsFederationButton: () => cy.get('[data-testid="overview-federation-subnav"]'),
+            schoolsReferenceNumbersButton: () => cy.get('[data-testid="overview-reference-numbers-subnav"]'),
         },
         schoolsContactsSubNav: {
             contactsInDfeSubnavButton: () => cy.get('[data-testid="contacts-in-dfe-subnav"]'),
@@ -294,6 +295,7 @@ class Navigation {
         this.elements.schoolsOverviewSubNav.schoolsDetailsButton().should('be.visible');
         this.elements.schoolsOverviewSubNav.schoolsSENButton().should('be.visible');
         this.elements.schoolsOverviewSubNav.schoolsFederationButton().should('be.visible');
+        this.elements.schoolsOverviewSubNav.schoolsReferenceNumbersButton().should('be.visible');
         return this;
     }
 
@@ -346,6 +348,11 @@ class Navigation {
 
     public checkSchoolsContactsInThisSchoolSubnavButtonIsHighlighted(): this {
         this.elements.schoolsContactsSubNav.contactsInThisSchoolSubnavButton().should('have.attr', 'aria-current', 'page');
+        return this;
+    }
+
+    public clickSchoolsReferenceNumberButton(): this {
+        this.elements.schoolsOverviewSubNav.schoolsReferenceNumbersButton().click();
         return this;
     }
 
