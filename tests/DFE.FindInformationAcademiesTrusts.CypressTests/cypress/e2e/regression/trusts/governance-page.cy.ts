@@ -12,7 +12,7 @@ describe("Testing the components of the Governance page", () => {
                 cy.visit(`/trusts/governance/trust-leadership?uid=${uid}`);
 
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Trust leadership - Governance - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Trust leadership - Governance - {trustName} - Find information about schools and trusts');
 
                 // Trust leadership table is visible and working
                 governancePage
@@ -33,7 +33,7 @@ describe("Testing the components of the Governance page", () => {
                 cy.visit(`/trusts/governance/trustees?uid=${uid}`);
 
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Trustees - Governance - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Trustees - Governance - {trustName} - Find information about schools and trusts');
 
                 // Trustee table is visible and working
                 governancePage
@@ -53,7 +53,7 @@ describe("Testing the components of the Governance page", () => {
                 cy.visit(`/trusts/governance/members?uid=${uid}`);
 
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Members - Governance - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Members - Governance - {trustName} - Find information about schools and trusts');
 
                 // Members table is visible and working
                 governancePage
@@ -73,7 +73,7 @@ describe("Testing the components of the Governance page", () => {
                 cy.visit(`/trusts/governance/historic-members?uid=${uid}`);
 
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Historic members - Governance - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Historic members - Governance - {trustName} - Find information about schools and trusts');
 
                 // Historic members table is visible and working
                 governancePage

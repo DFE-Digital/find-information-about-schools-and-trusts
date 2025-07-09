@@ -24,7 +24,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
         it("Checks the browser title is correct", () => {
             commonPage
-                .checkThatBrowserTitleForTrustPageMatches('Single headline grades - Ofsted - {trustName} - Find information about academies and trusts');
+                .checkThatBrowserTitleForTrustPageMatches('Single headline grades - Ofsted - {trustName} - Find information about schools and trusts');
         });
 
         it("Checks the breadcrumb shows the correct page name", () => {
@@ -86,7 +86,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
         it("Checks the browser title is correct", () => {
             commonPage
-                .checkThatBrowserTitleForTrustPageMatches('Current ratings - Ofsted - {trustName} - Find information about academies and trusts');
+                .checkThatBrowserTitleForTrustPageMatches('Current ratings - Ofsted - {trustName} - Find information about schools and trusts');
         });
 
         it("Checks the breadcrumb shows the correct page name", () => {
@@ -155,7 +155,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
         it("Checks the browser title is correct", () => {
             commonPage
-                .checkThatBrowserTitleForTrustPageMatches('Previous ratings - Ofsted - {trustName} - Find information about academies and trusts');
+                .checkThatBrowserTitleForTrustPageMatches('Previous ratings - Ofsted - {trustName} - Find information about schools and trusts');
         });
 
         it("Checks the breadcrumb shows the correct page name", () => {
@@ -224,7 +224,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
         it("Checks the browser title is correct", () => {
             commonPage
-                .checkThatBrowserTitleForTrustPageMatches('Safeguarding and concerns - Ofsted - {trustName} - Find information about academies and trusts');
+                .checkThatBrowserTitleForTrustPageMatches('Safeguarding and concerns - Ofsted - {trustName} - Find information about schools and trusts');
         });
 
         it("Checks the breadcrumb shows the correct page name", () => {

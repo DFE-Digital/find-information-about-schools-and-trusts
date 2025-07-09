@@ -21,7 +21,7 @@ public record DataSourceListEntry(DataSourceServiceModel DataSource, string Data
         Source.Cdm => "RSD (Regional Services Division) service support team",
         Source.Mis => "State-funded school inspections and outcomes: management information",
         Source.ExploreEducationStatistics => "Explore education statistics",
-        Source.FiatDb => "Find information about academies and trusts",
+        Source.FiatDb => "Find information about schools and trusts",
         Source.Prepare => "Prepare",
         Source.Complete => "Complete",
         Source.ManageFreeSchoolProjects => "Manage free school projects",

@@ -13,7 +13,7 @@ describe("Testing the Pipeline academies pages", () => {
 
             it("Checks the browser title is correct", () => {
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Pre advisory board - Pipeline academies - Academies - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Pre advisory board - Pipeline academies - Academies - {trustName} - Find information about schools and trusts');
             });
 
             it("Checks the Pre advisory board Pipeline academies subpage header is present", () => {
@@ -62,7 +62,7 @@ describe("Testing the Pipeline academies pages", () => {
 
             it("Checks the browser title is correct", () => {
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Post advisory board - Pipeline academies - Academies - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Post advisory board - Pipeline academies - Academies - {trustName} - Find information about schools and trusts');
             });
 
             it("Checks the Post advisory board Pipeline academies subpage header is present", () => {
@@ -106,7 +106,7 @@ describe("Testing the Pipeline academies pages", () => {
 
             it("Checks the browser title is correct", () => {
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Free schools - Pipeline academies - Academies - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Free schools - Pipeline academies - Academies - {trustName} - Find information about schools and trusts');
             });
 
             it("Checks the Free schools Pipeline academies subpage header is present", () => {

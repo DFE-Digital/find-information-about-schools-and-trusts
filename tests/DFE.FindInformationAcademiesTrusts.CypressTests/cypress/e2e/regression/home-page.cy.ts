@@ -9,7 +9,7 @@ describe("Testing the components of the home page", () => {
 
   it("Checks the browser title is correct", () => {
     commonPage
-      .checkThatBrowserTitleMatches("Home page - Find information about academies and trusts");
+      .checkThatBrowserTitleMatches("Home page - Find information about schools and trusts");
   });
 
   it("Should check that the what you can find section is collapsed when you first land on the home screen ", () => {

@@ -11,7 +11,7 @@ describe("Testing the components of the Trust overview page", () => {
 
         it("The page loads with the correct headings and data", () => {
             commonPage
-                .checkThatBrowserTitleForTrustPageMatches('Trust details - Overview - {trustName} - Find information about academies and trusts');
+                .checkThatBrowserTitleForTrustPageMatches('Trust details - Overview - {trustName} - Find information about schools and trusts');
 
             overviewPage
                 .checkTrustDetailsSubHeaderPresent()
@@ -30,7 +30,7 @@ describe("Testing the components of the Trust overview page", () => {
 
         it("The page loads with the correct headings and data", () => {
             commonPage
-                .checkThatBrowserTitleForTrustPageMatches('Trust summary - Overview - {trustName} - Find information about academies and trusts');
+                .checkThatBrowserTitleForTrustPageMatches('Trust summary - Overview - {trustName} - Find information about schools and trusts');
 
             overviewPage
                 .checkTrustSummarySubHeaderPresent()
@@ -50,7 +50,7 @@ describe("Testing the components of the Trust overview page", () => {
 
         it("The page loads with the correct headings and data", () => {
             commonPage
-                .checkThatBrowserTitleForTrustPageMatches('Reference numbers - Overview - {trustName} - Find information about academies and trusts');
+                .checkThatBrowserTitleForTrustPageMatches('Reference numbers - Overview - {trustName} - Find information about schools and trusts');
 
             overviewPage
                 .checkReferenceNumbersSubHeaderPresent()

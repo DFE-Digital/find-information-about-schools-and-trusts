@@ -11,6 +11,50 @@ function generateNameAndEmail() {
     };
 }
 
+// Helper function to check browser title for different contact pages
+function checkContactPageTitle(pageType: string) {
+    const titleMappings: Record<string, string> = {
+        'in-dfe': 'In DfE - Contacts - {trustName} - Find information about schools and trusts',
+        'in-the-trust': 'In this trust - Contacts - {trustName} - Find information about schools and trusts',
+        'edit-trm': 'Edit Trust relationship manager details - Contacts - {trustName} - Find information about schools and trusts',
+        'edit-sfso': 'Edit SFSO (Schools financial support and oversight) lead details - Contacts - {trustName} - Find information about schools and trusts'
+    };
+
+    commonPage
+        .checkThatBrowserTitleForTrustPageMatches(titleMappings[pageType]);
+}
+
+// Email validation test cases
+const emailValidationTestCases = [
+    {
+        description: "full non DFE email",
+        email: "email@hotmail.co.uk",
+        expectedErrors: ['Enter a DfE email address without any spaces']
+    },
+    {
+        description: "incorrect email format",
+        email: "email",
+        trmExpectedErrors: ['Enter an email address in the correct format, like name@education.gov.uk'],
+        sfsoExpectedErrors: ['Enter a DfE email address without any spaces', 'Enter an email address in the correct format, like name@education.gov.uk']
+    },
+    {
+        description: "illegal characters",
+        email: "@£$$^&",
+        trmExpectedErrors: ['Enter an email address in the correct format, like name@education.gov.uk'],
+        sfsoExpectedErrors: ['Enter a DfE email address without any spaces', 'Enter an email address in the correct format, like name@education.gov.uk']
+    },
+    {
+        description: "whitespace",
+        email: "a     b",
+        expectedErrors: ['Enter a DfE email address without any spaces', 'Enter an email address in the correct format, like name@education.gov.uk']
+    },
+    {
+        description: "email without prefix",
+        email: "@education.gov.uk",
+        expectedErrors: ['Enter an email address in the correct format, like name@education.gov.uk']
+    }
+];
+
 describe("Testing the components of the Trust contacts page", () => {
     testTrustData.forEach(({ typeOfTrust, uid }) => {
         describe(`On the contacts in DfE page for a ${typeOfTrust}`, () => {
@@ -19,8 +63,7 @@ describe("Testing the components of the Trust contacts page", () => {
             });
 
             it("Checks the browser title is correct", () => {
-                commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('In DfE - Contacts - {trustName} - Find information about academies and trusts');
+                checkContactPageTitle('in-dfe');
             });
 
             it("Checks the breadcrumb shows the correct page name", () => {
@@ -81,8 +124,7 @@ describe("Testing the components of the Trust contacts page", () => {
             });
 
             it("Checks the browser title is correct", () => {
-                commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Edit Trust relationship manager details - Contacts - {trustName} - Find information about academies and trusts');
+                checkContactPageTitle('edit-trm');
             });
         });
 
@@ -92,8 +134,7 @@ describe("Testing the components of the Trust contacts page", () => {
             });
 
             it("Checks the browser title is correct", () => {
-                commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Edit SFSO (Schools financial support and oversight) lead details - Contacts - {trustName} - Find information about academies and trusts');
+                checkContactPageTitle('edit-sfso');
             });
         });
 
@@ -103,8 +144,7 @@ describe("Testing the components of the Trust contacts page", () => {
             });
 
             it("Checks the browser title is correct", () => {
-                commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('In this trust - Contacts - {trustName} - Find information about academies and trusts');
+                checkContactPageTitle('in-the-trust');
             });
 
             it("Checks the breadcrumb shows the correct page name", () => {
@@ -126,92 +166,42 @@ describe("Testing the components of the Trust contacts page", () => {
             cy.visit('/trusts/contacts/in-dfe?uid=5527');
         });
 
-        it("Checks that a full non DFE email entered returns the correct error message on a TRM ", () => {
-            trustContactsPage
-                .editTrustRelationshipManager("Name", "email@hotmail.co.uk");
-            commonPage
-                .checkErrorPopup('Enter a DfE email address without any spaces');
+        describe('TRM email validation errors', () => {
+            emailValidationTestCases.forEach(({ description, email, expectedErrors, trmExpectedErrors }) => {
+                const errors = trmExpectedErrors ?? expectedErrors;
+                it(`Checks that ${description} entered returns the correct error message on a TRM`, () => {
+                    trustContactsPage.editTrustRelationshipManager("Name", email);
+                    errors.forEach(error => {
+                        commonPage.checkErrorPopup(error);
+                    });
+                });
+            });
         });
 
-        it("Checks that an incorrect email entered returns the correct error message on a TRM ", () => {
-            trustContactsPage
-                .editTrustRelationshipManager("Name", "email");
-            commonPage
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
-        });
-
-        it("Checks that illegal characters entered returns the correct error message on a TRM ", () => {
-            trustContactsPage
-                .editTrustRelationshipManager("Name", "@£$$^&");
-            commonPage
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
-        });
-
-        it("Checks that whitespace entered returns the correct error message on a TRM ", () => {
-            trustContactsPage
-                .editTrustRelationshipManager("Name", "a     b");
-            commonPage
-                .checkErrorPopup('Enter a DfE email address without any spaces')
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
-        });
-
-        it("Checks that an email address without the prefix entered returns the correct error message on a TRM ", () => {
-            trustContactsPage
-                .editTrustRelationshipManager("Name", "@education.gov.uk");
-            commonPage
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
-        });
-
-        it("Checks that a full non DFE email entered returns the correct error message on a SFSO ", () => {
-            trustContactsPage
-                .editSfsoLead("Name", "email@hotmail.co.uk");
-            commonPage
-                .checkErrorPopup('Enter a DfE email address without any spaces');
-        });
-
-        it("Checks that an incorrect email entered returns the correct error message on a SFSO ", () => {
-            trustContactsPage
-                .editSfsoLead("Name", "email");
-            commonPage
-                .checkErrorPopup('Enter a DfE email address without any spaces')
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
-        });
-
-        it("Checks that illegal characters entered returns the correct error message on a SFSO ", () => {
-            trustContactsPage
-                .editSfsoLead("Name", "@£$$^&");
-            commonPage
-                .checkErrorPopup('Enter a DfE email address without any spaces')
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
-        });
-
-        it("Checks that whitespace entered returns the correct error message on a SFSO ", () => {
-            trustContactsPage
-                .editSfsoLead("Name", "a     b");
-            commonPage
-                .checkErrorPopup('Enter a DfE email address without any spaces')
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
-        });
-
-        it("Checks that an email address without the prefix entered returns the correct error message on a SFSO ", () => {
-            trustContactsPage
-                .editSfsoLead("Name", "@education.gov.uk");
-            commonPage
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+        describe('SFSO email validation errors', () => {
+            emailValidationTestCases.forEach(({ description, email, expectedErrors, sfsoExpectedErrors }) => {
+                const errors = sfsoExpectedErrors ?? expectedErrors;
+                it(`Checks that ${description} entered returns the correct error message on a SFSO`, () => {
+                    trustContactsPage.editSfsoLead("Name", email);
+                    errors.forEach(error => {
+                        commonPage.checkErrorPopup(error);
+                    });
+                });
+            });
         });
     });
 
     describe("Testing the contacts sub navigation", () => {
+        const testUid = '5527';
 
         it('Should check that the contacts in dfe navigation button takes me to the correct page', () => {
-            cy.visit('/trusts/contacts/in-the-trust?uid=5527');
+            cy.visit(`/trusts/contacts/in-the-trust?uid=${testUid}`);
 
             trustContactsPage
                 .clickContactsInDfeSubnavButton()
                 .checkContactsInDfeSubHeaderPresent();
 
-            navigation
-                .checkCurrentURLIsCorrect('/trusts/contacts/in-dfe?uid=5527');
+            navigation.checkCurrentURLIsCorrect(`/trusts/contacts/in-dfe?uid=${testUid}`);
 
             trustContactsPage
                 .checkAllSubNavItemsPresent()
@@ -220,14 +210,13 @@ describe("Testing the components of the Trust contacts page", () => {
         });
 
         it('Should check that the contacts in this trust navigation button takes me to the correct page', () => {
-            cy.visit('/trusts/contacts/in-dfe?uid=5527');
+            cy.visit(`/trusts/contacts/in-dfe?uid=${testUid}`);
 
             trustContactsPage
                 .clickContactsInTheTrustSubnavButton()
                 .checkContactsInTheTrustSubHeaderPresent();
 
-            navigation
-                .checkCurrentURLIsCorrect('/trusts/contacts/in-the-trust?uid=5527');
+            navigation.checkCurrentURLIsCorrect(`/trusts/contacts/in-the-trust?uid=${testUid}`);
 
             trustContactsPage
                 .checkAllSubNavItemsPresent()
@@ -237,18 +226,22 @@ describe("Testing the components of the Trust contacts page", () => {
         });
 
         it('Should check that the contacts sub nav items are not present when I am not on the contacts page', () => {
-            cy.visit('/trusts/overview/trust-details?uid=5527');
+            cy.visit(`/trusts/overview/trust-details?uid=${testUid}`);
 
-            trustContactsPage
-                .checkSubNavNotPresent();
+            trustContactsPage.checkSubNavNotPresent();
         });
 
         describe("Testing a trust that has no contacts within it to ensure the issue of a 500 page appearing does not happen", () => {
+            const noContactsTrustUid = '17728';
+
             beforeEach(() => {
                 commonPage.interceptAndVerifyNo500Errors();
             });
 
-            ['/trusts/contacts/in-dfe?uid=17728', '/trusts/contacts/in-the-trust?uid=17728'].forEach((url) => {
+            [
+                `/trusts/contacts/in-dfe?uid=${noContactsTrustUid}`,
+                `/trusts/contacts/in-the-trust?uid=${noContactsTrustUid}`
+            ].forEach((url) => {
                 it(`Should have no 500 error on ${url}`, () => {
                     cy.visit(url);
                 });

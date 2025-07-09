@@ -12,7 +12,7 @@ describe('Cookie page and consent tests', () => {
 
     it("Checks the browser title is correct", () => {
         commonPage
-            .checkThatBrowserTitleMatches('Cookies - Find information about academies and trusts');
+            .checkThatBrowserTitleMatches('Cookies - Find information about schools and trusts');
     });
 
     it('should check that both mandatory and optional cookies both exist after accepting optional cookies', () => {
