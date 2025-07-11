@@ -1,5 +1,5 @@
-using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 using System.Diagnostics.CodeAnalysis;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Trust;
 

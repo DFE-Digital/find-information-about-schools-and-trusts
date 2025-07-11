@@ -1,4 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
@@ -176,5 +177,54 @@ public class SchoolServiceTests
 
         result.Ukprn.Should().BeNull();
         await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+    }
+
+    [Fact]
+    public async Task GetSchoolGovernanceAsync_should_return_governance_results()
+    {
+        const int urn = 123456;
+
+        var startDate = DateTime.Today.AddYears(-3);
+        var futureEndDate = DateTime.Today.AddYears(1);
+        var historicEndDate = DateTime.Today.AddYears(-1);
+
+        var governor = new Governor(
+            "9999",
+            "1234",
+            Role: "Governor",
+            FullName: "First Second Last",
+            DateOfAppointment: startDate,
+            DateOfTermEnd: futureEndDate,
+            AppointingBody: "School board",
+            Email: null
+        );
+        var chair = new Governor(
+            "9998",
+            "1234",
+            Role: "Chair",
+            FullName: "First Second Last",
+            DateOfAppointment: startDate,
+            DateOfTermEnd: futureEndDate,
+            AppointingBody: "School board",
+            Email: null
+        );
+
+        var historic = new Governor(
+            "9999",
+            "1234",
+            Role: "Chair",
+            FullName: "First Second Last",
+            DateOfAppointment: startDate,
+            DateOfTermEnd: historicEndDate,
+            AppointingBody: "School board",
+            Email: null
+        );
+
+        _mockSchoolRepository.GetGovernanceAsync(urn).Returns([governor, chair, historic]);
+
+        var result = await _sut.GetSchoolGovernanceAsync(urn);
+
+        result.Historic.Should().ContainSingle().Which.Should().BeEquivalentTo(historic);
+        result.Current.Should().BeEquivalentTo([chair, governor]);
     }
 }
