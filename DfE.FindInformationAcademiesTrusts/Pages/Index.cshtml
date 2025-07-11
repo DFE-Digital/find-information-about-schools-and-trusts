@@ -1,6 +1,5 @@
 ﻿@page
 @using DfE.FindInformationAcademiesTrusts.Data
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
@@ -40,29 +39,30 @@
             </div>
         </div>
     </div>
-    <div class="app-banner app-banner--grey govuk-!-padding-top-8">
-        <div class="dfe-width-container">
+    <div class="app-banner app-banner--grey">
+        <div class="dfe-width-container govuk-!-padding-top-2 govuk-!-padding-bottom-2">
             <h2 class="govuk-heading-l">
                 Useful tools (links open in a new tab)
             </h2>
-            <div class="dfe-grid-container">
+            <div class="dfe-grid-container__fit">
                 @foreach (var serviceLink in UsefulToolsLinks)
                 {
                     DisplayLinkInCard(serviceLink);
                 }
+                       
             </div>
         </div>
     </div>
-    <div class="dfe-width-container govuk-!-padding-top-8 govuk-!-padding-bottom-8">
+    <div class="dfe-width-container govuk-!-padding-top-6 govuk-!-padding-bottom-6">
         <h2 class="govuk-heading-l">
             Regional Services Divisions systems (open in a new tab)
         </h2>
-        <div class="dfe-grid-container">
-            @foreach (var serviceLink in ViewConstants.RsdServiceLinks)
-            {
-                DisplayLinkInCard(serviceLink);
-            }
-        </div>
+             <div class="dfe-grid-container__fit">
+                @foreach (var serviceLink in ViewConstants.RsdServiceLinks)
+                {
+                    DisplayLinkInCard(serviceLink);
+                }
+            </div>
     </div>
 </main>
 
@@ -71,13 +71,13 @@
 {
   private void DisplayLinkInCard(ExternalServiceLink serviceLink)
   {
-    <div class="dfe-card">
-      <div class="dfe-card-container">
-        <h3 class="govuk-heading-m">
-          <a href="@serviceLink.Url" class="govuk-link govuk-link--no-visited-state dfe-card-link--header" rel="noopener" target="_blank" aria-label="@serviceLink.ServiceName (opens in a new tab)">@serviceLink.ServiceName</a>
-        </h3>
-        <p>@serviceLink.ServiceDescription</p>
+      <div class="dfe-card__auto-width">
+          <div class="dfe-card-container">
+              <h3 class="govuk-heading-m">
+                  <a href="@serviceLink.Url" class="govuk-link govuk-link--no-visited-state dfe-card-link--header" rel="noopener" target="_blank" aria-label="@serviceLink.ServiceName (opens in a new tab)">@serviceLink.ServiceName</a>
+              </h3>
+              <p>@serviceLink.ServiceDescription</p>
+          </div>
       </div>
-    </div>
   }
 }

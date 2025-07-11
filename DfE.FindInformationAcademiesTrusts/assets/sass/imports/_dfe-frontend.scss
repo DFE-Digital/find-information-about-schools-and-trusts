@@ -18,3 +18,13 @@
 .govuk-heading-xl {
   @include govuk-font-size(48);
 }
+
+.dfe-grid-container__fit {
+  @extend .dfe-grid-container;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.dfe-card__auto-width {
+  @extend .dfe-card;
+  max-width: none;
+}
