@@ -179,6 +179,27 @@ public class SchoolRepositoryTests
         _mockLogger.VerifyLogErrors($"Unable to find head teacher contact for school with URN {notFoundUrn}");
     }
 
+
+    [Fact]
+    public async Task GetSchoolContactsAsync_if_email_is_empty_string_email_should_be_null()
+    {
+        var urn = 45678;
+
+        _mockAcademiesDbContext.TadHeadTeacherContacts.Add(new TadHeadTeacherContact
+        {
+            Urn = urn,
+            HeadFirstName = "Teacher",
+            HeadLastName = "McTeacherson",
+            HeadEmail = string.Empty
+        });
+
+        var result = await _sut.GetSchoolContactsAsync(urn);
+
+        result.Should().NotBeNull();
+        result!.Name.Should().Be("Teacher McTeacherson");
+        result.Email.Should().BeNull();
+    }
+
     [Fact]
     public async Task GetSchoolSenProvisionAsync_should_return_sen_provision()
     {
@@ -413,5 +434,50 @@ public class SchoolRepositoryTests
 
         var result = await _sut.GetReferenceNumbersAsync(123456);
         result.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetGovernanceAsync_ShouldReturnEmpty_WithNoGovernanceSet()
+    {
+        var result = await _sut.GetGovernanceAsync(1234);
+
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetGovernanceAsync_ShouldReturnExpectedData()
+    {
+        var urn = 123;
+
+        var giasGovernance = new GiasGovernance
+        {
+            Urn = urn.ToString(),
+            Forename1 = "testy",
+            Forename2 = "mc",
+            Surname = "testface",
+            DateOfAppointment = DateTime.UtcNow.AddDays(-100).ToString("dd/MM/yyyy"),
+            DateTermOfOfficeEndsEnded = DateTime.UtcNow.AddDays(100).ToString("dd/MM/yyyy"),
+            AppointingBody = "trust members"
+        };
+
+        var giasGovernance2 = new GiasGovernance
+        {
+            Urn = "9876",
+            Forename1 = "another",
+            Surname = "govener",
+            DateOfAppointment = DateTime.UtcNow.AddDays(-100).ToString("dd/MM/yyyy"),
+            DateTermOfOfficeEndsEnded = DateTime.UtcNow.AddDays(100).ToString("dd/MM/yyyy"),
+            AppointingBody = "trust members"
+        };
+
+        _mockAcademiesDbContext.GiasGovernances.AddRange([giasGovernance, giasGovernance2]);
+
+        var result = await _sut.GetGovernanceAsync(urn);
+
+        result.Length.Should().Be(1);
+        result[0].FullName.Should().Be("testy mc testface");
+        result[0].AppointingBody.Should().Be("trust members");
+        result[0].DateOfAppointment.Should().Be(DateTime.UtcNow.AddDays(-100).Date);
+        result[0].DateOfTermEnd.Should().Be(DateTime.UtcNow.AddDays(100).Date);
     }
 }
