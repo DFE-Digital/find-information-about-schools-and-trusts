@@ -1,6 +1,7 @@
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 using Microsoft.EntityFrameworkCore;
 
@@ -75,7 +76,8 @@ public class TrustRepository(
             .Select(governance => new Governor(
                 governance.Gid!,
                 governance.Uid!,
-                GetFullName(governance.Forename1!, governance.Forename2!, governance.Surname!),
+                stringFormattingUtilities.GetFullName(governance.Forename1!, governance.Forename2!,
+                    governance.Surname!),
                 governance.Role!,
                 governance.AppointingBody!,
                 governance.DateOfAppointment.ParseAsNullableDate(),
@@ -123,19 +125,6 @@ public class TrustRepository(
             .SingleOrDefaultAsync() ?? string.Empty;
     }
 
-    private static string GetFullName(string forename1, string forename2, string surname)
-    {
-        var fullName = forename1; //Forename1 is always populated
-
-        if (!string.IsNullOrWhiteSpace(forename2))
-            fullName += $" {forename2}";
-
-        if (!string.IsNullOrWhiteSpace(surname))
-            fullName += $" {surname}";
-
-        return fullName;
-    }
-
     private async Task<Dictionary<string, Person>> GetGovernanceContactsAsync(string uid, string? urn = null)
     {
         string[] roles = { "Chair of Trustees", "Accounting Officer", "Chief Financial Officer" };
@@ -149,7 +138,8 @@ public class TrustRepository(
                 .Select(governance => new
                 {
                     governance.Gid,
-                    FullName = GetFullName(governance.Forename1!, governance.Forename2!, governance.Surname!),
+                    FullName = stringFormattingUtilities.GetFullName(governance.Forename1!, governance.Forename2!,
+                        governance.Surname!),
                     EndDate = governance.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
                     StartDate = governance.DateOfAppointment.ParseAsNullableDate() ?? DateTime.MinValue,
                     Role = governance.Role!

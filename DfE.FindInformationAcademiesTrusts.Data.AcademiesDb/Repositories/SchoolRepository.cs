@@ -1,6 +1,8 @@
 using System.Globalization;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -145,5 +147,21 @@ public class SchoolRepository(
     {
         return await academiesDbContext.GiasEstablishments.Where(e => e.Urn == urn)
             .Select(e => new SchoolReferenceNumbers(e.LaCode, e.EstablishmentNumber, e.Ukprn)).SingleOrDefaultAsync();
+    }
+
+    public async Task<Governor[]> GetGovernanceAsync(int urn)
+    {
+        return await academiesDbContext.GiasGovernances.Where(e => e.Urn == urn.ToString())
+            .Select(governance => new Governor(
+                governance.Gid!,
+                governance.Uid!,
+                stringFormattingUtilities.GetFullName(governance.Forename1!, governance.Forename2!,
+                    governance.Surname!),
+                governance.Role!,
+                governance.AppointingBody!,
+                governance.DateOfAppointment.ParseAsNullableDate(),
+                governance.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
+                null))
+            .ToArrayAsync();
     }
 }

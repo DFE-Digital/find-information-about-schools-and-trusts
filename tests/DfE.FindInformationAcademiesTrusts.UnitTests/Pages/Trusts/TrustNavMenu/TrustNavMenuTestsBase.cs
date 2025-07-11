@@ -1,4 +1,4 @@
-using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Academies;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Academies.InTrust;
