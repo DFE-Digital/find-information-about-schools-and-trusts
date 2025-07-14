@@ -1,8 +1,11 @@
 using DfE.FindInformationAcademiesTrusts.Configuration;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
+using DfE.FindInformationAcademiesTrusts.Services.School;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.SchoolNavMenu;
 
@@ -47,6 +50,7 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             nameof(SenModel) => "Overview",
             nameof(FederationModel) => "Overview",
             nameof(ReferenceNumbersModel) => "Overview",
+            nameof(CurrentModel) => "Governance",
             _ => throw new ArgumentException("Couldn't get expected name for given page type", nameof(pageType))
         };
     }
@@ -59,7 +63,7 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
     {
         MockFeatureManager.IsEnabledAsync(FeatureFlags.ContactsInDfeForSchools).Returns(false);
         var activePage = GetMockSchoolPage(activePageType);
-        var expectedActiveSubPageLink = GetSubPageLinkTo(activePageType, false);
+        var expectedActiveSubPageLink = GetSubPageLinkTo(activePageType);
 
         var results = await Sut.GetSubNavLinksAsync(activePage);
 
@@ -74,14 +78,14 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
     {
         MockFeatureManager.IsEnabledAsync(FeatureFlags.ContactsInDfeForSchools).Returns(true);
         var activePage = GetMockSchoolPage(activePageType);
-        var expectedActiveSubPageLink = GetSubPageLinkTo(activePageType, true);
+        var expectedActiveSubPageLink = GetSubPageLinkTo(activePageType);
 
         var results = await Sut.GetSubNavLinksAsync(activePage);
 
         results.Should().ContainSingle(l => l.LinkIsActive).Which.AspPage.Should().Be(expectedActiveSubPageLink);
     }
 
-    private static string GetSubPageLinkTo(Type pageType, bool contactsInDfeForSchoolsFeatureFlagEnabled)
+    private static string GetSubPageLinkTo(Type pageType)
     {
         return pageType.Name switch
         {
@@ -91,6 +95,7 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             nameof(SenModel) => "/Schools/Overview/Sen",
             nameof(FederationModel) => "/Schools/Overview/Federation",
             nameof(ReferenceNumbersModel) => "/Schools/Overview/ReferenceNumbers",
+            nameof(CurrentModel) => "/Schools/Governance/Current",
             _ => throw new ArgumentException("Couldn't get expected sub page nav asp link for given page type",
                 nameof(pageType))
         };
@@ -227,5 +232,62 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
 
         var result = await action.Should().ThrowAsync<ArgumentException>();
         result.Which.Message.Should().StartWith("Page type is not supported.");
+    }
+
+    public static TheoryData<SchoolGovernanceServiceModel, string, string> GovernanceData => new()
+    {
+        { new SchoolGovernanceServiceModel([], []), "Current governors(0)", "Historic governors(0)" },
+        {
+            new SchoolGovernanceServiceModel(GenerateGovernors(true, "Member", 2), []), "Current governors(2)",
+            "Historic governors(0)"
+        },
+        {
+            new SchoolGovernanceServiceModel([], GenerateGovernors(false, "Member", 2)), "Current governors(0)",
+            "Historic governors(2)"
+        },
+        {
+            new SchoolGovernanceServiceModel(GenerateGovernors(true, "Member", 20),
+                GenerateGovernors(false, "Member", 10)),
+            "Current governors(20)", "Historic governors(10)"
+        }
+    };
+
+    private static Governor[] GenerateGovernors(bool isCurrent, string role, int numberToGenerate)
+    {
+        return Enumerable.Repeat(new Governor(
+            "9999",
+            string.Empty,
+            Role: role,
+            FullName: "First Second Last",
+            DateOfAppointment: DateTime.Today.AddYears(-3),
+            DateOfTermEnd: isCurrent ? DateTime.Today.AddYears(1) : DateTime.Today.AddYears(-1),
+            AppointingBody: "School board",
+            Email: null
+        ), numberToGenerate).ToArray();
+    }
+
+    [Theory]
+    [MemberData(nameof(GovernanceData))]
+    public async Task GetSubNavLinksAsync_for_governance_should_display_number_in_title(
+        SchoolGovernanceServiceModel serviceModel, string expectedCurrent, string expectedHistoric)
+    {
+        var activePage = (GovernanceAreaModel)GetMockSchoolPage(typeof(CurrentModel));
+        activePage.SchoolGovernance = serviceModel;
+
+        var results = await Sut.GetSubNavLinksAsync(activePage);
+
+        results.Should().SatisfyRespectively(l =>
+            {
+                l.LinkDisplayText.Should().Be(expectedCurrent);
+                l.AspPage.Should().Be("/Schools/Governance/Current");
+                l.TestId.Should().Be("current-governors-subnav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be(expectedHistoric);
+                l.AspPage.Should().Be("/Schools/Governance/Historic");
+                l.TestId.Should().Be("historic-governors-subnav");
+            }
+        );
     }
 }
