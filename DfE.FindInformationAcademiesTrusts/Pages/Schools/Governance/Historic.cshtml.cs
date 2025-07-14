@@ -12,7 +12,7 @@ public class HistoricModel(
     ISchoolNavMenu schoolNavMenu)
     : GovernanceAreaModel(schoolService, trustService, dataSourceService, schoolNavMenu)
 {
-    public const string SubPageName = "Historic govenors";
+    public const string SubPageName = "Historic governors";
 
     public override PageMetadata PageMetadata => base.PageMetadata with { SubPageName = SubPageName };
 

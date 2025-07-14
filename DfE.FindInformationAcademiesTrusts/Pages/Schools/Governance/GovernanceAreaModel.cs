@@ -1,7 +1,6 @@
 ﻿using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
-using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Governance;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
@@ -20,7 +19,7 @@ public class GovernanceAreaModel(
 
     public const string PageName = "Governance";
 
-    public SchoolGovernanceServiceModel SchoolGovernance { get; set; } = null!;
+    public SchoolGovernanceServiceModel SchoolGovernance { get; set; } = new([], []);
 
     public override PageMetadata PageMetadata => base.PageMetadata with { PageName = PageName };
 
@@ -36,10 +35,8 @@ public class GovernanceAreaModel(
         var giasDataSource = await dataSourceService.GetAsync(Source.Gias);
 
         DataSourcesPerPage.AddRange([
-            new DataSourcePageListEntry(TrustLeadershipModel.SubPageName, [new DataSourceListEntry(giasDataSource)]),
-            new DataSourcePageListEntry(TrusteesModel.SubPageName, [new DataSourceListEntry(giasDataSource)]),
-            new DataSourcePageListEntry(MembersModel.SubPageName, [new DataSourceListEntry(giasDataSource)]),
-            new DataSourcePageListEntry(HistoricMembersModel.SubPageName, [new DataSourceListEntry(giasDataSource)])
+            new DataSourcePageListEntry(CurrentModel.SubPageName, [new DataSourceListEntry(giasDataSource)]),
+            new DataSourcePageListEntry(HistoricModel.SubPageName, [new DataSourceListEntry(giasDataSource)])
         ]);
 
         return pageResult;

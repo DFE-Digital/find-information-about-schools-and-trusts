@@ -12,7 +12,7 @@ public class CurrentModel(
     ISchoolNavMenu schoolNavMenu)
     : GovernanceAreaModel(schoolService, trustService, dataSourceService, schoolNavMenu)
 {
-    public const string SubPageName = "Current govenors";
+    public const string SubPageName = "Current governors";
 
     public override PageMetadata PageMetadata => base.PageMetadata with { SubPageName = SubPageName };
 
