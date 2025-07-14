@@ -24,58 +24,64 @@ describe('Schools Navigation Tests', () => {
 
     describe("Routing tests", () => {
 
-        const schoolTypesNotToShow = [
-            { urn: 136083, unsupportedSchoolType: "Independent schools" },
-            { urn: 150163, unsupportedSchoolType: "Online provider" },
-            { urn: 131832, unsupportedSchoolType: "Other types" },
-            { urn: 133793, unsupportedSchoolType: "Universities" },
-            { urn: 137210, unsupportedSchoolType: "Closed academy" },
-            { urn: 142109, unsupportedSchoolType: "Closed school" },
-        ];
+        context("404 routing for unsupported and closed school types", () => {
+            const schoolTypesNotToShow = [
+                { urn: 136083, unsupportedSchoolType: "Independent schools" },
+                { urn: 150163, unsupportedSchoolType: "Online provider" },
+                { urn: 131832, unsupportedSchoolType: "Other types" },
+                { urn: 133793, unsupportedSchoolType: "Universities" },
+                { urn: 137210, unsupportedSchoolType: "Closed academy" },
+                { urn: 142109, unsupportedSchoolType: "Closed school" },
+            ];
 
-        schoolTypesNotToShow.forEach(({ urn, unsupportedSchoolType }) => {
-            TestDataStore.GetAllSchoolSubpagesForUrn(urn).forEach(({ pageName, subpages }) => {
+            schoolTypesNotToShow.forEach(({ urn, unsupportedSchoolType }) => {
+                TestDataStore.GetAllSchoolSubpagesForUrn(urn).forEach(({ pageName, subpages }) => {
 
-                describe(pageName, () => {
+                    describe(pageName, () => {
 
-                    subpages.forEach(({ subpageName, url }) => {
-                        it(`Should check that navigating to subpages for unsupported and closed school types display the 404 not found page ${pageName} > ${subpageName} > ${unsupportedSchoolType}`, () => {
-                            // Set up an interceptor to check that the page response is a 404
-                            commonPage.interceptAndVerifyResponseHas404Status(url);
+                        subpages.forEach(({ subpageName, url }) => {
+                            it(`Should check that navigating to subpages for unsupported and closed school types display the 404 not found page ${pageName} > ${subpageName} > ${unsupportedSchoolType}`, () => {
+                                // Set up an interceptor to check that the page response is a 404
+                                commonPage.interceptAndVerifyResponseHas404Status(url);
 
-                            // Go to the given subpage
-                            cy.visit(url, { failOnStatusCode: false });
+                                // Go to the given subpage
+                                cy.visit(url, { failOnStatusCode: false });
 
-                            // Check that the 404 response interceptor was called
-                            cy.wait('@checkTheResponseIs404');
+                                // Check that the 404 response interceptor was called
+                                cy.wait('@checkTheResponseIs404');
 
-                            // Check that the data sources component has a subheading for each subnav
-                            commonPage
-                                .checkPageNotFoundDisplayed();
+                                // Check that the data sources component has a subheading for each subnav
+                                commonPage
+                                    .checkPageNotFoundDisplayed();
+                            });
                         });
                     });
                 });
             });
         });
 
-        navTestAcademies.forEach(({ academyURN, trustAcademyName, trustUID }) => {
-            it('Should check that an academy has the link to the trust in the header and it takes me to the correct trust', () => {
-                cy.visit(`/schools/overview/details?urn=${academyURN}`);
-                schoolsPage
-                    .checkAcademyLinkPresentAndCorrect(`${trustAcademyName}`)
-                    .clickAcademyTrustLink();
-                navigation
-                    .checkCurrentURLIsCorrect(`/trusts/overview/trust-details?uid=${trustUID}`);
-                overviewPage
-                    .checkTrustDetailsSubHeaderPresent();
+        context("Academy trust link navigation", () => {
+            navTestAcademies.forEach(({ academyURN, trustAcademyName, trustUID }) => {
+                it('Should check that an academy has the link to the trust in the header and it takes me to the correct trust', () => {
+                    cy.visit(`/schools/overview/details?urn=${academyURN}`);
+                    schoolsPage
+                        .checkAcademyLinkPresentAndCorrect(`${trustAcademyName}`)
+                        .clickAcademyTrustLink();
+                    navigation
+                        .checkCurrentURLIsCorrect(`/trusts/overview/trust-details?uid=${trustUID}`);
+                    overviewPage
+                        .checkTrustDetailsSubHeaderPresent();
 
+                });
             });
         });
 
-        it('Should check that an school does not have the link to the trust in the header', () => {
-            cy.visit(`/schools/overview/details?urn=${navTestSchool.schoolURN}`);
-            schoolsPage
-                .checkAcademyLinkNotPresentForSchool();
+        context("School trust link validation", () => {
+            it('Should check that an school does not have the link to the trust in the header', () => {
+                cy.visit(`/schools/overview/details?urn=${navTestSchool.schoolURN}`);
+                schoolsPage
+                    .checkAcademyLinkNotPresentForSchool();
+            });
         });
     });
 
@@ -228,8 +234,58 @@ describe('Schools Navigation Tests', () => {
         });
 
         context('School overview subnav round robin tests -- (Academy)', () => {
-            // school details --> SEN (academy)
-            it('Should check that the school details navigation button takes me to the correct page for a schools type subnav', () => {
+            // academy details --> Reference Numbers (academy)
+            it('Should check that the academy details navigation button takes me to the reference numbers page for an academy type subnav and button is highlighted', () => {
+                cy.visit(`/schools/overview/details?urn=${navTestAcademies[0].academyURN}`);
+                navigation
+                    .clickSchoolsReferenceNumberButton()
+                    .checkCurrentURLIsCorrect(`/schools/overview/referencenumbers?urn=${navTestAcademies[0].academyURN}`)
+                    .checkSchoolsReferenceNumbersButtonIsHighlighted()
+                    .checkAllSchoolServiceNavItemsPresent()
+                    .checkAllAcademyOverviewSubNavItemsPresent();
+                schoolsPage
+                    .checkSchoolReferenceNumbersHeaderPresent();
+            });
+
+            // Reference Numbers --> SEN (academy)
+            it('Should check that the reference numbers navigation button takes me to the SEN page for an academy type subnav', () => {
+                cy.visit(`/schools/overview/referencenumbers?urn=${navTestAcademies[0].academyURN}`);
+                navigation
+                    .clickSchoolsSENButton()
+                    .checkCurrentURLIsCorrect(`/schools/overview/sen?urn=${navTestAcademies[0].academyURN}`)
+                    .checkAllSchoolServiceNavItemsPresent()
+                    .checkAllAcademyOverviewSubNavItemsPresent();
+                schoolsPage
+                    .checkSENSubpageHeaderCorrect();
+            });
+
+            // SEN --> Reference Numbers (academy)
+            it('Should check that the SEN navigation button takes me to the reference numbers page for an academy type subnav and button is highlighted', () => {
+                cy.visit(`/schools/overview/sen?urn=${navTestAcademies[0].academyURN}`);
+                navigation
+                    .clickSchoolsReferenceNumberButton()
+                    .checkCurrentURLIsCorrect(`/schools/overview/referencenumbers?urn=${navTestAcademies[0].academyURN}`)
+                    .checkSchoolsReferenceNumbersButtonIsHighlighted()
+                    .checkAllSchoolServiceNavItemsPresent()
+                    .checkAllAcademyOverviewSubNavItemsPresent();
+                schoolsPage
+                    .checkSchoolReferenceNumbersHeaderPresent();
+            });
+
+            // Reference Numbers --> academy details (academy)
+            it('Should check that the reference numbers navigation button takes me to the academy details page for an academy type subnav', () => {
+                cy.visit(`/schools/overview/referencenumbers?urn=${navTestAcademies[0].academyURN}`);
+                navigation
+                    .clickSchoolsDetailsButton()
+                    .checkCurrentURLIsCorrect(`/schools/overview/details?urn=${navTestAcademies[0].academyURN}`)
+                    .checkAllSchoolServiceNavItemsPresent()
+                    .checkAllAcademyOverviewSubNavItemsPresent();
+                schoolsPage
+                    .checkAcademyDetailsHeaderPresent();
+            });
+
+            // academy details --> SEN (academy)
+            it('Should check that the academy details navigation button takes me to the SEN page for an academy type subnav', () => {
                 cy.visit(`/schools/overview/details?urn=${navTestAcademies[0].academyURN}`);
                 navigation
                     .clickSchoolsSENButton()
@@ -240,8 +296,8 @@ describe('Schools Navigation Tests', () => {
                     .checkSENSubpageHeaderCorrect();
             });
 
-            // SEN --> school details (academy)
-            it('Should check that the school details navigation button takes me to the correct page for a schools type subnav', () => {
+            // SEN --> academy details (academy)
+            it('Should check that the SEN navigation button takes me to the academy details page for an academy type subnav', () => {
                 cy.visit(`/schools/overview/sen?urn=${navTestAcademies[0].academyURN}`);
                 navigation
                     .clickSchoolsDetailsButton()
@@ -251,22 +307,75 @@ describe('Schools Navigation Tests', () => {
                 schoolsPage
                     .checkAcademyDetailsHeaderPresent();
             });
+
+
         });
 
         // school details --> Reference Numbers (school)
-        it('Should check that the school details navigation button takes me to the correct page for a schools type subnav', () => {
+        it('Should check that the school details navigation button takes me to the reference numbers page for a schools type subnav and button is highlighted', () => {
             cy.visit(`/schools/overview/details?urn=${navTestSchool.schoolURN}`);
             navigation
                 .clickSchoolsReferenceNumberButton()
                 .checkCurrentURLIsCorrect(`/schools/overview/referencenumbers?urn=${navTestSchool.schoolURN}`)
+                .checkSchoolsReferenceNumbersButtonIsHighlighted()
                 .checkAllSchoolServiceNavItemsPresent()
                 .checkAllSchoolOverviewSubNavItemsPresent();
             schoolsPage
                 .checkSchoolReferenceNumbersHeaderPresent();
         });
 
-        // Reference Numbers --> school details (academy)
-        it('Should check that the school details navigation button takes me to the details page for a schools type subnav', () => {
+        // federation details --> Reference Numbers (school)
+        it('Should check that the federation details navigation button takes me to the reference numbers page for a schools type subnav and button is highlighted', () => {
+            cy.visit(`/schools/overview/federation?urn=${navTestSchool.schoolURN}`);
+            navigation
+                .clickSchoolsReferenceNumberButton()
+                .checkCurrentURLIsCorrect(`/schools/overview/referencenumbers?urn=${navTestSchool.schoolURN}`)
+                .checkSchoolsReferenceNumbersButtonIsHighlighted()
+                .checkAllSchoolServiceNavItemsPresent()
+                .checkAllSchoolOverviewSubNavItemsPresent();
+            schoolsPage
+                .checkSchoolReferenceNumbersHeaderPresent();
+        });
+
+        // Reference Numbers --> federation details (school)
+        it('Should check that the reference numbers navigation button takes me to the federation page for a schools type subnav', () => {
+            cy.visit(`/schools/overview/referencenumbers?urn=${navTestSchool.schoolURN}`);
+            navigation
+                .clickSchoolsFederationButton()
+                .checkCurrentURLIsCorrect(`/schools/overview/federation?urn=${navTestSchool.schoolURN}`)
+                .checkAllSchoolServiceNavItemsPresent()
+                .checkAllSchoolOverviewSubNavItemsPresent();
+            schoolsPage
+                .checkFederationDetailsHeaderPresent();
+        });
+
+        // Reference Numbers --> SEN (school)
+        it('Should check that the reference numbers navigation button takes me to the SEN page for a schools type subnav', () => {
+            cy.visit(`/schools/overview/referencenumbers?urn=${navTestSchool.schoolURN}`);
+            navigation
+                .clickSchoolsSENButton()
+                .checkCurrentURLIsCorrect(`/schools/overview/sen?urn=${navTestSchool.schoolURN}`)
+                .checkAllSchoolServiceNavItemsPresent()
+                .checkAllSchoolOverviewSubNavItemsPresent();
+            schoolsPage
+                .checkSENSubpageHeaderCorrect();
+        });
+
+        // SEN --> Reference Numbers (school)
+        it('Should check that the SEN navigation button takes me to the reference numbers page for a schools type subnav and button is highlighted', () => {
+            cy.visit(`/schools/overview/sen?urn=${navTestSchool.schoolURN}`);
+            navigation
+                .clickSchoolsReferenceNumberButton()
+                .checkCurrentURLIsCorrect(`/schools/overview/referencenumbers?urn=${navTestSchool.schoolURN}`)
+                .checkSchoolsReferenceNumbersButtonIsHighlighted()
+                .checkAllSchoolServiceNavItemsPresent()
+                .checkAllSchoolOverviewSubNavItemsPresent();
+            schoolsPage
+                .checkSchoolReferenceNumbersHeaderPresent();
+        });
+
+        // Reference Numbers --> school details (school)
+        it('Should check that the reference numbers navigation button takes me to the details page for a schools type subnav', () => {
             cy.visit(`/schools/overview/referencenumbers?urn=${navTestSchool.schoolURN}`);
             navigation
                 .clickSchoolsDetailsButton()
@@ -276,6 +385,8 @@ describe('Schools Navigation Tests', () => {
             schoolsPage
                 .checkSchoolDetailsHeaderPresent();
         });
+
+
     });
 
     describe("School contacts edit navigation tests", () => {

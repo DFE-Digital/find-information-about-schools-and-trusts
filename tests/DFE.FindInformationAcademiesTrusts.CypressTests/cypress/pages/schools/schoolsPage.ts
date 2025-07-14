@@ -6,7 +6,6 @@ class SchoolsPage {
         schoolType: () => cy.get('[data-testid="school-type"]'),
         trustLink: () => cy.get('[data-testid="header-trust-link"]'),
         nav: {
-            overviewNav: () => cy.get('[data-testid="overview-nav"]'),
         },
         overview: {
             detailsTabHeader: () => cy.get('[data-testid="overview-details-subnav"]'),
@@ -33,11 +32,13 @@ class SchoolsPage {
                 senProvisionTypeKey: () => cy.get('[data-testid="sen-provision-type-key"]'),
                 senProvisionType: () => cy.get('[data-testid="sen-provision-type"]'),
             },
-             referenceNumbersTab: {
-                tabName: () => cy.get('[data-testid="overview-reference-numbers-subnav]'),
+            referenceNumbersTab: {
                 urnHeader: () => cy.get('[data-testid="reference-numbers-urn-header"]'),
+                urnValue: () => cy.get('[data-testid="reference-numbers-urn-value"]'),
                 laestabHeader: () => cy.get('[data-testid="reference-numbers-laestab-header"]'),
-                ukprnHeader: () => cy.get('[data-testid="reference-numbers-ukprn-header"]')
+                laestabValue: () => cy.get('[data-testid="reference-numbers-laestab-value"]'),
+                ukprnHeader: () => cy.get('[data-testid="reference-numbers-ukprn-header"]'),
+                ukprnValue: () => cy.get('[data-testid="reference-numbers-ukprn-value"]')
             },
         },
         schoolContacts: {
@@ -467,7 +468,7 @@ class SchoolsPage {
         return this;
     }
 
-        // #region school reference numbers
+    // #region school reference numbers
 
     public checkSchoolReferenceNumbersHeaderPresent(): this {
         this.elements.subpageHeader().should('contain', 'Reference numbers');
@@ -480,7 +481,88 @@ class SchoolsPage {
         this.elements.overview.referenceNumbersTab.ukprnHeader().should('be.visible').and('contain.text', 'UKPRN (UK provider reference number)');
         return this;
     }
-        // #endregion
+
+    public checkUrnHeaderPresent(): this {
+        this.elements.overview.referenceNumbersTab.urnHeader().should('be.visible').and('contain.text', 'URN (Unique Reference Number)');
+        return this;
+    }
+
+    public checkLaestabHeaderPresent(): this {
+        this.elements.overview.referenceNumbersTab.laestabHeader().should('be.visible').and('contain.text', 'LAESTAB (local authority establishment number)');
+        return this;
+    }
+
+    public checkUkprnHeaderPresent(): this {
+        this.elements.overview.referenceNumbersTab.ukprnHeader().should('be.visible').and('contain.text', 'UKPRN (UK provider reference number)');
+        return this;
+    }
+
+    public checkUrnValuePresent(): this {
+        this.elements.overview.referenceNumbersTab.urnValue().should('be.visible');
+        this.elements.overview.referenceNumbersTab.urnValue().should('not.contain.text', 'Not available');
+        this.elements.overview.referenceNumbersTab.urnValue().should('not.be.empty');
+        return this;
+    }
+
+    public checkLaestabValuePresent(): this {
+        this.elements.overview.referenceNumbersTab.laestabValue().should('be.visible');
+        this.elements.overview.referenceNumbersTab.laestabValue().should('not.contain.text', 'Not available');
+        this.elements.overview.referenceNumbersTab.laestabValue().should('not.be.empty');
+        return this;
+    }
+
+    public checkUkprnValuePresent(): this {
+        this.elements.overview.referenceNumbersTab.ukprnValue().should('be.visible');
+        this.elements.overview.referenceNumbersTab.ukprnValue().should('not.contain.text', 'Not available');
+        this.elements.overview.referenceNumbersTab.ukprnValue().should('not.be.empty');
+        return this;
+    }
+
+    public checkLaestabCorrectFormat(): this {
+        // Business rule: LAESTAB should be displayed as XXX/XXXX format
+        this.elements.overview.referenceNumbersTab.laestabValue().should(($el) => {
+            const text = $el.text().trim();
+            // Check if it matches XXX/XXXX format (3 digits slash 4 digits)
+            expect(text).to.match(/^\d{3}\/\d{4}$/, 'LAESTAB should be in XXX/XXXX format');
+        });
+        return this;
+    }
+
+    public checkUrnIsNumeric(): this {
+        // Business rule: URN should be a numeric value
+        this.elements.overview.referenceNumbersTab.urnValue().should(($el) => {
+            const text = $el.text().trim();
+            expect(text).to.match(/^\d+$/, 'URN should be numeric');
+        });
+        return this;
+    }
+
+    public checkUkprnIsNumeric(): this {
+        // Business rule: UKPRN should be a numeric value
+        this.elements.overview.referenceNumbersTab.ukprnValue().should(($el) => {
+            const text = $el.text().trim();
+            expect(text).to.match(/^\d+$/, 'UKPRN should be numeric');
+        });
+        return this;
+    }
+
+    public checkAllReferenceNumbersDataPresent(): this {
+        return this
+            .checkUrnValuePresent()
+            .checkLaestabValuePresent()
+            .checkUkprnValuePresent()
+            .checkLaestabCorrectFormat()
+            .checkUrnIsNumeric()
+            .checkUkprnIsNumeric();
+    }
+
+    public checkReferenceNumbersPageCompleteWithBusinessRules(): this {
+        return this
+            .checkSchoolReferenceNumbersHeaderPresent()
+            .checkReferenceNumbersCardItemsPresent()
+            .checkAllReferenceNumbersDataPresent();
+    }
+    // #endregion
 }
 
 const schoolsPage = new SchoolsPage();
