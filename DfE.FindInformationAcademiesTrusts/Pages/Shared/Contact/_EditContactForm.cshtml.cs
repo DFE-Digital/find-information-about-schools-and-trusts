@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
+using DfE.FindInformationAcademiesTrusts.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -17,9 +18,7 @@ public abstract class EditContactFormModel : BasePageModel
 
     [BindProperty]
     [BindRequired]
-    [EmailAddress(ErrorMessage = "Enter an email address in the correct format, like name@education.gov.uk")]
-    [RegularExpression(@"(?i)^\S*@education\.gov\.uk$",
-        ErrorMessage = "Enter a DfE email address without any spaces")]
+    [DfeEmailAddress]
     [MaxLength(320)]
     public string? Email { get; set; }
 
