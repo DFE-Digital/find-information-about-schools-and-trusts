@@ -234,22 +234,12 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
         result.Which.Message.Should().StartWith("Page type is not supported.");
     }
 
-    public static TheoryData<SchoolGovernanceServiceModel, string, string> GovernanceData => new()
+    public static TheoryData<int, int, string, string> GovernanceData => new()
     {
-        { new SchoolGovernanceServiceModel([], []), "Current governors(0)", "Historic governors(0)" },
-        {
-            new SchoolGovernanceServiceModel(GenerateGovernors(true, "Member", 2), []), "Current governors(2)",
-            "Historic governors(0)"
-        },
-        {
-            new SchoolGovernanceServiceModel([], GenerateGovernors(false, "Member", 2)), "Current governors(0)",
-            "Historic governors(2)"
-        },
-        {
-            new SchoolGovernanceServiceModel(GenerateGovernors(true, "Member", 20),
-                GenerateGovernors(false, "Member", 10)),
-            "Current governors(20)", "Historic governors(10)"
-        }
+        { 0, 0, "Current governors(0)", "Historic governors(0)" },
+        { 2, 0, "Current governors(2)", "Historic governors(0)" },
+        { 0, 2, "Current governors(0)", "Historic governors(2)" },
+        { 20, 10, "Current governors(20)", "Historic governors(10)" }
     };
 
     private static Governor[] GenerateGovernors(bool isCurrent, string role, int numberToGenerate)
@@ -268,11 +258,14 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
 
     [Theory]
     [MemberData(nameof(GovernanceData))]
-    public async Task GetSubNavLinksAsync_for_governance_should_display_number_in_title(
-        SchoolGovernanceServiceModel serviceModel, string expectedCurrent, string expectedHistoric)
+    public async Task GetSubNavLinksAsync_for_governance_should_display_number_in_title(int numberOfCurrent,
+        int numberOfHistoric, string expectedCurrent, string expectedHistoric)
     {
+        var currentGovernance = GenerateGovernors(true, "member", numberOfCurrent);
+        var historicGovernance = GenerateGovernors(false, "member", numberOfHistoric);
+
         var activePage = (GovernanceAreaModel)GetMockSchoolPage(typeof(CurrentModel));
-        activePage.SchoolGovernance = serviceModel;
+        activePage.SchoolGovernance = new SchoolGovernanceServiceModel(currentGovernance, historicGovernance);
 
         var results = await Sut.GetSubNavLinksAsync(activePage);
 
