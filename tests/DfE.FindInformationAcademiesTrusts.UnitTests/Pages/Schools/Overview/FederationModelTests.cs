@@ -86,4 +86,31 @@ public class FederationModelTests : BaseOverviewAreaModelTests<FederationModel>
         Sut.OpenedOnDate.Should().Be(null);
         Sut.Schools.Should().BeEquivalentTo(new Dictionary<string, string>());
     }
+
+    [Fact]
+    public async Task OnGetAsync_should_set_values_correctly()
+    {
+        _dummyFederationDetails = _dummyFederationDetails with
+        {
+            FederationName = "Fed Name",
+            FederationUid = "FedUid",
+            OpenedOnDate = new DateOnly(2022, 01, 20),
+            Schools = new Dictionary<string, string>
+            {
+                { "1234", "test" }
+            }
+        };
+
+        _mockSchoolOverviewFederationService.GetSchoolOverviewFederationAsync(Arg.Any<int>())
+            .Returns(_dummyFederationDetails);
+        await Sut.OnGetAsync();
+
+        Sut.FederationName.Should().Be("Fed Name");
+        Sut.FederationUid.Should().Be("FedUid");
+        Sut.OpenedOnDate.Should().Be(new DateOnly(2022, 01, 20));
+        Sut.Schools.Should().BeEquivalentTo(new Dictionary<string, string>
+        {
+            { "1234", "test" }
+        });
+    }
 }

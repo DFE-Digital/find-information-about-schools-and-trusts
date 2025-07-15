@@ -114,7 +114,7 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
             : [inSchoolNavLink];
     }
 
-    private NavLink[] BuildLinksForGovernancePage(GovernanceAreaModel activePage)
+    private static NavLink[] BuildLinksForGovernancePage(GovernanceAreaModel activePage)
     {
         var currentNavLink = GetSubNavLinkTo<CurrentModel>(GovernanceAreaModel.PageName,
             CurrentModel.NavTitle(activePage.SchoolGovernance.Current.Length),
