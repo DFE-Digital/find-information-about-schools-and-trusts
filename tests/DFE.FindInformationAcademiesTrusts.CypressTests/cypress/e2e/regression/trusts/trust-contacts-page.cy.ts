@@ -11,6 +11,8 @@ function generateNameAndEmail() {
     };
 }
 
+const incorrectEmailFormatMessage = 'Enter a DfE email address in the correct format, e.g. joe.bloggs@education.gov.uk';
+
 describe("Testing the components of the Trust contacts page", () => {
     testTrustData.forEach(({ typeOfTrust, uid }) => {
         describe(`On the contacts in DfE page for a ${typeOfTrust}`, () => {
@@ -130,74 +132,80 @@ describe("Testing the components of the Trust contacts page", () => {
             trustContactsPage
                 .editTrustRelationshipManager("Name", "email@hotmail.co.uk");
             commonPage
-                .checkErrorPopup('Enter a DfE email address without any spaces');
+                .checkErrorPopup(incorrectEmailFormatMessage);
         });
 
         it("Checks that an incorrect email entered returns the correct error message on a TRM ", () => {
             trustContactsPage
                 .editTrustRelationshipManager("Name", "email");
             commonPage
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+                .checkErrorPopup(incorrectEmailFormatMessage);
         });
 
         it("Checks that illegal characters entered returns the correct error message on a TRM ", () => {
             trustContactsPage
                 .editTrustRelationshipManager("Name", "@£$$^&");
             commonPage
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+                .checkErrorPopup(incorrectEmailFormatMessage);
         });
 
         it("Checks that whitespace entered returns the correct error message on a TRM ", () => {
             trustContactsPage
                 .editTrustRelationshipManager("Name", "a     b");
             commonPage
-                .checkErrorPopup('Enter a DfE email address without any spaces')
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
-        });
-
-        it("Checks that an email address without the prefix entered returns the correct error message on a TRM ", () => {
-            trustContactsPage
-                .editTrustRelationshipManager("Name", "@education.gov.uk");
-            commonPage
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+                .checkErrorPopup(incorrectEmailFormatMessage);
         });
 
         it("Checks that a full non DFE email entered returns the correct error message on a SFSO ", () => {
             trustContactsPage
                 .editSfsoLead("Name", "email@hotmail.co.uk");
             commonPage
-                .checkErrorPopup('Enter a DfE email address without any spaces');
+                .checkErrorPopup(incorrectEmailFormatMessage);
         });
 
         it("Checks that an incorrect email entered returns the correct error message on a SFSO ", () => {
             trustContactsPage
                 .editSfsoLead("Name", "email");
             commonPage
-                .checkErrorPopup('Enter a DfE email address without any spaces')
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+                .checkErrorPopup(incorrectEmailFormatMessage);
         });
 
         it("Checks that illegal characters entered returns the correct error message on a SFSO ", () => {
             trustContactsPage
                 .editSfsoLead("Name", "@£$$^&");
             commonPage
-                .checkErrorPopup('Enter a DfE email address without any spaces')
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+                .checkErrorPopup(incorrectEmailFormatMessage);
         });
 
         it("Checks that whitespace entered returns the correct error message on a SFSO ", () => {
             trustContactsPage
                 .editSfsoLead("Name", "a     b");
             commonPage
-                .checkErrorPopup('Enter a DfE email address without any spaces')
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+                .checkErrorPopup(incorrectEmailFormatMessage);
         });
 
-        it("Checks that an email address without the prefix entered returns the correct error message on a SFSO ", () => {
-            trustContactsPage
-                .editSfsoLead("Name", "@education.gov.uk");
-            commonPage
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+        context('Checks that an email address with an incorrect prefix formats entered returns the correct error message on a TRM', () => {
+            const incorrectPrefixes = ['@education.gov.uk', 'joe..bloggs@education.gov.uk', '.@education.gov.uk', '""@education.gov.uk'];
+            incorrectPrefixes.forEach(prefix => {
+                it(`Checks that an email address with an incorrect prefix ${prefix} entered returns the correct error message`, () => {
+                    trustContactsPage
+                        .editTrustRelationshipManager("Name", prefix);
+                    commonPage
+                        .checkErrorPopup(incorrectEmailFormatMessage);
+                });
+            });
+        });
+
+        context('Checks that an email address with an incorrect prefix formats entered returns the correct error message on a SFSO Lead', () => {
+            const incorrectPrefixes = ['@education.gov.uk', 'joe..bloggs@education.gov.uk', '.@education.gov.uk', '""@education.gov.uk'];
+            incorrectPrefixes.forEach(prefix => {
+                it(`Checks that an email address with an incorrect prefix ${prefix} entered returns the correct error message`, () => {
+                    trustContactsPage
+                        .editSfsoLead("Name", prefix);
+                    commonPage
+                        .checkErrorPopup(incorrectEmailFormatMessage);
+                });
+            });
         });
     });
 
