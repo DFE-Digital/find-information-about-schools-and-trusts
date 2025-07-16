@@ -1,6 +1,6 @@
-import homePage from '../../pages/homePage';
-import paginationPage from '../../pages/paginationPage';
-import searchPage from '../../pages/searchPage';
+import homePage from '../../../pages/homePage';
+import paginationPage from '../../../pages/paginationPage';
+import searchPage from '../../../pages/searchPage';
 
 describe('Testing the main/home page search functionality', () => {
   beforeEach(() => {

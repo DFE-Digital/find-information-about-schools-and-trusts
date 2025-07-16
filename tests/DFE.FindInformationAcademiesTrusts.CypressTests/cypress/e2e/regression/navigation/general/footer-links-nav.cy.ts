@@ -1,4 +1,4 @@
-import navigation from "../../../pages/navigation";
+import navigation from "../../../../pages/navigation";
 
 describe('Testing Navigation', () => {
 
