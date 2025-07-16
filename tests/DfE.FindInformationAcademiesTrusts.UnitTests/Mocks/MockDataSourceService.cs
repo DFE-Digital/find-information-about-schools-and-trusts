@@ -42,6 +42,7 @@ public static class MockDataSourceService
             Source.Mstr => UpdateFrequency.Daily,
             Source.Prepare => UpdateFrequency.Daily,
             Source.Mis => UpdateFrequency.Monthly,
+            Source.MisFurtherEducation => UpdateFrequency.Monthly,
             Source.ExploreEducationStatistics => UpdateFrequency.Annually,
             _ => throw new ArgumentOutOfRangeException(nameof(source), source, null)
         });
@@ -50,6 +51,8 @@ public static class MockDataSourceService
     public static DataSourceServiceModel Complete { get; } = GetDummyDataSource(Source.Complete);
     public static DataSourceServiceModel Gias { get; } = GetDummyDataSource(Source.Gias);
     public static DataSourceServiceModel Prepare { get; } = GetDummyDataSource(Source.Prepare);
+    public static DataSourceServiceModel Mis { get; } = GetDummyDataSource(Source.Mis);
+    public static DataSourceServiceModel MisFurtherEducation { get; } = GetDummyDataSource(Source.MisFurtherEducation);
 
     public static DataSourceServiceModel Fiat { get; } = new(Source.FiatDb, StaticTime, null, UpdatedBy);
 
