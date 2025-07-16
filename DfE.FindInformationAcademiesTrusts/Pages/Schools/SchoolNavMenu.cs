@@ -3,6 +3,7 @@ using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.NavMenu;
 using Microsoft.FeatureManagement;
@@ -30,6 +31,8 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
                 activePage),
             GetServiceNavLinkTo<ContactsAreaModel>(ContactsAreaModel.PageName, contactLink, activePage),
             GetServiceNavLinkTo<GovernanceAreaModel>(GovernanceAreaModel.PageName, "/Schools/Governance/Current",
+                activePage),
+            GetServiceNavLinkTo<OfstedAreaModel>(OfstedAreaModel.PageName, "/Schools/Ofsted/SingleHeadlineGrades",
                 activePage)
         ];
     }
@@ -51,6 +54,7 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
             OverviewAreaModel => BuildLinksForOverviewPage(activePage),
             ContactsAreaModel => await BuildLinksForContactsPageAsync(activePage),
             GovernanceAreaModel governanceAreaModel => BuildLinksForGovernancePage(governanceAreaModel),
+            OfstedAreaModel => BuildLinksForOfstedPage(activePage),
             _ => throw new ArgumentOutOfRangeException(nameof(activePage), activePage, "Page type is not supported.")
         };
     }
@@ -127,6 +131,15 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
             "historic-governors-subnav");
 
         return [currentNavLink, historicNavLink];
+    }
+
+    private static NavLink[] BuildLinksForOfstedPage(ISchoolAreaModel activePage)
+    {
+        return
+        [
+            GetSubNavLinkTo<SingleHeadlineGradesModel>(OfstedAreaModel.PageName, SingleHeadlineGradesModel.SubPageName,
+                "/Schools/Ofsted/SingleHeadlineGrades", activePage, "ofsted-single-headline-grades-subnav")
+        ];
     }
 
     private static NavLink GetSubNavLinkTo<T>(string serviceName, string linkDisplayText, string aspPage,
