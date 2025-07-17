@@ -22,7 +22,7 @@ describe('Pagination Tests', () => {
         navigation
             .checkCurrentURLIsCorrect('pagenumber=2');
         commonPage
-            .checkThatBrowserTitleMatches('Search (page 2 of 72) - tru - Find information about academies and trusts');
+            .checkThatBrowserTitleMatches('Search (page 2 of 72) - tru - Find information about schools and trusts');
 
         paginationPage
             .clickPageNumber(3);
@@ -30,7 +30,7 @@ describe('Pagination Tests', () => {
         navigation
             .checkCurrentURLIsCorrect('pagenumber=3');
         commonPage
-            .checkThatBrowserTitleMatches('Search (page 3 of 72) - tru - Find information about academies and trusts');
+            .checkThatBrowserTitleMatches('Search (page 3 of 72) - tru - Find information about schools and trusts');
 
         paginationPage
             .clickPageNumber(72);
@@ -38,7 +38,7 @@ describe('Pagination Tests', () => {
         navigation
             .checkCurrentURLIsCorrect('pagenumber=72');
         commonPage
-            .checkThatBrowserTitleMatches('Search (page 72 of 72) - tru - Find information about academies and trusts');
+            .checkThatBrowserTitleMatches('Search (page 72 of 72) - tru - Find information about schools and trusts');
     });
 
     it('Should navigate to the next page on next button click', () => {
@@ -114,7 +114,7 @@ describe('Pagination Tests', () => {
             .checkSingleResultOnlyHasOnePage(1);
 
         commonPage
-            .checkThatBrowserTitleMatches('Search - henley-in-arden - Find information about academies and trusts');
+            .checkThatBrowserTitleMatches('Search - henley-in-arden - Find information about schools and trusts');
     });
 
     it('Should navigate to the previous page on previous button click', () => {

@@ -54,7 +54,7 @@ export const generateComprehensiveAccessibilityReport = (allResults: AuditPageRe
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comprehensive Accessibility Audit Report - Find Information about Academies and Trusts</title>
+    <title>Comprehensive Accessibility Audit Report - Find Information about Schools and Trusts</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; background: #f5f5f5; line-height: 1.6; }
         .container { max-width: 1400px; margin: 0 auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
@@ -127,7 +127,7 @@ export const generateComprehensiveAccessibilityReport = (allResults: AuditPageRe
         <div class="header">
             <h1>🛡️ Comprehensive Accessibility Audit Report</h1>
             <div class="meta">
-                <strong>Application:</strong> Find Information about Academies and Trusts<br>
+                <strong>Application:</strong> Find Information about Schools and Trusts<br>
                 <strong>Generated:</strong> ${timestamp}<br>
                 <strong>Pages Audited:</strong> ${overallStats.totalPages}<br>
                 <strong>Total Rules Evaluated:</strong> ${overallStats.totalPasses + overallStats.totalViolations}
@@ -136,7 +136,7 @@ export const generateComprehensiveAccessibilityReport = (allResults: AuditPageRe
 
         <div class="executive-summary">
             <h2>📊 Executive Summary</h2>
-            <p>This comprehensive audit evaluated <strong>${overallStats.totalPages} key pages</strong> across the Find Information about Academies and Trusts application, testing against <strong>all applicable WCAG 2.1 AA accessibility standards</strong>.</p>
+            <p>This comprehensive audit evaluated <strong>${overallStats.totalPages} key pages</strong> across the Find Information about Schools and Trusts application, testing against <strong>all applicable WCAG 2.1 AA accessibility standards</strong>.</p>
             
             <div class="stats-grid">
                 <div class="stat-card total">

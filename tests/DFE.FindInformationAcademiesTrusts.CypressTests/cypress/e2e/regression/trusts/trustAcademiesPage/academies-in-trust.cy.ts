@@ -11,7 +11,7 @@ describe("Testing the components of the Academies page", () => {
 
         it("Checks the browser title is correct", () => {
             commonPage
-                .checkThatBrowserTitleForTrustPageMatches('Details - In this trust - Academies - {trustName} - Find information about academies and trusts');
+                .checkThatBrowserTitleForTrustPageMatches('Details - In this trust - Academies - {trustName} - Find information about schools and trusts');
         });
 
         it("Checks the correct details page headers are present", () => {
@@ -68,7 +68,7 @@ describe("Testing the components of the Academies page", () => {
 
         it("Checks the browser title is correct", () => {
             commonPage
-                .checkThatBrowserTitleForTrustPageMatches('Pupil numbers - In this trust - Academies - {trustName} - Find information about academies and trusts');
+                .checkThatBrowserTitleForTrustPageMatches('Pupil numbers - In this trust - Academies - {trustName} - Find information about schools and trusts');
         });
 
         it("Checks the correct Pupil numbers page headers are present", () => {
@@ -113,7 +113,7 @@ describe("Testing the components of the Academies page", () => {
 
         it("Checks the browser title is correct", () => {
             commonPage
-                .checkThatBrowserTitleForTrustPageMatches('Free school meals - In this trust - Academies - {trustName} - Find information about academies and trusts');
+                .checkThatBrowserTitleForTrustPageMatches('Free school meals - In this trust - Academies - {trustName} - Find information about schools and trusts');
         });
 
         it("Checks the correct Free school meals page headers are present", () => {

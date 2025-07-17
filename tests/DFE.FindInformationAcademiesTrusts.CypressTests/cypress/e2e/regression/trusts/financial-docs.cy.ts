@@ -12,7 +12,7 @@ testFinanceData.forEach(({ uid }) => {
 
             it("Checks the browser title is correct", () => {
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Financial statements - Financial documents - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Financial statements - Financial documents - {trustName} - Find information about schools and trusts');
             });
 
             it("Checks the Finance statements page subpage header is present", () => {
@@ -41,7 +41,7 @@ testFinanceData.forEach(({ uid }) => {
 
             it("Checks the browser title is correct", () => {
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Management letters - Financial documents - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Management letters - Financial documents - {trustName} - Find information about schools and trusts');
             });
 
             it("Checks the Management letters page subpage header is present", () => {
@@ -70,7 +70,7 @@ testFinanceData.forEach(({ uid }) => {
 
             it("Checks the browser title is correct", () => {
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Internal scrutiny reports - Financial documents - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Internal scrutiny reports - Financial documents - {trustName} - Find information about schools and trusts');
             });
 
             it("Checks the Internal scrutiny reports page subpage header is present", () => {
@@ -99,7 +99,7 @@ testFinanceData.forEach(({ uid }) => {
 
             it("Checks the browser title is correct", () => {
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Self-assessment checklists - Financial documents - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Self-assessment checklists - Financial documents - {trustName} - Find information about schools and trusts');
             });
 
             it("Checks the Self assessment checklists page subpage header is present", () => {
