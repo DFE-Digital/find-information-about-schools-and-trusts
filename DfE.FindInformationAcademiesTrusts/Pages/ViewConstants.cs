@@ -6,13 +6,13 @@ namespace DfE.FindInformationAcademiesTrusts.Pages;
 [ExcludeFromCodeCoverage]
 public static class ViewConstants
 {
-    public const string ServiceName = "Find information about academies and trusts";
+    public const string ServiceName = "Find information about schools and trusts";
 
     public const string ReportAProblemMailToLink =
-        "mailto:regionalservices.rg@education.gov.uk?subject=Report a problem with Find information about academies and trusts";
+        "mailto:regionalservices.rg@education.gov.uk?subject=Report a problem with Find information about schools and trusts";
 
     public const string ReportNotFoundMailtoLink =
-        "mailto:regionalservices.rg@education.gov.uk?subject=Page not found – Find information about academies and trusts (FIAT)";
+        "mailto:regionalservices.rg@education.gov.uk?subject=Page not found – Find information about schools and trusts (FAST)";
 
     public const string GetHelpFormLink =
         "https://forms.office.com/Pages/ResponsePage.aspx?id=yXfS-grGoU2187O4s0qC-X7F89QcWu5CjlJXwF0TVktUMTFEUVRCVVg4WlMyS1AzUEJSUDAySlhQTCQlQCN0PWcu";
