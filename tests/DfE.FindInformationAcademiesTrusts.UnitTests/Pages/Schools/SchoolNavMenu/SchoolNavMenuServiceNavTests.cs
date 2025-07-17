@@ -1,6 +1,7 @@
 using DfE.FindInformationAcademiesTrusts.Configuration;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.SchoolNavMenu;
@@ -73,6 +74,12 @@ public class SchoolNavMenuServiceNavTests : SchoolNavMenuTestsBase
                 l.LinkDisplayText.Should().Be("Contacts");
                 l.AspPage.Should().Be("/Schools/Contacts/InSchool");
                 l.TestId.Should().Be("contacts-nav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Governance");
+                l.AspPage.Should().Be("/Schools/Governance/Current");
+                l.TestId.Should().Be("governance-nav");
             }
         );
     }
@@ -98,6 +105,12 @@ public class SchoolNavMenuServiceNavTests : SchoolNavMenuTestsBase
                 l.LinkDisplayText.Should().Be("Contacts");
                 l.AspPage.Should().Be("/Schools/Contacts/InDfe");
                 l.TestId.Should().Be("contacts-nav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Governance");
+                l.AspPage.Should().Be("/Schools/Governance/Current");
+                l.TestId.Should().Be("governance-nav");
             }
         );
     }
@@ -146,6 +159,7 @@ public class SchoolNavMenuServiceNavTests : SchoolNavMenuTestsBase
             nameof(SenModel) => "/Schools/Overview/Details",
             nameof(FederationModel) => "/Schools/Overview/Details",
             nameof(ReferenceNumbersModel) => "/Schools/Overview/Details",
+            nameof(CurrentModel) => "/Schools/Governance/Current",
             _ => throw new ArgumentException("Couldn't get expected service nav asp link for given page type",
                 nameof(pageType))
         };

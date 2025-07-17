@@ -1,6 +1,7 @@
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.FiatDb.Repositories;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 using Microsoft.Extensions.Caching.Memory;
@@ -103,7 +104,8 @@ public class TrustService(
     public async Task<InternalContactUpdatedServiceModel> UpdateContactAsync(int uid, string? name, string? email,
         TrustContactRole role)
     {
-        var (emailChanged, nameChanged) = await contactRepository.UpdateTrustInternalContactsAsync(uid, name, email, role);
+        var (emailChanged, nameChanged) =
+            await contactRepository.UpdateTrustInternalContactsAsync(uid, name, email, role);
 
         return new InternalContactUpdatedServiceModel(emailChanged, nameChanged);
     }
@@ -151,6 +153,7 @@ public class TrustService(
 
         return overviewModel;
     }
+
     public decimal GetGovernanceTurnoverRate(TrustGovernance trustGovernance)
     {
         var today = dateTimeProvider.Today;
@@ -166,10 +169,10 @@ public class TrustService(
         List<Governor> eligibleGovernorsForTurnoverCalculation = GetGovernorsExcludingLeadership(trustGovernance);
 
         // Total number of current governor positions
-        int totalCurrentGovernors = currentGovernors.Count;
+        var totalCurrentGovernors = currentGovernors.Count;
 
         // Appointments in the past 12 months
-        int appointmentsInPast12Months = CountEventsWithinDateRange(
+        var appointmentsInPast12Months = CountEventsWithinDateRange(
             eligibleGovernorsForTurnoverCalculation,
             g => g.DateOfAppointment,
             past12MonthsStart,
@@ -177,14 +180,14 @@ public class TrustService(
         );
 
         // Resignations in the past 12 months
-        int resignationsInPast12Months = CountEventsWithinDateRange(
+        var resignationsInPast12Months = CountEventsWithinDateRange(
             eligibleGovernorsForTurnoverCalculation,
             g => g.DateOfTermEnd,
             past12MonthsStart,
             today
         );
 
-        int totalEvents = appointmentsInPast12Months + resignationsInPast12Months;
+        var totalEvents = appointmentsInPast12Months + resignationsInPast12Months;
         return CalculateTurnoverRate(totalCurrentGovernors, totalEvents);
     }
 
@@ -199,20 +202,21 @@ public class TrustService(
     public static List<Governor> GetGovernorsExcludingLeadership(TrustGovernance trustGovernance)
     {
         return trustGovernance.CurrentTrustees
-                    .Concat(trustGovernance.CurrentMembers)
-                    .Concat(trustGovernance.HistoricMembers)
-                    .Where(g => !g.HasRoleLeadership)
-                    .ToList();
+            .Concat(trustGovernance.CurrentMembers)
+            .Concat(trustGovernance.HistoricMembers)
+            .Where(g => !g.HasRoleLeadership)
+            .ToList();
     }
 
     public static List<Governor> GetCurrentGovernors(TrustGovernance trustGovernance)
     {
         return trustGovernance.CurrentTrustees
-                    .Concat(trustGovernance.CurrentMembers)
-                    .ToList();
+            .Concat(trustGovernance.CurrentMembers)
+            .ToList();
     }
 
-    public static int CountEventsWithinDateRange<T>(IEnumerable<T> items, Func<T, DateTime?> dateSelector, DateTime rangeStart, DateTime rangeEnd)
+    public static int CountEventsWithinDateRange<T>(IEnumerable<T> items, Func<T, DateTime?> dateSelector,
+        DateTime rangeStart, DateTime rangeEnd)
     {
         return items.Count(item => dateSelector(item) != null &&
                                    dateSelector(item) >= rangeStart &&

@@ -1,6 +1,7 @@
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Repositories;
@@ -10,8 +11,7 @@ public class TrustRepositoryTests
     private readonly TrustRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
 
-    private readonly IStringFormattingUtilities _mockStringFormattingUtilities =
-        Substitute.For<IStringFormattingUtilities>();
+    private readonly IStringFormattingUtilities stringFormattingUtilities = new StringFormattingUtilities();
 
     private readonly DateTime _lastYear = DateTime.Today.AddYears(-1);
     private readonly DateTime _nextYear = DateTime.Today.AddYears(1);
@@ -22,7 +22,7 @@ public class TrustRepositoryTests
 
     public TrustRepositoryTests()
     {
-        _sut = new TrustRepository(_mockAcademiesDbContext.Object, _mockStringFormattingUtilities);
+        _sut = new TrustRepository(_mockAcademiesDbContext.Object, stringFormattingUtilities);
     }
 
     [Theory]
@@ -86,7 +86,7 @@ public class TrustRepositoryTests
         const string locality = "a locality";
         const string town = "a town";
         const string postcode = "a postcode";
-        const string expectedAddress = "an address";
+        const string expectedAddress = $"{street}, {locality}, {town}, {postcode}";
 
         _mockAcademiesDbContext.GiasGroups.Add(new GiasGroup
         {
@@ -100,8 +100,6 @@ public class TrustRepositoryTests
             GroupStatusCode = "OPEN",
             GroupName = "SOME TRUST"
         });
-
-        _mockStringFormattingUtilities.BuildAddressString(street, locality, town, postcode).Returns(expectedAddress);
 
         var result = await _sut.GetTrustOverviewAsync("2806");
 
