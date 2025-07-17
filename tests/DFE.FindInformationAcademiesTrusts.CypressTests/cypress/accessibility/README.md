@@ -1,6 +1,6 @@
 # 🛡️ Accessibility Testing & Audit Reports
 
-This directory contains accessibility testing reports and audit documentation for the Find Information about Academies and Trusts application.
+This directory contains accessibility testing reports and audit documentation for the Find Information about Schools and Trusts application.
 
 ## 📊 **Two Types of Accessibility Testing**
 
