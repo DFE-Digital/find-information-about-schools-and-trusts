@@ -10,6 +10,8 @@ const TEST_ACADEMY_URN = 137083; // Abbey Grange Church of England Academy
 const getInTheSchoolContactsUrl = (urn: number) => `/schools/contacts/in-the-school?urn=${urn}`;
 
 // Helper to build the URL for the "in DfE" contacts page
+
+const incorrectEmailFormatMessage = 'Enter a DfE email address in the correct format, e.g. joe.bloggs@education.gov.uk';
 const getInDfeContactsUrl = (urn: number) => `/schools/contacts/in-dfe?urn=${urn}`;
 
 describe('Testing the components of the School "in this school/academy" contacts page', () => {
@@ -194,39 +196,41 @@ describe('Testing the school contact edit functionality', () => {
             schoolsPage
                 .editRegionsGroupLaLead("Name", "email@hotmail.co.uk");
             commonPage
-                .checkErrorPopup('Enter a DfE email address without any spaces');
+                .checkErrorPopup(incorrectEmailFormatMessage);
         });
 
         it('Checks that an incorrect email entered returns the correct error message', () => {
             schoolsPage
                 .editRegionsGroupLaLead("Name", "email");
             commonPage
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+                .checkErrorPopup(incorrectEmailFormatMessage);
         });
 
         it('Checks that illegal characters entered returns the correct error message', () => {
             schoolsPage
                 .editRegionsGroupLaLead("Name", "@£$$^&");
             commonPage
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+                .checkErrorPopup(incorrectEmailFormatMessage);
         });
 
         it('Checks that whitespace entered returns the correct error message', () => {
             schoolsPage
                 .editRegionsGroupLaLead("Name", "a     b");
             commonPage
-                .checkErrorPopup('Enter a DfE email address without any spaces')
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+                .checkErrorPopup(incorrectEmailFormatMessage);
         });
 
-        it('Checks that an email address without the prefix entered returns the correct error message', () => {
-            schoolsPage
-                .editRegionsGroupLaLead("Name", "@education.gov.uk");
-            commonPage
-                .checkErrorPopup('Enter an email address in the correct format, like name@education.gov.uk');
+        context('Checks that an email address with an incorrect prefix formats entered returns the correct error message', () => {
+            const incorrectPrefixes = ['@education.gov.uk', 'joe..bloggs@education.gov.uk', '.@education.gov.uk', '""@education.gov.uk'];
+            incorrectPrefixes.forEach(prefix => {
+                it(`Checks that an email address with an incorrect prefix ${prefix} entered returns the correct error message`, () => {
+                    schoolsPage
+                        .editRegionsGroupLaLead("Name", prefix);
+                    commonPage
+                        .checkErrorPopup(incorrectEmailFormatMessage);
+                });
+            });
         });
-
-
     });
 
     describe('Testing that LA maintained schools show edit links but academies do not', () => {
