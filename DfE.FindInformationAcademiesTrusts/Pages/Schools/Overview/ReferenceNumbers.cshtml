@@ -16,7 +16,7 @@
         <dt class="govuk-summary-list__key govuk-!-width-two-thirds" data-testid="reference-numbers-urn-header">
           URN (Unique Reference Number)
         </dt>
-        <dd class="govuk-summary-list__value">
+        <dd class="govuk-summary-list__value" data-testid="reference-numbers-urn-value">
           @Model.Urn
         </dd>
       </div>
@@ -25,7 +25,7 @@
         <dt class="govuk-summary-list__key govuk-!-width-two-thirds" data-testid="reference-numbers-laestab-header">
           LAESTAB (local authority establishment number)
         </dt>
-        <dd class="govuk-summary-list__value">
+        <dd class="govuk-summary-list__value" data-testid="reference-numbers-laestab-value">
           @Model.Laestab
         </dd>
       </div>
@@ -34,12 +34,13 @@
         <dt class="govuk-summary-list__key govuk-!-width-two-thirds" data-testid="reference-numbers-ukprn-header">
           UKPRN (UK provider reference number)
         </dt>
-        <dd class="govuk-summary-list__value">
+        <dd class="govuk-summary-list__value" data-testid="reference-numbers-ukprn-value">
           @Model.Ukprn
         </dd>
       </div>
 
-      <hr class="govuk-section-break govuk-section-break--m">
     </dl>
+
+    <hr class="govuk-section-break govuk-section-break--m">
   </div>
 </div>

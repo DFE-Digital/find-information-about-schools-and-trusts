@@ -34,24 +34,43 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - group: ui-trusts
+          - group: regression-search-and-general
             browser: "edge"
             spec: |
-              cypress/e2e/regression/trusts/**/*.cy.ts
-          - group: ui-schools-and-general
+              cypress/e2e/regression/search/**/*.cy.ts
+              cypress/e2e/regression/*.cy.ts
+              cypress/e2e/regression/navigation/general/*.cy.ts
+          - group: regression-navigation-and-school-routing
+            browser: "edge"
+            spec: |
+              cypress/e2e/regression/navigation/trust/trust-navigation-core.cy.ts
+              cypress/e2e/regression/navigation/school/schools-navigation.cy.ts
+              cypress/e2e/regression/navigation/school/school-routing.cy.ts
+          - group: regression-trusts-contacts-financial
+            browser: "edge"
+            spec: |
+              cypress/e2e/regression/trusts/trust-contacts-page.cy.ts
+              cypress/e2e/regression/trusts/financial-docs.cy.ts
+          - group: regression-trusts-governance-ofsted-routing
+            browser: "edge"
+            spec: |
+              cypress/e2e/regression/trusts/governance-page.cy.ts
+              cypress/e2e/regression/trusts/ofsted-page.cy.ts
+              cypress/e2e/regression/navigation/trust/trust-routing.cy.ts
+          - group: regression-trusts-academies-overview
+            browser: "edge"
+            spec: |
+              cypress/e2e/regression/trusts/trustAcademiesPage/*.cy.ts
+              cypress/e2e/regression/trusts/overview-page.cy.ts
+              cypress/e2e/regression/trusts/data-download-trust.cy.ts
+          - group: regression-schools
             browser: "edge"
             spec: |
               cypress/e2e/regression/schools/**/*.cy.ts
-              cypress/e2e/regression/navigation/**/*.cy.ts
-              cypress/e2e/regression/*.cy.ts
-          - group: a11y-comprehensive
+          - group: accessibility-all
             browser: "edge"
             spec: |
-              cypress/e2e/accessibility/comprehensive-accessibility-audit.cy.ts
-          - group: a11y-components
-            browser: "edge"
-            spec: |
-              cypress/e2e/accessibility/components/**/*.cy.ts
+              cypress/e2e/accessibility/**/*.cy.ts
     container:
       image: cypress/browsers:22.14.0@sha256:5fedacf2c6b1fab4f2d2d24a1cb2054af6d0103e0b163cd5064e523f45ca1a88
     defaults:

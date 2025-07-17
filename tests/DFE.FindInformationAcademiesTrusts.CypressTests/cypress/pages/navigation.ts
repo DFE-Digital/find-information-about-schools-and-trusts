@@ -293,14 +293,15 @@ class Navigation {
 
     public checkAllSchoolOverviewSubNavItemsPresent(): this {
         this.elements.schoolsOverviewSubNav.schoolsDetailsButton().should('be.visible');
-        this.elements.schoolsOverviewSubNav.schoolsSENButton().should('be.visible');
         this.elements.schoolsOverviewSubNav.schoolsFederationButton().should('be.visible');
         this.elements.schoolsOverviewSubNav.schoolsReferenceNumbersButton().should('be.visible');
+        this.elements.schoolsOverviewSubNav.schoolsSENButton().should('be.visible');
         return this;
     }
 
     public checkAllAcademyOverviewSubNavItemsPresent(): this {
         this.elements.schoolsOverviewSubNav.schoolsDetailsButton().should('be.visible');
+        this.elements.schoolsOverviewSubNav.schoolsReferenceNumbersButton().should('be.visible');
         this.elements.schoolsOverviewSubNav.schoolsSENButton().should('be.visible');
         return this;
     }
@@ -353,6 +354,11 @@ class Navigation {
 
     public clickSchoolsReferenceNumberButton(): this {
         this.elements.schoolsOverviewSubNav.schoolsReferenceNumbersButton().click();
+        return this;
+    }
+
+    public checkSchoolsReferenceNumbersButtonIsHighlighted(): this {
+        this.elements.schoolsOverviewSubNav.schoolsReferenceNumbersButton().should('have.attr', 'aria-current', 'page');
         return this;
     }
 

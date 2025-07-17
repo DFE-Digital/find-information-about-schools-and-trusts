@@ -1,8 +1,7 @@
-import searchPage from "../../pages/searchPage";
-import homePage from "../../pages/homePage";
-import { testSchoolData } from "../../support/test-data-store";
-import navigation from "../../pages/navigation";
-import commonPage from "../../pages/commonPage";
+import searchPage from "../../../pages/searchPage";
+import homePage from "../../../pages/homePage";
+import { testSchoolData } from "../../../support/test-data-store";
+import commonPage from "../../../pages/commonPage";
 
 describe("Testing the components of the search results page", () => {
 

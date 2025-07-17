@@ -1,5 +1,5 @@
-import searchPage from '../../pages/searchPage';
-import headerPage from '../../pages/headerPage';
+import searchPage from '../../../pages/searchPage';
+import headerPage from '../../../pages/headerPage';
 
 describe(`Testing the components of the header search`, () => {
 

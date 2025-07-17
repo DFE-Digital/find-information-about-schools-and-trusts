@@ -74,6 +74,7 @@ export class AuditPageDefinitions {
 
         // School Overview subpages
         this.auditHelper.auditPage('School Overview - Details', 'Schools', `/schools/overview/details?urn=${schoolUrn}`);
+        this.auditHelper.auditPage('School Overview - Reference numbers', 'Schools', `/schools/overview/referencenumbers?urn=${schoolUrn}`);
         this.auditHelper.auditPage('School Overview - SEN Provision', 'Schools', `/schools/overview/sen?urn=${senSchoolUrn}`);
         this.auditHelper.auditPage('School Overview - Federation Details', 'Schools', `/schools/overview/federation?urn=${federationSchoolUrn}`);
 

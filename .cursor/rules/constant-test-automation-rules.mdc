@@ -25,5 +25,5 @@ This rule is used to guide Cursor's generation of E2E test automation code for C
 - Avoid hardcoded test data. Use factories, fixtures, or test helpers where possible.
 - Always write 'better' code.
 - Be very detailed with summarization and do not miss out things that are important.
-- Important: try to fix things at the cause, not the symptom. 
-
+- Important: try to fix things at the cause, not the symptom.
+- Important: Check for existing functionality before adding new code. What can be reused? Do we have existing tests for this already in other files?
