@@ -20,7 +20,10 @@ describe("Testing the components of the Trust contacts page", () => {
                 cy.visit(`/trusts/contacts/in-dfe?uid=${uid}`);
             });
 
-            checkExpectedBrowserTitle('In DfE - Contacts - {trustName} - Find information about schools and trusts');
+            it("Checks the browser title is correct", () => {
+                commonPage
+                    .checkThatBrowserTitleForTrustPageMatches('In DfE - Contacts - {trustName} - Find information about schools and trusts');
+            });
 
             it("Checks the breadcrumb shows the correct page name", () => {
                 navigation
@@ -78,8 +81,11 @@ describe("Testing the components of the Trust contacts page", () => {
             beforeEach(() => {
                 cy.visit(`/trusts/contacts/edittrustrelationshipmanager?uid=${uid}`);
             });
-            checkExpectedBrowserTitle('Edit Trust relationship manager details - Contacts - {trustName} - Find information about schools and trusts');
 
+            it("Checks the browser title is correct", () => {
+                commonPage
+                    .checkThatBrowserTitleForTrustPageMatches('Edit Trust relationship manager details - Contacts - {trustName} - Find information about schools and trusts');
+            });
         });
 
         describe(`On the edit SFSO lead contact details page for a ${typeOfTrust}`, () => {
@@ -87,7 +93,10 @@ describe("Testing the components of the Trust contacts page", () => {
                 cy.visit(`/trusts/contacts/editsfsolead?uid=${uid}`);
             });
 
-            checkExpectedBrowserTitle('Edit SFSO (Schools financial support and oversight) lead details - Contacts - {trustName} - Find information about schools and trusts');
+            it("Checks the browser title is correct", () => {
+                commonPage
+                    .checkThatBrowserTitleForTrustPageMatches('Edit SFSO (Schools financial support and oversight) lead details - Contacts - {trustName} - Find information about schools and trusts');
+            });
         });
 
         describe(`On the contacts in the trust page for a ${typeOfTrust}`, () => {
@@ -95,8 +104,11 @@ describe("Testing the components of the Trust contacts page", () => {
                 cy.visit(`/trusts/contacts/in-the-trust?uid=${uid}`);
             });
 
-            checkExpectedBrowserTitle('In this trust - Contacts - {trustName} - Find information about schools and trusts');
-           
+            it("Checks the browser title is correct", () => {
+                commonPage
+                    .checkThatBrowserTitleForTrustPageMatches('In this trust - Contacts - {trustName} - Find information about schools and trusts');
+            });
+
             it("Checks the breadcrumb shows the correct page name", () => {
                 navigation
                     .checkPageNameBreadcrumbPresent("Contacts");
@@ -252,10 +264,4 @@ describe("Testing the components of the Trust contacts page", () => {
         });
     });
 
-    function checkExpectedBrowserTitle(expectedBrowserTitle: string) {
-            it("Checks the browser title is correct", () => {
-                commonPage
-                    .checkThatBrowserTitleForTrustPageMatches(expectedBrowserTitle);
-            });
-        }
 });
