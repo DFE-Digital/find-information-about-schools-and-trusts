@@ -14,8 +14,8 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseTrustPageTests<T>, ITest
 {
     protected readonly IAcademyService MockAcademyService = Substitute.For<IAcademyService>();
 
-    protected readonly IOfstedDataExportService
-        MockOfstedDataExportService = Substitute.For<IOfstedDataExportService>();
+    protected readonly IOfstedTrustDataExportService
+        MockOfstedTrustDataExportService = Substitute.For<IOfstedTrustDataExportService>();
 
     protected readonly IDateTimeProvider MockDateTimeProvider = Substitute.For<IDateTimeProvider>();
 
@@ -80,7 +80,7 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseTrustPageTests<T>, ITest
     {
         // Arrange
         byte[] expectedBytes = [1, 2, 3];
-        MockOfstedDataExportService.BuildAsync(TrustUid).Returns(expectedBytes);
+        MockOfstedTrustDataExportService.BuildAsync(TrustUid).Returns(expectedBytes);
 
         // Act
         var result = await Sut.OnGetExportAsync(TrustUid);
@@ -115,7 +115,7 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseTrustPageTests<T>, ITest
         var expectedBytes = new byte[] { 1, 2, 3 };
 
         MockTrustService.GetTrustSummaryAsync(uid)!.Returns(DummyTrustSummary with { Name = "Sample/Trust:Name?" });
-        MockOfstedDataExportService.BuildAsync(uid).Returns(expectedBytes);
+        MockOfstedTrustDataExportService.BuildAsync(uid).Returns(expectedBytes);
 
         // Act
         var result = await Sut.OnGetExportAsync(uid);
