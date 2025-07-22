@@ -63,6 +63,7 @@ public class DataSourceListEntryTest
     [InlineData(Source.Mstr, "Get information about schools (internal use only, do not share outside of DfE)")]
     [InlineData(Source.Cdm, "RSD (Regional Services Division) service support team")]
     [InlineData(Source.Mis, "State-funded school inspections and outcomes: management information")]
+    [InlineData(Source.MisFurtherEducation, "Further education and skills inspections and outcomes: management information")]
     [InlineData(Source.ExploreEducationStatistics, "Explore education statistics")]
     [InlineData(Source.FiatDb, "Find information about schools and trusts")]
     public void Name_should_return_the_correct_string_for_each_source(Source source, string expected)

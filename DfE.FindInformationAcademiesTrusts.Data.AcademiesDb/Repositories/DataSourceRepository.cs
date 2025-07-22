@@ -18,7 +18,7 @@ public class DataSourceRepository(
             Source.Gias => await GetDataSourceFromApplicationEvents("GIAS_Daily", Source.Gias, UpdateFrequency.Daily),
             Source.Mstr => await GetDataSourceFromApplicationEvents("MSTR_Daily", Source.Mstr, UpdateFrequency.Daily),
             Source.Cdm => await GetDataSourceFromApplicationEvents("CDM_Daily", Source.Cdm, UpdateFrequency.Daily),
-            Source.Mis => await GetMisEstablishmentsUpdatedAsync(),
+            Source.Mis or Source.MisFurtherEducation => await GetMisEstablishmentsUpdatedAsync(source),
             Source.Prepare
             or Source.Complete
             or Source.ManageFreeSchoolProjects => await GetDataSourceFromMstr(source),
@@ -26,17 +26,17 @@ public class DataSourceRepository(
         };
     }
 
-    public async Task<DataSource> GetMisEstablishmentsUpdatedAsync()
+    private async Task<DataSource> GetMisEstablishmentsUpdatedAsync(Source source)
     {
         var lastEntry = await academiesDbContext.ApplicationSettings
             .FirstOrDefaultAsync(e => e.Key == "ManagementInformationSchoolTableData CSV Filename");
         if (lastEntry?.Modified is null)
         {
             logger.LogError("Unable to find when ManagementInformationSchoolTableData was last modified");
-            return new DataSource(Source.Mis, null, UpdateFrequency.Monthly);
+            return new DataSource(source, null, UpdateFrequency.Monthly);
         }
 
-        return new DataSource(Source.Mis, lastEntry.Modified.Value, UpdateFrequency.Monthly);
+        return new DataSource(source, lastEntry.Modified.Value, UpdateFrequency.Monthly);
     }
 
     /// <summary>
