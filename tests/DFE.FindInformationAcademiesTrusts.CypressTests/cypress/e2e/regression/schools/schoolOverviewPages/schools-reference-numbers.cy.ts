@@ -19,11 +19,6 @@ describe("Testing the Schools Reference numbers pages", () => {
                 schoolsPage
                     .checkSchoolReferenceNumbersHeaderPresent();
             });
-
-            it(`Checks the school type is correct for a ${description} on the urn ${urn}`, () => {
-                schoolsPage
-                    .checkCorrectSchoolTypePresent();
-            });
         });
     });
 

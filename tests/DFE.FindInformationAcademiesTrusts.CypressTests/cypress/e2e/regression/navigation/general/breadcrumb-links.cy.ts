@@ -1,35 +1,33 @@
 import navigation from "../../../../pages/navigation";
-import { testTrustData } from "../../../../support/test-data-store";
+import { testTrustData, testBreadcrumbSchoolData, TestDataStore } from "../../../../support/test-data-store";
 
-describe('Testing Navigation', () => {
+describe('Testing breadcrumb functionality across FAST', () => {
+    describe("Testing the general page breadcrumb links and their relevant functionality", () => {
+        ['/search', '/accessibility', '/cookies', '/privacy', '/notfound'].forEach((url) => {
+            it(`Should have Home breadcrumb only on ${url}`, () => {
+                cy.visit(url, { failOnStatusCode: false });
 
-    describe("Testing the breadcrumb-links", () => {
-
-        describe("Testing the general page breadcrumb links and their relevant functionality", () => {
-
-            ['/search', '/accessibility', '/cookies', '/privacy', '/notfound'].forEach((url) => {
-                it(`Should have Home breadcrumb only on ${url}`, () => {
-                    cy.visit(url, { failOnStatusCode: false });
-
-                    navigation
-                        .checkCurrentURLIsCorrect(url)
-                        .checkHomeBreadcrumbPresent()
-                        .clickHomeBreadcrumbButton()
-                        .checkBrowserPageTitleContains('Home page');
-                });
-            });
-
-            ['/', '/error'].forEach((url) => {
-                it(`Should have no breadcrumb on ${url}`, () => {
-                    cy.visit(url);
-
-                    navigation
-                        .checkCurrentURLIsCorrect(url)
-                        .checkAccessibilityStatementLinkPresent() // ensure page content has loaded - all pages have an a11y statement link
-                        .checkBreadcrumbNotPresent();
-                });
+                navigation
+                    .checkCurrentURLIsCorrect(url)
+                    .checkHomeBreadcrumbPresent()
+                    .clickHomeBreadcrumbButton()
+                    .checkBrowserPageTitleContains('Home page');
             });
         });
+
+        ['/', '/error'].forEach((url) => {
+            it(`Should have no breadcrumb on ${url}`, () => {
+                cy.visit(url);
+
+                navigation
+                    .checkCurrentURLIsCorrect(url)
+                    .checkAccessibilityStatementLinkPresent() // ensure page content has loaded - all pages have an a11y statement link
+                    .checkBreadcrumbNotPresent();
+            });
+        });
+    });
+
+    describe("Testing the breadcrumb-links for Trust pages", () => {
 
         describe("Testing the breadcrumb links on the trust academy details page", () => {
 
@@ -51,41 +49,36 @@ describe('Testing Navigation', () => {
                         cy.visit(url);
                         navigation
                             .checkPageNameBreadcrumbPresent("Academies");
-                        //revist adding this later need to rethink how the foreach handles differing uid pulls for the differnt pages .checkTrustNameBreadcrumbPresent('Ashton West End Primary Academy');
                     });
                 });
             });
         });
     });
 
-    describe("Testing the breadcrumb links on the schools overview pages for a LA Maintained School", () => {
-        const testBreadcrumbSchool = {
-            urn: 107188,
-            type: "Community school"
-        };
+    describe("Testing breadcrumb links for School pages", () => {
+        const schoolBreadcrumbTestData = [
+            {
+                ...testBreadcrumbSchoolData.communitySchool,
+                getSubpages: (urn: number) => TestDataStore.GetAllSchoolSubpagesForUrn(urn)
+            },
+            {
+                ...testBreadcrumbSchoolData.academyConverter,
+                getSubpages: (urn: number) => TestDataStore.GetAllAcademySubpagesForUrn(urn)
+            }
+        ];
 
-        [`/schools/overview/details?urn=${testBreadcrumbSchool.urn}`, `/schools/overview/federation?urn=${testBreadcrumbSchool.urn}`, `/schools/overview/sen?urn=${testBreadcrumbSchool.urn}`].forEach((url) => {
-            it(`Checks the breadcrumb shows the correct page name for ${testBreadcrumbSchool.type} on ${url}`, () => {
-                cy.visit(url);
-                navigation
-                    .checkPageNameBreadcrumbPresent("Overview");
-            });
-        });
-    });
-
-    describe("Testing the breadcrumb links on the schools overview pages for an Academy", () => {
-        const testBreadcrumbAcademy = {
-            urn: 137083,
-            type: "Academy converter"
-        };
-
-        [`/schools/overview/details?urn=${testBreadcrumbAcademy.urn}`, `/schools/overview/sen?urn=${testBreadcrumbAcademy.urn}`].forEach((url) => {
-            it(`Checks the breadcrumb shows the correct page name for ${testBreadcrumbAcademy.type} on ${url}`, () => {
-                cy.visit(url);
-                navigation
-                    .checkPageNameBreadcrumbPresent("Overview");
+        schoolBreadcrumbTestData.forEach(({ urn, type, getSubpages }) => {
+            getSubpages(urn).forEach(({ pageName, subpages }) => {
+                describe(`Testing breadcrumb links on ${pageName} pages for ${type}`, () => {
+                    subpages.forEach(({ subpageName, url }) => {
+                        it(`Checks the breadcrumb shows the correct page name for ${type} on ${pageName} > ${subpageName}`, () => {
+                            cy.visit(url);
+                            navigation
+                                .checkPageNameBreadcrumbPresent(pageName);
+                        });
+                    });
+                });
             });
         });
     });
 });
-
