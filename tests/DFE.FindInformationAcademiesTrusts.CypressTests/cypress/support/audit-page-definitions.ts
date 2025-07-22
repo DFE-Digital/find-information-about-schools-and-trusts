@@ -69,8 +69,8 @@ export class AuditPageDefinitions {
     auditSchoolPages(): void {
         const schoolUrn = testSchoolData[1].urn; // Academy
         const laMaintainedSchoolUrn = testSchoolData[0].urn; // LA maintained school
-        const senSchoolUrn = testSchoolData[0].urn;
-        const federationSchoolUrn = testFederationData.schoolWithFederationDetails.urn;
+        const senSchoolUrn = testSchoolData[0].urn; // SEN school
+        const federationSchoolUrn = testFederationData.schoolWithFederationDetails.urn; // Federation school
 
         // School Overview subpages
         this.auditHelper.auditPage('School Overview - Details', 'Schools', `/schools/overview/details?urn=${schoolUrn}`);
@@ -88,5 +88,10 @@ export class AuditPageDefinitions {
 
         // School Contact Edit Pages (sensitive data - no screenshots, LA maintained schools only)
         this.auditHelper.auditPageWithoutScreenshots('Edit Regions Group LA Lead Contact', 'Schools', `/schools/contacts/editregionsgrouplocalauthoritylead?urn=${laMaintainedSchoolUrn}`);
+
+        // School Governance subpages
+        this.auditHelper.auditPage('School Governance - Current governors', 'Schools', `/schools/governance/current?urn=${schoolUrn}`);
+        this.auditHelper.auditPage('School Governance - Historic governors', 'Schools', `/schools/governance/historic?urn=${schoolUrn}`);
+
     }
 } 
