@@ -28,16 +28,17 @@ namespace DfE.FindInformationAcademiesTrusts.Services.ManageProjectsAndCases
         }
         public async Task<IPaginatedList<UserCaseInfo>> GetCasesAsync(GetCasesParameters parameters)
         {
-            var cases = await _caseAggregationServiceClient.GetCasesByUserAsync(parameters.UserEmail,
+            var cases = await _caseAggregationServiceClient.GetCasesByUserAsync(
                 parameters.UserName,
+                parameters.UserEmail,
                 false,
                 parameters.IncludePrepare,
                 parameters.IncludeComplete,
                 parameters.IncludeManageFreeSchools,
                 parameters.IncludeConcerns,
                 false,
-                "",
                 parameters.ProjectFilters,
+                "",
                 parameters.Sort,
                 parameters.Page,
                 parameters.RecordCount,

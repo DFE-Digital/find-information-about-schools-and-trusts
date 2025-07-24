@@ -72,12 +72,7 @@
         }
         <div class="moj-filter__options">
             <form method="get" class="form">
-                <div class="govuk-!-margin-top-2">
-                    <button class="govuk-button" data-module="govuk-button" data-test-id="submit-button"
-                            data-cy="select-projectlist-filter-apply">
-                        Apply filters
-                    </button>
-                </div>
+
                 @*  <div class="govuk-form-group">
                     <label class="govuk-label govuk-label--m" for="Title">
                         Search for projects
@@ -91,7 +86,7 @@
                 </div> *@
                 <div class="govuk-form-group">
                     <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
-                        <div class="govuk-accordion__section">
+                        <div class="govuk-accordion__section govuk-accordion__section--expanded">
                             <div class="govuk-accordion__section-header">
                                 <h2 class="govuk-accordion__section-heading">
                                     <label class="govuk-accordion__section-button"
@@ -131,7 +126,7 @@
 
                                     <label class="govuk-accordion__section-button" id="accordion-project-type-heading"
                                            data-cy="select-projectlist-filter-project-type" for="filter-searches">
-                                        Project Type
+                                        Project type
                                     </label>
                                 </h2>
                             </div>
@@ -158,6 +153,12 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="govuk-!-margin-top-2">
+                    <button class="govuk-button" data-module="govuk-button" data-test-id="submit-button"
+                            data-cy="select-projectlist-filter-apply">
+                        Apply filters
+                    </button>
                 </div>
             </form>
         </div>

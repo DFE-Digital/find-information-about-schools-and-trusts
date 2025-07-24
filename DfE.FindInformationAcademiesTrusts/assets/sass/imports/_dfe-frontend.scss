@@ -28,3 +28,8 @@
   @extend .dfe-card;
   max-width: none;
 }
+
+.govuk-tag__auto-width {
+    @extend .govuk-tag;
+    max-width: none;
+}

@@ -12,6 +12,7 @@
         <PackageReference Include="Azure.Extensions.AspNetCore.DataProtection.Keys" Version="1.6.0" />
         <PackageReference Include="Azure.Identity" Version="1.14.0" />
         <PackageReference Include="ClosedXML" Version="0.104.2" />
+        <PackageReference Include="Dfe.CaseAggregationService.Api.Client" Version="1.0.0" />
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.17">
             <PrivateAssets>all</PrivateAssets>
@@ -47,11 +48,5 @@
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data.FiatDb\DfE.FindInformationAcademiesTrusts.Data.FiatDb.csproj" />
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data.Hardcoded\DfE.FindInformationAcademiesTrusts.Data.Hardcoded.csproj" />
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data\DfE.FindInformationAcademiesTrusts.Data.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Dfe.CaseAggregationService.Api.Client">
-        <HintPath>..\..\..\_gittest\rsd-case-aggregation-api\src\Dfe.CaseAggregationService.Api.Client\bin\Debug\net8.0\Dfe.CaseAggregationService.Api.Client.dll</HintPath>
-      </Reference>
     </ItemGroup>
 </Project>

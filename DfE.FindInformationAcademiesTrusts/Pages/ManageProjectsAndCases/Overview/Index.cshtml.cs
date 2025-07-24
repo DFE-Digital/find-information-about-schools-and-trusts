@@ -4,7 +4,6 @@ using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.ManageProjectsAndCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using DfE.FindInformationAcademiesTrusts.Extensions;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overview
@@ -24,7 +23,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overvi
         [BindProperty]
         public int TotalProjects { get; set; }
 
-        public string PageName => "ManageMyProjectsAndCases/Overview/Index";
+        public string PageName => "ManageProjectsAndCases/Overview/Index";
 
         public IPageStatus PageStatus => Cases.PageStatus;
         

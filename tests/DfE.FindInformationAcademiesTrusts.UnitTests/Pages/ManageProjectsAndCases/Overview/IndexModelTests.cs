@@ -3,6 +3,7 @@ using Dfe.CaseAggregationService.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overview;
 using DfE.FindInformationAcademiesTrusts.Services.ManageProjectsAndCases;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore.Query;
@@ -14,14 +15,16 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
     {
         private readonly IndexModel _indexModel;
         private readonly IGetCasesService _getCasesService;
+        private readonly IWebHostEnvironment _environment;
 
         private readonly IPaginatedList<UserCaseInfo> _emptyList = PaginatedList<UserCaseInfo>.Empty();
 
         public IndexModelTests()
         {
             _getCasesService = Substitute.For<IGetCasesService>();
+            _environment = Substitute.For<IWebHostEnvironment>();
 
-            _indexModel = new IndexModel(_getCasesService);
+            _indexModel = new IndexModel(_getCasesService, _environment);
 
             SetupContext();
 
