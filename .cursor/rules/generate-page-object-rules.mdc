@@ -1,0 +1,20 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+@page-object
+@generation
+@poms
+
+Use this rule when generating a new Page Object file from an existing UI page or test.
+
+## Guidelines
+
+- Use the `class <PageName>Page` convention.
+- Use `data-testid` selectors if available as these are the most robust for test.
+- Group related elements into named methods or getters (e.g., `get breadcrumbs()`, `get actionButtons()`).
+- Avoid returning raw `cy.get(...)` calls; wrap them in methods for clarity.
+- Include a comment above each method describing its purpose and usage.
+- Export the class as default.
+- Assume use with Cypress and TypeScript.

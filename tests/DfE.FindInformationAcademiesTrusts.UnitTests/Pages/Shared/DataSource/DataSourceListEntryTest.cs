@@ -64,7 +64,7 @@ public class DataSourceListEntryTest
     [InlineData(Source.Cdm, "RSD (Regional Services Division) service support team")]
     [InlineData(Source.Mis, "State-funded school inspections and outcomes: management information")]
     [InlineData(Source.ExploreEducationStatistics, "Explore education statistics")]
-    [InlineData(Source.FiatDb, "Find information about academies and trusts")]
+    [InlineData(Source.FiatDb, "Find information about schools and trusts")]
     public void Name_should_return_the_correct_string_for_each_source(Source source, string expected)
     {
         var sut = new DataSourceListEntry(_dataSourceServiceModel with { Source = source });

@@ -1,4 +1,4 @@
-name: Run automated UI tests
+name: Run automated UI and accessibility tests
 run-name: UI tests for '${{ inputs.environment }}' - `${{ inputs.branch-name }}`
 
 on:
@@ -31,10 +31,46 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     strategy:
+      fail-fast: false
       matrix:
-        browser: [
-          "edge"
-        ]
+        include:
+          - group: regression-search-and-general
+            browser: "edge"
+            spec: |
+              cypress/e2e/regression/search/**/*.cy.ts
+              cypress/e2e/regression/*.cy.ts
+              cypress/e2e/regression/navigation/general/*.cy.ts
+          - group: regression-navigation-and-school-routing
+            browser: "edge"
+            spec: |
+              cypress/e2e/regression/navigation/trust/trust-navigation-core.cy.ts
+              cypress/e2e/regression/navigation/school/schools-navigation.cy.ts
+              cypress/e2e/regression/navigation/school/school-routing.cy.ts
+          - group: regression-trusts-contacts-financial
+            browser: "edge"
+            spec: |
+              cypress/e2e/regression/trusts/trust-contacts-page.cy.ts
+              cypress/e2e/regression/trusts/financial-docs.cy.ts
+          - group: regression-trusts-governance-ofsted-routing
+            browser: "edge"
+            spec: |
+              cypress/e2e/regression/trusts/governance-page.cy.ts
+              cypress/e2e/regression/trusts/ofsted-page.cy.ts
+              cypress/e2e/regression/navigation/trust/trust-routing.cy.ts
+          - group: regression-trusts-academies-overview
+            browser: "edge"
+            spec: |
+              cypress/e2e/regression/trusts/trustAcademiesPage/*.cy.ts
+              cypress/e2e/regression/trusts/overview-page.cy.ts
+              cypress/e2e/regression/trusts/data-download-trust.cy.ts
+          - group: regression-schools
+            browser: "edge"
+            spec: |
+              cypress/e2e/regression/schools/**/*.cy.ts
+          - group: accessibility-all
+            browser: "edge"
+            spec: |
+              cypress/e2e/accessibility/**/*.cy.ts
     container:
       image: cypress/browsers:22.14.0@sha256:5fedacf2c6b1fab4f2d2d24a1cb2054af6d0103e0b163cd5064e523f45ca1a88
     defaults:
@@ -45,6 +81,14 @@ jobs:
         with:
           ref: ${{ github.ref }}
 
+      - name: Setup Cypress environment
+        run: |
+          mkdir -p cypress/downloads
+          mkdir -p cypress/accessibility
+          mkdir -p cypress/accessibility/audit-reports
+          mkdir -p cypress/screenshots
+          chmod -R 755 cypress/
+
       - name: Run
         uses: cypress-io/github-action@v6
         env:
@@ -52,6 +96,7 @@ jobs:
           CYPRESS_AUTH_KEY: ${{ secrets.TEST_OVERRIDE_CYPRESS_TEST_SECRET }}
         with:
           browser: ${{ matrix.browser }}
+          spec: ${{ matrix.spec }}
           working-directory: tests/DFE.FindInformationAcademiesTrusts.CypressTests
           wait-on: ${{ secrets.BASE_URL }}
 
@@ -59,7 +104,7 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: screenshots-${{ inputs.environment }}-${{ matrix.browser }}
+          name: screenshots-${{ inputs.environment }}-${{ matrix.group }}
           path: tests/DFE.FindInformationAcademiesTrusts.CypressTests/cypress/screenshots
 
       - name: Generate report
@@ -72,5 +117,13 @@ jobs:
         if: ${{ failure() }}
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: reports-${{ inputs.environment }}-${{ matrix.browser }}
+          name: reports-${{ inputs.environment }}-${{ matrix.group }}
           path: tests/DFE.FindInformationAcademiesTrusts.CypressTests/mochareports
+
+      - name: Upload accessibility reports
+        if: ${{ always() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: a11y-reports-${{ inputs.environment }}-${{ matrix.group }}
+          path: tests/DFE.FindInformationAcademiesTrusts.CypressTests/cypress/accessibility
+          if-no-files-found: ${{ matrix.group == 'a11y-comprehensive' && 'error' || 'warn' }}

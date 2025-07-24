@@ -18,7 +18,7 @@ export class AuthenticationInterceptor {
     }
 }
 
-export type AuthenticationInterceptorParams = {
+export interface AuthenticationInterceptorParams {
     role?: string;
     username?: string;
 }

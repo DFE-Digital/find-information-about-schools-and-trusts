@@ -1,0 +1,29 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+@cypress
+@e2e
+@typescript
+@generated-tests
+
+This rule is used to guide Cursor's generation of E2E test automation code for Cypress projects using TypeScript and the Page Object Model pattern.
+
+## Test Automation Code Generation Rules
+
+- Use TypeScript. Always include type annotations and interfaces where appropriate.
+- Follow the Page Object Model (POM). Do not use `cy.get()` or direct DOM selectors inside tests — use page object methods.
+- Never use `cy.wait()` with hardcoded values (e.g. `cy.wait(1000)`). Wait for elements using `.should('exist')` or state-driven logic.
+- All test files must include at least one meaningful assertion.
+- Use `describe()` and `it()` blocks with clear, specific names that describe test purpose.
+- Use `data-testid` selectors via page object methods for interacting with elements.
+- Prefer `cy.intercept()` for API mocking and test determinism if needed.
+- Write readable, maintainable test code. Optimise  for team collaboration — avoid clever hacks.
+- Include comments for non-obvious logic or any AI-generated steps that aren't straightforward.
+- Match formatting and linting rules (assume Prettier + ESLint are enforced).
+- Avoid hardcoded test data. Use factories, fixtures, or test helpers where possible.
+- Always write 'better' code.
+- Be very detailed with summarization and do not miss out things that are important.
+- Important: try to fix things at the cause, not the symptom.
+- Important: Check for existing functionality before adding new code. What can be reused? Do we have existing tests for this already in other files?

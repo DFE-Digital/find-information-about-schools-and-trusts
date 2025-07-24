@@ -1,0 +1,85 @@
+@page "/schools/contacts/in-dfe"
+@using DfE.FindInformationAcademiesTrusts.Data.Enums
+@using DfE.FindInformationAcademiesTrusts.Extensions
+@model InDfeModel
+
+@{
+    Layout = "_SchoolLayout";
+}
+
+@section SchoolPageMessage
+{
+    @if (!string.IsNullOrWhiteSpace(TempData["ContactUpdatedMessage"] as string))
+    {
+        <div class="govuk-notification-banner govuk-notification-banner--success" role="alert"
+             aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+            <div class="govuk-notification-banner__header">
+                <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                    Success
+                </h2>
+            </div>
+            <div class="govuk-notification-banner__content">
+                <h3 class="govuk-notification-banner__heading">
+                    @TempData["ContactUpdatedMessage"]
+                </h3>
+            </div>
+        </div>
+    }
+}
+
+<div class="govuk-grid-row" data-testid="school-contacts-section">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m" data-testid="subpage-header">
+            @Model.PageMetadata.SubPageName
+        </h2>
+
+        @if (Model.SchoolCategory == SchoolCategory.LaMaintainedSchool)
+        {
+            <div class="govuk-summary-card" data-testid="contact-card-regions-group-la-lead">
+                <div class="govuk-summary-card__title-wrapper">
+                    <h3 class="govuk-summary-card__title" data-testid="contact-card-title-regions-group-la-lead">
+                        @SchoolContactRole.RegionsGroupLocalAuthorityLead.MapRoleToViewString()
+                    </h3>
+                    <div class="govuk-summary-card__actions">
+                        <a class="govuk-link" asp-page="/Schools/Contacts/EditRegionsGroupLocalAuthorityLead"
+                           asp-route-urn="@Model.Urn">Change<span class="govuk-visually-hidden"> details of this contact (@SchoolContactRole.RegionsGroupLocalAuthorityLead.MapRoleToViewString())</span></a>
+                    </div>
+                </div>
+                <partial name="Contact/_DisplayContact" model="Model.RegionsGroupLocalAuthorityLead"
+                         view-data='new ViewDataDictionary(ViewData) { { "contactType", "regions-group-local-authority-lead" } }'/>
+            </div>
+        }
+
+        @if (Model.SchoolCategory == SchoolCategory.Academy)
+        {
+            <div class="govuk-summary-card" data-testid="contact-card-trust-relationship-manager">
+                <div class="govuk-summary-card__title-wrapper">
+                    <h3 class="govuk-summary-card__title" data-testid="contact-card-title-trust-relationship-manager">
+                        Trust relationship manager
+                    </h3>
+                </div>
+                <partial name="Contact/_DisplayContact" model="Model.TrustRelationshipManager"
+                         view-data='new ViewDataDictionary(ViewData) { { "contactType", "trust-relationship-manager" } }'/>
+            </div>
+
+            <div class="govuk-summary-card" data-testid="contact-card-sfso-lead">
+                <div class="govuk-summary-card__title-wrapper">
+                    <h3 class="govuk-summary-card__title" data-testid="contact-card-title-sfso-lead">
+                        SFSO (Schools Financial Support and Oversight) lead
+                    </h3>
+                </div>
+                <partial name="Contact/_DisplayContact" model="Model.SfsoLead"
+                         view-data='new ViewDataDictionary(ViewData) { { "contactType", "sfso-lead" } }'/>
+            </div>
+
+            <div class="govuk-inset-text">
+                <p class="govuk-body">
+                    You must update <a class="govuk-link" asp-page="/Trusts/Contacts/InDfe"
+                                       asp-route-uid="@Model.TrustSummary!.Uid">the DfE contacts for the trust</a> to
+                    change these details.
+                </p>
+            </div>
+        }
+        <hr class="govuk-section-break govuk-section-break--m" data-testid="contacts-section-divider">
+    </div>
+</div>

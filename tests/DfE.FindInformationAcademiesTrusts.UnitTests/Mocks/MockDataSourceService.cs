@@ -6,6 +6,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
 public static class MockDataSourceService
 {
     private static readonly DateTime StaticTime = new(2023, 11, 9, 0, 0, 0, DateTimeKind.Utc);
+    private static readonly string UpdatedBy = "some.user@education.gov.uk";
 
     public static IDataSourceService CreateSubstitute()
     {
@@ -18,6 +19,15 @@ public static class MockDataSourceService
                 var source = (Source)args[0];
                 return Task.FromResult(GetDummyDataSource(source));
             });
+
+        mockDataSourceService
+            .GetSchoolContactDataSourceAsync(Arg.Any<int>(), Arg.Any<SchoolContactRole>())
+            .Returns(Fiat);
+
+        mockDataSourceService
+            .GetTrustContactDataSourceAsync(Arg.Any<int>(), Arg.Any<TrustContactRole>())
+            .Returns(Fiat);
+
         return mockDataSourceService;
     }
 
@@ -40,6 +50,8 @@ public static class MockDataSourceService
     public static DataSourceServiceModel Complete { get; } = GetDummyDataSource(Source.Complete);
     public static DataSourceServiceModel Gias { get; } = GetDummyDataSource(Source.Gias);
     public static DataSourceServiceModel Prepare { get; } = GetDummyDataSource(Source.Prepare);
+
+    public static DataSourceServiceModel Fiat { get; } = new(Source.FiatDb, StaticTime, null, UpdatedBy);
 
     public static DataSourceServiceModel ManageFreeSchool { get; } =
         GetDummyDataSource(Source.ManageFreeSchoolProjects);

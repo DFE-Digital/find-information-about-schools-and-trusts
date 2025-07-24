@@ -14,7 +14,7 @@
         <h3 class="govuk-heading-m" data-testid="subpage-header">
             @Model.PageMetadata.SubPageName
         </h3>
-        
+
         @if (Model.SchoolCategory == SchoolCategory.Academy && !Model.TrustInformationIsAvailable)
         {
             <div class="govuk-notification-banner">
@@ -23,7 +23,8 @@
                 </div>
                 <div class="govuk-notification-banner__content">
                     <p class="govuk-notification-banner__heading">Trust information is not available for this academy.</p>
-                    <a class="govuk-notification-banner__link" href="@Model.GetInformationAboutSchoolsLink">View the academy on GIAS</a> for more information.
+                    <a class="govuk-notification-banner__link" href="@Model.GetInformationAboutSchoolsLink">View the academy
+                        on GIAS</a> for more information.
                 </div>
             </div>
         }
@@ -39,7 +40,7 @@
                 </dd>
             </div>
 
-            @if (Model.SchoolCategory == SchoolCategory.Academy)
+            @if (Model.TrustSummaryIsAvailable)
             {
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key" data-testid="details-date-joined-trust-header">
@@ -57,15 +58,15 @@
                     </dd>
                 </div>
 
-                <div class="govuk-summary-list__row">
+            <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key" data-testid="details-trust-header">
                         Trust
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        @if (Model.TrustInformationIsAvailable)
+                        @if (Model.TrustSummaryIsAvailable)
                         {
                             <a data-testid="academy-trust-link" class="govuk-link" asp-page="/Trusts/Overview/TrustDetails"
-                               asp-route-uid="@Model.TrustSummary?.Uid">
+                                asp-route-uid="@Model.TrustSummary?.Uid">
                                 @Model.TrustSummary?.Name
                             </a>
                         }
@@ -122,20 +123,20 @@
         <ul class="govuk-list govuk-list--bullet">
             <li>
                 <a class="govuk-link" rel="noreferrer noopener" target="_blank" data-testid="details-gias-link"
-                   href="@Model.GetInformationAboutSchoolsLink">
+                    href="@Model.GetInformationAboutSchoolsLink">
                     Get information about schools
                 </a>
             </li>
             <li>
                 <a class="govuk-link" rel="noreferrer noopener" target="_blank"
-                   data-testid="details-financial-benchmarking-link"
-                   href="@Model.FinancialBenchmarkingInsightsToolLink">
+                    data-testid="details-financial-benchmarking-link"
+                    href="@Model.FinancialBenchmarkingInsightsToolLink">
                     Financial benchmarking
                 </a>
             </li>
             <li>
                 <a class="govuk-link" rel="noreferrer noopener" target="_blank"
-                   data-testid="details-find-school-performance-link" href="@Model.FindSchoolPerformanceLink">
+                    data-testid="details-find-school-performance-link" href="@Model.FindSchoolPerformanceLink">
                     Find school college and performance data
                 </a>
             </li>

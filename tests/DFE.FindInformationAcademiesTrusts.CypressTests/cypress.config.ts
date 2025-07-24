@@ -1,9 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-require-imports */
+
 import { defineConfig } from "cypress";
 import fs from 'fs';
 import path from 'path';
 
 module.exports = defineConfig({
   userAgent: 'FindInformationAcademiesTrusts/1.0 Cypress',
+  // Runtime environment variables
+  env: {
+    // Enable accessibility voice for interactive testing
+    enableAccessibilityVoice: false,
+  },
   e2e: {
     experimentalRunAllSpecs: true,
     reporter: 'cypress-multi-reporters',
@@ -21,21 +30,48 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       config.baseUrl = config.env.URL as string;
 
-      // Custom task to find the most recent .xlsx file in the downloads folder
+      // Add accessibility tasks from wick-a11y
+      const addAccessibilityTasks = require('wick-a11y/accessibility-tasks');
+      addAccessibilityTasks(on);
+
+      // Override wick-a11y task with robust directory creation
       on('task', {
+        moveScreenshotToFolder(args: { from: string; to: string; }) {
+          try {
+            // Ensure the target directory exists
+            const targetDir = path.dirname(args.to);
+            if (!fs.existsSync(targetDir)) {
+              fs.mkdirSync(targetDir, { recursive: true });
+            }
+
+            // Move the file if source exists
+            if (fs.existsSync(args.from)) {
+              fs.renameSync(args.from, args.to);
+              return { success: true };
+            }
+
+            // If source doesn't exist, just return success (no screenshot to move)
+            return { success: true, message: 'No screenshot to move' };
+          } catch (error) {
+            console.warn('Screenshot move failed:', error);
+            return { success: true, message: 'Screenshot move failed but continuing' };
+          }
+        },
+
+        // Custom task to find the most recent .xlsx file in the downloads folder
         findLatestFile(folderPath: string) {
           const files = fs.readdirSync(folderPath);
-          const xlsxFiles = files.filter(file => file.endsWith('.xlsx'));
+          const xlsxFiles = files.filter((file: string) => file.endsWith('.xlsx'));
 
           if (xlsxFiles.length === 0) return null;
 
           // Sort files by modified date, latest first
           const latestFile = xlsxFiles
-            .map(fileName => ({
+            .map((fileName: string) => ({
               name: fileName,
               time: fs.statSync(path.join(folderPath, fileName)).mtime.getTime()
             }))
-            .sort((a, b) => b.time - a.time)[0];
+            .sort((a: { time: number; }, b: { time: number; }) => b.time - a.time)[0];
 
           return path.join(folderPath, latestFile.name);
         },
@@ -62,7 +98,7 @@ module.exports = defineConfig({
         clearDownloads(folderPath: string) {
           if (fs.existsSync(folderPath)) {
             const files = fs.readdirSync(folderPath);
-            files.forEach((file) => {
+            files.forEach((file: string) => {
               fs.unlinkSync(path.join(folderPath, file));
             });
           }

@@ -2,7 +2,7 @@ class SearchPage {
 
     elements = {
         searchResults: () => cy.get('#main-content'),
-        mainAutocomplete: () => cy.get('#home-search__listbox'),
+        mainAutocomplete: () => cy.get('#home-search__listbox', { timeout: 10000 }),
         searchPageSearchBox: () => cy.get('#search'),
         searchPageSearchButton: () => cy.get('[data-testid="search"]'),
         resultsInfo: () => cy.get('#results-details'),

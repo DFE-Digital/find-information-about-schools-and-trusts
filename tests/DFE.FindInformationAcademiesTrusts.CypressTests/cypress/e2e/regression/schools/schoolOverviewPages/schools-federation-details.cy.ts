@@ -1,15 +1,13 @@
 import commonPage from '../../../../pages/commonPage';
 import schoolsPage from '../../../../pages/schools/schoolsPage';
+import { testFederationData } from '../../../../support/test-data-store';
 
 describe('School Federation Details Tests', () => {
-    const schoolWithFederationDetails = 107188;
-    const schoolWithoutFederationDetails = 100000;
-    const academy = 142768;
 
     context('School with federation details', () => {
         beforeEach(() => {
             // Replace with a URN of a school that has federation details
-            cy.visit(`/schools/overview/federation?urn=${schoolWithFederationDetails}`);
+            cy.visit(`/schools/overview/federation?urn=${testFederationData.schoolWithFederationDetails.urn}`);
         });
 
         it('should display federation details correctly', () => {
@@ -21,8 +19,8 @@ describe('School Federation Details Tests', () => {
     });
 
     const noFederationUrns = [
-        { urn: schoolWithoutFederationDetails, type: 'school with no federation' },
-        { urn: academy, type: 'academy' }
+        { urn: testFederationData.schoolWithoutFederationDetails.urn, type: testFederationData.schoolWithoutFederationDetails.type },
+        { urn: testFederationData.academy.urn, type: testFederationData.academy.type }
     ];
 
     noFederationUrns.forEach(({ urn, type }) => {

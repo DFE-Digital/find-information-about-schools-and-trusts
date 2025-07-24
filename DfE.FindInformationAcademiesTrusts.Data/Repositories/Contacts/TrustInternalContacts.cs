@@ -1,6 +1,6 @@
 ﻿namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.Contacts;
 
-public record InternalContacts(
+public record TrustInternalContacts(
     InternalContact? TrustRelationshipManager,
     InternalContact? SfsoLead
 );

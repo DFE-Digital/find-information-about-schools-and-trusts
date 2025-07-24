@@ -17,8 +17,9 @@ public class InSchoolModelTests : BaseContactsAreaModelTests<InSchoolModel>
     {
         _mockSchoolContactsService.GetInSchoolContactsAsync(Arg.Any<int>()).Returns(_dummyInSchoolContacts);
 
-        Sut = new InSchoolModel(MockSchoolService, MockTrustService, _mockSchoolContactsService, MockDataSourceService)
-            { Urn = SchoolUrn };
+        Sut = new InSchoolModel(MockSchoolService, MockTrustService, _mockSchoolContactsService, MockDataSourceService,
+                MockSchoolNavMenu, MockFeatureManager)
+        { Urn = SchoolUrn };
     }
 
     public override async Task OnGetAsync_should_configure_PageMetadata_SubPageName()

@@ -1,7 +1,7 @@
 import commonPage from "../../../pages/commonPage";
 import navigation from "../../../pages/navigation";
 import governancePage from "../../../pages/trusts/governancePage";
-import { trustsWithGovernanceData } from "../../../support/test-data-store";
+import { trustsWithGovernanceData, trustsWithNoGovernanceData } from "../../../support/test-data-store";
 
 describe("Testing the components of the Governance page", () => {
 
@@ -12,7 +12,7 @@ describe("Testing the components of the Governance page", () => {
                 cy.visit(`/trusts/governance/trust-leadership?uid=${uid}`);
 
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Trust leadership - Governance - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Trust leadership - Governance - {trustName} - Find information about schools and trusts');
 
                 // Trust leadership table is visible and working
                 governancePage
@@ -33,7 +33,7 @@ describe("Testing the components of the Governance page", () => {
                 cy.visit(`/trusts/governance/trustees?uid=${uid}`);
 
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Trustees - Governance - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Trustees - Governance - {trustName} - Find information about schools and trusts');
 
                 // Trustee table is visible and working
                 governancePage
@@ -53,7 +53,7 @@ describe("Testing the components of the Governance page", () => {
                 cy.visit(`/trusts/governance/members?uid=${uid}`);
 
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Members - Governance - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Members - Governance - {trustName} - Find information about schools and trusts');
 
                 // Members table is visible and working
                 governancePage
@@ -73,7 +73,7 @@ describe("Testing the components of the Governance page", () => {
                 cy.visit(`/trusts/governance/historic-members?uid=${uid}`);
 
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Historic members - Governance - {trustName} - Find information about academies and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Historic members - Governance - {trustName} - Find information about schools and trusts');
 
                 // Historic members table is visible and working
                 governancePage
@@ -119,16 +119,7 @@ describe("Testing the components of the Governance page", () => {
         });
     });
 
-    const trustsWithNoGovernanceData = [
-        {
-            typeOfTrust: "single academy trust with no governance data",
-            uid: 17022
-        },
-        {
-            typeOfTrust: "multi academy trust with no governance data",
-            uid: 17637
-        }
-    ];
+
     trustsWithNoGovernanceData.forEach(({ typeOfTrust, uid }) => {
         describe(`On the Governance pages for a ${typeOfTrust}`, () => {
 

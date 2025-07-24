@@ -87,4 +87,94 @@ public class SchoolServiceTests
         await _mockSchoolRepository.Received(1).IsPartOfFederationAsync(urn);
         result.Should().Be(expectedReturnValue);
     }
+
+    [Fact]
+    public async Task GetReferenceNumbersAsync_should_return_only_urn_when_repository_returns_null()
+    {
+        const int urn = 123456;
+        _mockSchoolRepository.GetReferenceNumbersAsync(urn).Returns((SchoolReferenceNumbers?)null);
+
+        var result = await _sut.GetReferenceNumbersAsync(urn);
+
+        result.Urn.Should().Be(urn);
+        result.Laestab.Should().BeNull();
+        result.Ukprn.Should().BeNull();
+        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+    }
+
+    [Theory]
+    [InlineData("123", "4567", "123/4567")]
+    [InlineData("234", "5678", "234/5678")]
+    [InlineData("345", "6789", "345/6789")]
+    public async Task GetReferenceNumbersAsync_should_include_laestab_when_la_code_and_establishment_number_are_present(
+        string laCode, string establishmentNumber, string expectedLaestab)
+    {
+        _mockSchoolRepository.GetReferenceNumbersAsync(123456)
+            .Returns(new SchoolReferenceNumbers(laCode, establishmentNumber, null));
+
+        var result = await _sut.GetReferenceNumbersAsync(123456);
+
+        result.Laestab.Should().Be(expectedLaestab);
+        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(123456);
+    }
+
+    [Fact]
+    public async Task GetReferenceNumbersAsync_should_not_include_laestab_when_la_code_is_missing()
+    {
+        const int urn = 123456;
+        const string? laCode = null;
+        const string establishmentNumber = "4567";
+
+        _mockSchoolRepository.GetReferenceNumbersAsync(urn)
+            .Returns(new SchoolReferenceNumbers(laCode, establishmentNumber, null));
+
+        var result = await _sut.GetReferenceNumbersAsync(urn);
+
+        result.Laestab.Should().BeNull();
+        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+    }
+
+    [Fact]
+    public async Task GetReferenceNumbersAsync_should_not_include_laestab_when_establishment_number_is_missing()
+    {
+        const int urn = 123456;
+        const string laCode = "123";
+        const string? establishmentNumber = null;
+
+        _mockSchoolRepository.GetReferenceNumbersAsync(urn)
+            .Returns(new SchoolReferenceNumbers(laCode, establishmentNumber, null));
+
+        var result = await _sut.GetReferenceNumbersAsync(urn);
+
+        result.Laestab.Should().BeNull();
+        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+    }
+
+    [Fact]
+    public async Task GetReferenceNumbersAsync_should_include_ukprn_when_present()
+    {
+        const int urn = 123456;
+        const string ukprn = "12345678";
+
+        _mockSchoolRepository.GetReferenceNumbersAsync(urn).Returns(new SchoolReferenceNumbers(null, null, ukprn));
+
+        var result = await _sut.GetReferenceNumbersAsync(urn);
+
+        result.Ukprn.Should().Be(ukprn);
+        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+    }
+
+    [Fact]
+    public async Task GetReferenceNumbersAsync_should_not_include_ukprn_when_missing()
+    {
+        const int urn = 123456;
+        const string? ukprn = null;
+
+        _mockSchoolRepository.GetReferenceNumbersAsync(urn).Returns(new SchoolReferenceNumbers(null, null, ukprn));
+
+        var result = await _sut.GetReferenceNumbersAsync(urn);
+
+        result.Ukprn.Should().BeNull();
+        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+    }
 }

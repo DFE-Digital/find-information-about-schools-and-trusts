@@ -1,17 +1,7 @@
 import schoolsPage from "../../../../pages/schools/schoolsPage";
+import { senSchoolData } from "../../../../support/test-data-store";
 
 describe("Testing the Schools Overview SEN pages", () => {
-
-    const senSchoolData = [
-        {
-            typeOfSchool: "school with SEN provision",
-            urn: 122957
-        },
-        {
-            typeOfSchool: "academy with SEN provision",
-            urn: 143934
-        }
-    ];
 
     describe("SEN page tab", () => {
         senSchoolData.forEach(({ typeOfSchool, urn }) => {

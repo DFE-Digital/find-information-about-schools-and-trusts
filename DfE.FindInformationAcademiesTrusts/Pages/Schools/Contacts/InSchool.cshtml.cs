@@ -5,6 +5,7 @@ using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.FeatureManagement;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 
@@ -12,8 +13,10 @@ public class InSchoolModel(
     ISchoolService schoolService,
     ITrustService trustService,
     ISchoolContactsService schoolContactsService,
-    IDataSourceService dataSourceService)
-    : ContactsAreaModel(schoolService, trustService, dataSourceService)
+    IDataSourceService dataSourceService,
+    ISchoolNavMenu schoolNavMenu,
+    IVariantFeatureManager featureManager)
+    : ContactsAreaModel(schoolService, trustService, dataSourceService, schoolNavMenu, featureManager)
 {
     public override PageMetadata PageMetadata => base.PageMetadata with
     {

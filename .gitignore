@@ -36,6 +36,7 @@ cypress.*.env.json
 **/cypress/downloads/**
 **/cypress/reports/**
 mochareports/
+**/cypress/accessibility/**
 
 ### Visual Studio and VSCode config
 .vs

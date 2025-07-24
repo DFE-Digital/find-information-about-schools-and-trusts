@@ -6,10 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
 
-public class SenModel(ISchoolService schoolService, 
-    ITrustService trustService, 
+public class SenModel(
+    ISchoolService schoolService,
+    ITrustService trustService,
     ISchoolOverviewSenService schoolOverviewSenService,
-    IDataSourceService dataSourceService) : OverviewAreaModel(schoolService, trustService, dataSourceService)
+    IDataSourceService dataSourceService,
+    ISchoolNavMenu schoolNavMenu) : OverviewAreaModel(schoolService, trustService, dataSourceService, schoolNavMenu)
 {
     public override PageMetadata PageMetadata => base.PageMetadata with
     {
@@ -26,7 +28,7 @@ public class SenModel(ISchoolService schoolService,
     public string? SenCapacity { get; set; }
     public string? ResourcedProvisionType { get; set; }
     public List<string> SenProvisionTypes { get; set; } = new();
-    
+
     private static readonly string NotAvailable = "Not available";
 
     public override async Task<IActionResult> OnGetAsync()
@@ -40,11 +42,13 @@ public class SenModel(ISchoolService schoolService,
         SenOnRoll = SchoolOverviewSenServiceModel.SenOnRoll ?? NotAvailable;
         SenCapacity = SchoolOverviewSenServiceModel.SenCapacity ?? NotAvailable;
         ResourcedProvisionType = SchoolOverviewSenServiceModel.ResourcedProvisionTypes ?? NotAvailable;
-        SenProvisionTypes = SchoolOverviewSenServiceModel.SenProvisionTypes[0] != null ? SchoolOverviewSenServiceModel.SenProvisionTypes :
-        [
-            "Not available"
-        ];
-        
+        SenProvisionTypes = SchoolOverviewSenServiceModel.SenProvisionTypes[0] != null
+            ? SchoolOverviewSenServiceModel.SenProvisionTypes
+            :
+            [
+                "Not available"
+            ];
+
         return pageResult;
     }
 }

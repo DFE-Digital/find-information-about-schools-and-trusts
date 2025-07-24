@@ -12,7 +12,8 @@ public class DetailsModel(
     ITrustService trustService,
     ISchoolOverviewDetailsService schoolOverviewDetailsService,
     IOtherServicesLinkBuilder otherServicesLinkBuilder,
-    IDataSourceService dataSourceService) : OverviewAreaModel(schoolService, trustService, dataSourceService)
+    IDataSourceService dataSourceService,
+    ISchoolNavMenu schoolNavMenu) : OverviewAreaModel(schoolService, trustService, dataSourceService, schoolNavMenu)
 {
     public override PageMetadata PageMetadata => base.PageMetadata with
     {
@@ -36,6 +37,7 @@ public class DetailsModel(
     public string FindSchoolPerformanceLink { get; private set; } = null!;
 
     public bool TrustInformationIsAvailable { get; private set; } = true;
+    public bool TrustSummaryIsAvailable { get; private set; }
 
     public override async Task<IActionResult> OnGetAsync()
     {
@@ -49,6 +51,7 @@ public class DetailsModel(
         FinancialBenchmarkingInsightsToolLink = otherServicesLinkBuilder.FinancialBenchmarkingLinkForSchool(Urn);
         FindSchoolPerformanceLink = otherServicesLinkBuilder.FindSchoolPerformanceDataListingLink(Urn);
 
+        TrustSummaryIsAvailable = TrustSummary is not null;
         TrustInformationIsAvailable = SchoolOverviewModel.DateJoinedTrust is not null && TrustSummary is not null;
 
         return pageResult;

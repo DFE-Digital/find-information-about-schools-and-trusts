@@ -71,7 +71,7 @@ class AcademiesInTrustPage {
     public getAcademyCountFromSidebar(): Cypress.Chainable<number> {
         return this.elements.pageTabs.academyCountLabel()
             .invoke('text')
-            .then(text => parseInt(text.match(/\d+/)[0]));
+            .then(text => parseInt((/\d+/.exec(text))[0]));
     }
 
     public getTableRowCountOnDetailsPage(): Cypress.Chainable<number> {

@@ -20,8 +20,9 @@ public class SenModelTests : BaseOverviewAreaModelTests<SenModel>
     {
         _mockSchoolOverviewSenService.GetSchoolOverviewSenAsync(Arg.Any<int>())
             .Returns(_dummySenDetails);
-        
-        Sut = new SenModel(MockSchoolService, MockTrustService, _mockSchoolOverviewSenService, MockDataSourceService);
+
+        Sut = new SenModel(MockSchoolService, MockTrustService, _mockSchoolOverviewSenService, MockDataSourceService,
+            MockSchoolNavMenu);
         Sut.Urn = SchoolUrn;
     }
 
@@ -29,7 +30,7 @@ public class SenModelTests : BaseOverviewAreaModelTests<SenModel>
     public override async Task OnGetAsync_should_configure_PageMetadata_SubPageName()
     {
         await Sut.OnGetAsync();
-        
+
         Sut.PageMetadata.SubPageName.Should().Be("SEN (special educational needs)");
     }
 
@@ -37,19 +38,19 @@ public class SenModelTests : BaseOverviewAreaModelTests<SenModel>
     public async Task OnGetAsync_should_set_SchoolOverviewSenServiceModel()
     {
         await Sut.OnGetAsync();
-        
+
         Sut.SchoolOverviewSenServiceModel.Should().Be(_dummySenDetails);
     }
-    
+
     [Theory]
-    [InlineData(null,null, null, null, null)]
-    [InlineData("2",null, null, null, null)]
-    [InlineData(null,"32", null, null, null)]
-    [InlineData(null,null, "77", null, null)]
-    [InlineData(null,null, null, "8", null)]
-    [InlineData(null,null, null, null, "Provision")]
+    [InlineData(null, null, null, null, null)]
+    [InlineData("2", null, null, null, null)]
+    [InlineData(null, "32", null, null, null)]
+    [InlineData(null, null, "77", null, null)]
+    [InlineData(null, null, null, "8", null)]
+    [InlineData(null, null, null, null, "Provision")]
     public async Task OnGetAsync_should_set_null_values_correctly(
-        string? resourcedProvisionOnRoll, 
+        string? resourcedProvisionOnRoll,
         string? resourcedProvisionCapacity,
         string? senOnRoll,
         string? senCapacity,
@@ -63,13 +64,13 @@ public class SenModelTests : BaseOverviewAreaModelTests<SenModel>
             SenCapacity = senCapacity,
             ResourcedProvisionTypes = resourcedProvisionTypes
         };
-        
+
         var resourcedProvisionOnRollValue = resourcedProvisionOnRoll ?? "Not available";
         var resourcedProvisionCapacityValue = resourcedProvisionCapacity ?? "Not available";
         var senOnRollValue = senOnRoll ?? "Not available";
         var senCapacityValue = senCapacity ?? "Not available";
         var resourcedProvisionTypesValue = resourcedProvisionTypes ?? "Not available";
-        
+
         _mockSchoolOverviewSenService.GetSchoolOverviewSenAsync(Arg.Any<int>())
             .Returns(_dummySenDetails);
         await Sut.OnGetAsync();
@@ -85,11 +86,11 @@ public class SenModelTests : BaseOverviewAreaModelTests<SenModel>
     public async Task OnGetAsync_should_set_empty_sen_provision_types_correctly()
     {
         _dummySenDetails = _dummySenDetails with { SenProvisionTypes = [null!] };
-        
+
         _mockSchoolOverviewSenService.GetSchoolOverviewSenAsync(Arg.Any<int>())
             .Returns(_dummySenDetails);
         await Sut.OnGetAsync();
-        
+
         Sut.SenProvisionTypes.Should().Contain(["Not available"]);
     }
 }

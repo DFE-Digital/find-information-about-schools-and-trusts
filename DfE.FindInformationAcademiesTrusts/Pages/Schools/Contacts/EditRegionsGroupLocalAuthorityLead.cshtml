@@ -1,0 +1,9 @@
+@page
+@model EditRegionsGroupLocalAuthorityLeadModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = Model.PageMetadata.BrowserTitle;
+}
+
+<partial name="_EditSchoolContactForm" model="@Model"/>

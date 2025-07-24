@@ -1,0 +1,20 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+@project-setup
+@scaffolding
+@boilerplate
+
+Use this rule to scaffold a new E2E test suite for a frontend app using Cypress and TypeScript.
+
+## Guidelines
+
+- Create folder structure:
+  - `e2e/` with subfolders: `pages/`, `tests/`, `utils/`, `fixtures/`
+- Create an example test with proper structure using `describe/it`, POM, and assertions.
+- Create a sample page object class and corresponding test using `data-testid`.
+- Include `cypress.config.ts` setup with custom baseUrl and retry settings.
+- Include sample command in `cypress/support/commands.ts`.
+- Provide basic documentation in markdown for getting started (`TESTING.md`).

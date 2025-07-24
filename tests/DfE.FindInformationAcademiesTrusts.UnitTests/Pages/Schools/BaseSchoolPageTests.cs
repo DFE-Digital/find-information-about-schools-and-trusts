@@ -14,6 +14,7 @@ public abstract class BaseSchoolPageTests<T> where T : SchoolAreaModel
     protected readonly ISchoolService MockSchoolService = Substitute.For<ISchoolService>();
     protected readonly ITrustService MockTrustService = Substitute.For<ITrustService>();
     protected readonly IDataSourceService MockDataSourceService = Mocks.MockDataSourceService.CreateSubstitute();
+    protected readonly ISchoolNavMenu MockSchoolNavMenu = Substitute.For<ISchoolNavMenu>();
 
     protected const int SchoolUrn = 123456;
     protected const int AcademyUrn = 888888;
@@ -102,13 +103,14 @@ public abstract class BaseSchoolPageTests<T> where T : SchoolAreaModel
     }
 
     [Fact]
-    public async Task OnGetAsync_if_school_is_not_an_academy_should_not_get_trust_summary()
+    public async Task
+        OnGetAsync_if_school_is_not_an_academy_should_get_trust_summary_as_la_maintained_could_be_a_trust()
     {
         Sut.Urn = DummySchoolSummary.Urn;
 
         await Sut.OnGetAsync();
 
-        await MockTrustService.Received(0).GetTrustSummaryAsync(Sut.Urn);
+        await MockTrustService.Received(1).GetTrustSummaryAsync(Sut.Urn);
 
         Sut.TrustSummary.Should().BeNull();
     }

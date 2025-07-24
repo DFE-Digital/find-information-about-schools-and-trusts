@@ -5,6 +5,16 @@
   "scripts": {
     "cy:open": "cypress open --browser edge",
     "cy:run": "npm run clean:reports && cypress run --browser edge",
+    "cy:a11y:open": "cypress open --browser edge --spec 'cypress/e2e/accessibility/**/*.cy.ts'",
+    "cy:a11y:run": "cypress run --browser edge --spec cypress/e2e/accessibility/**/*.cy.ts",
+    "cy:a11y:audit": "cypress run --browser edge --spec cypress/e2e/accessibility/comprehensive-accessibility-audit.cy.ts",
+    "cy:a11y:components": "cypress run --browser edge --spec cypress/e2e/accessibility/components/**/*.cy.ts",
+    "cy:a11y:audit:open": "cypress open --browser edge --spec 'cypress/e2e/accessibility/comprehensive-accessibility-audit.cy.ts'",
+    "cy:a11y:components:open": "cypress open --browser edge --spec 'cypress/e2e/accessibility/components/**/*.cy.ts'",
+    "cy:data:open": "cypress open --browser edge --spec 'cypress/e2e/data-tests/**/*.cy.ts'",
+    "cy:data:run": "cypress run --browser edge --spec cypress/e2e/data-tests/**/*.cy.ts",
+    "cy:ui:trusts": "cypress run --browser edge --spec 'cypress/e2e/regression/trusts/**/*.cy.ts'",
+    "cy:ui:other": "cypress run --browser edge --spec 'cypress/e2e/regression/schools/**/*.cy.ts,cypress/e2e/regression/navigation/**/*.cy.ts,cypress/e2e/regression/*.cy.ts'",
     "clean:reports": "rm -rf cypress/reports/mocha/*.json",
     "combine:reports": "mochawesome-merge cypress/reports/mocha/*.json> mochareports/report.json",
     "create:html:report": "marge  mochareports/report.json -f report -o mochareports",
@@ -25,6 +35,7 @@
     "mochawesome-merge": "^4.2.1",
     "mochawesome-report-generator": "^6.0.1",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.15.0"
+    "typescript-eslint": "^8.15.0",
+    "wick-a11y": "^2.0.1"
   }
 }

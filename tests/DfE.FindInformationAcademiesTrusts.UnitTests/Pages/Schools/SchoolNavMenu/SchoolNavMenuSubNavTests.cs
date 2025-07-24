@@ -1,8 +1,8 @@
+using DfE.FindInformationAcademiesTrusts.Configuration;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
-using Sut = DfE.FindInformationAcademiesTrusts.Pages.Schools.SchoolNavMenu;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.SchoolNavMenu;
 
@@ -11,11 +11,11 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
     [Theory]
     [InlineData(123456)]
     [InlineData(567890)]
-    public void GetSubNavLinks_should_set_route_data_to_urn(int expectedUrn)
+    public async Task GetSubNavLinksAsync_should_set_route_data_to_urn(int expectedUrn)
     {
         var activePage = GetMockSchoolPage(typeof(DetailsModel), expectedUrn);
 
-        var results = Sut.GetSubNavLinks(activePage);
+        var results = await Sut.GetSubNavLinksAsync(activePage);
 
         results.Should().AllSatisfy(link =>
         {
@@ -26,13 +26,13 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
     }
 
     [Theory]
-    [MemberData(nameof(SubPageTypes))]
-    public void GetSubNavLinks_should_set_hidden_text_to_page_name(Type activePageType)
+    [MemberData(nameof(ContactsInDfeForSchoolsEnabledSubPageTypes))]
+    public async Task GetSubNavLinksAsync_should_set_hidden_text_to_page_name(Type activePageType)
     {
         var activePage = GetMockSchoolPage(activePageType);
         var expectedPageName = GetExpectedPageName(activePageType);
 
-        var results = Sut.GetSubNavLinks(activePage);
+        var results = await Sut.GetSubNavLinksAsync(activePage);
 
         results.Should().AllSatisfy(link => { link.VisuallyHiddenLinkText.Should().Be(expectedPageName); });
     }
@@ -42,33 +42,55 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
         return pageType.Name switch
         {
             nameof(DetailsModel) => "Overview",
+            nameof(InDfeModel) => "Contacts",
             nameof(InSchoolModel) => "Contacts",
             nameof(SenModel) => "Overview",
             nameof(FederationModel) => "Overview",
+            nameof(ReferenceNumbersModel) => "Overview",
             _ => throw new ArgumentException("Couldn't get expected name for given page type", nameof(pageType))
         };
     }
 
     [Theory]
-    [MemberData(nameof(SubPageTypes))]
-    public void GetSubNavLinks_should_set_active_sub_page_link(Type activePageType)
+    [MemberData(nameof(ContactsInDfeForSchoolsDisabledSubPageTypes))]
+    public async Task
+        GetSubNavLinksAsync_should_set_active_sub_page_link_when_ContactsInDfeForSchools_feature_flag_is_disabled(
+            Type activePageType)
     {
+        MockFeatureManager.IsEnabledAsync(FeatureFlags.ContactsInDfeForSchools).Returns(false);
         var activePage = GetMockSchoolPage(activePageType);
-        var expectedActiveSubPageLink = GetSubPageLinkTo(activePageType);
+        var expectedActiveSubPageLink = GetSubPageLinkTo(activePageType, false);
 
-        var results = Sut.GetSubNavLinks(activePage);
+        var results = await Sut.GetSubNavLinksAsync(activePage);
 
         results.Should().ContainSingle(l => l.LinkIsActive).Which.AspPage.Should().Be(expectedActiveSubPageLink);
     }
 
-    private static string GetSubPageLinkTo(Type pageType)
+    [Theory]
+    [MemberData(nameof(ContactsInDfeForSchoolsEnabledSubPageTypes))]
+    public async Task
+        GetSubNavLinksAsync_should_set_active_sub_page_link_when_ContactsInDfeForSchools_feature_flag_is_enabled(
+            Type activePageType)
+    {
+        MockFeatureManager.IsEnabledAsync(FeatureFlags.ContactsInDfeForSchools).Returns(true);
+        var activePage = GetMockSchoolPage(activePageType);
+        var expectedActiveSubPageLink = GetSubPageLinkTo(activePageType, true);
+
+        var results = await Sut.GetSubNavLinksAsync(activePage);
+
+        results.Should().ContainSingle(l => l.LinkIsActive).Which.AspPage.Should().Be(expectedActiveSubPageLink);
+    }
+
+    private static string GetSubPageLinkTo(Type pageType, bool contactsInDfeForSchoolsFeatureFlagEnabled)
     {
         return pageType.Name switch
         {
             nameof(DetailsModel) => "/Schools/Overview/Details",
+            nameof(InDfeModel) => "/Schools/Contacts/InDfe",
             nameof(InSchoolModel) => "/Schools/Contacts/InSchool",
             nameof(SenModel) => "/Schools/Overview/Sen",
             nameof(FederationModel) => "/Schools/Overview/Federation",
+            nameof(ReferenceNumbersModel) => "/Schools/Overview/ReferenceNumbers",
             _ => throw new ArgumentException("Couldn't get expected sub page nav asp link for given page type",
                 nameof(pageType))
         };
@@ -77,12 +99,13 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
     [Theory]
     [InlineData(SchoolCategory.LaMaintainedSchool, "School details")]
     [InlineData(SchoolCategory.Academy, "Academy details")]
-    public void GetSubNavLinks_should_return_expected_links_for_overview_when_federation(SchoolCategory schoolCategory,
+    public async Task GetSubNavLinksAsync_should_return_expected_links_for_overview_when_federation(
+        SchoolCategory schoolCategory,
         string expectedText)
     {
         var activePage = GetMockSchoolPage(typeof(DetailsModel), schoolCategory: schoolCategory);
 
-        var results = Sut.GetSubNavLinks(activePage);
+        var results = await Sut.GetSubNavLinksAsync(activePage);
 
         results.Should().SatisfyRespectively(
             l =>
@@ -99,6 +122,12 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             },
             l =>
             {
+                l.LinkDisplayText.Should().Be("Reference numbers");
+                l.AspPage.Should().Be("/Schools/Overview/ReferenceNumbers");
+                l.TestId.Should().Be("overview-reference-numbers-subnav");
+            },
+            l =>
+            {
                 l.LinkDisplayText.Should().Be("SEN (special educational needs)");
                 l.AspPage.Should().Be("/Schools/Overview/Sen");
                 l.TestId.Should().Be("overview-sen-subnav");
@@ -109,13 +138,13 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
     [Theory]
     [InlineData(SchoolCategory.LaMaintainedSchool, "School details")]
     [InlineData(SchoolCategory.Academy, "Academy details")]
-    public void GetSubNavLinks_should_return_expected_links_for_overview_when_not_federation(
+    public async Task GetSubNavLinksAsync_should_return_expected_links_for_overview_when_not_federation(
         SchoolCategory schoolCategory,
         string expectedText)
     {
         var activePage = GetMockSchoolPage(typeof(DetailsModel), schoolCategory: schoolCategory, isFederation: false);
 
-        var results = Sut.GetSubNavLinks(activePage);
+        var results = await Sut.GetSubNavLinksAsync(activePage);
 
         results.Should().SatisfyRespectively(
             l =>
@@ -123,6 +152,12 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
                 l.LinkDisplayText.Should().Be(expectedText);
                 l.AspPage.Should().Be("/Schools/Overview/Details");
                 l.TestId.Should().Be("overview-details-subnav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Reference numbers");
+                l.AspPage.Should().Be("/Schools/Overview/ReferenceNumbers");
+                l.TestId.Should().Be("overview-reference-numbers-subnav");
             },
             l =>
             {
@@ -136,12 +171,15 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
     [Theory]
     [InlineData(SchoolCategory.LaMaintainedSchool, "In this school")]
     [InlineData(SchoolCategory.Academy, "In this academy")]
-    public void GetSubNavLinks_should_return_expected_links_for_contacts(SchoolCategory schoolCategory,
-        string expectedText)
+    public async Task
+        GetSubNavLinksAsync_should_return_expected_links_for_contacts_when_ContactsInDfeForSchools_feature_flag_is_disabled(
+            SchoolCategory schoolCategory,
+            string expectedText)
     {
+        MockFeatureManager.IsEnabledAsync(FeatureFlags.ContactsInDfeForSchools).Returns(false);
         var activePage = GetMockSchoolPage(typeof(InSchoolModel), schoolCategory: schoolCategory);
 
-        var results = Sut.GetSubNavLinks(activePage);
+        var results = await Sut.GetSubNavLinksAsync(activePage);
 
         results.Should().SatisfyRespectively(l =>
             {
@@ -152,14 +190,42 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
         );
     }
 
+    [Theory]
+    [InlineData(SchoolCategory.LaMaintainedSchool, "In this school")]
+    [InlineData(SchoolCategory.Academy, "In this academy")]
+    public async Task
+        GetSubNavLinksAsync_should_return_expected_links_for_contacts_when_ContactsInDfeForSchools_feature_flag_is_enabled(
+            SchoolCategory schoolCategory,
+            string expectedText)
+    {
+        MockFeatureManager.IsEnabledAsync(FeatureFlags.ContactsInDfeForSchools).Returns(true);
+        var activePage = GetMockSchoolPage(typeof(InSchoolModel), schoolCategory: schoolCategory);
+
+        var results = await Sut.GetSubNavLinksAsync(activePage);
+
+        results.Should().SatisfyRespectively(l =>
+            {
+                l.LinkDisplayText.Should().Be("In DfE");
+                l.AspPage.Should().Be("/Schools/Contacts/InDfe");
+                l.TestId.Should().Be("contacts-in-dfe-subnav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be(expectedText);
+                l.AspPage.Should().Be("/Schools/Contacts/InSchool");
+                l.TestId.Should().Be("contacts-in-this-school-subnav");
+            }
+        );
+    }
+
     [Fact]
-    public void GetSubNavLinks_should_throw_if_page_not_supported()
+    public async Task GetSubNavLinksAsync_should_throw_if_page_not_supported()
     {
         var activePage = Substitute.For<ISchoolAreaModel>();
 
-        var action = () => Sut.GetSubNavLinks(activePage);
+        var action = async () => await Sut.GetSubNavLinksAsync(activePage);
 
-        action.Should().Throw<ArgumentOutOfRangeException>()
-            .Which.Message.Should().StartWith("Page type is not supported.");
+        var result = await action.Should().ThrowAsync<ArgumentException>();
+        result.Which.Message.Should().StartWith("Page type is not supported.");
     }
 }

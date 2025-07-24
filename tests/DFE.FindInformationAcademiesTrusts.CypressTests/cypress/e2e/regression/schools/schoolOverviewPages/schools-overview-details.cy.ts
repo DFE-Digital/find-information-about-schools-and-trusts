@@ -2,6 +2,7 @@ import schoolsPage from "../../../../pages/schools/schoolsPage";
 import { testSchoolData } from "../../../../support/test-data-store";
 
 describe("Overview details page", () => {
+
     testSchoolData.forEach(({ typeOfSchool, urn }) => {
         it(`Checks the page name is correct for a ${typeOfSchool} on the urn ${urn}`, () => {
             cy.visit(`/schools/overview/details?urn=${urn}`);
@@ -57,6 +58,23 @@ describe("Overview details page", () => {
             cy.visit(`/schools/overview/details?urn=${testSchoolData[0].urn}`);
             schoolsPage
                 .checkDetailsAcademyDataItemsNotPresent();
+        });
+    });
+
+    const schoolInSATs = [
+        { urn: 140884, type: 'school in SAT' }
+    ];
+
+    schoolInSATs.forEach(({ urn, type }) => {
+        context(`${type} should have trust details`, () => {
+
+            it('Checks the school header is present on a school type', () => {
+                cy.visit(`/schools/overview/details?urn=${urn}`);
+                schoolsPage
+                    .checkSchoolDetailsHeaderPresent()
+                    .checkDetailsAcademyDataItemsPresent();
+            });
+
         });
     });
 });

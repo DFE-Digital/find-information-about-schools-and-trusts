@@ -42,7 +42,7 @@ class DataDownload {
         this.findLatestDownloadedFile().then((downloadFilePath) => {
             cy.task<{ success: boolean; message?: string }>('deleteFile', downloadFilePath).then((result) => {
                 if (!result.success) {
-                    cy.log(result.message || 'Failed to delete file');
+                    cy.log(result.message ?? 'Failed to delete file');
                 }
             });
         });

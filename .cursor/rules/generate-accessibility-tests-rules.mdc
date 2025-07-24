@@ -1,0 +1,20 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+@a11y
+@axe
+@accessibility
+
+Use this rule when writing accessibility tests using `cypress-axe`.
+
+## Guidelines
+
+- Inject Axe using `cy.injectAxe()` after page load or route change.
+- Use `cy.checkA11y()` scoped to the main content container.
+- Suppress known false positives with configuration where justified.
+- Tag tests as `@accessibility` for traceability.
+- Write assertions that fail clearly (e.g., log violations to console).
+- Where issues are found, recommend remediations in comments.
+- Include accessibility checks in both the main page and key modal/dialog components.

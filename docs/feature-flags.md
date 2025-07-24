@@ -7,6 +7,7 @@ Feature flags can be used to programatically turn features on and off. We can us
 - `TestFlag` (Default: false): Flag added to test the functionality of feature flags. Adds a line to the layout that shows flags are working when set to true.
 - `UpdatedFooterHelpLink` (Default: true): Flag added to control when we release the updated help link in the footer.
 - `GovernanceTurnover` (Default: false): Flag to hide the governance turnover calculation until a bug fix can be determined.
+- `ContactsInDfeForSchools` (Default: false): This flag controls the visibility of the 'Contacts in DfE' page for a school or academy. The page is accessible and appears in the school nav menu when the flag is set to true.
 
 ## Implementation
 
@@ -14,7 +15,7 @@ We have followed what is more or less the default DotNet appoach for adding feat
 
 ### Adding a flag
 
-To create a flag you need to add it as a constant to `DfE.FindInformationAcadmiesTrusts/Configuration/FeatureFlags.cs` and add a default value to the appsettings.json file. Finally add the flag name, default value (used in appsettings.json) and reason for creating the flag/what the flag controls to the list at the end of this file.
+To create a flag you need to add it as a constant to `DfE.FindInformationAcadmiesTrusts/Configuration/FeatureFlags.cs` and add a default value to the appsettings.json file. Finally add the flag name, default value (used in appsettings.json) and reason for creating the flag/what the flag controls to the list above.
 
 ### Using a flag
 

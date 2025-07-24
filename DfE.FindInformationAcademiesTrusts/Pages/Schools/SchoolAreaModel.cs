@@ -1,6 +1,7 @@
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
+using DfE.FindInformationAcademiesTrusts.Pages.Shared.NavMenu;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,8 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Schools;
 
 public class SchoolAreaModel(
     ISchoolService schoolService,
-    ITrustService trustService) : BasePageModel, ISchoolAreaModel
+    ITrustService trustService,
+    ISchoolNavMenu schoolNavMenu) : BasePageModel, ISchoolAreaModel
 {
     [BindProperty(SupportsGet = true)] public int Urn { get; set; }
 
@@ -23,6 +25,8 @@ public class SchoolAreaModel(
     public bool IsPartOfAFederation { get; set; }
 
     public TrustSummaryServiceModel? TrustSummary { get; private set; }
+    public NavLink[] ServiceNavLinks { get; set; } = null!;
+    public NavLink[] SubNavLinks { get; set; } = null!;
 
     public virtual async Task<IActionResult> OnGetAsync()
     {
@@ -33,14 +37,14 @@ public class SchoolAreaModel(
             return new NotFoundResult();
         }
 
-        if (schoolSummary.Category == SchoolCategory.Academy)
-        {
-            TrustSummary = await trustService.GetTrustSummaryAsync(schoolSummary.Urn);
-        }
+        TrustSummary = await trustService.GetTrustSummaryAsync(schoolSummary.Urn);
 
         IsPartOfAFederation = await schoolService.IsPartOfFederationAsync(schoolSummary.Urn);
 
         SchoolSummary = schoolSummary;
+
+        ServiceNavLinks = await schoolNavMenu.GetServiceNavLinksAsync(this);
+        SubNavLinks = await schoolNavMenu.GetSubNavLinksAsync(this);
 
         return Page();
     }

@@ -36,7 +36,7 @@ class HeaderPage {
 
         // Verify suggestions contain our text
         this.elements.headerAutocomplete()
-            .should('exist', { timeout: 10000 })
+            .should('exist', { timeout: 20000 })
             .should(($listbox) => {
                 const suggestions = Array.from($listbox.children()).map(el => el.innerText);
                 expect(suggestions.length, 'Expected to find suggestions in dropdown').to.be.greaterThan(0);

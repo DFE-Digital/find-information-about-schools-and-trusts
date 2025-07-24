@@ -10,34 +10,33 @@
 }
 
 <main id="main-content">
-    <div class="app-banner app-banner--l">
-        <div class="dfe-width-container">
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-one-half">
-                    <h1 class="govuk-heading-xl app-banner--heading govuk-!-margin-bottom-8">
-                        Find information about academies and trusts
-                    </h1>
-                    <form class="govuk-form-group app-search govuk-!-margin-bottom-0" asp-page="Search" method="post" role="search" aria-label="sitewide">
-                        <p class="govuk-body">Use this tool to find information on trusts and schools, including academies.</p>
-                        <details class="govuk-details" data-module="govuk-details" data-testid="what-you-can-find-list">
-                            <summary class="govuk-details__summary">
-                                <span class="govuk-details__summary-text">
-                                    <span>Establishments you can search</span>
-                                </span>
-                            </summary>
-                            <ul class="govuk-list govuk-details__text govuk-list--bullet">
-                                <li class="govuk-!-margin-left-5">academies</li>
-                                <li class="govuk-!-margin-left-5">free schools</li>
-                                <li class="govuk-!-margin-left-5">local authority maintained schools</li>
-                                <li class="govuk-!-margin-left-5">special schools</li>
-                                <li class="govuk-!-margin-left-5">trusts</li>
-                            </ul>
-                        </details>
-                        <partial name="_PageSearchForm" model="Model"/>
-                    </form>
-                </div>
-            </div>
-        </div>
+  <div class="app-banner app-banner--l">
+    <div class="dfe-width-container">
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-half">
+              <h1 class="govuk-heading-xl app-banner--heading govuk-!-margin-bottom-8">
+                  Find information about schools and trusts
+              </h1>
+              <form class="govuk-form-group app-search govuk-!-margin-bottom-0" asp-page="Search" method="post" role="search" aria-label="sitewide">
+                  <p class="govuk-body">Use this tool to find information on trusts and schools, including academies.</p>
+                  <details class="govuk-details" data-module="govuk-details" data-testid="what-you-can-find-list">
+                      <summary class="govuk-details__summary">
+                          <span class="govuk-details__summary-text">
+                              <span>Establishments you can search</span>
+                          </span>
+                      </summary>
+                      <ul class="govuk-list govuk-details__text govuk-list--bullet">
+                          <li class="govuk-!-margin-left-5">academies</li>
+                          <li class="govuk-!-margin-left-5">free schools</li>
+                          <li class="govuk-!-margin-left-5">local authority maintained schools</li>
+                          <li class="govuk-!-margin-left-5">special schools</li>
+                          <li class="govuk-!-margin-left-5">trusts</li>
+                      </ul>
+                  </details>
+                  <partial name="_PageSearchForm" model="Model"/>
+              </form>
+          </div>
+      </div>
     </div>
     <div class="app-banner app-banner--grey">
         <div class="dfe-width-container govuk-!-padding-top-6 govuk-!-padding-bottom-2">

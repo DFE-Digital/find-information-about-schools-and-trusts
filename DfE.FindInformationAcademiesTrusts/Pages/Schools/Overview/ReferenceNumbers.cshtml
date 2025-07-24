@@ -1,0 +1,46 @@
+@page
+@model ReferenceNumbersModel
+
+@{
+  Layout = "_SchoolLayout";
+}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h2 class="govuk-heading-m" data-testid="subpage-header">
+      Reference numbers
+    </h2>
+
+    <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-!-width-two-thirds" data-testid="reference-numbers-urn-header">
+          URN (Unique Reference Number)
+        </dt>
+        <dd class="govuk-summary-list__value" data-testid="reference-numbers-urn-value">
+          @Model.Urn
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-!-width-two-thirds" data-testid="reference-numbers-laestab-header">
+          LAESTAB (local authority establishment number)
+        </dt>
+        <dd class="govuk-summary-list__value" data-testid="reference-numbers-laestab-value">
+          @Model.Laestab
+        </dd>
+      </div>
+
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key govuk-!-width-two-thirds" data-testid="reference-numbers-ukprn-header">
+          UKPRN (UK provider reference number)
+        </dt>
+        <dd class="govuk-summary-list__value" data-testid="reference-numbers-ukprn-value">
+          @Model.Ukprn
+        </dd>
+      </div>
+
+    </dl>
+
+    <hr class="govuk-section-break govuk-section-break--m">
+  </div>
+</div>

@@ -25,7 +25,7 @@ public class FederationModelTests : BaseOverviewAreaModelTests<FederationModel>
             .Returns(_dummyFederationDetails);
 
         Sut = new FederationModel(MockSchoolService, MockTrustService, _mockSchoolOverviewFederationService,
-            MockDataSourceService);
+            MockDataSourceService, MockSchoolNavMenu);
         Sut.Urn = SchoolUrn;
     }
 
