@@ -38,31 +38,32 @@
           </div>
       </div>
     </div>
-    <div class="app-banner app-banner--grey">
-        <div class="dfe-width-container govuk-!-padding-top-6 govuk-!-padding-bottom-2">
-            <h2 class="govuk-heading-l">
-                Useful tools (links open in a new tab)
-            </h2>
-            <div class="dfe-grid-container__fit">
-                @foreach (var serviceLink in UsefulToolsLinks)
-                {
-                    DisplayLinkInCard(serviceLink);
-                }
-                       
-            </div>
-        </div>
+  </div>
+  <div class="app-banner app-banner--grey">
+    <div class="dfe-width-container govuk-!-padding-top-6 govuk-!-padding-bottom-2">
+      <h2 class="govuk-heading-l">
+        Useful tools (links open in a new tab)
+      </h2>
+      <div class="dfe-grid-container__fit">
+        @foreach (var serviceLink in UsefulToolsLinks)
+        {
+            DisplayLinkInCard(serviceLink);
+        }
+
+      </div>
     </div>
-    <div class="dfe-width-container govuk-!-padding-top-8 govuk-!-padding-bottom-6">
-        <h2 class="govuk-heading-l">
-            Regional Services Divisions systems (open in a new tab)
-        </h2>
-             <div class="dfe-grid-container__fit">
-                @foreach (var serviceLink in ViewConstants.RsdServiceLinks)
-                {
-                    DisplayLinkInCard(serviceLink);
-                }
-            </div>
+  </div>
+  <div class="dfe-width-container govuk-!-padding-top-8 govuk-!-padding-bottom-6">
+    <h2 class="govuk-heading-l">
+        Regional Services Divisions systems (open in a new tab)
+    </h2>
+    <div class="dfe-grid-container__fit">
+      @foreach (var serviceLink in ViewConstants.RsdServiceLinks)
+      {
+          DisplayLinkInCard(serviceLink);
+      }
     </div>
+  </div>
 </main>
 
 
