@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 
-namespace DfE.FindInformationAcademiesTrusts.Pages.Shared
+namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
 {
     public class ProjectListFilters
     {

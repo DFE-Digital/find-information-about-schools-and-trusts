@@ -1,4 +1,4 @@
-﻿using DfE.FindInformationAcademiesTrusts.Pages.Shared;
+﻿using DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases;
 using Microsoft.Extensions.Primitives;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages

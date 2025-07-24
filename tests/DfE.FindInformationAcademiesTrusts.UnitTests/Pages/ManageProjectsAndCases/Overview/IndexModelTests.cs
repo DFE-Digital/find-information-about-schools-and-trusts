@@ -37,7 +37,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
             // Act
             await _indexModel.OnGetAsync();
             // Assert
-            _indexModel.PageName.Should().Be("ManageMyProjectsAndCases/Overview/Index");
+            _indexModel.PageName.Should().Be("ManageProjectsAndCases/Overview/Index");
         }
 
         [Fact]

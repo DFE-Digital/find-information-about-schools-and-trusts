@@ -1,4 +1,4 @@
-﻿@page "/managemyprojectsandcases/overview/"
+﻿@page "/manageprojectsandcases/overview/"
 @model IndexModel
 @{
     Layout = "_MMCLayout";
@@ -24,7 +24,7 @@
         }
     </div>
     <div class="govuk-grid-column-one-third">
-        <partial name="Shared/_ProjectListFilters" model="Model.Filters" />
+        <partial name="_ProjectListFilters" model="Model.Filters" />
     </div>
     <div class="govuk-grid-column-two-thirds">
         <h2 class="govuk-heading-l" test-id="projectCount" data-cy="select-projectlist-filter-count">
