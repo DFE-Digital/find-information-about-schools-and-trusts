@@ -1,10 +1,10 @@
 ﻿namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overview
 {
-    public class ResultSorting
+    public static class ResultSorting
     {
-        public const string createdDesc = "createdDesc";
-        public const string createdAsc = "createdAsc";
-        public const string updatedDesc = "updatedDesc";
-        public const string updatedAsc = "updatedAsc";
+        public const string CreatedDesc = "createdDesc";
+        public const string CreatedAsc = "createdAsc";
+        public const string UpdatedDesc = "updatedDesc";
+        public const string UpdatedAsc = "updatedAsc";
     }
 }

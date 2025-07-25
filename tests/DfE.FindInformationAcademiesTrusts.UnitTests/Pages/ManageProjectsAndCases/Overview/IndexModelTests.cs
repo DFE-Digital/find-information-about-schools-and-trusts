@@ -1,13 +1,11 @@
 ﻿using System.Collections;
 using Dfe.CaseAggregationService.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data;
-using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overview;
 using DfE.FindInformationAcademiesTrusts.Services.ManageProjectsAndCases;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Primitives;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCases.Overview
@@ -97,10 +95,10 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
 
 
         [Theory]
-        [InlineData(ResultSorting.createdAsc, SortCriteria.CreatedDateAscending)]
-        [InlineData(ResultSorting.createdDesc, SortCriteria.CreatedDateDescending)]
-        [InlineData(ResultSorting.updatedAsc, SortCriteria.UpdatedDateAscending)]
-        [InlineData(ResultSorting.updatedDesc, SortCriteria.UpdatedDateDescending)]
+        [InlineData(ResultSorting.CreatedAsc, SortCriteria.CreatedDateAscending)]
+        [InlineData(ResultSorting.CreatedDesc, SortCriteria.CreatedDateDescending)]
+        [InlineData(ResultSorting.UpdatedAsc, SortCriteria.UpdatedDateAscending)]
+        [InlineData(ResultSorting.UpdatedDesc, SortCriteria.UpdatedDateDescending)]
         public async Task OnGetAsync_SetSorting(string sortInput, SortCriteria expected)
         {
             // Arrange
@@ -265,21 +263,21 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
             
             yield return [new IncludeSystemTestCase(new StringValues(), true, true, true, true)];
 
-            for (int i = 1; i < 16; i++)
+            for (var i = 1; i < 16; i++)
             {
                 yield return [BuildCase(i)];
             }
 
         }
 
-        private IncludeSystemTestCase BuildCase(int index)
+        private static IncludeSystemTestCase BuildCase(int index)
         {
-            bool includePrepare = (index & 1) != 0;
-            bool includeComplete = (index & 2) != 0;
-            bool includeConcerns = (index & 4) != 0;
-            bool includeManageFreeSchools = (index & 8) != 0;
+            var includePrepare = (index & 1) != 0;
+            var includeComplete = (index & 2) != 0;
+            var includeConcerns = (index & 4) != 0;
+            var includeManageFreeSchools = (index & 8) != 0;
 
-            List<string> systems = new();
+            List<string> systems = [];
 
             if (includePrepare)
             {
@@ -315,29 +313,29 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
 
     public class IncludeProjectTypeData : IEnumerable<object[]>
     {
-        private readonly List<string> Expected = new List<string>
-        {
-            "Conversion",
-            "Form a MAT",
-            "Governance capability",
-            "Non-compliance",
-            "Pre-opening",
-            "Pre-opening - not included in figures",
-            "Safeguarding non-compliance",
-            "Transfer"
-        };
+        private readonly List<string> _expected =
+        [
+          "Conversion",
+          "Form a MAT",
+          "Governance capability",
+          "Non-compliance",
+          "Pre-opening",
+          "Pre-opening - not included in figures",
+          "Safeguarding non-compliance",
+          "Transfer"
+        ];
 
         private IEnumerable<IncludeProjectTypeTestCase> GenerateAllProjectTypePermutations()
         {
-            int n = Expected.Count;
-            for (int i = 1; i < (1 << n); i++)
+            var n = _expected.Count;
+            for (var i = 1; i < (1 << n); i++)
             {
                 var selected = new List<string>();
-                for (int bit = 0; bit < n; bit++)
+                for (var bit = 0; bit < n; bit++)
                 {
                     if ((i & (1 << bit)) != 0)
                     {
-                        selected.Add(Expected[bit]);
+                        selected.Add(_expected[bit]);
                     }
                 }
                 yield return new IncludeProjectTypeTestCase(new StringValues(selected.ToArray()));

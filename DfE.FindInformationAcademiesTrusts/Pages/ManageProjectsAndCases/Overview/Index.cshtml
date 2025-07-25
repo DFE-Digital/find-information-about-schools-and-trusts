@@ -38,10 +38,10 @@
                 </label>
                 <form id="sortForm" method="get" class="form">
                     <select class="govuk-select" id="sorting" asp-for="@Model.Sorting">
-                        <option value="@ResultSorting.createdDesc">Newest first</option>
-                        <option value="@ResultSorting.createdAsc">Oldest first</option>
-                        <option value="@ResultSorting.updatedDesc">Most recently updated</option>
-                        <option value="@ResultSorting.updatedAsc">Least recently updated</option>
+                        <option value="@ResultSorting.CreatedDesc">Newest first</option>
+                        <option value="@ResultSorting.CreatedAsc">Oldest first</option>
+                        <option value="@ResultSorting.UpdatedDesc">Most recently updated</option>
+                        <option value="@ResultSorting.UpdatedAsc">Least recently updated</option>
                     </select>
                 </form>
             </div>
@@ -103,10 +103,14 @@
                                 </dt>
                                 <dd>
                                     <span id="@("guidance-item-" + index + "-value")">
-                                        @foreach (var guidance in @currentCase.Guidance)
+                                        @{
+                                            var guidanceCount = currentCase.Guidance.Count;
+                                        }
+                                        @for (var i = 0; i < guidanceCount; i++)
                                         {
+                                            var guidance = currentCase.Guidance[i];
                                             <a class="govuk-link" href="@guidance.Link" target="_blank" rel="noopener noreferrer" data-cy="guidance-link-@index">@guidance.Title</a>
-                                            @(guidance != @currentCase.Guidance.Last() ? "," : "")
+                                            @(i < guidanceCount - 1 ? "," : "")
                                         }
                                     </span>
                                 </dd>
@@ -123,10 +127,15 @@
                                 </dt>
                                 <dd>
                                     <span id="@("resource-item-" + index + "-value")">
-                                        @foreach (var resource in @currentCase.Resources)
+                                        @{
+                                            var resourceCount = currentCase.Resources.Count;
+                                            var resourceIndex = 0;
+                                        }
+                                        @foreach (var resource in currentCase.Resources)
                                         {
                                             <a class="govuk-link" href="@resource.Link" target="_blank" rel="noopener noreferrer" data-cy="resource-link-@index">@resource.Title</a>
-                                            @(resource != @currentCase.Resources.Last() ? "," : "")
+                                            @(resourceIndex < resourceCount - 1 ? "," : "")
+                                            resourceIndex++;
                                         }
                                     </span>
                                 </dd>

@@ -43,9 +43,7 @@ public static class ViewConstants
             "See and access casework across different Regions Group systems.",
             "/manageprojectsandcases/overview/")
     ];
-
-    public static readonly List<ExternalServiceLink> ExternalServiceLinksWithMpc = MpcLink.Concat(ExternalServiceLinks).ToList();
-    
+   
     public static readonly List<ExternalServiceLink> RsdServiceLinks =
     [
         new("Prepare conversions and transfers",

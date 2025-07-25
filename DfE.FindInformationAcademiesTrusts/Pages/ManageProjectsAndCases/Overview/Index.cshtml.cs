@@ -18,7 +18,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overvi
         public ProjectListFilters Filters { get; init; } = new();
 
         [BindProperty(SupportsGet = true)]
-        public string Sorting { get; set; } = ResultSorting.createdDesc;
+        public string Sorting { get; set; } = ResultSorting.CreatedDesc;
 
         [BindProperty]
         public int TotalProjects { get; set; }
@@ -92,7 +92,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overvi
                     ConvertSortCriteria()
                 ));
 
-            TotalProjects = Cases.Count();
+            TotalProjects = Cases.Count;
 
             PaginationRouteData = new Dictionary<string, string> { { nameof(Sorting), Sorting } };
         }
@@ -116,10 +116,10 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overvi
         {
             return Sorting switch
             {
-                ResultSorting.createdAsc => SortCriteria.CreatedDateAscending,
-                ResultSorting.createdDesc => SortCriteria.CreatedDateDescending,
-                ResultSorting.updatedAsc => SortCriteria.UpdatedDateAscending,
-                ResultSorting.updatedDesc => SortCriteria.UpdatedDateDescending,
+                ResultSorting.CreatedAsc => SortCriteria.CreatedDateAscending,
+                ResultSorting.CreatedDesc => SortCriteria.CreatedDateDescending,
+                ResultSorting.UpdatedAsc => SortCriteria.UpdatedDateAscending,
+                ResultSorting.UpdatedDesc => SortCriteria.UpdatedDateDescending,
                 _ => SortCriteria.CreatedDateDescending
             };
         }

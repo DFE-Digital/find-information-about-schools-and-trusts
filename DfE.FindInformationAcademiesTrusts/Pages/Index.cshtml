@@ -4,8 +4,8 @@
 @{
     ViewData["Title"] = "Home page";
 
-    var UsefulToolsLinks = User.IsInRole("User.Role.MPCViewer")
-        ? ViewConstants.ExternalServiceLinksWithMpc
+    var usefulToolsLinks = User.IsInRole("User.Role.MPCViewer")
+        ? ViewConstants.MpcLink.Concat(ViewConstants.ExternalServiceLinks).ToList()
         : ViewConstants.ExternalServiceLinks;
 }
 
@@ -45,7 +45,7 @@
         Useful tools (links open in a new tab)
       </h2>
         <div class="dfe-grid-container dfe-grid-container__fit">
-        @foreach (var serviceLink in UsefulToolsLinks)
+        @foreach (var serviceLink in usefulToolsLinks)
         {
             DisplayLinkInCard(serviceLink);
         }

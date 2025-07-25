@@ -10,15 +10,15 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
         public const string FilterSystems = nameof(FilterSystems);
 
         private IDictionary<string, object?> _store = null!;
-        public List<string> AvailableProjectTypes { get; set; } = new();
+        public List<string> AvailableProjectTypes { get; set; } = [];
 
-        public List<string> AvailableSystems { get; set; } = new();
+        public List<string> AvailableSystems { get; set; } = [];
         
         [BindProperty]
-        public string[] SelectedProjectTypes { get; set; } = Array.Empty<string>();
+        public string[] SelectedProjectTypes { get; set; } = [];
 
         [BindProperty]
-        public string[] SelectedSystems { get; set; } = Array.Empty<string>();
+        public string[] SelectedSystems { get; set; } = [];
 
         public bool IsVisible => SelectedProjectTypes.Length > 0 ||
                                  SelectedSystems.Length > 0;
@@ -41,8 +41,8 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
             {
                 ClearFilters();
 
-                SelectedProjectTypes = Array.Empty<string>();
-                SelectedSystems = Array.Empty<string>();
+                SelectedProjectTypes = [];
+                SelectedSystems = [];
 
                 return;
             }
@@ -71,25 +71,25 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
 
             string[] GetFromQuery(string key)
             {
-                return query.ContainsKey(key) ? query[key]! : Array.Empty<string>();
+                return query.TryGetValue(key, out var value) ? value! : Array.Empty<string>();
             }
         }
 
         private string[] Get(string key, bool persist = false)
         {
-            if (_store.ContainsKey(key) is false) return Array.Empty<string>();
+            if (!_store.TryGetValue(key, out var strValue)) return [];
 
-            string[]? value = (string[]?)_store[key];
+            string[]? value = (string[]?)strValue;
             if (persist) Cache(key, value);
 
-            return value ?? Array.Empty<string>();
+            return value ?? [];
         }
 
         private string[] GetAndRemove(string key, string[]? value, bool persist = false)
         {
-            if (_store.ContainsKey(key) is false) return Array.Empty<string>();
+            if (!_store.TryGetValue(key, out var strValue)) return [];
 
-            string[]? currentValues = (string[]?)_store[key];
+            string[]? currentValues = (string[]?)strValue;
 
             if (value is not null && value.Length > 0 && currentValues is not null)
             {
@@ -98,7 +98,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
 
             if (persist) Cache(key, currentValues);
 
-            return currentValues ?? Array.Empty<string>();
+            return currentValues ?? [];
         }
 
         private string[] Cache(string key, string[]? value)
@@ -108,7 +108,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
             else
                 _store[key] = value;
 
-            return value ?? Array.Empty<string>();
+            return value ?? [];
         }
 
         private void ClearFilters()
