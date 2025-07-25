@@ -8,34 +8,34 @@
 @import "components/footer";
 
 .app-banner {
-    @include govuk-responsive-padding(3, "top");
-    @include govuk-responsive-padding(3, "bottom");
-    background-color: $app-color-blue-light;
+  @include govuk-responsive-padding(3, "top");
+  @include govuk-responsive-padding(3, "bottom");
+  background-color: $app-color-blue-light;
 
-    &.school {
-        background-color: $app-color-dfe-purple-light;
-    }
+  &.school {
+    background-color: $app-color-dfe-purple-light;
+  }
 
-    .app-banner--heading {
-        color: $app-color-dfe-blue;
-    }
+  .app-banner--heading {
+    color: $app-color-dfe-blue;
+  }
 
-    .app-banner--body {
-        color: $govuk-secondary-text-colour;
-    }
+  .app-banner--body {
+    color: $govuk-secondary-text-colour;
+  }
 
-    &.app-banner--l {
-        @include govuk-responsive-padding(7, "top");
-        @include govuk-responsive-padding(5, "bottom");
-    }
+  &.app-banner--l {
+    @include govuk-responsive-padding(7, "top");
+    @include govuk-responsive-padding(5, "bottom");
+  }
 
-    &.app-banner--s {
-        @include govuk-responsive-padding(0);
-    }
+  &.app-banner--s {
+    @include govuk-responsive-padding(0);
+  }
 
-    &.app-banner--grey {
-        background-color: #E7E7E6;
-    }
+  &.app-banner--grey {
+    background-color: #e7e7e6;
+  }
 }
 
 .app-search-results-summary-list {
