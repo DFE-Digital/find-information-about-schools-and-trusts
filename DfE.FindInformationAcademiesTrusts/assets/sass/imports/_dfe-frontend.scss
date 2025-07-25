@@ -20,16 +20,13 @@
 }
 
 .dfe-grid-container__fit {
-  @extend .dfe-grid-container;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 }
 
 .dfe-card__auto-width {
-  @extend .dfe-card;
   max-width: none;
 }
 
 .govuk-tag__auto-width {
-    @extend .govuk-tag;
-    max-width: none;
+  max-width: none;
 }

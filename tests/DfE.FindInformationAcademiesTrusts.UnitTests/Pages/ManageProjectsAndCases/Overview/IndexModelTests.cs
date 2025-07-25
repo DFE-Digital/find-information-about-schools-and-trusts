@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Dfe.CaseAggregationService.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data;
+using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overview;
 using DfE.FindInformationAcademiesTrusts.Services.ManageProjectsAndCases;
 using Microsoft.AspNetCore.Hosting;
@@ -25,7 +26,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
             _environment = Substitute.For<IWebHostEnvironment>();
 
             _indexModel = new IndexModel(_getCasesService, _environment);
-
+      
             SetupContext();
 
             _getCasesService.GetCasesAsync(Arg.Any<GetCasesParameters>()).Returns(_emptyList);
@@ -197,7 +198,32 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
                 .GetCasesAsync(Arg.Is<GetCasesParameters>(x => x.RecordCount == 25));
         }
 
-        private void SetupContext(StringValues? selectedSystems = null, StringValues? selectedProjectTypes = null)
+
+        [Fact]
+        public async Task OnGetAsync_ShouldSendFakeEmailWhenInDevelopment()
+        {
+          _environment.EnvironmentName.Returns("LocalDevelopment");
+          _indexModel.FakeEmail = "faked";
+          // Act
+          await _indexModel.OnGetAsync();
+          // Assert
+          await _getCasesService.Received(1)
+            .GetCasesAsync(Arg.Is<GetCasesParameters>(x => x.UserEmail == "faked"));
+        }
+
+        [Fact]
+        public async Task OnGetAsync_ShouldSendRealEmailWhenInProduction()
+        {
+          _environment.EnvironmentName.Returns("Production");
+          _indexModel.FakeEmail = "faked";
+          // Act
+          await _indexModel.OnGetAsync();
+          // Assert
+          await _getCasesService.Received(1)
+            .GetCasesAsync(Arg.Is<GetCasesParameters>(x => x.UserEmail != "faked"));
+        }
+
+    private void SetupContext(StringValues? selectedSystems = null, StringValues? selectedProjectTypes = null)
         {
             var httpContext = new DefaultHttpContext();
             var query = new Dictionary<string, StringValues>();

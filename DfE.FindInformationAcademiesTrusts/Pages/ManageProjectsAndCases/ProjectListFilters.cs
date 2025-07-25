@@ -116,18 +116,6 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
             Cache(FilterProjectTypes, default);
             Cache(FilterSystems, default);
         }
-
-        /// <summary>
-        ///    Removes all project list filters from the store
-        /// </summary>
-        /// <param name="store">the store used to cache filters between pages</param>
-        /// <remarks>
-        ///    Note that, when using TempData, this won't take effect until after the next request context that returns a 2xx response!
-        /// </remarks>
-        public static void ClearFiltersFrom(IDictionary<string, object?> store)
-        {
-            new ProjectListFilters().PersistUsing(store).ClearFilters();
-        }
     }
 
 }
