@@ -13,7 +13,7 @@
         }
 
 
-        public enum OfstedColumns
+        public enum OfstedTrustColumns
         {
             SchoolName = 1,
             DateJoined = 2,

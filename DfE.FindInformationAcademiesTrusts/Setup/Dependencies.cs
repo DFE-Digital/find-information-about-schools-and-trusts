@@ -90,7 +90,7 @@ public static class Dependencies
         builder.Services.AddScoped<ISchoolService, SchoolService>();
 
         builder.Services.AddScoped<IPipelineAcademiesExportService, PipelineAcademiesExportService>();
-        builder.Services.AddScoped<IOfstedDataExportService, OfstedDataExportService>();
+        builder.Services.AddScoped<IOfstedTrustDataExportService, OfstedTrustDataExportService>();
         builder.Services.AddScoped<IAcademiesExportService, AcademiesExportService>();
 
         builder.Services.AddScoped<IOtherServicesLinkBuilder, OtherServicesLinkBuilder>();
