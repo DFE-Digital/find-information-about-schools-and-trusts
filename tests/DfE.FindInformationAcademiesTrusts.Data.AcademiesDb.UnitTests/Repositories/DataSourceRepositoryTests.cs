@@ -32,6 +32,7 @@ public class DataSourceRepositoryTests
     [InlineData(Source.Cdm, UpdateFrequency.Daily)]
     [InlineData(Source.Gias, UpdateFrequency.Daily)]
     [InlineData(Source.Mis, UpdateFrequency.Monthly)]
+    [InlineData(Source.MisFurtherEducation, UpdateFrequency.Monthly)]
     [InlineData(Source.Mstr, UpdateFrequency.Daily)]
     [InlineData(Source.Prepare, UpdateFrequency.Daily)]
     [InlineData(Source.Complete, UpdateFrequency.Daily)]
@@ -58,6 +59,8 @@ public class DataSourceRepositoryTests
     [InlineData(Source.Cdm, "Unable to find when CDM_Daily was last run", UpdateFrequency.Daily)]
     [InlineData(Source.Gias, "Unable to find when GIAS_Daily was last run", UpdateFrequency.Daily)]
     [InlineData(Source.Mis, "Unable to find when ManagementInformationSchoolTableData was last modified",
+        UpdateFrequency.Monthly)]
+    [InlineData(Source.MisFurtherEducation, "Unable to find when ManagementInformationSchoolTableData was last modified",
         UpdateFrequency.Monthly)]
     [InlineData(Source.Mstr, "Unable to find when MSTR_Daily was last run", UpdateFrequency.Daily)]
     [InlineData(Source.Prepare, "Unable to find last data refresh for MSTR source 'Prepare'", UpdateFrequency.Daily)]
@@ -112,7 +115,7 @@ public class DataSourceRepositoryTests
         if (source is not Source.Gias) _mockAcademiesDbContext.AddApplicationEvent("GIAS_Daily", lastUpdateTime);
         if (source is not Source.Mstr) _mockAcademiesDbContext.AddApplicationEvent("MSTR_Daily", lastUpdateTime);
         if (source is not Source.Cdm) _mockAcademiesDbContext.AddApplicationEvent("CDM_Daily", lastUpdateTime);
-        if (source is not Source.Mis)
+        if (source is not Source.Mis && source is not Source.MisFurtherEducation)
             _mockAcademiesDbContext.AddApplicationSetting("ManagementInformationSchoolTableData CSV Filename",
                 lastUpdateTime);
         if (source is not Source.Prepare)

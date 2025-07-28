@@ -163,7 +163,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseTrustPageTests<T>, ITe
 
         await Sut.OnGetAsync();
 
-        Sut.DataSourcesPerPage[0].DataSources[0].DataSource.Should().Be(
+        Sut.DataSourcesPerPage[0].DataSources[0].DataSources[0].Should().Be(
             new DataSourceServiceModel(Source.FiatDb,
                 _trustRelationshipManager.LastModifiedAtTime,
                 null,
@@ -179,7 +179,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseTrustPageTests<T>, ITe
 
         await Sut.OnGetAsync();
 
-        Sut.DataSourcesPerPage[0].DataSources[1].DataSource.Should().Be(
+        Sut.DataSourcesPerPage[0].DataSources[1].DataSources[0].Should().Be(
             new DataSourceServiceModel(Source.FiatDb,
                 _sfsoLead.LastModifiedAtTime,
                 null,
