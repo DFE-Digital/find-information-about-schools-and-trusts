@@ -13,6 +13,7 @@ public interface IOtherServicesLinkBuilder
 
     string? FinancialBenchmarkingInsightsToolListingLink(string? companiesHouseNumber);
     string FinancialBenchmarkingLinkForSchool(int urn);
+    string OfstedReportLinkForSchool(int urn);
 }
 
 public class OtherServicesLinkBuilder : IOtherServicesLinkBuilder
@@ -29,6 +30,8 @@ public class OtherServicesLinkBuilder : IOtherServicesLinkBuilder
         "https://www.find-school-performance-data.service.gov.uk";
 
     private const string SharepointBaseUrl = "https://educationgovuk.sharepoint.com";
+
+    private const string OfstedReportsBaseUrl = "https://reports.ofsted.gov.uk";
 
     public string GetInformationAboutSchoolsListingLinkForTrust(string trustUid)
     {
@@ -79,5 +82,10 @@ public class OtherServicesLinkBuilder : IOtherServicesLinkBuilder
     {
         return
             $"{SharepointBaseUrl}/_layouts/15/sharepoint.aspx?oobRefiners=%7B%22FileType%22%3A%5B%22other%22%5D%7D&q={groupId}&v=%2Fsearch";
+    }
+
+    public string OfstedReportLinkForSchool(int urn)
+    {
+        return $"{OfstedReportsBaseUrl}/inspection-reports/find-inspection-report/provider/ELS/{urn}";
     }
 }
