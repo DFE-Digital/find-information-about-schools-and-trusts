@@ -9,7 +9,7 @@ public class SingleHeadlineGradesModelTests : BaseOfstedAreaModelTests<SingleHea
         Sut = new SingleHeadlineGradesModel(MockDataSourceService,
                 MockTrustService,
                 MockAcademyService,
-                MockOfstedDataExportService,
+                MockOfstedTrustDataExportService,
                 MockDateTimeProvider
             )
             { Uid = TrustUid };

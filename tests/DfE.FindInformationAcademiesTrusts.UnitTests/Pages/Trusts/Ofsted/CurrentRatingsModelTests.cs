@@ -9,7 +9,7 @@ public class CurrentRatingsModelTests : BaseOfstedAreaModelTests<CurrentRatingsM
         Sut = new CurrentRatingsModel(MockDataSourceService,
                 MockTrustService,
                 MockAcademyService,
-                MockOfstedDataExportService,
+                MockOfstedTrustDataExportService,
                 MockDateTimeProvider
             )
             { Uid = TrustUid };
