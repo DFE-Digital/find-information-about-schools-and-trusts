@@ -39,6 +39,13 @@
             CategoryOfConcern = 22
         }
 
+        public enum OfstedSchoolColumns
+        {
+            InspectionType = 1,
+            DateOfInspection = 2,
+            Grade = 3,
+        }
+
         public enum AcademyColumns
         {
             SchoolName = 1,
