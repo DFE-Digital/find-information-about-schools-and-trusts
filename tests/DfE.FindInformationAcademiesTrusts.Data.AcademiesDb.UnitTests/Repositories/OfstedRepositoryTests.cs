@@ -841,4 +841,226 @@ public class OfstedRepositoryTests
             }
         }
     }
+
+    [Fact]
+    public async Task
+        GetOfstedInspectionHistorySummaryAsync_when_no_establishment_with_urn_exists_then_returns_Unknown_OfsteadInspectionHistorySummary()
+    {
+        var result = await _sut.GetOfstedInspectionHistorySummaryAsync(123456);
+
+        result.Should().BeEquivalentTo(OfstedInspectionHistorySummary.Unknown);
+    }
+
+    [Theory]
+    [InlineData(
+        "01/01/2024",
+        "2",
+        OfstedRatingScore.Good,
+        "01/01/2014",
+        "3",
+        OfstedRatingScore.RequiresImprovement)]
+    [InlineData(
+        "12/12/2023",
+        "3",
+        OfstedRatingScore.RequiresImprovement,
+        "12/12/2013",
+        "4",
+        OfstedRatingScore.Inadequate)]
+    public async Task
+        GetOfstedInspectionHistorySummaryAsync_when_establishment_exists_then_returns_OfsteadInspectionHistorySummary_with_correct_data(
+            string currentInspectionDate,
+            string currentInspectionOutcome,
+            OfstedRatingScore expectedCurrentInspectionOutcome,
+            string previousInspectionDate,
+            string previousInspectionOutcome,
+            OfstedRatingScore expectedPreviousInspectionOutcome)
+    {
+        _mockAcademiesDbContext.MisMstrEstablishmentFiat.AddRange([
+            new MisMstrEstablishmentFiat
+            {
+                Urn = 123456,
+                InspectionStartDate = currentInspectionDate,
+                OverallEffectiveness = currentInspectionOutcome,
+                PreviousInspectionStartDate = previousInspectionDate,
+                PreviousFullInspectionOverallEffectiveness = previousInspectionOutcome
+            },
+            new MisMstrEstablishmentFiat
+            {
+                Urn = 987654,
+                InspectionStartDate = "06/06/2023",
+                OverallEffectiveness = "Outstanding",
+                PreviousInspectionStartDate = "06/06/2013",
+                PreviousFullInspectionOverallEffectiveness = "Outstanding"
+            }
+        ]);
+
+        var result = await _sut.GetOfstedInspectionHistorySummaryAsync(123456);
+
+        result.CurrentInspection.InspectionDate.Should().NotBeNull();
+        result.CurrentInspection.InspectionDate.Should().Be(DateTime.Parse(currentInspectionDate));
+        result.CurrentInspection.InspectionOutcome.Should().Be(expectedCurrentInspectionOutcome);
+
+        result.PreviousInspection.InspectionDate.Should().NotBeNull();
+        result.PreviousInspection.InspectionDate.Should().Be(DateTime.Parse(previousInspectionDate));
+        result.PreviousInspection.InspectionOutcome.Should().Be(expectedPreviousInspectionOutcome);
+    }
+
+    [Fact]
+    public async Task
+        GetOfstedInspectionHistorySummaryAsync_when_current_inspection_date_is_missing_then_CurrentInspection_has_null_InspectionDate()
+    {
+        _mockAcademiesDbContext.MisMstrEstablishmentFiat.AddRange([
+            new MisMstrEstablishmentFiat
+            {
+                Urn = 123456,
+                InspectionStartDate = null,
+                OverallEffectiveness = "1",
+                PreviousInspectionStartDate = "01/01/2012",
+                PreviousFullInspectionOverallEffectiveness = "1"
+            }
+        ]);
+
+        var result = await _sut.GetOfstedInspectionHistorySummaryAsync(123456);
+
+        result.CurrentInspection.InspectionDate.Should().BeNull();
+        result.PreviousInspection.InspectionDate.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task
+        GetOfstedInspectionHistorySummaryAsync_when_previous_inspection_date_is_missing_then_PreviousInspection_has_null_InspectionDate()
+    {
+        _mockAcademiesDbContext.MisMstrEstablishmentFiat.AddRange([
+            new MisMstrEstablishmentFiat
+            {
+                Urn = 123456,
+                InspectionStartDate = "01/01/2022",
+                OverallEffectiveness = "1",
+                PreviousInspectionStartDate = null,
+                PreviousFullInspectionOverallEffectiveness = "1"
+            }
+        ]);
+
+        var result = await _sut.GetOfstedInspectionHistorySummaryAsync(123456);
+
+        result.CurrentInspection.InspectionDate.Should().NotBeNull();
+        result.PreviousInspection.InspectionDate.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task
+        GetOfstedInspectionHistorySummaryAsync_when_current_overall_effectiveness_is_missing_then_CurrentInspection_has_NotInspected_InspectionOutcome()
+    {
+        _mockAcademiesDbContext.MisMstrEstablishmentFiat.AddRange([
+            new MisMstrEstablishmentFiat
+            {
+                Urn = 123456,
+                InspectionStartDate = "01/01/2022",
+                OverallEffectiveness = null,
+                PreviousInspectionStartDate = "01/01/2012",
+                PreviousFullInspectionOverallEffectiveness = "1"
+            }
+        ]);
+
+        var result = await _sut.GetOfstedInspectionHistorySummaryAsync(123456);
+
+        result.CurrentInspection.InspectionOutcome.Should().Be(OfstedRatingScore.NotInspected);
+        result.PreviousInspection.InspectionOutcome.Should().NotBe(OfstedRatingScore.NotInspected);
+    }
+
+    [Fact]
+    public async Task
+        GetOfstedInspectionHistorySummaryAsync_when_previous_overall_effectiveness_is_missing_then_PreviousInspection_has_NotInspected_InspectionOutcome()
+    {
+        _mockAcademiesDbContext.MisMstrEstablishmentFiat.AddRange([
+            new MisMstrEstablishmentFiat
+            {
+                Urn = 123456,
+                InspectionStartDate = "01/01/2022",
+                OverallEffectiveness = "1",
+                PreviousInspectionStartDate = "01/01/2012",
+                PreviousFullInspectionOverallEffectiveness = null
+            }
+        ]);
+
+        var result = await _sut.GetOfstedInspectionHistorySummaryAsync(123456);
+
+        result.CurrentInspection.InspectionOutcome.Should().NotBe(OfstedRatingScore.NotInspected);
+        result.PreviousInspection.InspectionOutcome.Should().Be(OfstedRatingScore.NotInspected);
+    }
+
+    [Fact]
+    public async Task
+        GetOfstedShortInspectionAsync_when_no_establishment_with_urn_exists_then_returns_Unknown_ShortInspection()
+    {
+        var result = await _sut.GetOfstedShortInspectionAsync(123456);
+
+        result.Should().BeEquivalentTo(OfstedShortInspection.Unknown);
+    }
+
+    [Theory]
+    [InlineData("01/01/2025", "School remains Good")]
+    [InlineData("12/12/2024", "Improved significantly")]
+    public async Task
+        GetOfstedShortInspectionAsync_when_establishment_exists_then_returns_ShortInspection_with_correct_data(
+            string inspectionDate, string inspectionOutcome)
+    {
+        _mockAcademiesDbContext.MisMstrEstablishmentFiat.AddRange([
+            new MisMstrEstablishmentFiat
+            {
+                Urn = 123456,
+                DateOfLatestSection8Inspection = inspectionDate,
+                Section8InspectionOverallOutcome = inspectionOutcome
+            },
+            new MisMstrEstablishmentFiat
+            {
+                Urn = 987654,
+                DateOfLatestSection8Inspection = "06/06/2023",
+                Section8InspectionOverallOutcome = "School remains Outstanding"
+            }
+        ]);
+
+        var result = await _sut.GetOfstedShortInspectionAsync(123456);
+
+        result.InspectionDate.Should().NotBeNull();
+        result.InspectionDate!.Should().Be(DateTime.Parse(inspectionDate));
+        result.InspectionOutcome.Should().NotBeNull();
+        result.InspectionOutcome!.Should().Be(inspectionOutcome);
+    }
+
+    [Fact]
+    public async Task
+        GetOfstedShortInspectionAsync_when_inspection_date_is_missing_then_ShortInspection_has_null_InspectionDate()
+    {
+        _mockAcademiesDbContext.MisMstrEstablishmentFiat.AddRange([
+            new MisMstrEstablishmentFiat
+            {
+                Urn = 123456,
+                DateOfLatestSection8Inspection = null,
+                Section8InspectionOverallOutcome = "School remains Outstanding"
+            }
+        ]);
+
+        var result = await _sut.GetOfstedShortInspectionAsync(123456);
+
+        result.InspectionDate.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task
+        GetOfstedShortInspectionAsync_when_inspection_outcome_is_missing_then_ShortInspection_has_null_InspectionOutcome()
+    {
+        _mockAcademiesDbContext.MisMstrEstablishmentFiat.AddRange([
+            new MisMstrEstablishmentFiat
+            {
+                Urn = 123456,
+                DateOfLatestSection8Inspection = "01/01/2025",
+                Section8InspectionOverallOutcome = null
+            }
+        ]);
+
+        var result = await _sut.GetOfstedShortInspectionAsync(123456);
+
+        result.InspectionOutcome.Should().BeNull();
+    }
 }
