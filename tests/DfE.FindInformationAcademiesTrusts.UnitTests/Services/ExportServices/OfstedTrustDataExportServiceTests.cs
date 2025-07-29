@@ -92,6 +92,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             var joinedDate = new DateTime(2020, 1, 1);
             var currentInspectionDate = new DateTime(2021, 5, 20);
             var previousInspectionDate = new DateTime(2019, 12, 31);
+            var shortInspectionDate = new DateTime(2025, 7, 1);
 
             _mockAcademyService.GetAcademiesInTrustDetailsAsync(trustUid)
                 .Returns([new("A123", "Academy XYZ", "TypeX", "Local LA", "Urban", DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-10)))]);
@@ -99,6 +100,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             _mockAcademyService.GetAcademiesInTrustOfstedAsync(trustUid)
                 .Returns([
                     new("A123", "Academy XYZ", joinedDate,
+                        new OfstedShortInspection(shortInspectionDate, "School remains Good"),
                         new OfstedRating((int)OfstedRatingScore.Good, previousInspectionDate),
                         new OfstedRating((int)OfstedRatingScore.Outstanding, currentInspectionDate))
                 ]);
@@ -178,6 +180,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             var joinedDate = new DateTime(2020, 1, 1);
             var currentInspectionDate = new DateTime(2021, 5, 20);
             var previousInspectionDate = new DateTime(2019, 12, 31);
+            var shortInspectionDate = new DateTime(2025, 7, 1);
 
             _mockAcademyService.GetAcademiesInTrustDetailsAsync(trustUid)
                 .Returns([new("A123", null, "TypeX", "Local LA", "Urban", DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-10)))]);
@@ -185,6 +188,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             _mockAcademyService.GetAcademiesInTrustOfstedAsync(trustUid)
                 .Returns([
                     new("A123", "Academy XYZ", joinedDate,
+                        new OfstedShortInspection(shortInspectionDate, "School remains Good"),
                         new OfstedRating((int)OfstedRatingScore.Good, previousInspectionDate),
                         new OfstedRating((int)OfstedRatingScore.Outstanding, currentInspectionDate))
                 ]);
