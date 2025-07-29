@@ -12,6 +12,8 @@ public record AcademyOfstedServiceModel(
     OfstedRating CurrentOfstedRating
 )
 {
+    public bool HasRecentShortInspection => ShortInspection.InspectionDate > CurrentOfstedRating.InspectionDate;
+
     public BeforeOrAfterJoining WhenDidCurrentInspectionHappen
     {
         get
