@@ -11,7 +11,7 @@ public class AcademyOfstedServiceModelTests
 
     public AcademyOfstedServiceModelTests()
     {
-        _sut = new AcademyOfstedServiceModel("1234", "test", _joinDate, OfstedRating.NotInspected,
+        _sut = new AcademyOfstedServiceModel("1234", "test", _joinDate, OfstedShortInspection.Unknown, OfstedRating.NotInspected,
             OfstedRating.NotInspected);
     }
 
