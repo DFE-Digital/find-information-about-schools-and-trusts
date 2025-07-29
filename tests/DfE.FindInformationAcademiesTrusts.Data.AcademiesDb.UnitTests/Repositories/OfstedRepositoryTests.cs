@@ -824,6 +824,52 @@ public class OfstedRepositoryTests
         _mockLogger.VerifyDidNotReceive();
     }
 
+    [Fact]
+    public async Task GetAcademiesInTrustOfstedAsync_should_include_short_inspection_data_when_not_further_education()
+    {
+        _mockAcademiesDbContext.AddGiasGroupLinks(GroupUid, "987654");
+        _mockAcademiesDbContext.MisMstrEstablishmentFiat.Add(
+            new MisMstrEstablishmentFiat()
+            {
+                Urn = 987654, DateOfLatestSection8Inspection = "15/05/2023", Section8InspectionOverallOutcome = "School remains Good",
+            });
+
+        var result = await _sut.GetAcademiesInTrustOfstedAsync(GroupUid);
+
+        var actual = result.Should().ContainSingle().Subject;
+        actual.ShortInspection.InspectionDate.Should().HaveDay(15).And.HaveMonth(5).And.HaveYear(2023);
+        actual.ShortInspection.InspectionOutcome.Should().Be("School remains Good");
+    }
+
+    [Fact]
+    public async Task GetAcademiesInTrustOfstedAsync_should_include_short_inspection_data_when_further_education()
+    {
+        _mockAcademiesDbContext.AddGiasGroupLinks(GroupUid, "987654");
+        _mockAcademiesDbContext.MisMstrFurtherEducationEstablishmentFiat.Add(new MisMstrFurtherEducationEstablishmentFiat()
+        {
+            ProviderUrn = 987654,
+            DateOfLatestShortInspection = "01/07/2025"
+        });
+
+        var result = await _sut.GetAcademiesInTrustOfstedAsync(GroupUid);
+
+        var actual = result.Should().ContainSingle().Subject;
+        actual.ShortInspection.InspectionDate
+            .Should().HaveDay(1).And.HaveMonth(7).And.HaveYear(2025);
+        actual.ShortInspection.InspectionOutcome.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetAcademiesInTrustOfstedAsync_should_include_unknown_short_inspection_when_urn_is_unknown()
+    {
+        _mockAcademiesDbContext.AddGiasGroupLinks(GroupUid, "987654");
+        
+        var result = await _sut.GetAcademiesInTrustOfstedAsync(GroupUid);
+        
+        result.Should().ContainSingle()
+            .Which.ShortInspection.Should().BeEquivalentTo(OfstedShortInspection.Unknown);
+    }
+
     private void VerifyLogs(int[] urns, bool shouldLogError)
     {
         foreach (var urn in urns)
