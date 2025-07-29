@@ -18,6 +18,6 @@ public class CurrentModel(
 
     public static string NavTitle(int number)
     {
-        return SubPageName + $"({number})";
+        return SubPageName + $" ({number})";
     }
 }

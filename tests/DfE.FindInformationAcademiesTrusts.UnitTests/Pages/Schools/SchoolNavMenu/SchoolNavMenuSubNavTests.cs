@@ -236,10 +236,10 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
 
     public static TheoryData<int, int, string, string> GovernanceData => new()
     {
-        { 0, 0, "Current governors(0)", "Historic governors(0)" },
-        { 2, 0, "Current governors(2)", "Historic governors(0)" },
-        { 0, 2, "Current governors(0)", "Historic governors(2)" },
-        { 20, 10, "Current governors(20)", "Historic governors(10)" }
+        { 0, 0, "Current governors (0)", "Historic governors (0)" },
+        { 2, 0, "Current governors (2)", "Historic governors (0)" },
+        { 0, 2, "Current governors (0)", "Historic governors (2)" },
+        { 20, 10, "Current governors (20)", "Historic governors (10)" }
     };
 
     private static Governor[] GenerateGovernors(bool isCurrent, string role, int numberToGenerate)

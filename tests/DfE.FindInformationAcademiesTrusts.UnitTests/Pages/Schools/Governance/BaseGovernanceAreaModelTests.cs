@@ -32,16 +32,16 @@ public abstract class BaseGovernanceAreaModelTests<T> : BaseSchoolPageTests<T> w
     }
 
     [Theory]
-    [InlineData(0, "Historic governors(0)")]
-    [InlineData(1, "Historic governors(1)")]
+    [InlineData(0, "Historic governors (0)")]
+    [InlineData(1, "Historic governors (1)")]
     public void Historic_SubNavTitle_should_be_generated_from_number_of_results(int number, string expected)
     {
         HistoricModel.NavTitle(number).Should().Be(expected);
     }
 
     [Theory]
-    [InlineData(0, "Current governors(0)")]
-    [InlineData(1, "Current governors(1)")]
+    [InlineData(0, "Current governors (0)")]
+    [InlineData(1, "Current governors (1)")]
     public void Current_SubNavTitle_should_be_generated_from_number_of_results(int number, string expected)
     {
         CurrentModel.NavTitle(number).Should().Be(expected);
