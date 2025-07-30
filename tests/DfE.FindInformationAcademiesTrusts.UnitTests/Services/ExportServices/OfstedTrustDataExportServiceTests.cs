@@ -40,14 +40,13 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             // Verify headers on row 3
             worksheet.AssertSpreadsheetMatches(3,
             [
-                "School Name", "Date joined", "Current single headline grade", "Before/After Joining",
-                "Date of Current Inspection", "Previous single headline grade", "Before/After Joining",
-                "Date of previous inspection", "Quality of Education", "Behaviour and Attitudes",
-                "Personal Development",
-                "Leadership and Management", "Early Years Provision", "Sixth Form Provision",
-                "Previous Quality of Education", "Previous Behaviour and Attitudes", "Previous Personal Development",
-                "Previous Leadership and Management", "Previous Early Years Provision", "Previous Sixth Form Provision",
-                "Effective Safeguarding", "Category of Concern"
+                "School Name", "Date joined", "Has recent short inspection", "Current single headline grade",
+                "Before/After Joining", "Date of Current Inspection", "Previous single headline grade",
+                "Before/After Joining", "Date of previous inspection", "Quality of Education",
+                "Behaviour and Attitudes", "Personal Development", "Leadership and Management", "Early Years Provision",
+                "Sixth Form Provision", "Previous Quality of Education", "Previous Behaviour and Attitudes",
+                "Previous Personal Development", "Previous Leadership and Management", "Previous Early Years Provision",
+                "Previous Sixth Form Provision", "Effective Safeguarding", "Category of Concern"
             ]);
         }
 
@@ -112,6 +111,9 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             // Row with data is row 4
             worksheet.CellValue(4, OfstedTrustColumns.SchoolName).Should().Be("Academy XYZ");
             
+            // Short inspection data
+            worksheet.CellValue(4, OfstedTrustColumns.HasRecentShortInspection).Should().Be("Yes");
+            
             // Date Joined as date
             worksheet.Cell(4, OfstedTrustColumns.DateJoined).DataType.Should().Be(XLDataType.DateTime);
             worksheet.Cell(4, OfstedTrustColumns.DateJoined).GetValue<DateTime>().Should().Be(joinedDate);
@@ -148,6 +150,8 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             using var workbook = new XLWorkbook(new MemoryStream(result));
             var worksheet = workbook.Worksheet("Ofsted");
 
+            // Short inspection
+            worksheet.CellValue(4, OfstedTrustColumns.HasRecentShortInspection).Should().Be(string.Empty);
 
             //Current inspection
             worksheet.CellValue(4, OfstedTrustColumns.DateOfCurrentInspection).Should().Be(string.Empty);
