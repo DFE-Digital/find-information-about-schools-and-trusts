@@ -13,30 +13,32 @@
         }
 
 
+        
         public enum OfstedTrustColumns
         {
             SchoolName = 1,
             DateJoined = 2,
-            CurrentSingleHeadlineGrade = 3,
-            CurrentBeforeAfterJoining = 4,
-            DateOfCurrentInspection = 5,
-            PreviousSingleHeadlineGrade = 6,
-            PreviousBeforeAfterJoining = 7,
-            DateOfPreviousInspection = 8,
-            CurrentQualityOfEducation = 9,
-            CurrentBehaviourAndAttitudes = 10,
-            CurrentPersonalDevelopment = 11,
-            CurrentLeadershipAndManagement = 12,
-            CurrentEarlyYearsProvision = 13,
-            CurrentSixthFormProvision = 14,
-            PreviousQualityOfEducation = 15,
-            PreviousBehaviourAndAttitudes = 16,
-            PreviousPersonalDevelopment = 17,
-            PreviousLeadershipAndManagement = 18,
-            PreviousEarlyYearsProvision = 19,
-            PreviousSixthFormProvision = 20,
-            EffectiveSafeguarding = 21,
-            CategoryOfConcern = 22
+            HasRecentShortInspection = 3,
+            CurrentSingleHeadlineGrade = 4,
+            CurrentBeforeAfterJoining = 5,
+            DateOfCurrentInspection = 6,
+            PreviousSingleHeadlineGrade = 7,
+            PreviousBeforeAfterJoining = 8,
+            DateOfPreviousInspection = 9,
+            CurrentQualityOfEducation = 10,
+            CurrentBehaviourAndAttitudes = 11,
+            CurrentPersonalDevelopment = 12,
+            CurrentLeadershipAndManagement = 13,
+            CurrentEarlyYearsProvision = 14,
+            CurrentSixthFormProvision = 15,
+            PreviousQualityOfEducation = 16,
+            PreviousBehaviourAndAttitudes = 17,
+            PreviousPersonalDevelopment = 18,
+            PreviousLeadershipAndManagement = 19,
+            PreviousEarlyYearsProvision = 20,
+            PreviousSixthFormProvision = 21,
+            EffectiveSafeguarding = 22,
+            CategoryOfConcern = 23
         }
 
         public enum OfstedSchoolColumns

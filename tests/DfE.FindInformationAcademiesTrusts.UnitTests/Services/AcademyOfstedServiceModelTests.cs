@@ -11,7 +11,7 @@ public class AcademyOfstedServiceModelTests
 
     public AcademyOfstedServiceModelTests()
     {
-        _sut = new AcademyOfstedServiceModel("1234", "test", _joinDate, OfstedRating.NotInspected,
+        _sut = new AcademyOfstedServiceModel("1234", "test", _joinDate, OfstedShortInspection.Unknown, OfstedRating.NotInspected,
             OfstedRating.NotInspected);
     }
 
@@ -73,5 +73,45 @@ public class AcademyOfstedServiceModelTests
     public void WhenDidPreviousInspectionHappen_should_be_NotYetInspected_when_PreviousInspectionDate_is_null()
     {
         _sut.WhenDidPreviousInspectionHappen.Should().Be(BeforeOrAfterJoining.NotYetInspected);
+    }
+    
+    [Fact]
+    public void
+        HasRecentShortInspection_returns_true_when_ShortInspection_InspectionDate_is_after_CurrentInspection_InspectionDate()
+    {
+        var sut = _sut with
+        {
+            ShortInspection = new OfstedShortInspection(new DateTime(2025, 1, 1), "School remains Good"),
+            CurrentOfstedRating = new OfstedRating(1, new DateTime(2021, 1, 1))
+        };
+        
+        sut.HasRecentShortInspection.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData(2021)]
+    [InlineData(2020)]
+    public void
+        HasRecentShortInspection_returns_false_when_ShortInspection_InspectionDate_is_not_after_CurrentInspection_InspectionDate(int year)
+    {
+        var sut = _sut with
+        {
+            ShortInspection = new OfstedShortInspection(new DateTime(year, 1, 1), "School remains Good"),
+            CurrentOfstedRating = new OfstedRating(1, new DateTime(2021, 1, 1))
+        };
+        
+        sut.HasRecentShortInspection.Should().BeFalse();
+    }
+
+    [Fact]
+    public void HasRecentShortInspection_returns_false_when_ShortInspection_InspectionDate_is_null()
+    {
+        var sut = _sut with
+        {
+            ShortInspection = OfstedShortInspection.Unknown,
+            CurrentOfstedRating = new OfstedRating(1, new DateTime(2021, 1, 1))
+        };
+        
+        sut.HasRecentShortInspection.Should().BeFalse();
     }
 }

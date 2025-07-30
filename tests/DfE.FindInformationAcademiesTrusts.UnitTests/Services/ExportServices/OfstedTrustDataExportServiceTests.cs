@@ -40,14 +40,13 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             // Verify headers on row 3
             worksheet.AssertSpreadsheetMatches(3,
             [
-                "School Name", "Date joined", "Current single headline grade", "Before/After Joining",
-                "Date of Current Inspection", "Previous single headline grade", "Before/After Joining",
-                "Date of previous inspection", "Quality of Education", "Behaviour and Attitudes",
-                "Personal Development",
-                "Leadership and Management", "Early Years Provision", "Sixth Form Provision",
-                "Previous Quality of Education", "Previous Behaviour and Attitudes", "Previous Personal Development",
-                "Previous Leadership and Management", "Previous Early Years Provision", "Previous Sixth Form Provision",
-                "Effective Safeguarding", "Category of Concern"
+                "School Name", "Date joined", "Has recent short inspection", "Current single headline grade",
+                "Before/After Joining", "Date of Current Inspection", "Previous single headline grade",
+                "Before/After Joining", "Date of previous inspection", "Quality of Education",
+                "Behaviour and Attitudes", "Personal Development", "Leadership and Management", "Early Years Provision",
+                "Sixth Form Provision", "Previous Quality of Education", "Previous Behaviour and Attitudes",
+                "Previous Personal Development", "Previous Leadership and Management", "Previous Early Years Provision",
+                "Previous Sixth Form Provision", "Effective Safeguarding", "Category of Concern"
             ]);
         }
 
@@ -92,6 +91,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             var joinedDate = new DateTime(2020, 1, 1);
             var currentInspectionDate = new DateTime(2021, 5, 20);
             var previousInspectionDate = new DateTime(2019, 12, 31);
+            var shortInspectionDate = new DateTime(2025, 7, 1);
 
             _mockAcademyService.GetAcademiesInTrustDetailsAsync(trustUid)
                 .Returns([new("A123", "Academy XYZ", "TypeX", "Local LA", "Urban", DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-10)))]);
@@ -99,6 +99,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             _mockAcademyService.GetAcademiesInTrustOfstedAsync(trustUid)
                 .Returns([
                     new("A123", "Academy XYZ", joinedDate,
+                        new OfstedShortInspection(shortInspectionDate, "School remains Good"),
                         new OfstedRating((int)OfstedRatingScore.Good, previousInspectionDate),
                         new OfstedRating((int)OfstedRatingScore.Outstanding, currentInspectionDate))
                 ]);
@@ -109,6 +110,9 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
 
             // Row with data is row 4
             worksheet.CellValue(4, OfstedTrustColumns.SchoolName).Should().Be("Academy XYZ");
+            
+            // Short inspection data
+            worksheet.CellValue(4, OfstedTrustColumns.HasRecentShortInspection).Should().Be("Yes");
             
             // Date Joined as date
             worksheet.Cell(4, OfstedTrustColumns.DateJoined).DataType.Should().Be(XLDataType.DateTime);
@@ -146,6 +150,8 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             using var workbook = new XLWorkbook(new MemoryStream(result));
             var worksheet = workbook.Worksheet("Ofsted");
 
+            // Short inspection
+            worksheet.CellValue(4, OfstedTrustColumns.HasRecentShortInspection).Should().Be(string.Empty);
 
             //Current inspection
             worksheet.CellValue(4, OfstedTrustColumns.DateOfCurrentInspection).Should().Be(string.Empty);
@@ -178,6 +184,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             var joinedDate = new DateTime(2020, 1, 1);
             var currentInspectionDate = new DateTime(2021, 5, 20);
             var previousInspectionDate = new DateTime(2019, 12, 31);
+            var shortInspectionDate = new DateTime(2025, 7, 1);
 
             _mockAcademyService.GetAcademiesInTrustDetailsAsync(trustUid)
                 .Returns([new("A123", null, "TypeX", "Local LA", "Urban", DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-10)))]);
@@ -185,6 +192,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             _mockAcademyService.GetAcademiesInTrustOfstedAsync(trustUid)
                 .Returns([
                     new("A123", "Academy XYZ", joinedDate,
+                        new OfstedShortInspection(shortInspectionDate, "School remains Good"),
                         new OfstedRating((int)OfstedRatingScore.Good, previousInspectionDate),
                         new OfstedRating((int)OfstedRatingScore.Outstanding, currentInspectionDate))
                 ]);

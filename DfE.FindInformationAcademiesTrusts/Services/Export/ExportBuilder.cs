@@ -92,6 +92,19 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Export
             }
         }
 
+        public void SetBoolCell(Enum column, bool? boolValue)
+        {
+            var cell = Worksheet.Cell(CurrentRow, (int)(object)column);
+            if (boolValue.HasValue)
+            {
+                cell.Value = boolValue.Value ? "Yes" : "No";
+            }
+            else
+            {
+                cell.Value = string.Empty;
+            }
+        }
+
         internal ExportBuilder WriteRows(Action action)
         {
             action.Invoke();
