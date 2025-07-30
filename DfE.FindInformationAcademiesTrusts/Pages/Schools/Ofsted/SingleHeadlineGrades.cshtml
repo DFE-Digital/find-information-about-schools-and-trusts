@@ -1,0 +1,100 @@
+@page
+@using DfE.FindInformationAcademiesTrusts.Extensions
+@model SingleHeadlineGradesModel
+
+@{
+    Layout = "_SchoolLayout";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h3 class="govuk-heading-m" data-testid="subpage-header">
+            @Model.PageMetadata.SubPageName
+        </h3>
+
+        @if (Model.DateJoinedTrust is not null)
+        {
+            <p class="govuk-body">This academy joined the trust on
+                <strong>@Model.DateJoinedTrust.ShowDateStringOrReplaceWithText()</strong>.</p>
+        }
+
+        <details class="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    Why a single headline grade might not be available
+                </span>
+            </summary>
+
+            <div class="govuk-details__text">
+                <p class="govuk-body">
+                    Single headline grades stopped being awarded by Ofsted on
+                    <strong>2 September 2024</strong>.
+                </p>
+                <p class="govuk-body">Inspections completed after this date are broken down by category.</p>
+                <p class="govuk-body">You can see these on the ‘Current ratings’ and ‘Previous ratings’ pages.</p>
+            </div>
+        </details>
+
+        <details class="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    Why short inspection data might not be available
+                </span>
+            </summary>
+
+            <div class="govuk-details__text">
+                <p class="govuk-body">A grade and date of a short inspection may not be available, when a full
+                    inspection has followed it.</p>
+                <p class="govuk-body">The data can be found in the school's Ofsted inspection reports.</p>
+            </div>
+        </details>
+
+        <table class="govuk-table govuk-!-margin-bottom-0">
+            <caption class="govuk-table__caption govuk-visually-hidden">Grades and inspection dates</caption>
+
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">
+                    <span class="govuk-visually-hidden">Data type</span>
+                </th>
+                <th scope="col" class="govuk-table__header">Date of inspection</th>
+                <th scope="col" class="govuk-table__header">Grade</th>
+            </tr>
+            </thead>
+
+            <tbody class="govuk-table__body">
+            @if (Model.HeadlineGrades.HasRecentShortInspection)
+            {
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__cell">Recent short inspection</th>
+                    <td class="govuk-table__cell">@Model.HeadlineGrades.ShortInspection.InspectionDate.ShowDateStringOrReplaceWithText("Not available")</td>
+                    <td class="govuk-table__cell">@Model.HeadlineGrades.ShortInspection.InspectionOutcome</td>
+                </tr>
+            }
+
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__cell">Current full inspection</th>
+                <td class="govuk-table__cell">@Model.HeadlineGrades.CurrentInspection.InspectionDate.ShowDateStringOrReplaceWithText("Not available")</td>
+                <td class="govuk-table__cell">@Model.HeadlineGrades.CurrentInspection.InspectionOutcome.ToDisplayString(true)</td>
+            </tr>
+
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__cell">Previous full inspection</th>
+                <td class="govuk-table__cell">@Model.HeadlineGrades.PreviousInspection.InspectionDate.ShowDateStringOrReplaceWithText("Not available")</td>
+                <td class="govuk-table__cell">@Model.HeadlineGrades.PreviousInspection.InspectionOutcome.ToDisplayString(false)</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <hr class="govuk-section-break govuk-section-break--m">
+
+        <p class="govuk-body"><a class="govuk-link" href="@Model.OfstedReportUrl">See the inspection reports at Ofsted</a>.</p>
+
+        <hr class="govuk-section-break govuk-section-break--m">
+
+        <a asp-page-handler="Export" asp-route-urn="@Model.Urn" draggable="false" class="govuk-button govuk-button--secondary"
+           data-module="govuk-button" data-govuk-button-init="">
+            Download all Ofsted data
+        </a>
+    </div>
+</div>

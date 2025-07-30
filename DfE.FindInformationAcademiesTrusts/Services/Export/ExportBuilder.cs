@@ -1,5 +1,7 @@
 ﻿using ClosedXML.Excel;
+using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages;
+using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Export
@@ -11,6 +13,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Export
         public IXLWorksheet Worksheet { get; set; }
 
         public readonly int TrustRows = 3;
+        public readonly int SchoolRows = 3;
         public readonly int HeaderRows = 1;
 
         public int CurrentRow { get; set; }
@@ -35,6 +38,23 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Export
             Worksheet.Cell(2, 1).Value = trustSummary.Type;
 
             CurrentRow += TrustRows;
+
+            return this;
+        }
+
+        public ExportBuilder WriteSchoolInformation(SchoolOverviewServiceModel school, SchoolCategory category)
+        {
+            Worksheet.Cell(1, 1).Value = school.Name;
+            Worksheet.Row(1).Style.Font.Bold = true;
+
+            Worksheet.Cell(2, 1).Value = category switch
+            {
+                SchoolCategory.LaMaintainedSchool => "Not part of a trust",
+                SchoolCategory.Academy => $"Joined trust on {school.DateJoinedTrust:dd/MM/yyyy}",
+                _ => throw new ArgumentOutOfRangeException(nameof(category))
+            };
+
+            CurrentRow += SchoolRows;
 
             return this;
         }

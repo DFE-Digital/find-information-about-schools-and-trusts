@@ -9,7 +9,7 @@ public class SafeguardingAndConcernsModelTests : BaseOfstedAreaModelTests<Safegu
         Sut = new SafeguardingAndConcernsModel(MockDataSourceService,
                 MockTrustService,
                 MockAcademyService,
-                MockOfstedDataExportService,
+                MockOfstedTrustDataExportService,
                 MockDateTimeProvider
             )
             { Uid = TrustUid };

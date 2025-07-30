@@ -13,7 +13,7 @@
         }
 
 
-        public enum OfstedColumns
+        public enum OfstedTrustColumns
         {
             SchoolName = 1,
             DateJoined = 2,
@@ -37,6 +37,13 @@
             PreviousSixthFormProvision = 20,
             EffectiveSafeguarding = 21,
             CategoryOfConcern = 22
+        }
+
+        public enum OfstedSchoolColumns
+        {
+            InspectionType = 1,
+            DateOfInspection = 2,
+            Grade = 3,
         }
 
         public enum AcademyColumns

@@ -30,6 +30,7 @@ public class DataSourceServiceTests
         { Source.Gias, GetDummyDataSource(Source.Gias, UpdateFrequency.Daily) },
         { Source.ManageFreeSchoolProjects, GetDummyDataSource(Source.ManageFreeSchoolProjects, UpdateFrequency.Daily) },
         { Source.Mis, GetDummyDataSource(Source.Mis, UpdateFrequency.Monthly) },
+        { Source.MisFurtherEducation, GetDummyDataSource(Source.MisFurtherEducation, UpdateFrequency.Monthly) },
         { Source.Mstr, GetDummyDataSource(Source.Mstr, UpdateFrequency.Daily) },
         { Source.Prepare, GetDummyDataSource(Source.Prepare, UpdateFrequency.Daily) }
     };
@@ -44,7 +45,8 @@ public class DataSourceServiceTests
 
         Source[] supportedAcademiesDbSources =
         [
-            Source.Cdm, Source.Complete, Source.Gias, Source.ManageFreeSchoolProjects, Source.Mis, Source.Mstr,
+            Source.Cdm, Source.Complete, Source.Gias, Source.ManageFreeSchoolProjects, Source.Mis,
+            Source.MisFurtherEducation, Source.Mstr,
             Source.Prepare
         ];
 
@@ -78,6 +80,7 @@ public class DataSourceServiceTests
     [InlineData(Source.ExploreEducationStatistics, UpdateFrequency.Annually)]
     [InlineData(Source.Gias, UpdateFrequency.Daily)]
     [InlineData(Source.Mis, UpdateFrequency.Monthly)]
+    [InlineData(Source.MisFurtherEducation, UpdateFrequency.Monthly)]
     [InlineData(Source.Mstr, UpdateFrequency.Daily)]
     public async Task GetAsync_cached_should_return_cached_result(Source source, UpdateFrequency updateFrequency)
     {
@@ -96,6 +99,7 @@ public class DataSourceServiceTests
     [InlineData(Source.Gias, UpdateFrequency.Daily)]
     [InlineData(Source.ManageFreeSchoolProjects, UpdateFrequency.Daily)]
     [InlineData(Source.Mis, UpdateFrequency.Monthly)]
+    [InlineData(Source.MisFurtherEducation, UpdateFrequency.Monthly)]
     [InlineData(Source.Mstr, UpdateFrequency.Daily)]
     [InlineData(Source.Prepare, UpdateFrequency.Daily)]
     public async Task GetAsync_uncached_should_call_dataSourceRepository(Source source, UpdateFrequency updateFrequency)
@@ -119,6 +123,7 @@ public class DataSourceServiceTests
     [InlineData(Source.Gias)]
     [InlineData(Source.ManageFreeSchoolProjects)]
     [InlineData(Source.Mis)]
+    [InlineData(Source.MisFurtherEducation)]
     [InlineData(Source.Mstr)]
     [InlineData(Source.Prepare)]
     public async Task GetAsync_uncached_should_call_academiesDbDataSourceRepository(Source source)
@@ -136,6 +141,7 @@ public class DataSourceServiceTests
     [InlineData(Source.Gias, UpdateFrequency.Daily)]
     [InlineData(Source.ManageFreeSchoolProjects, UpdateFrequency.Daily)]
     [InlineData(Source.Mis, UpdateFrequency.Monthly)]
+    [InlineData(Source.MisFurtherEducation, UpdateFrequency.Monthly)]
     [InlineData(Source.Mstr, UpdateFrequency.Daily)]
     [InlineData(Source.Prepare, UpdateFrequency.Daily)]
     public async Task GetAsync_uncached_should_cache_result(Source source, UpdateFrequency updateFrequency)

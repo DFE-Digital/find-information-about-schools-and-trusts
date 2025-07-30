@@ -19,14 +19,7 @@
           @foreach (var source in pageSource.DataSources)
           {
             <li data-testid="@source.TestId">
-              @if (source.DataSource.UpdatedBy is not null)
-              {
-                <span>@source.DataField was updated by @source.UpdatedByText on @source.LastUpdatedText</span>
-              }
-              else
-              {
-                <span>@source.DataField taken from @source.Name on @source.LastUpdatedText</span>
-              }
+              <span>@source.ToString()</span>
             </li>
           }
         </ul>
