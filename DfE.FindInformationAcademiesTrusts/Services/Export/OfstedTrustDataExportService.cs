@@ -18,6 +18,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Export
         [
             CommonColumnNames.SchoolName,
             CommonColumnNames.DateJoined,
+            "Has recent short inspection",
             "Current single headline grade",
             CommonColumnNames.BeforeOrAfterJoiningHeader,
             "Date of Current Inspection",
@@ -75,6 +76,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Export
 
             SetTextCell(OfstedTrustColumns.SchoolName, academy.EstablishmentName ?? string.Empty);
             SetDateCell(OfstedTrustColumns.DateJoined, ofstedData?.DateAcademyJoinedTrust);
+            SetBoolCell(OfstedTrustColumns.HasRecentShortInspection, ofstedData?.HasRecentShortInspection);
             SetTextCell(OfstedTrustColumns.CurrentSingleHeadlineGrade, currentRating.OverallEffectiveness.ToDisplayString(true));
             SetTextCell(OfstedTrustColumns.CurrentBeforeAfterJoining, ofstedData?.WhenDidCurrentInspectionHappen.ToDisplayString() ?? string.Empty);
             SetDateCell(OfstedTrustColumns.DateOfCurrentInspection, currentRating.InspectionDate);
