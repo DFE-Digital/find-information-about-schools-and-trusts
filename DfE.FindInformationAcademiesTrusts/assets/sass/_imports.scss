@@ -1,6 +1,8 @@
 @import "inter-ui/inter.css";
 $govuk-assets-path: "/node_modules/govuk-frontend/dist/govuk/assets/";
 
+$moj-images-path: "/node_modules/@ministryofjustice/frontend/moj/assets/images/";
+
 // Add DfE design system styles
 $govuk-font-family: "Inter", blinkmacsystemfont, "Segoe UI", roboto,
   oxygen-sans, ubuntu, cantarell, "Helvetica Neue", sans-serif;
