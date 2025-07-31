@@ -10,6 +10,8 @@ public interface ISchoolService
     Task<bool> IsPartOfFederationAsync(int urn);
 
     Task<SchoolReferenceNumbersServiceModel> GetReferenceNumbersAsync(int urn);
+
+    Task<SchoolGovernanceServiceModel> GetSchoolGovernanceAsync(int urn);
 }
 
 public class SchoolService(IMemoryCache memoryCache, ISchoolRepository schoolRepository) : ISchoolService
@@ -55,5 +57,14 @@ public class SchoolService(IMemoryCache memoryCache, ISchoolRepository schoolRep
             : null;
 
         return new SchoolReferenceNumbersServiceModel(urn, laestab, referenceNumbers.Ukprn);
+    }
+
+    public async Task<SchoolGovernanceServiceModel> GetSchoolGovernanceAsync(int urn)
+    {
+        var governance = await schoolRepository.GetGovernanceAsync(urn);
+
+        return new SchoolGovernanceServiceModel(
+            governance.Where(x => x.IsCurrentOrFutureGovernor).ToArray(),
+            governance.Where(x => !x.IsCurrentOrFutureGovernor).ToArray());
     }
 }

@@ -17,4 +17,6 @@ public interface ISchoolRepository
     Task<FederationDetails> GetSchoolFederationDetailsAsync(int urn);
 
     Task<SchoolReferenceNumbers?> GetReferenceNumbersAsync(int urn);
+
+    Task<Governor[]> GetGovernanceAsync(int urn);
 }
