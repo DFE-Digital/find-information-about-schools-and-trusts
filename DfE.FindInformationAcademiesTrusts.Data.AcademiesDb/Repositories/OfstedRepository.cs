@@ -60,6 +60,33 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
                 est.Section8InspectionOverallOutcome)).FirstOrDefaultAsync() ?? OfstedShortInspection.Unknown;
     }
 
+    public async Task<SchoolOfsted> GetSchoolOfstedRatingsAsync(int urn)
+    {
+        var urnString = urn.ToString();
+        
+        var result = await GetOfstedRatings([urnString]);
+        var ofstedRatings = result[urnString];
+        
+        var giasGroupLink = await academiesDbContext.GiasGroupLinks
+            .Where(gl => gl.Urn == urnString)
+            .Select(gl => new
+            {
+                Urn = gl.Urn!,
+                gl.EstablishmentName,
+                gl.JoinedDate
+            })
+            .FirstOrDefaultAsync();
+
+        return new SchoolOfsted(
+            urnString,
+            giasGroupLink?.EstablishmentName,
+            giasGroupLink?.JoinedDate.ParseAsNullableDate(),
+            ofstedRatings.ShortInspection,
+            ofstedRatings.Previous,
+            ofstedRatings.Current
+        );
+    }
+
     private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatings(string[] urns)
     {
         // First pass at getting ofsted ratings from the db
