@@ -3,7 +3,7 @@ using DfE.FindInformationAcademiesTrusts.Data.Enums;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Academy;
 
-public record AcademyOfstedServiceModel(
+public record SchoolOfstedServiceModel(
     string Urn,
     string? EstablishmentName,
     DateTime? DateAcademyJoinedTrust,
