@@ -13,7 +13,7 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
     private static readonly DateTime
         SingleHeadlineGradesPolicyChangeDate = new(2024, 09, 02, 0, 0, 0, DateTimeKind.Utc);
 
-    public async Task<AcademyOfsted[]> GetAcademiesInTrustOfstedAsync(string uid)
+    public async Task<SchoolOfsted[]> GetAcademiesInTrustOfstedAsync(string uid)
     {
         var giasGroupLinkData = await academiesDbContext.GiasGroupLinks
             .Where(gl => gl.GroupUid == uid)
@@ -28,7 +28,7 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
         var ofstedRatings = await GetOfstedRatings(giasGroupLinkData.Select(gl => gl.Urn).ToArray());
 
         var academyOfsteds = giasGroupLinkData.Select(gl =>
-                new AcademyOfsted(gl.Urn,
+                new SchoolOfsted(gl.Urn,
                     gl.EstablishmentName,
                     DateTime.ParseExact(gl.JoinedDate!, "dd/MM/yyyy", CultureInfo.InvariantCulture),
                     ofstedRatings[gl.Urn].ShortInspection,
