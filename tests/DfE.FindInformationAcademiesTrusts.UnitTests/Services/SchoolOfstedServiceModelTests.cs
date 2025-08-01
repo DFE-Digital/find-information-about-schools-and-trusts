@@ -4,14 +4,14 @@ using DfE.FindInformationAcademiesTrusts.Services.Academy;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services;
 
-public class AcademyOfstedServiceModelTests
+public class SchoolOfstedServiceModelTests
 {
-    private readonly AcademyOfstedServiceModel _sut;
+    private readonly SchoolOfstedServiceModel _sut;
     private readonly DateTime _joinDate = new(2024, 11, 29);
 
-    public AcademyOfstedServiceModelTests()
+    public SchoolOfstedServiceModelTests()
     {
-        _sut = new AcademyOfstedServiceModel("1234", "test", _joinDate, OfstedShortInspection.Unknown, OfstedRating.NotInspected,
+        _sut = new SchoolOfstedServiceModel("1234", "test", _joinDate, OfstedShortInspection.Unknown, OfstedRating.NotInspected,
             OfstedRating.NotInspected);
     }
 
