@@ -6,7 +6,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Academy;
 public record AcademyOfstedServiceModel(
     string Urn,
     string? EstablishmentName,
-    DateTime DateAcademyJoinedTrust,
+    DateTime? DateAcademyJoinedTrust,
     OfstedShortInspection ShortInspection,
     OfstedRating PreviousOfstedRating,
     OfstedRating CurrentOfstedRating
