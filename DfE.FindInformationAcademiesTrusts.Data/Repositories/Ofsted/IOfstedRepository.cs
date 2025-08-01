@@ -5,4 +5,5 @@ public interface IOfstedRepository
     Task<SchoolOfsted[]> GetAcademiesInTrustOfstedAsync(string uid);
     Task<OfstedInspectionHistorySummary> GetOfstedInspectionHistorySummaryAsync(int urn);
     Task<OfstedShortInspection> GetOfstedShortInspectionAsync(int urn);
+    Task<SchoolOfsted> GetSchoolOfstedRatingsAsync(int urn);
 }
