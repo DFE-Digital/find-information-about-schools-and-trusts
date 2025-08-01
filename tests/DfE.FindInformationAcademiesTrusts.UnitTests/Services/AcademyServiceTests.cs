@@ -69,7 +69,7 @@ public class AcademyServiceTests
 
         var result = await _sut.GetAcademiesInTrustOfstedAsync(uid);
 
-        result.Should().BeOfType<AcademyOfstedServiceModel[]>();
+        result.Should().BeOfType<SchoolOfstedServiceModel[]>();
         result.Should().BeEquivalentTo(academies);
     }
 
