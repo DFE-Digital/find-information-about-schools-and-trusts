@@ -90,8 +90,8 @@ export class AuditPageDefinitions {
         this.auditHelper.auditPageWithoutScreenshots('Edit Regions Group LA Lead Contact', 'Schools', `/schools/contacts/editregionsgrouplocalauthoritylead?urn=${laMaintainedSchoolUrn}`);
 
         // School Governance subpages
-        this.auditHelper.auditPage('School Governance - Current governors', 'Schools', `/schools/governance/current?urn=${schoolUrn}`);
-        this.auditHelper.auditPage('School Governance - Historic governors', 'Schools', `/schools/governance/historic?urn=${schoolUrn}`);
+        this.auditHelper.auditPage('School Governance - Current governors', 'Schools', `/schools/governance/current?urn=${academyUrn}`);
+        this.auditHelper.auditPage('School Governance - Historic governors', 'Schools', `/schools/governance/historic?urn=${academyUrn}`);
 
 
         // School Ofsted subpages

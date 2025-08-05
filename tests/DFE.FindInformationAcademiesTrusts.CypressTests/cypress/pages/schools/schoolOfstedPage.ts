@@ -35,7 +35,7 @@ class SchoolOfstedPage {
     };
 
     private readonly checkValueIsValidOfstedGrade = (element: JQuery<HTMLElement>) =>
-        this.checkElementMatches(element, /^(|School remains Good|Outstanding|Good|Requires improvement|Inadequate|Not yet inspected|Not inspected|Not available)$/);
+        this.checkElementMatches(element, /^(School remains Good|Outstanding|Good|Requires improvement|Inadequate|Not yet inspected|Not inspected|Not available)$/);
 
     // Page header checks
     public checkOfstedSingleHeadlineGradesPageHeaderPresent(): this {
