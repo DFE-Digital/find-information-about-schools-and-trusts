@@ -14,11 +14,11 @@
 
         @if (Model.DateJoinedTrust is not null)
         {
-            <p class="govuk-body">This academy joined the trust on
+            <p class="govuk-body" data-testid="academy-joined-trust-text">This academy joined the trust on
                 <strong>@Model.DateJoinedTrust.ShowDateStringOrReplaceWithText()</strong>.</p>
         }
 
-        <details class="govuk-details">
+        <details class="govuk-details" data-testid="why-single-headline-not-available-details">
             <summary class="govuk-details__summary">
                 <span class="govuk-details__summary-text">
                     Why a single headline grade might not be available
@@ -35,7 +35,7 @@
             </div>
         </details>
 
-        <details class="govuk-details">
+        <details class="govuk-details" data-testid="why-short-inspection-not-available-details">
             <summary class="govuk-details__summary">
                 <span class="govuk-details__summary-text">
                     Why short inspection data might not be available
@@ -49,7 +49,7 @@
             </div>
         </details>
 
-        <table class="govuk-table govuk-!-margin-bottom-0">
+        <table class="govuk-table govuk-!-margin-bottom-0" data-testid="ofsted-inspection-table">
             <caption class="govuk-table__caption govuk-visually-hidden">Grades and inspection dates</caption>
 
             <thead class="govuk-table__head">
@@ -57,43 +57,43 @@
                 <th scope="col" class="govuk-table__header">
                     <span class="govuk-visually-hidden">Data type</span>
                 </th>
-                <th scope="col" class="govuk-table__header">Date of inspection</th>
-                <th scope="col" class="govuk-table__header">Grade</th>
+                <th scope="col" class="govuk-table__header" data-testid="date-of-inspection-header">Date of inspection</th>
+                <th scope="col" class="govuk-table__header" data-testid="grade-header">Grade</th>
             </tr>
             </thead>
 
             <tbody class="govuk-table__body">
             @if (Model.HeadlineGrades.HasRecentShortInspection)
             {
-                <tr class="govuk-table__row">
+                <tr class="govuk-table__row" data-testid="recent-short-inspection-row">
                     <th scope="row" class="govuk-table__cell">Recent short inspection</th>
-                    <td class="govuk-table__cell">@Model.HeadlineGrades.ShortInspection.InspectionDate.ShowDateStringOrReplaceWithText("Not available")</td>
-                    <td class="govuk-table__cell">@Model.HeadlineGrades.ShortInspection.InspectionOutcome</td>
+                    <td class="govuk-table__cell" data-testid="recent-short-inspection-date">@Model.HeadlineGrades.ShortInspection.InspectionDate.ShowDateStringOrReplaceWithText("Not available")</td>
+                    <td class="govuk-table__cell" data-testid="recent-short-inspection-grade">@Model.HeadlineGrades.ShortInspection.InspectionOutcome</td>
                 </tr>
             }
 
-            <tr class="govuk-table__row">
+            <tr class="govuk-table__row" data-testid="current-full-inspection-row">
                 <th scope="row" class="govuk-table__cell">Current full inspection</th>
-                <td class="govuk-table__cell">@Model.HeadlineGrades.CurrentInspection.InspectionDate.ShowDateStringOrReplaceWithText("Not available")</td>
-                <td class="govuk-table__cell">@Model.HeadlineGrades.CurrentInspection.InspectionOutcome.ToDisplayString(true)</td>
+                <td class="govuk-table__cell" data-testid="current-full-inspection-date">@Model.HeadlineGrades.CurrentInspection.InspectionDate.ShowDateStringOrReplaceWithText("Not available")</td>
+                <td class="govuk-table__cell" data-testid="current-full-inspection-grade">@Model.HeadlineGrades.CurrentInspection.InspectionOutcome.ToDisplayString(true)</td>
             </tr>
 
-            <tr class="govuk-table__row">
+            <tr class="govuk-table__row" data-testid="previous-full-inspection-row">
                 <th scope="row" class="govuk-table__cell">Previous full inspection</th>
-                <td class="govuk-table__cell">@Model.HeadlineGrades.PreviousInspection.InspectionDate.ShowDateStringOrReplaceWithText("Not available")</td>
-                <td class="govuk-table__cell">@Model.HeadlineGrades.PreviousInspection.InspectionOutcome.ToDisplayString(false)</td>
+                <td class="govuk-table__cell" data-testid="previous-full-inspection-date">@Model.HeadlineGrades.PreviousInspection.InspectionDate.ShowDateStringOrReplaceWithText("Not available")</td>
+                <td class="govuk-table__cell" data-testid="previous-full-inspection-grade">@Model.HeadlineGrades.PreviousInspection.InspectionOutcome.ToDisplayString(false)</td>
             </tr>
             </tbody>
         </table>
 
         <hr class="govuk-section-break govuk-section-break--m">
 
-        <p class="govuk-body"><a class="govuk-link" href="@Model.OfstedReportUrl">See the inspection reports at Ofsted</a>.</p>
+        <p class="govuk-body"><a class="govuk-link" href="@Model.OfstedReportUrl" data-testid="ofsted-inspection-reports-link">See the inspection reports at Ofsted</a>.</p>
 
         <hr class="govuk-section-break govuk-section-break--m">
 
         <a asp-page-handler="Export" asp-route-urn="@Model.Urn" draggable="false" class="govuk-button govuk-button--secondary"
-           data-module="govuk-button" data-govuk-button-init="">
+           data-module="govuk-button" data-govuk-button-init="" data-testid="download-all-ofsted-data-button">
             Download all Ofsted data
         </a>
     </div>

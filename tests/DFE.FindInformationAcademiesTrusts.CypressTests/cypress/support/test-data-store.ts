@@ -65,6 +65,12 @@ export class TestDataStore {
                 ]
             },
             {
+                pageName: "Ofsted",
+                subpages: [
+                    { subpageName: "Single headline grades", url: `/schools/ofsted/singleheadlinegrades?urn=${urn}` },
+                ]
+            },
+            {
                 pageName: "Governance",
                 subpages: [
                     { subpageName: "Current governors", url: `/schools/governance/current?urn=${urn}` },
@@ -88,6 +94,12 @@ export class TestDataStore {
                 subpages: [
                     { subpageName: "In DfE", url: `/schools/contacts/in-dfe?urn=${urn}` },
                     { subpageName: "In this academy", url: `/schools/contacts/in-the-school?urn=${urn}` },
+                ]
+            },
+            {
+                pageName: "Ofsted",
+                subpages: [
+                    { subpageName: "Single headline grades", url: `/schools/ofsted/singleheadlinegrades?urn=${urn}` },
                 ]
             },
             {
