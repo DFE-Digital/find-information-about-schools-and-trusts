@@ -252,4 +252,21 @@ public class SchoolServiceTests
         result.CurrentInspection.Should().BeEquivalentTo(expectedCurrentInspection);
         result.PreviousInspection.Should().BeEquivalentTo(expectedPreviousInspection);
     }
+    
+    [Fact]
+    public async Task GetSchoolOfstedRatingsAsync_returns_data_from_ofsted_repository()
+    {
+        const int urn = 123456;
+
+        var expected = new SchoolOfsted("1", "Academy 1", new DateTime(2022, 12, 1),
+            new OfstedShortInspection(new DateTime(2025, 7, 1), "School remains Good"),
+            new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2023, 1, 1)),
+            new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 2, 1)));
+        
+        _mockOfstedRepository.GetSchoolOfstedRatingsAsync(urn).Returns(expected);
+
+        var result = await _sut.GetSchoolOfstedRatingsAsync(urn);
+        
+        result.Should().BeEquivalentTo(expected);
+    }
 }
