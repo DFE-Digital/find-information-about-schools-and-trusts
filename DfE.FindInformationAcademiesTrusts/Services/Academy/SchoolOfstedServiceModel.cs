@@ -18,6 +18,11 @@ public record SchoolOfstedServiceModel(
     {
         get
         {
+            if (DateAcademyJoinedTrust is null)
+            {
+                return BeforeOrAfterJoining.NotApplicable;
+            }
+
             if (CurrentOfstedRating.InspectionDate is null)
             {
                 return BeforeOrAfterJoining.NotYetInspected;
@@ -38,6 +43,11 @@ public record SchoolOfstedServiceModel(
     {
         get
         {
+            if (DateAcademyJoinedTrust is null)
+            {
+                return BeforeOrAfterJoining.NotApplicable;
+            }
+
             if (PreviousOfstedRating.InspectionDate is null)
             {
                 return BeforeOrAfterJoining.NotYetInspected;
