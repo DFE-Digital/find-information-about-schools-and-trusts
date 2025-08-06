@@ -4,5 +4,6 @@ public enum BeforeOrAfterJoining
 {
     Before,
     After,
-    NotYetInspected
+    NotYetInspected,
+    NotApplicable
 }
