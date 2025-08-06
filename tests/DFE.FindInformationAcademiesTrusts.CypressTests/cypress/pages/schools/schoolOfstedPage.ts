@@ -158,17 +158,17 @@ class SchoolOfstedPage {
 
     // Date validation methods
     public checkCurrentFullInspectionDateValid(): this {
-        this.elements.singleHeadlineGrades.currentFullInspectionDate().each(commonPage.checkValueIsValidDate);
+        this.elements.singleHeadlineGrades.currentFullInspectionDate().each(commonPage.checkValueIsValidFullDate);
         return this;
     }
 
     public checkPreviousFullInspectionDateValid(): this {
-        this.elements.singleHeadlineGrades.previousFullInspectionDate().each(commonPage.checkValueIsValidDate);
+        this.elements.singleHeadlineGrades.previousFullInspectionDate().each(commonPage.checkValueIsValidFullDate);
         return this;
     }
 
     public checkRecentShortInspectionDateValid(): this {
-        this.elements.singleHeadlineGrades.recentShortInspectionDate().each(commonPage.checkValueIsValidDate);
+        this.elements.singleHeadlineGrades.recentShortInspectionDate().each(commonPage.checkValueIsValidFullDate);
         return this;
     }
 
