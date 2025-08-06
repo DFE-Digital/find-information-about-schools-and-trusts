@@ -4,6 +4,7 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 
@@ -51,6 +52,9 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             nameof(FederationModel) => "Overview",
             nameof(ReferenceNumbersModel) => "Overview",
             nameof(CurrentModel) => "Governance",
+            nameof(HistoricModel) => "Governance",
+            nameof(SingleHeadlineGradesModel) => "Ofsted",
+            nameof(PreviousRatingsModel) => "Ofsted",
             _ => throw new ArgumentException("Couldn't get expected name for given page type", nameof(pageType))
         };
     }
@@ -96,6 +100,9 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             nameof(FederationModel) => "/Schools/Overview/Federation",
             nameof(ReferenceNumbersModel) => "/Schools/Overview/ReferenceNumbers",
             nameof(CurrentModel) => "/Schools/Governance/Current",
+            nameof(HistoricModel) => "/Schools/Governance/Historic",
+            nameof(SingleHeadlineGradesModel) => "/Schools/Ofsted/SingleHeadlineGrades",
+            nameof(PreviousRatingsModel) => "/Schools/Ofsted/PreviousRatings",
             _ => throw new ArgumentException("Couldn't get expected sub page nav asp link for given page type",
                 nameof(pageType))
         };
