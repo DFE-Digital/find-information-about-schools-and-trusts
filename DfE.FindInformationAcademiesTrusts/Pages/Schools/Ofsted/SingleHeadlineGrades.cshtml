@@ -15,7 +15,8 @@
         @if (Model.DateJoinedTrust is not null)
         {
             <p class="govuk-body" data-testid="academy-joined-trust-text">This academy joined the trust on
-                <strong>@Model.DateJoinedTrust.ShowDateStringOrReplaceWithText()</strong>.</p>
+                <strong>@Model.DateJoinedTrust.ShowFullDateStringOrReplaceWithText()</strong>.
+            </p>
         }
 
         <details class="govuk-details" data-testid="why-single-headline-not-available-details">
@@ -43,9 +44,8 @@
             </summary>
 
             <div class="govuk-details__text">
-                <p class="govuk-body">A grade and date of a short inspection may not be available, when a full
-                    inspection has followed it.</p>
-                <p class="govuk-body">The data can be found in the school's Ofsted inspection reports.</p>
+                <p class="govuk-body">If a school has a short Ofsted inspection followed by a full one, data about the short inspection may not appear on this page.</p>
+                <p class="govuk-body">Ofsted's inspection report will contain this data.</p>
             </div>
         </details>
 
@@ -67,20 +67,20 @@
             {
                 <tr class="govuk-table__row" data-testid="recent-short-inspection-row">
                     <th scope="row" class="govuk-table__cell">Recent short inspection</th>
-                    <td class="govuk-table__cell" data-testid="recent-short-inspection-date">@Model.HeadlineGrades.ShortInspection.InspectionDate.ShowDateStringOrReplaceWithText("Not available")</td>
+                        <td class="govuk-table__cell" data-testid="recent-short-inspection-date">@Model.HeadlineGrades.ShortInspection.InspectionDate.ShowFullDateStringOrReplaceWithText("Not available")</td>
                     <td class="govuk-table__cell" data-testid="recent-short-inspection-grade">@Model.HeadlineGrades.ShortInspection.InspectionOutcome</td>
                 </tr>
             }
 
             <tr class="govuk-table__row" data-testid="current-full-inspection-row">
                 <th scope="row" class="govuk-table__cell">Current full inspection</th>
-                <td class="govuk-table__cell" data-testid="current-full-inspection-date">@Model.HeadlineGrades.CurrentInspection.InspectionDate.ShowDateStringOrReplaceWithText("Not available")</td>
+                    <td class="govuk-table__cell" data-testid="current-full-inspection-date">@Model.HeadlineGrades.CurrentInspection.InspectionDate.ShowFullDateStringOrReplaceWithText("Not available")</td>
                 <td class="govuk-table__cell" data-testid="current-full-inspection-grade">@Model.HeadlineGrades.CurrentInspection.InspectionOutcome.ToDisplayString(true)</td>
             </tr>
 
             <tr class="govuk-table__row" data-testid="previous-full-inspection-row">
                 <th scope="row" class="govuk-table__cell">Previous full inspection</th>
-                <td class="govuk-table__cell" data-testid="previous-full-inspection-date">@Model.HeadlineGrades.PreviousInspection.InspectionDate.ShowDateStringOrReplaceWithText("Not available")</td>
+                    <td class="govuk-table__cell" data-testid="previous-full-inspection-date">@Model.HeadlineGrades.PreviousInspection.InspectionDate.ShowFullDateStringOrReplaceWithText("Not available")</td>
                 <td class="govuk-table__cell" data-testid="previous-full-inspection-grade">@Model.HeadlineGrades.PreviousInspection.InspectionOutcome.ToDisplayString(false)</td>
             </tr>
             </tbody>
@@ -92,9 +92,16 @@
 
         <hr class="govuk-section-break govuk-section-break--m">
 
-        <a asp-page-handler="Export" asp-route-urn="@Model.Urn" draggable="false" class="govuk-button govuk-button--secondary"
-           data-module="govuk-button" data-govuk-button-init="" data-testid="download-all-ofsted-data-button">
-            Download all Ofsted data
-        </a>
+        
+        <section class="govuk-!-margin-top-2 govuk-!-margin-bottom-2 export-container">
+            <input type="hidden" name="urn" value="@Model.Urn" />
+            <a asp-page-handler="Export" asp-route-urn="@Model.Urn"
+               class="govuk-button govuk-button--secondary export-button--with-icon" data-testid="download-all-ofsted-data-button">
+                <svg class="export-button__icon" width="20" height="20" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                    <path d="M24.968 17.5V22.1667C24.968 22.7855 24.7222 23.379 24.2846 23.8166C23.847 24.2542 23.2535 24.5 22.6347 24.5H6.30135C5.68251 24.5 5.08902 24.2542 4.65143 23.8166C4.21385 23.379 3.96802 22.7855 3.96802 22.1667V17.5M8.63468 11.6667L14.468 17.5M14.468 17.5L20.3014 11.6667M14.468 17.5V3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Download all Ofsted data
+            </a>
+        </section>
     </div>
 </div>

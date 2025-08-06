@@ -15,6 +15,17 @@ public static class DateTimeExtensions
         return replacementText;
     }
 
+    public static string ShowFullDateStringOrReplaceWithText(this DateTime? date,
+        string replacementText = ViewConstants.NoDataText)
+    {
+        if (date.HasValue)
+        {
+            return date.Value.ToString(StringFormatConstants.DisplayFullDateFormat);
+        }
+
+        return replacementText;
+    }
+
     public static string ToDataSortValue(this DateTime date)
     {
         return date.ToString(StringFormatConstants.SortableDateFormat);
