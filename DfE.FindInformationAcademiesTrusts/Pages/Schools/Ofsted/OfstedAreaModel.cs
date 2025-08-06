@@ -42,10 +42,13 @@ public class OfstedAreaModel(
 
         OfstedReportUrl = otherServicesLinkBuilder.OfstedReportLinkForSchool(Urn);
 
+        var misDataSource = await dataSourceService.GetAsync(Source.Mis);
+        var misFurtherEducationDataSource = await dataSourceService.GetAsync(Source.MisFurtherEducation);
+        
         List<DataSourceServiceModel> dataSources =
         [
-            await dataSourceService.GetAsync(Source.Mis),
-            await dataSourceService.GetAsync(Source.MisFurtherEducation)
+            misDataSource,
+            misFurtherEducationDataSource
         ];
 
         DataSourcesPerPage =
@@ -53,6 +56,10 @@ public class OfstedAreaModel(
             new DataSourcePageListEntry(SingleHeadlineGradesModel.SubPageName, [
                 new DataSourceListEntry(dataSources, "Single headline grades were"),
                 new DataSourceListEntry(dataSources, "All inspection dates were")
+            ]),
+            new DataSourcePageListEntry(PreviousRatingsModel.SubPageName, [
+                new DataSourceListEntry(misDataSource, "Previous Ofsted rating"),
+                new DataSourceListEntry(misDataSource, "Date of previous inspection")
             ])
         ];
 
