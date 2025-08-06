@@ -6,6 +6,9 @@ class SchoolsPage {
         schoolType: () => cy.get('[data-testid="school-type"]'),
         trustLink: () => cy.get('[data-testid="header-trust-link"]'),
         nav: {
+            ofsted: {
+                singleHeadlineGradesTab: () => cy.get('[data-testid="ofsted-single-headline-grades-subnav"]'),
+            }
         },
         overview: {
             detailsTabHeader: () => cy.get('[data-testid="overview-details-subnav"]'),
@@ -754,6 +757,20 @@ class SchoolsPage {
             // Note: Appointed by, From, and To dates may be empty/N/A in some cases
         });
 
+        return this;
+    }
+
+    // #endregion
+
+    // #region Ofsted navigation
+
+    public checkOfstedSingleHeadlineGradesNavTabPresent(): this {
+        this.elements.nav.ofsted.singleHeadlineGradesTab().should('be.visible');
+        return this;
+    }
+
+    public clickOfstedSingleHeadlineGradesNavTab(): this {
+        this.elements.nav.ofsted.singleHeadlineGradesTab().click();
         return this;
     }
 

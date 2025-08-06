@@ -80,6 +80,12 @@ public class SchoolNavMenuServiceNavTests : SchoolNavMenuTestsBase
                 l.LinkDisplayText.Should().Be("Governance");
                 l.AspPage.Should().Be("/Schools/Governance/Current");
                 l.TestId.Should().Be("governance-nav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Ofsted");
+                l.AspPage.Should().Be("/Schools/Ofsted/SingleHeadlineGrades");
+                l.TestId.Should().Be("ofsted-nav");
             }
         );
     }
@@ -111,6 +117,12 @@ public class SchoolNavMenuServiceNavTests : SchoolNavMenuTestsBase
                 l.LinkDisplayText.Should().Be("Governance");
                 l.AspPage.Should().Be("/Schools/Governance/Current");
                 l.TestId.Should().Be("governance-nav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Ofsted");
+                l.AspPage.Should().Be("/Schools/Ofsted/SingleHeadlineGrades");
+                l.TestId.Should().Be("ofsted-nav");
             }
         );
     }

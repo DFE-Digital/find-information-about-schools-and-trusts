@@ -14,7 +14,7 @@ public class OfstedAreaModel(
     IDataSourceService dataSourceService,
     ITrustService trustService,
     IAcademyService academyService,
-    IOfstedDataExportService ofstedDataExportService,
+    IOfstedTrustDataExportService ofstedTrustDataExportService,
     IDateTimeProvider dateTimeProvider)
     : TrustsAreaModel(dataSourceService, trustService)
 {
@@ -79,7 +79,7 @@ public class OfstedAreaModel(
         var sanitizedTrustName =
             string.Concat(trustSummary.Name.Where(c => !Path.GetInvalidFileNameChars().Contains(c)));
 
-        var fileContents = await ofstedDataExportService.BuildAsync(uid);
+        var fileContents = await ofstedTrustDataExportService.BuildAsync(uid);
         var fileName = $"Ofsted-{sanitizedTrustName}-{DateTimeProvider.Now:yyyy-MM-dd}.xlsx";
         var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 

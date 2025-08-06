@@ -39,6 +39,26 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
         return academyOfsteds;
     }
 
+    public async Task<OfstedInspectionHistorySummary> GetOfstedInspectionHistorySummaryAsync(int urn)
+    {
+        var urnString = urn.ToString();
+        var rating = (await GetOfstedRatings([urnString]))[urnString];
+
+        var currentFullInspection =
+            new OfstedFullInspectionSummary(rating.Current.InspectionDate, rating.Current.OverallEffectiveness);
+        var previousFullInspection =
+            new OfstedFullInspectionSummary(rating.Previous.InspectionDate, rating.Previous.OverallEffectiveness);
+
+        return new OfstedInspectionHistorySummary(currentFullInspection, previousFullInspection);
+    }
+
+    public async Task<OfstedShortInspection> GetOfstedShortInspectionAsync(int urn)
+    {
+        return await academiesDbContext.MisMstrEstablishmentsFiat.Where(est => est.Urn == urn).Select(est =>
+            new OfstedShortInspection(est.DateOfLatestSection8Inspection.ParseAsNullableDate(),
+                est.Section8InspectionOverallOutcome)).FirstOrDefaultAsync() ?? OfstedShortInspection.Unknown;
+    }
+
     private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatings(string[] urns)
     {
         // First pass at getting ofsted ratings from the db
@@ -66,7 +86,8 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
                 logger.LogError(
                     "URN {Urn} was not found in Mis.Establishments or Mis.FurtherEducationEstablishments. This indicates a data integrity issue with the Ofsted data in Academies Db.",
                     urn);
-                allOfstedRatings.Add(urn, new AcademyOfstedRatings(int.Parse(urn), OfstedRating.Unknown, OfstedRating.Unknown, "none"));
+                allOfstedRatings.Add(urn,
+                    new AcademyOfstedRatings(int.Parse(urn), OfstedRating.Unknown, OfstedRating.Unknown, "none"));
                 continue;
             }
 

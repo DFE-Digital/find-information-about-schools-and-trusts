@@ -1,5 +1,7 @@
+using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
@@ -10,11 +12,12 @@ public class SchoolServiceTests
 {
     private readonly SchoolService _sut;
     private readonly ISchoolRepository _mockSchoolRepository = Substitute.For<ISchoolRepository>();
+    private readonly IOfstedRepository _mockOfstedRepository = Substitute.For<IOfstedRepository>();
     private readonly MockMemoryCache _mockMemoryCache = new();
 
     public SchoolServiceTests()
     {
-        _sut = new SchoolService(_mockMemoryCache.Object, _mockSchoolRepository);
+        _sut = new SchoolService(_mockMemoryCache.Object, _mockSchoolRepository, _mockOfstedRepository);
     }
 
     [Fact]
@@ -226,5 +229,27 @@ public class SchoolServiceTests
 
         result.Historic.Should().ContainSingle().Which.Should().BeEquivalentTo(historic);
         result.Current.Should().BeEquivalentTo([chair, governor]);
+    }
+
+    [Fact]
+    public async Task GetOfstedHeadlineGradesAsync_returns_data_from_ofsted_repository()
+    {
+        const int urn = 123456;
+
+        var expectedShortInspection = new OfstedShortInspection(new DateTime(2022, 1, 1), "School remains Good");
+        var expectedCurrentInspection =
+            new OfstedFullInspectionSummary(new DateTime(2021, 1, 1), OfstedRatingScore.Good);
+        var expectedPreviousInspection =
+            new OfstedFullInspectionSummary(new DateTime(2011, 1, 1), OfstedRatingScore.RequiresImprovement);
+
+        _mockOfstedRepository.GetOfstedShortInspectionAsync(urn).Returns(expectedShortInspection);
+        _mockOfstedRepository.GetOfstedInspectionHistorySummaryAsync(urn)
+            .Returns(new OfstedInspectionHistorySummary(expectedCurrentInspection, expectedPreviousInspection));
+
+        var result = await _sut.GetOfstedHeadlineGrades(urn);
+        
+        result.ShortInspection.Should().BeEquivalentTo(expectedShortInspection);
+        result.CurrentInspection.Should().BeEquivalentTo(expectedCurrentInspection);
+        result.PreviousInspection.Should().BeEquivalentTo(expectedPreviousInspection);
     }
 }
