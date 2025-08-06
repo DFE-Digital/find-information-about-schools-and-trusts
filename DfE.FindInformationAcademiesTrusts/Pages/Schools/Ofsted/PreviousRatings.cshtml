@@ -1,0 +1,100 @@
+@page
+@using DfE.FindInformationAcademiesTrusts.Extensions
+@model PreviousRatingsModel
+
+@{
+    Layout = "_SchoolLayout";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h3 class="govuk-heading-m">@Model.PageMetadata.SubPageName</h3>
+        
+        <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    Quality of education
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.OfstedRating.QualityOfEducation.ToDisplayString(false)
+                </dd>
+            </div>
+            
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    Behaviour and attitudes
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.OfstedRating.BehaviourAndAttitudes.ToDisplayString(false)
+                </dd>
+            </div>
+            
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    Personal development
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.OfstedRating.PersonalDevelopment.ToDisplayString(false)
+                </dd>
+            </div>
+            
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    Leadership and management
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.OfstedRating.EffectivenessOfLeadershipAndManagement.ToDisplayString(false)
+                </dd>
+            </div>
+            
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    Early years provision
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.OfstedRating.EarlyYearsProvision.ToDisplayString(false)
+                </dd>
+            </div>
+            
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    Sixth form provision
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.OfstedRating.SixthFormProvision.ToDisplayString(false)
+                </dd>
+            </div>
+            
+            @if (Model.InspectionBeforeJoiningTrust is not null)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                        Before or after joining the trust
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        <strong class="govuk-tag @(Model.InspectionBeforeJoiningTrust!.Value ? "govuk-tag--grey" : "")">
+                            @(Model.InspectionBeforeJoiningTrust!.Value ? "Before" : "After") joining
+                        </strong>
+                    </dd>
+                </div>
+            }
+        </dl>
+        
+        <hr class="govuk-section-break govuk-section-break--m">
+
+        <p class="govuk-body"><a class="govuk-link" href="@Model.OfstedReportUrl" data-testid="ofsted-inspection-reports-link">See the inspection reports at Ofsted</a>.</p>
+
+        <hr class="govuk-section-break govuk-section-break--m">
+
+        <section class="govuk-!-margin-top-2 govuk-!-margin-bottom-2 export-container">
+            <input type="hidden" name="urn" value="@Model.Urn" />
+            <a asp-page-handler="Export" asp-route-urn="@Model.Urn"
+               class="govuk-button govuk-button--secondary export-button--with-icon" data-testid="download-all-ofsted-data-button">
+                <svg class="export-button__icon" width="20" height="20" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                    <path d="M24.968 17.5V22.1667C24.968 22.7855 24.7222 23.379 24.2846 23.8166C23.847 24.2542 23.2535 24.5 22.6347 24.5H6.30135C5.68251 24.5 5.08902 24.2542 4.65143 23.8166C4.21385 23.379 3.96802 22.7855 3.96802 22.1667V17.5M8.63468 11.6667L14.468 17.5M14.468 17.5L20.3014 11.6667M14.468 17.5V3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Download all Ofsted data
+            </a>
+        </section>
+    </div>
+</div>
