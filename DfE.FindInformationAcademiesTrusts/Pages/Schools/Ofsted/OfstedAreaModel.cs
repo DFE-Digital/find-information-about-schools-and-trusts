@@ -21,7 +21,7 @@ public class OfstedAreaModel(
     ISchoolNavMenu schoolNavMenu)
     : SchoolAreaModel(schoolService, trustService, schoolNavMenu)
 {
-    private readonly ISchoolService _schoolService = schoolService;
+    protected readonly ISchoolService SchoolService = schoolService;
 
     public const string PageName = "Ofsted";
     public override PageMetadata PageMetadata => base.PageMetadata with { PageName = PageName };
@@ -61,7 +61,7 @@ public class OfstedAreaModel(
 
     public virtual async Task<IActionResult> OnGetExportAsync(int urn)
     {
-        var schoolSummary = await _schoolService.GetSchoolSummaryAsync(urn);
+        var schoolSummary = await SchoolService.GetSchoolSummaryAsync(urn);
 
         if (schoolSummary == null)
         {
