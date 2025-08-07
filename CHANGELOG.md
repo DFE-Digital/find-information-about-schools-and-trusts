@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased][unreleased]
 
+## [Release-44][release-44] (production-2025-08-06.6211)
+
+### Changed
+
+- Added Ofsted single headline grades page for a school or academy
+
 ## [Release-43][release-43] (production-2025-07-31.6191)
 
 ### Changed
@@ -416,7 +422,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Updated text on "404 - Not Found" page to adhere to DfE design pattern and added the not found url to the support email template.
 
 [unreleased]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-07-31.6191...HEAD
+  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-08-06.6211...HEAD
 [release-1]:
   https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-07-18.2517
 [release-2]:
@@ -503,3 +509,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-07-17.6155
 [release-43]:
   https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-07-31.6191
+[release-44]:
+  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-08-06.6211
