@@ -1,0 +1,86 @@
+﻿@page
+@using DfE.FindInformationAcademiesTrusts.Data.Enums
+@using DfE.FindInformationAcademiesTrusts.Extensions
+@using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model SafeguardingAndConcernsModel
+
+@{
+    Layout = "_SchoolLayout";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h3 class="govuk-heading-m" data-testid="subpage-header">
+            @Model.PageMetadata.SubPageName
+        </h3>
+
+        <details class="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    What this information means
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                <p class="govuk-body">
+                    <span class="govuk-!-font-weight-bold">'Effective safeguarding'</span> means that a school has been judged to have adequate safeguarding policies and processes in place. It reviews them regularly and implements them well.
+                </p>
+                <p class="govuk-body">
+                    <span class="govuk-!-font-weight-bold">'Category of concern'</span> means that a school has been found inadequate in a key or provision judgement. The school either has ‘serious weaknesses’ or requires ‘special measures.’
+                </p>
+            </div>
+        </details>
+
+        <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    Effective safeguarding
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.OfstedRating.SafeguardingIsEffective.ToDisplayString()
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    Category of concern
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.OfstedRating.CategoryOfConcern.ToDisplayString()
+                </dd>
+            </div>
+
+            @if (Model.InspectionBeforeOrAfterJoiningTrust != BeforeOrAfterJoining.NotApplicable)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                        Before or after joining the trust
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @switch (Model.InspectionBeforeOrAfterJoiningTrust)
+                        {
+                            case BeforeOrAfterJoining.Before:
+                                <strong class="govuk-tag govuk-tag--grey">
+                                    Before joining
+                                </strong>
+                                break;
+                            case BeforeOrAfterJoining.After:
+                                <strong class="govuk-tag">
+                                    After joining
+                                </strong>
+                                break;
+                            case BeforeOrAfterJoining.NotYetInspected:
+                                <strong class="govuk-tag govuk-tag--grey">
+                                    Not yet inspected
+                                </strong>
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    </dd>
+                </div>
+            }
+        </dl>
+
+        <hr class="govuk-section-break govuk-section-break--m">
+    </div>
+</div>
