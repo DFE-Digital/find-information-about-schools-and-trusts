@@ -6,6 +6,7 @@ public enum Source
     Mstr,
     Cdm,
     Mis,
+    MisFurtherEducation,
     ExploreEducationStatistics,
     FiatDb,
     Prepare,

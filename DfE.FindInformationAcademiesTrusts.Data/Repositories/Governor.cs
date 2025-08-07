@@ -1,4 +1,4 @@
-namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
+namespace DfE.FindInformationAcademiesTrusts.Data.Repositories;
 
 public record Governor(
     string GID,

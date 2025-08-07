@@ -6,6 +6,9 @@ class SchoolsPage {
         schoolType: () => cy.get('[data-testid="school-type"]'),
         trustLink: () => cy.get('[data-testid="header-trust-link"]'),
         nav: {
+            ofsted: {
+                singleHeadlineGradesTab: () => cy.get('[data-testid="ofsted-single-headline-grades-subnav"]'),
+            }
         },
         overview: {
             detailsTabHeader: () => cy.get('[data-testid="overview-details-subnav"]'),
@@ -70,6 +73,34 @@ class SchoolsPage {
                 saveButton: () => cy.contains('Save and continue'),
                 cancelButton: () => cy.contains('Cancel')
             },
+        },
+        governance: {
+            currentGovernors: {
+                currentGovernorsSection: () => cy.get('[data-testid="current-governors"]'),
+                currentGovernorsTable: () => cy.get('[data-testid="current-governors"] table'),
+                currentGovernorsHeader: () => cy.get('[data-testid="current-governors"] [data-testid="subpage-header"]'),
+                currentGovernorsRows: () => cy.get('[data-testid="current-members-row"]'),
+                currentGovernorsNames: () => cy.get('[data-testid="current-governors-name"]'),
+                currentGovernorsRoles: () => cy.get('[data-testid="current-governors-role"]'),
+                currentGovernorsAppointedBy: () => cy.get('[data-testid="current-governors-appointed"]'),
+                currentGovernorsFromDates: () => cy.get('[data-testid="current-governors-from"]'),
+                currentGovernorsToDates: () => cy.get('[data-testid="current-governors-to"]'),
+                currentGovernorsNavTab: () => cy.get('[data-testid="current-governors-subnav"]'),
+                noCurrentGovernorsMessage: () => cy.get('[data-testid="current-governors"]').contains('No Current governors'),
+            },
+            historicGovernors: {
+                historicGovernorsSection: () => cy.get('[data-testid="historic-governors"]'),
+                historicGovernorsTable: () => cy.get('[data-testid="historic-governors"] table'),
+                historicGovernorsHeader: () => cy.get('[data-testid="historic-governors"] [data-testid="subpage-header"]'),
+                historicGovernorsRows: () => cy.get('[data-testid="historic-members-row"]'),
+                historicGovernorsNames: () => cy.get('[data-testid="historic-governors-name"]'),
+                historicGovernorsRoles: () => cy.get('[data-testid="historic-governors-role"]'),
+                historicGovernorsAppointedBy: () => cy.get('[data-testid="historic-governors-appointed"]'),
+                historicGovernorsFromDates: () => cy.get('[data-testid="historic-governors-from"]'),
+                historicGovernorsToDates: () => cy.get('[data-testid="historic-governors-to"]'),
+                historicGovernorsNavTab: () => cy.get('[data-testid="historic-governors-subnav"]'),
+                noHistoricGovernorsMessage: () => cy.get('[data-testid="historic-governors"]').contains('No Historic governors'),
+            }
         },
         federation: {
             federationName: () => cy.get('[data-testid="federation-details-name"]'),
@@ -562,6 +593,187 @@ class SchoolsPage {
             .checkReferenceNumbersCardItemsPresent()
             .checkAllReferenceNumbersDataPresent();
     }
+    // #endregion
+
+    // #region School Governance pages
+
+    // Current governors methods
+    public checkCurrentGovernorsHeaderPresent(): this {
+        this.elements.governance.currentGovernors.currentGovernorsHeader().should('be.visible');
+        this.elements.governance.currentGovernors.currentGovernorsHeader().should('contain', 'Current governors');
+        return this;
+    }
+
+    public checkCurrentGovernorsSectionPresent(): this {
+        this.elements.governance.currentGovernors.currentGovernorsSection().should('be.visible');
+        return this;
+    }
+
+    public checkCurrentGovernorsTablePresent(): this {
+        this.elements.governance.currentGovernors.currentGovernorsTable().should('be.visible');
+        return this;
+    }
+
+    public checkCurrentGovernorsDataPresent(): this {
+        this.elements.governance.currentGovernors.currentGovernorsRows().should('have.length.at.least', 1);
+        this.elements.governance.currentGovernors.currentGovernorsNames().should('be.visible');
+        this.elements.governance.currentGovernors.currentGovernorsRoles().should('be.visible');
+        this.elements.governance.currentGovernors.currentGovernorsAppointedBy().should('be.visible');
+        this.elements.governance.currentGovernors.currentGovernorsFromDates().should('be.visible');
+        this.elements.governance.currentGovernors.currentGovernorsToDates().should('be.visible');
+        return this;
+    }
+
+    public checkCurrentGovernorsNavTabIsPresent(): this {
+        this.elements.governance.currentGovernors.currentGovernorsNavTab().should('be.visible');
+        return this;
+    }
+
+    public checkCurrentGovernorsTabHasCount(): this {
+        this.elements.governance.currentGovernors.currentGovernorsNavTab().should('contain.text', '(');
+        this.elements.governance.currentGovernors.currentGovernorsNavTab().should('contain.text', ')');
+        return this;
+    }
+
+    public checkCurrentGovernorsTabCountMatches(): this {
+        // Business rule: Tab should show the actual count of current governors
+        this.elements.governance.currentGovernors.currentGovernorsRows().then(($rows) => {
+            const actualCount = $rows.length;
+            this.elements.governance.currentGovernors.currentGovernorsNavTab()
+                .should('contain.text', `(${actualCount})`);
+        });
+        return this;
+    }
+
+    public checkNoCurrentGovernorsMessagePresent(): this {
+        this.elements.governance.currentGovernors.noCurrentGovernorsMessage().should('be.visible');
+        return this;
+    }
+
+    // Historic governors methods
+    public checkHistoricGovernorsHeaderPresent(): this {
+        this.elements.governance.historicGovernors.historicGovernorsHeader().should('be.visible');
+        this.elements.governance.historicGovernors.historicGovernorsHeader().should('contain', 'Historic governors');
+        return this;
+    }
+
+    public checkHistoricGovernorsSectionPresent(): this {
+        this.elements.governance.historicGovernors.historicGovernorsSection().should('be.visible');
+        return this;
+    }
+
+    public checkHistoricGovernorsTablePresent(): this {
+        this.elements.governance.historicGovernors.historicGovernorsTable().should('be.visible');
+        return this;
+    }
+
+    public checkHistoricGovernorsDataPresent(): this {
+        this.elements.governance.historicGovernors.historicGovernorsRows().should('have.length.at.least', 1);
+        this.elements.governance.historicGovernors.historicGovernorsNames().should('be.visible');
+        this.elements.governance.historicGovernors.historicGovernorsRoles().should('be.visible');
+        this.elements.governance.historicGovernors.historicGovernorsAppointedBy().should('be.visible');
+        this.elements.governance.historicGovernors.historicGovernorsFromDates().should('be.visible');
+        this.elements.governance.historicGovernors.historicGovernorsToDates().should('be.visible');
+        return this;
+    }
+
+    public checkHistoricGovernorsNavTabIsPresent(): this {
+        this.elements.governance.historicGovernors.historicGovernorsNavTab().should('be.visible');
+        return this;
+    }
+
+    public checkHistoricGovernorsTabHasCount(): this {
+        this.elements.governance.historicGovernors.historicGovernorsNavTab().should('contain.text', '(');
+        this.elements.governance.historicGovernors.historicGovernorsNavTab().should('contain.text', ')');
+        return this;
+    }
+
+    public checkHistoricGovernorsTabCountMatches(): this {
+        // Business rule: Tab should show the actual count of historic governors
+        this.elements.governance.historicGovernors.historicGovernorsRows().then(($rows) => {
+            const actualCount = $rows.length;
+            this.elements.governance.historicGovernors.historicGovernorsNavTab()
+                .should('contain.text', `(${actualCount})`);
+        });
+        return this;
+    }
+
+    public checkNoHistoricGovernorsMessagePresent(): this {
+        this.elements.governance.historicGovernors.noHistoricGovernorsMessage().should('be.visible');
+        return this;
+    }
+
+    // Governance page general methods
+    public checkGovernancePageNamePresent(): this {
+        this.elements.pageName().should('contain', 'Governance');
+        return this;
+    }
+
+    public checkAllGovernanceSubNavItemsPresent(): this {
+        this.elements.governance.currentGovernors.currentGovernorsNavTab().should('be.visible');
+        this.elements.governance.historicGovernors.historicGovernorsNavTab().should('be.visible');
+        return this;
+    }
+
+    public checkGovernanceTabCountsDisplayed(): this {
+        // Business rule: Both tabs should display counts in brackets
+        return this
+            .checkCurrentGovernorsTabHasCount()
+            .checkHistoricGovernorsTabHasCount();
+    }
+
+    public checkGovernanceTabCountsAccurate(): this {
+        // Business rule: Tab counts should match actual data
+        return this
+            .checkCurrentGovernorsTabCountMatches()
+            .checkHistoricGovernorsTabCountMatches();
+    }
+
+    public verifyGovernorsTableStructure(tableType: 'current' | 'historic'): this {
+        const tableSelector = tableType === 'current'
+            ? this.elements.governance.currentGovernors.currentGovernorsTable
+            : this.elements.governance.historicGovernors.historicGovernorsTable;
+
+        // Check table headers are present and correctly labeled
+        tableSelector().find('thead th').should('have.length', 5);
+        tableSelector().find('thead th').eq(0).should('contain.text', 'Name');
+        tableSelector().find('thead th').eq(1).should('contain.text', 'Role');
+        tableSelector().find('thead th').eq(2).should('contain.text', 'Appointed by');
+        tableSelector().find('thead th').eq(3).should('contain.text', 'From');
+        tableSelector().find('thead th').eq(4).should('contain.text', 'To');
+
+        return this;
+    }
+
+    public verifyGovernorsDataIntegrity(tableType: 'current' | 'historic'): this {
+        const rowsSelector = tableType === 'current'
+            ? this.elements.governance.currentGovernors.currentGovernorsRows
+            : this.elements.governance.historicGovernors.historicGovernorsRows;
+
+        // Check that each row has data in all required fields
+        rowsSelector().each(($row) => {
+            cy.wrap($row).find('[data-testid*="governors-name"]').should('not.be.empty');
+            cy.wrap($row).find('[data-testid*="governors-role"]').should('not.be.empty');
+            // Note: Appointed by, From, and To dates may be empty/N/A in some cases
+        });
+
+        return this;
+    }
+
+    // #endregion
+
+    // #region Ofsted navigation
+
+    public checkOfstedSingleHeadlineGradesNavTabPresent(): this {
+        this.elements.nav.ofsted.singleHeadlineGradesTab().should('be.visible');
+        return this;
+    }
+
+    public clickOfstedSingleHeadlineGradesNavTab(): this {
+        this.elements.nav.ofsted.singleHeadlineGradesTab().click();
+        return this;
+    }
+
     // #endregion
 }
 

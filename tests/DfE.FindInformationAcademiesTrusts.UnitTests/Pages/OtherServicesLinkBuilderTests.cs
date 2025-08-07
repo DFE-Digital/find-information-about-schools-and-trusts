@@ -80,8 +80,10 @@ public class OtherServicesLinkBuilderTests
     }
 
     [Theory]
-    [InlineData("TR02345", "https://educationgovuk.sharepoint.com/_layouts/15/sharepoint.aspx?oobRefiners=%7B%22FileType%22%3A%5B%22other%22%5D%7D&q=TR02345&v=%2Fsearch")]
-    [InlineData("", "https://educationgovuk.sharepoint.com/_layouts/15/sharepoint.aspx?oobRefiners=%7B%22FileType%22%3A%5B%22other%22%5D%7D&q=&v=%2Fsearch")]
+    [InlineData("TR02345",
+        "https://educationgovuk.sharepoint.com/_layouts/15/sharepoint.aspx?oobRefiners=%7B%22FileType%22%3A%5B%22other%22%5D%7D&q=TR02345&v=%2Fsearch")]
+    [InlineData("",
+        "https://educationgovuk.sharepoint.com/_layouts/15/sharepoint.aspx?oobRefiners=%7B%22FileType%22%3A%5B%22other%22%5D%7D&q=&v=%2Fsearch")]
     public void SharepointFolderLink_should_return_url_containing_GroupId(string trn, string expected)
     {
         var result =
@@ -96,7 +98,7 @@ public class OtherServicesLinkBuilderTests
     {
         var result = _sut.FinancialBenchmarkingLinkForSchool(111);
         result.Should()
-            .Be($"https://financial-benchmarking-and-insights-tool.education.gov.uk/school/111/spending-and-costs");
+            .Be("https://financial-benchmarking-and-insights-tool.education.gov.uk/school/111/spending-and-costs");
     }
 
 
@@ -105,6 +107,15 @@ public class OtherServicesLinkBuilderTests
     {
         var result = _sut.FindSchoolPerformanceDataListingLink(111);
         result.Should()
-            .Be($"https://www.find-school-performance-data.service.gov.uk/school/111");
+            .Be("https://www.find-school-performance-data.service.gov.uk/school/111");
+    }
+
+    [Theory]
+    [InlineData(123456, "https://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/123456")]
+    [InlineData(987654, "https://reports.ofsted.gov.uk/inspection-reports/find-inspection-report/provider/ELS/987654")]
+    public void OfstedReportLinkForSchool_should_be_to_the_correct_link(int urn, string expected)
+    {
+        var result = _sut.OfstedReportLinkForSchool(urn);
+        result.Should().Be(expected);
     }
 }

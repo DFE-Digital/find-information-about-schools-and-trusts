@@ -21,6 +21,22 @@ public class DateTimeExtensionsTests
         result.Should().Be("No data");
     }
 
+    [Fact]
+    public void ShowFullDateStringOrReplaceWithText_ReturnsFormattedDate_WhenNotNull()
+    {
+        DateTime? testTime = DateTime.Today;
+        var result = testTime.ShowFullDateStringOrReplaceWithText();
+        result.Should().BeEquivalentTo(DateTime.Today.ToString(StringFormatConstants.DisplayFullDateFormat));
+    }
+
+    [Fact]
+    public void ShowFullDateStringOrReplaceWithText_returns_NoData_WhenNull()
+    {
+        DateTime? testTime = null;
+        var result = testTime.ShowFullDateStringOrReplaceWithText();
+        result.Should().Be("No data");
+    }
+
     [Theory]
     [InlineData(2024, 12, 31, "20241231")]
     [InlineData(2024, 12, 03, "20241203")]

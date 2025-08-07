@@ -67,27 +67,36 @@ export class AuditPageDefinitions {
      * Audit all school-related pages
      */
     auditSchoolPages(): void {
-        const schoolUrn = testSchoolData[1].urn; // Academy
+        const academyUrn = testSchoolData[1].urn; // Academy
         const laMaintainedSchoolUrn = testSchoolData[0].urn; // LA maintained school
-        const senSchoolUrn = testSchoolData[0].urn;
-        const federationSchoolUrn = testFederationData.schoolWithFederationDetails.urn;
+        const senSchoolUrn = testSchoolData[0].urn; // SEN school
+        const federationSchoolUrn = testFederationData.schoolWithFederationDetails.urn; // Federation school
 
         // School Overview subpages
-        this.auditHelper.auditPage('School Overview - Details', 'Schools', `/schools/overview/details?urn=${schoolUrn}`);
-        this.auditHelper.auditPage('School Overview - Reference numbers', 'Schools', `/schools/overview/referencenumbers?urn=${schoolUrn}`);
+        this.auditHelper.auditPage('School Overview - Details', 'Schools', `/schools/overview/details?urn=${academyUrn}`);
+        this.auditHelper.auditPage('School Overview - Reference numbers', 'Schools', `/schools/overview/referencenumbers?urn=${academyUrn}`);
         this.auditHelper.auditPage('School Overview - SEN Provision', 'Schools', `/schools/overview/sen?urn=${senSchoolUrn}`);
         this.auditHelper.auditPage('School Overview - Federation Details', 'Schools', `/schools/overview/federation?urn=${federationSchoolUrn}`);
 
         // School Contacts - In School/Academy (sensitive data - no screenshots)
         this.auditHelper.auditPageWithoutScreenshots('LA Maintained School Contacts - In School', 'Schools', `/schools/contacts/in-the-school?urn=${laMaintainedSchoolUrn}`);
-        this.auditHelper.auditPageWithoutScreenshots('Academy Contacts - In Academy', 'Schools', `/schools/contacts/in-the-school?urn=${schoolUrn}`);
+        this.auditHelper.auditPageWithoutScreenshots('Academy Contacts - In Academy', 'Schools', `/schools/contacts/in-the-school?urn=${academyUrn}`);
 
         // School Contacts - In DfE (sensitive data - no screenshots)
         this.auditHelper.auditPageWithoutScreenshots('LA Maintained School Contacts - In DfE', 'Schools', `/schools/contacts/in-dfe?urn=${laMaintainedSchoolUrn}`);
-        this.auditHelper.auditPageWithoutScreenshots('Academy Contacts - In DfE', 'Schools', `/schools/contacts/in-dfe?urn=${schoolUrn}`);
+        this.auditHelper.auditPageWithoutScreenshots('Academy Contacts - In DfE', 'Schools', `/schools/contacts/in-dfe?urn=${academyUrn}`);
 
         // School Contact Edit Pages (sensitive data - no screenshots, LA maintained schools only)
         this.auditHelper.auditPageWithoutScreenshots('Edit Regions Group LA Lead Contact', 'Schools', `/schools/contacts/editregionsgrouplocalauthoritylead?urn=${laMaintainedSchoolUrn}`);
+
+        // School Governance subpages
+        this.auditHelper.auditPage('School Governance - Current governors', 'Schools', `/schools/governance/current?urn=${academyUrn}`);
+        this.auditHelper.auditPage('School Governance - Historic governors', 'Schools', `/schools/governance/historic?urn=${academyUrn}`);
+
+
+        // School Ofsted subpages
+        this.auditHelper.auditPage('School Ofsted - Single Headline Grades', 'Schools', `/schools/ofsted/singleheadlinegrades?urn=${academyUrn}`);
+        this.auditHelper.auditPage('LA Maintained School Ofsted - Single Headline Grades', 'Schools', `/schools/ofsted/singleheadlinegrades?urn=${laMaintainedSchoolUrn}`);
     }
 
     /***

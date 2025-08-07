@@ -1,3 +1,4 @@
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -10,9 +11,16 @@ public interface ISchoolService
     Task<bool> IsPartOfFederationAsync(int urn);
 
     Task<SchoolReferenceNumbersServiceModel> GetReferenceNumbersAsync(int urn);
+
+    Task<SchoolGovernanceServiceModel> GetSchoolGovernanceAsync(int urn);
+
+    Task<OfstedHeadlineGradesServiceModel> GetOfstedHeadlineGrades(int urn);
 }
 
-public class SchoolService(IMemoryCache memoryCache, ISchoolRepository schoolRepository) : ISchoolService
+public class SchoolService(
+    IMemoryCache memoryCache,
+    ISchoolRepository schoolRepository,
+    IOfstedRepository ofstedRepository) : ISchoolService
 {
     public async Task<bool> IsPartOfFederationAsync(int urn)
     {
@@ -55,5 +63,23 @@ public class SchoolService(IMemoryCache memoryCache, ISchoolRepository schoolRep
             : null;
 
         return new SchoolReferenceNumbersServiceModel(urn, laestab, referenceNumbers.Ukprn);
+    }
+
+    public async Task<SchoolGovernanceServiceModel> GetSchoolGovernanceAsync(int urn)
+    {
+        var governance = await schoolRepository.GetGovernanceAsync(urn);
+
+        return new SchoolGovernanceServiceModel(
+            governance.Where(x => x.IsCurrentOrFutureGovernor).ToArray(),
+            governance.Where(x => !x.IsCurrentOrFutureGovernor).ToArray());
+    }
+
+    public async Task<OfstedHeadlineGradesServiceModel> GetOfstedHeadlineGrades(int urn)
+    {
+        var shortInspection = await ofstedRepository.GetOfstedShortInspectionAsync(urn);
+        var inspectionHistorySummary = await ofstedRepository.GetOfstedInspectionHistorySummaryAsync(urn);
+
+        return new OfstedHeadlineGradesServiceModel(shortInspection, inspectionHistorySummary.CurrentInspection,
+            inspectionHistorySummary.PreviousInspection);
     }
 }

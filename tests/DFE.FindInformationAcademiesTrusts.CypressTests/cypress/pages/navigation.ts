@@ -42,6 +42,8 @@ class Navigation {
         schoolsServiceNav: {
             overviewServiceNavButton: () => cy.get('[data-testid="overview-nav"]'),
             contactsServiceNavButton: () => cy.get('[data-testid="contacts-nav"]'),
+            governanceServiceNavButton: () => cy.get('[data-testid="governance-nav"]'),
+            ofstedServiceNavButton: () => cy.get('[data-testid="ofsted-nav"]'),
         },
         schoolsOverviewSubNav: {
             schoolsDetailsButton: () => cy.get('[data-testid="overview-details-subnav"]'),
@@ -52,6 +54,10 @@ class Navigation {
         schoolsContactsSubNav: {
             contactsInDfeSubnavButton: () => cy.get('[data-testid="contacts-in-dfe-subnav"]'),
             contactsInThisSchoolSubnavButton: () => cy.get('[data-testid="contacts-in-this-school-subnav"]'),
+        },
+        schoolsGovernanceSubNav: {
+            currentGovernorsSubnavButton: () => cy.get('[data-testid="current-governors-subnav"]'),
+            historicGovernorsSubnavButton: () => cy.get('[data-testid="historic-governors-subnav"]'),
         }
     };
 
@@ -286,8 +292,11 @@ class Navigation {
     //#region Schools navigation
 
     public checkAllSchoolServiceNavItemsPresent(): this {
+        // Validates school navigation order: Overview → Contacts → Governance
         this.elements.schoolsServiceNav.overviewServiceNavButton().should('be.visible');
         this.elements.schoolsServiceNav.contactsServiceNavButton().should('be.visible');
+        this.elements.schoolsServiceNav.governanceServiceNavButton().should('be.visible');
+        this.elements.schoolsServiceNav.ofstedServiceNavButton().should('be.visible');
         return this;
     }
 
@@ -321,6 +330,11 @@ class Navigation {
         return this;
     }
 
+    public clickSchoolsGovernanceButton(): this {
+        this.elements.schoolsServiceNav.governanceServiceNavButton().click();
+        return this;
+    }
+
     public clickSchoolsFederationButton(): this {
         this.elements.schoolsOverviewSubNav.schoolsFederationButton().click();
         return this;
@@ -336,11 +350,39 @@ class Navigation {
         return this;
     }
 
+    public clickCurrentGovernorsSubnavButton(): this {
+        this.elements.schoolsGovernanceSubNav.currentGovernorsSubnavButton().click();
+        return this;
+    }
+
+    public clickHistoricGovernorsSubnavButton(): this {
+        this.elements.schoolsGovernanceSubNav.historicGovernorsSubnavButton().click();
+        return this;
+    }
+
     public checkSchoolsContactsSubNavItemsPresent(): this {
         this.elements.schoolsContactsSubNav.contactsInDfeSubnavButton().should('be.visible');
         this.elements.schoolsContactsSubNav.contactsInThisSchoolSubnavButton().should('be.visible');
         return this;
     }
+
+    public checkSchoolsGovernanceSubNavItemsPresent(): this {
+        this.elements.schoolsGovernanceSubNav.currentGovernorsSubnavButton().should('be.visible');
+        this.elements.schoolsGovernanceSubNav.historicGovernorsSubnavButton().should('be.visible');
+        return this;
+    }
+
+    public checkCurrentGovernorsSubnavButtonIsHighlighted(): this {
+        this.elements.schoolsGovernanceSubNav.currentGovernorsSubnavButton().should('have.attr', 'aria-current', 'page');
+        return this;
+    }
+
+    public checkHistoricGovernorsSubnavButtonIsHighlighted(): this {
+        this.elements.schoolsGovernanceSubNav.historicGovernorsSubnavButton().should('have.attr', 'aria-current', 'page');
+        return this;
+    }
+
+
 
     public checkSchoolsContactsInDfeSubnavButtonIsHighlighted(): this {
         this.elements.schoolsContactsSubNav.contactsInDfeSubnavButton().should('have.attr', 'aria-current', 'page');

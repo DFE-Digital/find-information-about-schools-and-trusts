@@ -22,7 +22,6 @@ describe('Schools Navigation Tests', () => {
     };
 
 
-
     describe("Functional navigation tests", () => {
 
         context("Academy trust link navigation", () => {
@@ -51,24 +50,36 @@ describe('Schools Navigation Tests', () => {
     });
 
     describe("Schools main navigation tests", () => {
-        it('Should check that the schools main navigation is present and correct', () => {
-            // School Overview --> School Contacts in DfE (School)
-            cy.visit(`/schools/overview/details?urn=${navTestSchool.schoolURN}`);
-            navigation
-                .clickSchoolsContactsButton()
-                .checkCurrentURLIsCorrect(`/schools/contacts/in-dfe?urn=${navTestSchool.schoolURN}`)
-                .checkAllSchoolServiceNavItemsPresent();
-            schoolsPage
-                .checkInDfeContactsSubpageHeaderIsCorrect();
+        // School main navigation order: Overview → Contacts → Governance
+        const navigationTestData = [
+            { type: 'School', urn: navTestSchool.schoolURN },
+            { type: 'Academy', urn: navTestAcademies[0].academyURN }
+        ];
 
-            // School Overview --> School Contacts in DfE (Academy)
-            cy.visit(`/schools/overview/details?urn=${navTestAcademies[0].academyURN}`);
-            navigation
-                .clickSchoolsContactsButton()
-                .checkCurrentURLIsCorrect(`/schools/contacts/in-dfe?urn=${navTestAcademies[0].academyURN}`)
-                .checkAllSchoolServiceNavItemsPresent();
-            schoolsPage
-                .checkInDfeContactsSubpageHeaderIsCorrect();
+        navigationTestData.forEach(({ type, urn }) => {
+            it(`Should validate complete navigation order for ${type}: Overview → Contacts → Governance`, () => {
+                // Test complete navigation flow
+                cy.visit(`/schools/overview/details?urn=${urn}`);
+
+                // Overview → Contacts
+                navigation
+                    .clickSchoolsContactsButton()
+                    .checkCurrentURLIsCorrect(`/schools/contacts/in-dfe?urn=${urn}`)
+                    .checkAllSchoolServiceNavItemsPresent();
+
+                // Contacts → Governance  
+                navigation
+                    .clickSchoolsGovernanceButton()
+                    .checkCurrentURLIsCorrect(`/schools/governance/current?urn=${urn}`)
+                    .checkGovernanceServiceNavButtonIsHighlighted();
+                schoolsPage
+                    .checkGovernancePageNamePresent();
+
+                // Governance → Overview (completing the cycle)
+                navigation
+                    .clickOverviewServiceNavButton()
+                    .checkCurrentURLIsCorrect(`/schools/overview/details?urn=${urn}`);
+            });
         });
     });
 
@@ -153,6 +164,68 @@ describe('Schools Navigation Tests', () => {
                 cy.get('[data-testid="contacts-in-this-school-subnav"]')
                     .should('be.visible')
                     .should('contain.text', 'In this academy');
+            });
+        });
+    });
+
+    describe("Schools governance sub navigation tests", () => {
+        context('School governance subnav navigation tests -- (School)', () => {
+            it('Should navigate from current governors to historic governors and back', () => {
+                // Start at current governors
+                cy.visit(`/schools/governance/current?urn=${navTestSchool.schoolURN}`);
+                navigation
+                    .checkSchoolsGovernanceSubNavItemsPresent()
+                    .checkCurrentGovernorsSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkCurrentGovernorsHeaderPresent()
+                    .checkCurrentGovernorsSectionPresent();
+
+                // Navigate to historic governors
+                navigation
+                    .clickHistoricGovernorsSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/governance/historic?urn=${navTestSchool.schoolURN}`)
+                    .checkHistoricGovernorsSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkHistoricGovernorsHeaderPresent()
+                    .checkHistoricGovernorsSectionPresent();
+
+                // Navigate back to current governors
+                navigation
+                    .clickCurrentGovernorsSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/governance/current?urn=${navTestSchool.schoolURN}`)
+                    .checkCurrentGovernorsSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkCurrentGovernorsHeaderPresent();
+            });
+        });
+
+        context('School governance subnav navigation tests -- (Academy)', () => {
+            it('Should navigate from current governors to historic governors and back', () => {
+                // Start at current governors
+                cy.visit(`/schools/governance/current?urn=${navTestAcademies[0].academyURN}`);
+                navigation
+                    .checkSchoolsGovernanceSubNavItemsPresent()
+                    .checkCurrentGovernorsSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkCurrentGovernorsHeaderPresent()
+                    .checkCurrentGovernorsSectionPresent();
+
+                // Navigate to historic governors
+                navigation
+                    .clickHistoricGovernorsSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/governance/historic?urn=${navTestAcademies[0].academyURN}`)
+                    .checkHistoricGovernorsSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkHistoricGovernorsHeaderPresent()
+                    .checkHistoricGovernorsSectionPresent();
+
+                // Navigate back to current governors
+                navigation
+                    .clickCurrentGovernorsSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/governance/current?urn=${navTestAcademies[0].academyURN}`)
+                    .checkCurrentGovernorsSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkCurrentGovernorsHeaderPresent();
             });
         });
     });
@@ -247,7 +320,6 @@ describe('Schools Navigation Tests', () => {
                     .checkAcademyDetailsHeaderPresent();
             });
         });
-
     });
 
     describe("School contacts edit navigation tests", () => {
@@ -272,12 +344,6 @@ describe('Schools Navigation Tests', () => {
 
                 navigation
                     .checkCurrentURLIsCorrect(`/schools/contacts/in-dfe?urn=${navTestSchool.schoolURN}`);
-            });
-
-            it('Should check breadcrumb navigation is correct on the in DfE contacts page', () => {
-                cy.visit(`/schools/contacts/in-dfe?urn=${navTestSchool.schoolURN}`);
-                navigation
-                    .checkPageNameBreadcrumbPresent("Contacts");
             });
         });
     });

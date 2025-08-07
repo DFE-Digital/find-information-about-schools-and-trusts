@@ -1,4 +1,7 @@
+using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
@@ -9,11 +12,12 @@ public class SchoolServiceTests
 {
     private readonly SchoolService _sut;
     private readonly ISchoolRepository _mockSchoolRepository = Substitute.For<ISchoolRepository>();
+    private readonly IOfstedRepository _mockOfstedRepository = Substitute.For<IOfstedRepository>();
     private readonly MockMemoryCache _mockMemoryCache = new();
 
     public SchoolServiceTests()
     {
-        _sut = new SchoolService(_mockMemoryCache.Object, _mockSchoolRepository);
+        _sut = new SchoolService(_mockMemoryCache.Object, _mockSchoolRepository, _mockOfstedRepository);
     }
 
     [Fact]
@@ -176,5 +180,76 @@ public class SchoolServiceTests
 
         result.Ukprn.Should().BeNull();
         await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+    }
+
+    [Fact]
+    public async Task GetSchoolGovernanceAsync_should_return_governance_results()
+    {
+        const int urn = 123456;
+
+        var startDate = DateTime.Today.AddYears(-3);
+        var futureEndDate = DateTime.Today.AddYears(1);
+        var historicEndDate = DateTime.Today.AddYears(-1);
+
+        var governor = new Governor(
+            "9999",
+            "1234",
+            Role: "Governor",
+            FullName: "First Second Last",
+            DateOfAppointment: startDate,
+            DateOfTermEnd: futureEndDate,
+            AppointingBody: "School board",
+            Email: null
+        );
+        var chair = new Governor(
+            "9998",
+            "1234",
+            Role: "Chair",
+            FullName: "First Second Last",
+            DateOfAppointment: startDate,
+            DateOfTermEnd: futureEndDate,
+            AppointingBody: "School board",
+            Email: null
+        );
+
+        var historic = new Governor(
+            "9999",
+            "1234",
+            Role: "Chair",
+            FullName: "First Second Last",
+            DateOfAppointment: startDate,
+            DateOfTermEnd: historicEndDate,
+            AppointingBody: "School board",
+            Email: null
+        );
+
+        _mockSchoolRepository.GetGovernanceAsync(urn).Returns([governor, chair, historic]);
+
+        var result = await _sut.GetSchoolGovernanceAsync(urn);
+
+        result.Historic.Should().ContainSingle().Which.Should().BeEquivalentTo(historic);
+        result.Current.Should().BeEquivalentTo([chair, governor]);
+    }
+
+    [Fact]
+    public async Task GetOfstedHeadlineGradesAsync_returns_data_from_ofsted_repository()
+    {
+        const int urn = 123456;
+
+        var expectedShortInspection = new OfstedShortInspection(new DateTime(2022, 1, 1), "School remains Good");
+        var expectedCurrentInspection =
+            new OfstedFullInspectionSummary(new DateTime(2021, 1, 1), OfstedRatingScore.Good);
+        var expectedPreviousInspection =
+            new OfstedFullInspectionSummary(new DateTime(2011, 1, 1), OfstedRatingScore.RequiresImprovement);
+
+        _mockOfstedRepository.GetOfstedShortInspectionAsync(urn).Returns(expectedShortInspection);
+        _mockOfstedRepository.GetOfstedInspectionHistorySummaryAsync(urn)
+            .Returns(new OfstedInspectionHistorySummary(expectedCurrentInspection, expectedPreviousInspection));
+
+        var result = await _sut.GetOfstedHeadlineGrades(urn);
+        
+        result.ShortInspection.Should().BeEquivalentTo(expectedShortInspection);
+        result.CurrentInspection.Should().BeEquivalentTo(expectedCurrentInspection);
+        result.PreviousInspection.Should().BeEquivalentTo(expectedPreviousInspection);
     }
 }

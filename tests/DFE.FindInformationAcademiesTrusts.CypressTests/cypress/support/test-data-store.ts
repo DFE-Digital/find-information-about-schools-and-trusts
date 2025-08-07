@@ -64,6 +64,19 @@ export class TestDataStore {
                     { subpageName: "In this school", url: `/schools/contacts/in-the-school?urn=${urn}` },
                 ]
             },
+            {
+                pageName: "Ofsted",
+                subpages: [
+                    { subpageName: "Single headline grades", url: `/schools/ofsted/singleheadlinegrades?urn=${urn}` },
+                ]
+            },
+            {
+                pageName: "Governance",
+                subpages: [
+                    { subpageName: "Current governors", url: `/schools/governance/current?urn=${urn}` },
+                    { subpageName: "Historic governors", url: `/schools/governance/historic?urn=${urn}` },
+                ]
+            },
         ];
 
     public static readonly GetAllAcademySubpagesForUrn = (urn: number) =>
@@ -81,6 +94,19 @@ export class TestDataStore {
                 subpages: [
                     { subpageName: "In DfE", url: `/schools/contacts/in-dfe?urn=${urn}` },
                     { subpageName: "In this academy", url: `/schools/contacts/in-the-school?urn=${urn}` },
+                ]
+            },
+            {
+                pageName: "Ofsted",
+                subpages: [
+                    { subpageName: "Single headline grades", url: `/schools/ofsted/singleheadlinegrades?urn=${urn}` },
+                ]
+            },
+            {
+                pageName: "Governance",
+                subpages: [
+                    { subpageName: "Current governors", url: `/schools/governance/current?urn=${urn}` },
+                    { subpageName: "Historic governors", url: `/schools/governance/historic?urn=${urn}` },
                 ]
             },
         ];
@@ -223,6 +249,43 @@ export const senSchoolData = [
     {
         typeOfSchool: "academy with SEN provision",
         urn: 143934
+    }
+];
+
+// School URNs with governance data for testing school governance functionality
+export const schoolsWithGovernanceData = [
+    {
+        typeOfSchool: "community school with governance data",
+        urn: 100099,
+        description: "Abbey Wood Nursery School - Local authority nursery school with current and historic governors"
+    },
+    {
+        typeOfSchool: "academy with governance data",
+        urn: 134224,
+        description: "Manchester Academy - Academy sponsor led with governance information"
+    }
+];
+
+// School URNs with no governance data for testing empty state scenarios
+export const schoolsWithNoGovernanceData = [
+    {
+        typeOfSchool: "school with no governance data",
+        urn: 130423,
+        description: "School with no current or historic governors for testing empty states"
+    }
+];
+
+// School URNs for comprehensive governance testing across different school types
+export const testSchoolGovernanceData = [
+    {
+        urn: 107188,
+        type: "Community school",
+        description: "Community school with comprehensive governance data"
+    },
+    {
+        urn: 137083,
+        type: "Academy converter",
+        description: "Academy with comprehensive governance data"
     }
 ];
 

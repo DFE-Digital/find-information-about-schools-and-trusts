@@ -9,7 +9,7 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
         Sut = new PreviousRatingsModel(MockDataSourceService,
                 MockTrustService,
                 MockAcademyService,
-                MockOfstedDataExportService,
+                MockOfstedTrustDataExportService,
                 MockDateTimeProvider
             )
             { Uid = TrustUid };

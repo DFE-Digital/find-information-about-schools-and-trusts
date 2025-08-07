@@ -1,6 +1,7 @@
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using Microsoft.FeatureManagement;
@@ -13,7 +14,7 @@ public abstract class SchoolNavMenuTestsBase
     protected IVariantFeatureManager MockFeatureManager = Substitute.For<IVariantFeatureManager>();
     protected readonly Sut Sut;
 
-    public SchoolNavMenuTestsBase()
+    protected SchoolNavMenuTestsBase()
     {
         Sut = new Sut(MockFeatureManager);
     }
@@ -37,7 +38,9 @@ public abstract class SchoolNavMenuTestsBase
         typeof(ReferenceNumbersModel),
         //Contacts
         typeof(InDfeModel),
-        typeof(InSchoolModel)
+        typeof(InSchoolModel),
+        //Governance
+        typeof(CurrentModel)
     ];
 
     protected static SchoolAreaModel GetMockSchoolPage(Type pageType, int urn = 123456,
