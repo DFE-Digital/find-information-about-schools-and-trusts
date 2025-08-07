@@ -154,6 +154,11 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
             new DataSourcePageListEntry("Previous ratings", [
                 new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Previous Ofsted rating"),
                 new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Date of previous inspection")
+            ]),
+            new DataSourcePageListEntry("Safeguarding and concerns", [
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Effective safeguarding"),
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Category of concern"),
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Date of current inspection")
             ])
         ]);
     }
