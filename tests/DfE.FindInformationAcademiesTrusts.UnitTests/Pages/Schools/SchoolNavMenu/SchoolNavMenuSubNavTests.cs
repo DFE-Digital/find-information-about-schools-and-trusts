@@ -54,6 +54,7 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             nameof(CurrentModel) => "Governance",
             nameof(HistoricModel) => "Governance",
             nameof(SingleHeadlineGradesModel) => "Ofsted",
+            nameof(CurrentRatingsModel) => "Ofsted",
             nameof(PreviousRatingsModel) => "Ofsted",
             _ => throw new ArgumentException("Couldn't get expected name for given page type", nameof(pageType))
         };
@@ -102,6 +103,7 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             nameof(CurrentModel) => "/Schools/Governance/Current",
             nameof(HistoricModel) => "/Schools/Governance/Historic",
             nameof(SingleHeadlineGradesModel) => "/Schools/Ofsted/SingleHeadlineGrades",
+            nameof(CurrentRatingsModel) => "/Schools/Ofsted/CurrentRatings",
             nameof(PreviousRatingsModel) => "/Schools/Ofsted/PreviousRatings",
             _ => throw new ArgumentException("Couldn't get expected sub page nav asp link for given page type",
                 nameof(pageType))
