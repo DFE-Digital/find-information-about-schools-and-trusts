@@ -57,6 +57,10 @@ public class OfstedAreaModel(
                 new DataSourceListEntry(dataSources, "Single headline grades were"),
                 new DataSourceListEntry(dataSources, "All inspection dates were")
             ]),
+            new DataSourcePageListEntry(CurrentRatingsModel.SubPageName, [
+                new DataSourceListEntry(misDataSource, "Current Ofsted rating"),
+                new DataSourceListEntry(misDataSource, "Date of current inspection")
+            ]),
             new DataSourcePageListEntry(PreviousRatingsModel.SubPageName, [
                 new DataSourceListEntry(misDataSource, "Previous Ofsted rating"),
                 new DataSourceListEntry(misDataSource, "Date of previous inspection")
