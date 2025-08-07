@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Security.Claims;
 using Dfe.CaseAggregationService.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overview;
@@ -22,7 +23,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
         {
             _getCasesService = Substitute.For<IGetCasesService>();
             _environment = Substitute.For<IWebHostEnvironment>();
-
+            
             _indexModel = new IndexModel(_getCasesService, _environment);
       
             SetupContext();
@@ -242,7 +243,14 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
             {
                 HttpContext = httpContext
             };
-            
+
+            httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(
+                [new Claim("role", "User.Role.MPCViewer")],
+                authenticationType: null,
+                nameType: "name",
+                roleType: "role"
+            ));
+
             _indexModel.TempData = new TempDataDictionary(new DefaultHttpContext(), Substitute.For<ITempDataProvider>());
         }
     }

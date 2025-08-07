@@ -51,7 +51,12 @@ describe('Comprehensive Application Accessibility Audit', () => {
         pageDefinitions.auditSchoolPages();
 
         // ============================================================================
-        // 4. GENERATE COMPREHENSIVE REPORT AFTER ALL PAGES AUDITED
+        // 4. MANAGE PROJECTS AND CASES PAGES - COVER OVERVIEW PAGE
+        // ============================================================================
+        pageDefinitions.auditManageProjectsAndCasesPages();
+
+        // ============================================================================
+        // 5. GENERATE COMPREHENSIVE REPORT AFTER ALL PAGES AUDITED
         // ============================================================================
         cy.then(() => {
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');

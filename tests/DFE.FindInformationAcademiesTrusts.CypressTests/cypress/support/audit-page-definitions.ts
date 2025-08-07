@@ -89,4 +89,11 @@ export class AuditPageDefinitions {
         // School Contact Edit Pages (sensitive data - no screenshots, LA maintained schools only)
         this.auditHelper.auditPageWithoutScreenshots('Edit Regions Group LA Lead Contact', 'Schools', `/schools/contacts/editregionsgrouplocalauthoritylead?urn=${laMaintainedSchoolUrn}`);
     }
-} 
+
+    /***
+     * Audit manage projects and cases pages
+     */
+    auditManageProjectsAndCasesPages(): void {
+        this.auditHelper.auditPageWithRole('User.Role.MPCViewer', 'Manage Projects and Cases - Overview', 'Manage Projects and Cases', '/manageprojectsandcases/overview');
+    }
+}

@@ -2,13 +2,11 @@ using Dfe.CaseAggregationService.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.ManageProjectsAndCases;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DfE.FindInformationAcademiesTrusts.Extensions;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overview
 {
-    [Authorize(Roles = "User.Role.MPCViewer")]
     public class IndexModel : BasePageModel, IPaginationModel
     {
         private readonly IGetCasesService _getCasesService;
@@ -46,8 +44,14 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overvi
         }
 
      
-        public async Task OnGetAsync()
+        public async Task<ActionResult> OnGetAsync()
         {
+            //Need to do this here as the Authorize attribute is not working with the AutomationAuthorizationHandler
+            if (!User.IsInRole("User.Role.MPCViewer"))
+            {
+                return StatusCode(403, "Forbidden");
+            }
+
             Filters.PersistUsing(TempData).PopulateFrom(Request.Query);
 
             Filters.AvailableProjectTypes = new List<string>()
@@ -62,7 +66,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overvi
                 "Transfer"
             };
 
-            Filters.AvailableSystems = new List<string>() 
+            Filters.AvailableSystems = new List<string>()
             {
                 "Complete conversions, transfers and changes",
                 "Manage free school projects",
@@ -95,6 +99,8 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overvi
             TotalProjects = Cases.Count;
 
             PaginationRouteData = new Dictionary<string, string> { { nameof(Sorting), Sorting } };
+
+            return Page();
         }
 
         private bool IncludePrepare() => Include("Prepare conversions and transfers");

@@ -9,7 +9,7 @@
     <div class="govuk-grid-column-full">
         @if (Model.Filters.IsVisible)
         {
-            <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner" data-cy="filter-success-notification">
+            <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner" data-testid="filter-success-notification">
                 <div class="govuk-notification-banner__header">
                     <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
                         Success
@@ -27,13 +27,13 @@
         <partial name="_ProjectListFilters" model="Model.Filters" />
     </div>
     <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-l" test-id="projectCount" data-cy="select-projectlist-filter-count">
+        <h2 class="govuk-heading-l" test-id="projectCount" data-testid="select-projectlist-filter-count" data-aria-controls="accordian-1">
             @Model.Cases.PageStatus.TotalResults @((Model.Cases.PageStatus.TotalResults == 1) ? "result" : "results") found
         </h2>
         @if (Model.TotalProjects > 0)
         {
             <div class="govuk-form-group">
-                <label class="govuk-label" for="sortForm">
+                <label class="govuk-label" for="sorting">
                     Sort by:
                 </label>
                 <form id="sortForm" method="get" class="form">
@@ -50,7 +50,7 @@
             </div>
         }
         @{
-            var index = 0;
+            var caseIndex = 0;
 
             if (Model.Cases != null)
             {
@@ -59,57 +59,61 @@
                     <div class="govuk-grid-row govuk-!-margin-top-6">
                         <div class="govuk-grid-column-full">
                             <h2 class="govuk-!-margin-bottom-1">
-                                <a id="@("case-" + index)" class="govuk-link" data-cy="trust-name-@index" href="@(string.IsNullOrEmpty(currentCase.TitleLink) ? "#" : currentCase.TitleLink)" target="_blank">@currentCase.Title</a>
+                                <a id="@("case-title-" + caseIndex)" class="govuk-link" data-testid="trust-name-@caseIndex" href="@(string.IsNullOrEmpty(currentCase.TitleLink) ? "#" : currentCase.TitleLink)" target="_blank">@currentCase.Title</a>
                             </h2>
                         </div>
                     </div>
-                    <div class="govuk-hint">
+                    <div class="govuk-hint" data-testid="case-system-@caseIndex">
                         @currentCase.System
                     </div>
-                    <div class="govuk-tag govuk-tag--yellow govuk-tag__auto-width">
+                    <div class="govuk-tag govuk-tag--yellow govuk-tag__auto-width" data-testid="case-project-type-@caseIndex">
                         @currentCase.ProjectType
                     </div>
-                    <dl class="govuk-summary-list">
-                        @foreach (var caseItem in @currentCase.Info)
-                        {
-                            <div class="govuk-summary-list__row">
-                                <dt class="govuk-summary-list__key">
-                                    <span id="@("case-item-" + index)">@caseItem.Label:</span>
-                                </dt>
-                                <dd class="govuk-summary-list__value">
-                                    <span id="@("case-item-" + index + "-value")">
-                                        @if (string.IsNullOrEmpty(@caseItem.Value))
-                                        {
-                                            <strong class="govuk-tag govuk-tag--grey">
-                                                Empty
-                                            </strong>
-                                        }
-                                        else
-                                        {
-                                            @caseItem.Value
-                                        }
-                                    </span>
-                                </dd>
-                            </div>
+                    <dl class="govuk-summary-list" data-testid="case-items-list-@caseIndex">
+                        @{ var caseItemIndex = 0;
+                            @foreach (var caseItem in @currentCase.Info)
+                            {
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        <span id="case-item-@caseIndex-@caseItemIndex">@caseItem.Label:</span>
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <span id="case-item-@caseIndex-@caseItemIndex-value">
+                                            @if (string.IsNullOrEmpty(@caseItem.Value))
+                                            {
+                                                <strong class="govuk-tag govuk-tag--grey">
+                                                    Empty
+                                                </strong>
+                                            }
+                                            else
+                                            {
+                                                @caseItem.Value
+                                            }
+                                        </span>
+                                    </dd>
+                                </div>
+
+                                caseItemIndex++;
+                            }
                         }
                         @if (@currentCase.Guidance.Count > 0)
                         {
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
 
-                                    <span id="@("guidance-" + index)">
+                                    <span id="@("guidance-" + caseIndex)">
                                         Guidance:
                                     </span>
                                 </dt>
                                 <dd>
-                                    <span id="@("guidance-item-" + index + "-value")">
+                                    <span id="@("guidance-item-" + caseIndex + "-value")">
                                         @{
                                             var guidanceCount = currentCase.Guidance.Count;
                                         }
                                         @for (var i = 0; i < guidanceCount; i++)
                                         {
                                             var guidance = currentCase.Guidance[i];
-                                            <a class="govuk-link" href="@guidance.Link" target="_blank" rel="noopener noreferrer" data-cy="guidance-link-@index">@guidance.Title</a>
+                                            <a class="govuk-link" href="@guidance.Link" target="_blank" rel="noopener noreferrer" data-testid="guidance-link-@caseIndex">@guidance.Title</a>
                                             @(i < guidanceCount - 1 ? "," : "")
                                         }
                                     </span>
@@ -121,19 +125,19 @@
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">
 
-                                    <span id="@("resource-" + index)">
+                                    <span id="@("resource-" + caseIndex)">
                                         Resources:
                                     </span>
                                 </dt>
                                 <dd>
-                                    <span id="@("resource-item-" + index + "-value")">
+                                    <span id="@("resource-item-" + caseIndex + "-value")">
                                         @{
                                             var resourceCount = currentCase.Resources.Count;
                                             var resourceIndex = 0;
                                         }
                                         @foreach (var resource in currentCase.Resources)
                                         {
-                                            <a class="govuk-link" href="@resource.Link" target="_blank" rel="noopener noreferrer" data-cy="resource-link-@index">@resource.Title</a>
+                                            <a class="govuk-link" href="@resource.Link" target="_blank" rel="noopener noreferrer" data-testid="resource-link-@caseIndex">@resource.Title</a>
                                             @(resourceIndex < resourceCount - 1 ? "," : "")
                                             resourceIndex++;
                                         }
@@ -143,6 +147,8 @@
                         }
 
                     </dl>
+
+                    caseIndex++;
                 }
             }
         }
@@ -154,7 +160,12 @@
 
     <script asp-add-nonce>
 
-        document.getElementById("sorting").addEventListener("change", onChange);
+        var sortingElem =document.getElementById("sorting")
+        
+        if(sortingElem)
+        {
+            sortingElem.addEventListener("change", onChange);
+        }
 
         function onChange(e)
         {

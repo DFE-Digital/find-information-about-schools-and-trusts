@@ -28,7 +28,7 @@
                     </div>
                     <div class="moj-filter__heading-action">
                         <p>
-                            <a class="govuk-link govuk-link--no-visited-state" data-cy="clear-filter"
+                            <a class="govuk-link govuk-link--no-visited-state" data-testid="clear-filter"
                                href="@Url.RouteUrl(ViewContext.RouteData.Values)?clear">Clear filters</a></p>
                     </div>
                 </div>
@@ -72,32 +72,20 @@
         }
         <div class="moj-filter__options">
             <form method="get" class="form">
-
-                @*  <div class="govuk-form-group">
-                    <label class="govuk-label govuk-label--m" for="Title">
-                        Search for projects
-                    </label>
-                    <span class="govuk-hint">You can search by school, academy and trust name, or by URN.</span>
-                    <div class="govuk-!-margin-top-2">
-                        <input id="Title" name="Title" asp-for="Title" type="text" class="govuk-input"
-                               aria-describedby="Title"
-                               data-cy="select-projectlist-filter-title">
-                    </div>
-                </div> *@
                 <div class="govuk-form-group">
                     <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
-                        <div class="govuk-accordion__section govuk-accordion__section--expanded">
+                        <div id="system-filter-section" class="govuk-accordion__section govuk-accordion__section--expanded">
                             <div class="govuk-accordion__section-header">
                                 <h2 class="govuk-accordion__section-heading">
                                     <label class="govuk-accordion__section-button"
                                            id="accordion-systems-heading"
-                                           data-cy="select-projectlist-filter-system"
+                                           data-testid="select-projectlist-filter-system"
                                            for="filter-authority-searches">
                                         System
                                     </label>
                                 </h2>
                             </div>
-                            <div class="govuk-accordion__section-content">
+                            <div class="govuk-accordion__section-content" id="accordion-default-content-1">
                                 <input type="text" class="govuk-input govuk-!-display-none govuk-!-margin-bottom-2"
                                        id="filter-authority-searches" placeholder="Type to filter system..."
                                        aria-labelledby="accordion-systems-heading">
@@ -109,7 +97,7 @@
                                                    id="filter-project-system-@system.Stub()"
                                                    name="SelectedSystems" type="checkbox"
                                                    value="@system"
-                                                   data-cy="select-system-filter-system-@system"
+                                                   data-testid="select-system-filter-system-@system"
                                                    @(Model.SelectedSystems.Contains(system) ? "checked" : null)/>
                                             <label class="govuk-label govuk-checkboxes__label"
                                                    for="filter-project-system-@system.Stub()">
@@ -120,17 +108,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="govuk-accordion__section">
+                        <div id="projecttype-filter-section" class="govuk-accordion__section" data-testid="filter-section-project-type">
                             <div class="govuk-accordion__section-header">
                                 <h2 class="govuk-accordion__section-heading">
 
                                     <label class="govuk-accordion__section-button" id="accordion-project-type-heading"
-                                           data-cy="select-projectlist-filter-project-type" for="filter-searches">
+                                           data-testid="select-projectlist-filter-project-type" for="filter-searches">
                                         Project type
                                     </label>
                                 </h2>
                             </div>
-                            <div class="govuk-accordion__section-content">
+                            <div class="govuk-accordion__section-content" id="accordion-default-content-2">
                                 <input type="text" class="govuk-input govuk-!-display-none govuk-!-margin-bottom-2"
                                        id="filter-searches" placeholder="Type to filter project type..."
                                        aria-labelledby="accordion-project-type-heading">
@@ -141,7 +129,7 @@
                                             <input class="govuk-checkboxes__input"
                                                    id="filter-project-project-type-@projectType.Stub()" name="selectedProjectTypes"
                                                    type="checkbox" value="@projectType"
-                                                   data-cy="select-projectlist-filter-project-type-@projectType"
+                                                   data-testid="select-projectlist-filter-project-type-@projectType"
                                                    @(Model.SelectedProjectTypes.Contains(projectType) ? "checked" : null)/>
                                             <label class="govuk-label govuk-checkboxes__label"
                                                    for="filter-project-project-type-@projectType.Stub()">
@@ -155,8 +143,7 @@
                     </div>
                 </div>
                 <div class="govuk-!-margin-top-2">
-                    <button class="govuk-button" data-module="govuk-button" data-test-id="submit-button"
-                            data-cy="select-projectlist-filter-apply">
+                    <button class="govuk-button" data-module="govuk-button" data-testid="apply-filter-button">
                         Apply filters
                     </button>
                 </div>
