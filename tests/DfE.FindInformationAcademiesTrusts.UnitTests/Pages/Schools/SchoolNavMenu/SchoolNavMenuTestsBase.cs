@@ -34,6 +34,7 @@ public abstract class SchoolNavMenuTestsBase
         typeof(HistoricModel),
         //Ofsted
         typeof(SingleHeadlineGradesModel),
+        typeof(CurrentRatingsModel),
         typeof(PreviousRatingsModel)
     ];
 
@@ -51,6 +52,7 @@ public abstract class SchoolNavMenuTestsBase
         typeof(HistoricModel),
         //Ofsted
         typeof(SingleHeadlineGradesModel),
+        typeof(CurrentRatingsModel),
         typeof(PreviousRatingsModel)
     ];
 
