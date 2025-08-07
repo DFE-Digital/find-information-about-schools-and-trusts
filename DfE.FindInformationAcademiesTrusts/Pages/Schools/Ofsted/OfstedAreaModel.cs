@@ -44,7 +44,7 @@ public class OfstedAreaModel(
 
         var misDataSource = await dataSourceService.GetAsync(Source.Mis);
         var misFurtherEducationDataSource = await dataSourceService.GetAsync(Source.MisFurtherEducation);
-        
+
         List<DataSourceServiceModel> dataSources =
         [
             misDataSource,
@@ -64,6 +64,11 @@ public class OfstedAreaModel(
             new DataSourcePageListEntry(PreviousRatingsModel.SubPageName, [
                 new DataSourceListEntry(misDataSource, "Previous Ofsted rating"),
                 new DataSourceListEntry(misDataSource, "Date of previous inspection")
+            ]),
+            new DataSourcePageListEntry(SafeguardingAndConcernsModel.SubPageName, [
+                new DataSourceListEntry(misDataSource, "Effective safeguarding"),
+                new DataSourceListEntry(misDataSource, "Category of concern"),
+                new DataSourceListEntry(misDataSource, "Date of current inspection")
             ])
         ];
 
