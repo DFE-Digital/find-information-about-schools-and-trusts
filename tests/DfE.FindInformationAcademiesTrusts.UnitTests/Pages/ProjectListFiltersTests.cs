@@ -7,11 +7,13 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages
     {
         private readonly IDictionary<string, object?> _store;
         private readonly string[]? _systems;
+        private readonly string[]? _projectList;
 
         public ProjectListFiltersTests()
         {
             _store = new Dictionary<string, object?>();
             _systems = ["Systems1", "Systems2"];
+            _projectList = ["Project1", "Project2", "Project3"];
         }
 
         [Fact]
@@ -26,12 +28,29 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages
         }
 
         [Fact]
-        public void IsVisible_ReturnsTrue_WhenAnySelectedFiltersExist()
+        public void IsVisible_ReturnsTrue_WhenAnySelectedProjectTypeFiltersExist()
         {
             // Arrange
             var projectListFilters = new ProjectListFilters
             {
                 SelectedProjectTypes = ["Type1"]
+            };
+
+            // Act
+            var isVisible = projectListFilters.IsVisible;
+
+            // Assert
+            Assert.True(isVisible);
+        }
+
+
+        [Fact]
+        public void IsVisible_ReturnsTrue_WhenAnySelectedSystemFiltersExist()
+        {
+            // Arrange
+            var projectListFilters = new ProjectListFilters
+            {
+                SelectedSystems = ["Type1"]
             };
 
             // Act
@@ -63,11 +82,14 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages
                 { "clear", "true" }
             };
 
-            var projectListFilters = new ProjectListFilters();
-            projectListFilters.PersistUsing(new Dictionary<string, object?>
+            var persist = new Dictionary<string, object?>
             {
-                { ProjectListFilters.FilterSystems, _systems }
-            });
+                { ProjectListFilters.FilterProjectTypes, _systems },
+                { ProjectListFilters.FilterSystems, _projectList }
+            };
+
+            var projectListFilters = new ProjectListFilters();
+            projectListFilters.PersistUsing(persist);
 
             // Act
             projectListFilters.PopulateFrom(query);
@@ -75,6 +97,27 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages
             // Assert
             Assert.Empty(projectListFilters.SelectedProjectTypes);
             Assert.Empty(projectListFilters.SelectedSystems);
+            Assert.Empty(persist);
+        }
+
+        [Fact]
+        public void PopulateFrom_PullsFromCache_WhenQueryStringHasNoValues()
+        {
+            // Arrange
+            var query = new Dictionary<string, StringValues>();
+
+            var store = new Dictionary<string, object?>
+            {
+                { ProjectListFilters.FilterSystems, _systems },
+            };
+            var projectListFilters = new ProjectListFilters();
+            projectListFilters.PersistUsing(store);
+
+            // Act
+            projectListFilters.PopulateFrom(query);
+
+            // Assert
+            Assert.Equal(_systems, projectListFilters.SelectedSystems);
         }
 
         [Fact]
@@ -90,7 +133,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages
 
             var store = new Dictionary<string, object?>
             {
-                { ProjectListFilters.FilterSystems, _systems }
+                { ProjectListFilters.FilterSystems, _systems },
             };
             var projectListFilters = new ProjectListFilters();
             projectListFilters.PersistUsing(store);

@@ -65,8 +65,8 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
             }
             else
             {
-                SelectedProjectTypes = Get(FilterProjectTypes, true);
-                SelectedSystems = Get(FilterSystems, true);
+                SelectedProjectTypes = Get(FilterProjectTypes);
+                SelectedSystems = Get(FilterSystems);
             }
 
             string[] GetFromQuery(string key)
@@ -75,14 +75,13 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
             }
         }
 
-        private string[] Get(string key, bool persist = false)
+        private string[] Get(string key)
         {
             if (!_store.TryGetValue(key, out var strValue)) return [];
 
             string[]? value = (string[]?)strValue;
-            if (persist) Cache(key, value);
 
-            return value ?? [];
+            return value!;
         }
 
         private string[] GetAndRemove(string key, string[]? value, bool persist = false)
