@@ -11,7 +11,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.ManageProjectsAndCases
         bool IncludeManageFreeSchools,
         bool IncludeConcerns,
         int Page,
-        int? RecordCount,
+        int RecordCount,
         IEnumerable<string> ProjectFilters,
         SortCriteria Sort);
 
@@ -44,7 +44,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.ManageProjectsAndCases
                 parameters.RecordCount,
                 "1");
             
-            return new PaginatedList<UserCaseInfo>(cases.CaseInfos, cases.TotalRecordCount, parameters.Page, parameters.RecordCount ?? 0);
+            return new PaginatedList<UserCaseInfo>(cases.CaseInfos, cases.TotalRecordCount, parameters.Page, parameters.RecordCount);
         }
     }
 }

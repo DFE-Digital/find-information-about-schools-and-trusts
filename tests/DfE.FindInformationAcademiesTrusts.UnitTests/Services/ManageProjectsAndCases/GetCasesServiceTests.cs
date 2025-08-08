@@ -19,18 +19,18 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ManageProjectsAn
         {
             _mockCasesClient.GetCasesByUserAsync(Arg.Any<string>(),
                     Arg.Any<string>(),
+                    Arg.Is<bool>(x => x == false),
                     Arg.Any<bool>(),
                     Arg.Any<bool>(),
                     Arg.Any<bool>(),
                     Arg.Any<bool>(),
-                    Arg.Any<bool>(),
-                    Arg.Any<bool>(),
+                    Arg.Is<bool>(x => x == false),
                     Arg.Any<IEnumerable<string>>(),
-                    Arg.Any<string>(),
+                    Arg.Is<string>(x => x == ""),
                     Arg.Any<SortCriteria>(),
                     Arg.Any<int>(),
                     Arg.Any<int>(),
-                    Arg.Any<string>())
+                    Arg.Is<string>(x => x == "1"))
                 .Returns(Task.FromResult(new GetCasesByUserResponseModel() { CaseInfos = new List<UserCaseInfo>(), TotalRecordCount = 0}));
 
             var result = await _sut.GetCasesAsync(new GetCasesParameters("n", "m", false, false, false, false, 1, 25, [], SortCriteria.CreatedDateAscending));
@@ -55,5 +55,6 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ManageProjectsAn
             result.PageStatus.TotalResults.Should().Be(0);
 
         }
+
     }
 }

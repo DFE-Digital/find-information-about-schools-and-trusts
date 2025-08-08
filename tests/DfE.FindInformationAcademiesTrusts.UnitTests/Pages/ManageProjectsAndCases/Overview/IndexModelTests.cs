@@ -6,6 +6,7 @@ using DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overview;
 using DfE.FindInformationAcademiesTrusts.Services.ManageProjectsAndCases;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Primitives;
 
@@ -94,6 +95,18 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
             await _getCasesService.Received(1).GetCasesAsync(Arg.Is<GetCasesParameters>(x => x.Sort == SortCriteria.CreatedDateDescending));
         }
 
+        [Fact]
+        public async Task OnGetAsync_RequiresRole()
+        {
+            SetupContext(userRole: "None");
+            // Act
+            var result = await _indexModel.OnGetAsync();
+            // Assert
+            _getCasesService.DidNotReceive();
+
+            result.Should().BeOfType<StatusCodeResult>();
+            result.As<StatusCodeResult>().StatusCode.Should().Be(403);
+        }
 
         [Theory]
         [InlineData(ResultSorting.CreatedAsc, SortCriteria.CreatedDateAscending)]
@@ -222,7 +235,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
             .GetCasesAsync(Arg.Is<GetCasesParameters>(x => x.UserEmail != "faked"));
         }
 
-    private void SetupContext(StringValues? selectedSystems = null, StringValues? selectedProjectTypes = null)
+    private void SetupContext(StringValues? selectedSystems = null, StringValues? selectedProjectTypes = null, string? userRole = null)
         {
             var httpContext = new DefaultHttpContext();
             var query = new Dictionary<string, StringValues>();
@@ -245,7 +258,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
             };
 
             httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(
-                [new Claim("role", "User.Role.MPCViewer")],
+                [new Claim("role", userRole ?? "User.Role.MPCViewer")],
                 authenticationType: null,
                 nameType: "name",
                 roleType: "role"

@@ -49,17 +49,3 @@ describe("Testing the components of the home page", () => {
       .CheckAllSystemsAreComplete()
   });
 });
-
-
-describe("Access control for /manageprojectsandcases/overview/", () => {
-  it.only("should return 403 for unauthorized user", () => {
-    cy.request("/manageprojectsandcases/overview/", {
-      failOnStatusCode: false,
-      headers: {
-        'Authorization': `Bearer ${Cypress.env("AUTH_KEY")}`,
-      }
-    }).then((response) => {
-      expect(response.status).to.eq(403);
-    });
-  });
-});

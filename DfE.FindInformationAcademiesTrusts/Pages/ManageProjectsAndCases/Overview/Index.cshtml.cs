@@ -49,7 +49,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overvi
             //Need to do this here as the Authorize attribute is not working with the AutomationAuthorizationHandler
             if (!User.IsInRole("User.Role.MPCViewer"))
             {
-                return StatusCode(403, "Forbidden");
+                return StatusCode(403);
             }
 
             Filters.PersistUsing(TempData).PopulateFrom(Request.Query);
