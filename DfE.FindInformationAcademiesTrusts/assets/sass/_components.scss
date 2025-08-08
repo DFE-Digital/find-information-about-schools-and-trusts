@@ -32,6 +32,10 @@
   &.app-banner--s {
     @include govuk-responsive-padding(0);
   }
+
+  &.app-banner--grey {
+    background-color: #e7e7e6;
+  }
 }
 
 .app-search-results-summary-list {

@@ -31,4 +31,10 @@
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data.UnitTests\DfE.FindInformationAcademiesTrusts.Data.UnitTests.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Dfe.CaseAggregationService.Api.Client">
+        <HintPath>..\..\..\..\_gittest\rsd-case-aggregation-api\src\Dfe.CaseAggregationService.Api.Client\bin\Debug\net8.0\Dfe.CaseAggregationService.Api.Client.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

@@ -98,4 +98,11 @@ export class AuditPageDefinitions {
         this.auditHelper.auditPage('School Ofsted - Single Headline Grades', 'Schools', `/schools/ofsted/singleheadlinegrades?urn=${academyUrn}`);
         this.auditHelper.auditPage('LA Maintained School Ofsted - Single Headline Grades', 'Schools', `/schools/ofsted/singleheadlinegrades?urn=${laMaintainedSchoolUrn}`);
     }
-} 
+
+    /***
+     * Audit manage projects and cases pages
+     */
+    auditManageProjectsAndCasesPages(): void {
+        this.auditHelper.auditPageWithRole('User.Role.MPCViewer', 'Manage Projects and Cases - Overview', 'Manage Projects and Cases', '/manageprojectsandcases/overview');
+    }
+}
