@@ -21,7 +21,7 @@ public class OfstedAreaModel(
     ISchoolNavMenu schoolNavMenu)
     : SchoolAreaModel(schoolService, trustService, schoolNavMenu)
 {
-    private readonly ISchoolService _schoolService = schoolService;
+    protected readonly ISchoolService SchoolService = schoolService;
 
     public const string PageName = "Ofsted";
     public override PageMetadata PageMetadata => base.PageMetadata with { PageName = PageName };
@@ -42,10 +42,13 @@ public class OfstedAreaModel(
 
         OfstedReportUrl = otherServicesLinkBuilder.OfstedReportLinkForSchool(Urn);
 
+        var misDataSource = await dataSourceService.GetAsync(Source.Mis);
+        var misFurtherEducationDataSource = await dataSourceService.GetAsync(Source.MisFurtherEducation);
+        
         List<DataSourceServiceModel> dataSources =
         [
-            await dataSourceService.GetAsync(Source.Mis),
-            await dataSourceService.GetAsync(Source.MisFurtherEducation)
+            misDataSource,
+            misFurtherEducationDataSource
         ];
 
         DataSourcesPerPage =
@@ -53,6 +56,14 @@ public class OfstedAreaModel(
             new DataSourcePageListEntry(SingleHeadlineGradesModel.SubPageName, [
                 new DataSourceListEntry(dataSources, "Single headline grades were"),
                 new DataSourceListEntry(dataSources, "All inspection dates were")
+            ]),
+            new DataSourcePageListEntry(CurrentRatingsModel.SubPageName, [
+                new DataSourceListEntry(misDataSource, "Current Ofsted rating"),
+                new DataSourceListEntry(misDataSource, "Date of current inspection")
+            ]),
+            new DataSourcePageListEntry(PreviousRatingsModel.SubPageName, [
+                new DataSourceListEntry(misDataSource, "Previous Ofsted rating"),
+                new DataSourceListEntry(misDataSource, "Date of previous inspection")
             ])
         ];
 
@@ -61,7 +72,7 @@ public class OfstedAreaModel(
 
     public virtual async Task<IActionResult> OnGetExportAsync(int urn)
     {
-        var schoolSummary = await _schoolService.GetSchoolSummaryAsync(urn);
+        var schoolSummary = await SchoolService.GetSchoolSummaryAsync(urn);
 
         if (schoolSummary == null)
         {

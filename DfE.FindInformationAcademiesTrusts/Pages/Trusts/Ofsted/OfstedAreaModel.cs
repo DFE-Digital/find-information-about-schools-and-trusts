@@ -22,7 +22,7 @@ public class OfstedAreaModel(
 
     public override PageMetadata PageMetadata => base.PageMetadata with { PageName = PageName };
 
-    public AcademyOfstedServiceModel[] Academies { get; set; } = default!;
+    public SchoolOfstedServiceModel[] Academies { get; set; } = default!;
     private IAcademyService AcademyService { get; } = academyService;
     public IDateTimeProvider DateTimeProvider { get; } = dateTimeProvider;
 

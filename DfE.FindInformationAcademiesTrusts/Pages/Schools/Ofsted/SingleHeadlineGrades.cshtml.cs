@@ -19,7 +19,6 @@ public class SingleHeadlineGradesModel(
     ISchoolNavMenu schoolNavMenu) : OfstedAreaModel(schoolService, schoolOverviewDetailsService, trustService,
     dataSourceService, ofstedSchoolDataExportService, dateTimeProvider, otherServicesLinkBuilder, schoolNavMenu)
 {
-    private readonly ISchoolService _schoolService = schoolService;
     public const string SubPageName = "Single headline grades";
     public override PageMetadata PageMetadata => base.PageMetadata with { SubPageName = SubPageName };
     public OfstedHeadlineGradesServiceModel HeadlineGrades { get; set; } = null!;
@@ -29,7 +28,7 @@ public class SingleHeadlineGradesModel(
         var pageResult = await base.OnGetAsync();
         if (pageResult is NotFoundResult) return pageResult;
 
-        HeadlineGrades = await _schoolService.GetOfstedHeadlineGrades(Urn);
+        HeadlineGrades = await SchoolService.GetOfstedHeadlineGrades(Urn);
 
         return pageResult;
     }

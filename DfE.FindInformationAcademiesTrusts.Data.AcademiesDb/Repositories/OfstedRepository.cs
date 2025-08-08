@@ -13,7 +13,7 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
     private static readonly DateTime
         SingleHeadlineGradesPolicyChangeDate = new(2024, 09, 02, 0, 0, 0, DateTimeKind.Utc);
 
-    public async Task<AcademyOfsted[]> GetAcademiesInTrustOfstedAsync(string uid)
+    public async Task<SchoolOfsted[]> GetAcademiesInTrustOfstedAsync(string uid)
     {
         var giasGroupLinkData = await academiesDbContext.GiasGroupLinks
             .Where(gl => gl.GroupUid == uid)
@@ -28,7 +28,7 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
         var ofstedRatings = await GetOfstedRatings(giasGroupLinkData.Select(gl => gl.Urn).ToArray());
 
         var academyOfsteds = giasGroupLinkData.Select(gl =>
-                new AcademyOfsted(gl.Urn,
+                new SchoolOfsted(gl.Urn,
                     gl.EstablishmentName,
                     DateTime.ParseExact(gl.JoinedDate!, "dd/MM/yyyy", CultureInfo.InvariantCulture),
                     ofstedRatings[gl.Urn].ShortInspection,
@@ -58,6 +58,33 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
         return await academiesDbContext.MisMstrEstablishmentsFiat.Where(est => est.Urn == urn).Select(est =>
             new OfstedShortInspection(est.DateOfLatestSection8Inspection.ParseAsNullableDate(),
                 est.Section8InspectionOverallOutcome)).FirstOrDefaultAsync() ?? OfstedShortInspection.Unknown;
+    }
+
+    public async Task<SchoolOfsted> GetSchoolOfstedRatingsAsync(int urn)
+    {
+        var urnString = urn.ToString();
+        
+        var result = await GetOfstedRatings([urnString]);
+        var ofstedRatings = result[urnString];
+        
+        var giasGroupLink = await academiesDbContext.GiasGroupLinks
+            .Where(gl => gl.Urn == urnString)
+            .Select(gl => new
+            {
+                Urn = gl.Urn!,
+                gl.EstablishmentName,
+                gl.JoinedDate
+            })
+            .FirstOrDefaultAsync();
+
+        return new SchoolOfsted(
+            urnString,
+            giasGroupLink?.EstablishmentName,
+            giasGroupLink?.JoinedDate.ParseAsNullableDate(),
+            ofstedRatings.ShortInspection,
+            ofstedRatings.Previous,
+            ofstedRatings.Current
+        );
     }
 
     private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatings(string[] urns)

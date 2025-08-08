@@ -1,5 +1,6 @@
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.School;
@@ -15,6 +16,8 @@ public interface ISchoolService
     Task<SchoolGovernanceServiceModel> GetSchoolGovernanceAsync(int urn);
 
     Task<OfstedHeadlineGradesServiceModel> GetOfstedHeadlineGrades(int urn);
+    
+    Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsync(int urn);
 }
 
 public class SchoolService(
@@ -81,5 +84,19 @@ public class SchoolService(
 
         return new OfstedHeadlineGradesServiceModel(shortInspection, inspectionHistorySummary.CurrentInspection,
             inspectionHistorySummary.PreviousInspection);
+    }
+
+    public async Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsync(int urn)
+    {
+        var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
+
+        return new SchoolOfstedServiceModel(
+            schoolOfstedRatings.Urn,
+            schoolOfstedRatings.EstablishmentName,
+            schoolOfstedRatings.DateAcademyJoinedTrust,
+            schoolOfstedRatings.ShortInspection,
+            schoolOfstedRatings.PreviousOfstedRating,
+            schoolOfstedRatings.CurrentOfstedRating
+        );
     }
 }

@@ -138,7 +138,11 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
         return
         [
             GetSubNavLinkTo<SingleHeadlineGradesModel>(OfstedAreaModel.PageName, SingleHeadlineGradesModel.SubPageName,
-                "/Schools/Ofsted/SingleHeadlineGrades", activePage, "ofsted-single-headline-grades-subnav")
+                "/Schools/Ofsted/SingleHeadlineGrades", activePage, "ofsted-single-headline-grades-subnav"),
+            GetSubNavLinkTo<CurrentRatingsModel>(OfstedAreaModel.PageName, CurrentRatingsModel.SubPageName,
+                "/Schools/Ofsted/CurrentRatings", activePage, "ofsted-current-ratings-subnav"),
+            GetSubNavLinkTo<PreviousRatingsModel>(OfstedAreaModel.PageName, PreviousRatingsModel.SubPageName,
+                "/Schools/Ofsted/PreviousRatings", activePage, "ofsted-previous-ratings-subnav")
         ];
     }
 

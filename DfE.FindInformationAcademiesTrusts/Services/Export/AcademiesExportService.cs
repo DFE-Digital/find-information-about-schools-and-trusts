@@ -63,7 +63,7 @@ public class AcademiesExportService(ITrustService trustService, IAcademyService 
             .Build();
     }
 
-    private void WriteRows(AcademyDetailsServiceModel[] academies, AcademyOfstedServiceModel[] academiesOfstedRatings,
+    private void WriteRows(AcademyDetailsServiceModel[] academies, SchoolOfstedServiceModel[] academiesOfstedRatings,
         AcademyPupilNumbersServiceModel[] academiesPupilNumbers,
         AcademyFreeSchoolMealsServiceModel[] academiesFreeSchoolMeals)
     {
@@ -79,7 +79,7 @@ public class AcademiesExportService(ITrustService trustService, IAcademyService 
 
     private void GenerateAcademyRow(
         AcademyDetailsServiceModel academy,
-        AcademyOfstedServiceModel? ofstedData,
+        SchoolOfstedServiceModel? ofstedData,
         AcademyPupilNumbersServiceModel? pupilNumbersData,
         AcademyFreeSchoolMealsServiceModel? freeSchoolMealsData)
     {

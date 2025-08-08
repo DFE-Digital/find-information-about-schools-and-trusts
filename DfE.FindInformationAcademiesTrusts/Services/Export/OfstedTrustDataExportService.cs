@@ -59,7 +59,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Export
                 .Build();
         }
 
-        private void WriteRows(AcademyDetailsServiceModel[] academies, AcademyOfstedServiceModel[] academiesOfstedRatings)
+        private void WriteRows(AcademyDetailsServiceModel[] academies, SchoolOfstedServiceModel[] academiesOfstedRatings)
         {
             foreach (var details in academies)
             {
@@ -69,7 +69,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Export
             }
         }
 
-        private void GenerateOfstedRow(AcademyDetailsServiceModel academy, AcademyOfstedServiceModel? ofstedData)
+        private void GenerateOfstedRow(AcademyDetailsServiceModel academy, SchoolOfstedServiceModel? ofstedData)
         {
             var previousRating = ofstedData?.PreviousOfstedRating ?? OfstedRating.NotInspected;
             var currentRating = ofstedData?.CurrentOfstedRating ?? OfstedRating.NotInspected;

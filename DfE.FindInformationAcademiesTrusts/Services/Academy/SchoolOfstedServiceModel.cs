@@ -3,10 +3,10 @@ using DfE.FindInformationAcademiesTrusts.Data.Enums;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Academy;
 
-public record AcademyOfstedServiceModel(
+public record SchoolOfstedServiceModel(
     string Urn,
     string? EstablishmentName,
-    DateTime DateAcademyJoinedTrust,
+    DateTime? DateAcademyJoinedTrust,
     OfstedShortInspection ShortInspection,
     OfstedRating PreviousOfstedRating,
     OfstedRating CurrentOfstedRating
@@ -18,6 +18,11 @@ public record AcademyOfstedServiceModel(
     {
         get
         {
+            if (DateAcademyJoinedTrust is null)
+            {
+                return BeforeOrAfterJoining.NotApplicable;
+            }
+
             if (CurrentOfstedRating.InspectionDate is null)
             {
                 return BeforeOrAfterJoining.NotYetInspected;
@@ -38,6 +43,11 @@ public record AcademyOfstedServiceModel(
     {
         get
         {
+            if (DateAcademyJoinedTrust is null)
+            {
+                return BeforeOrAfterJoining.NotApplicable;
+            }
+
             if (PreviousOfstedRating.InspectionDate is null)
             {
                 return BeforeOrAfterJoining.NotYetInspected;
