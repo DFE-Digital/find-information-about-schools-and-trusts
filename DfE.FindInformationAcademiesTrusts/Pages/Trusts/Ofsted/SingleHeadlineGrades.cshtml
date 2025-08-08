@@ -9,7 +9,7 @@
   <p class="govuk-body">The following grades are taken from the current and previous full inspection.</p>
   <details class="govuk-details">
     <summary class="govuk-details__summary">
-      <span class="govuk-details__summary-text">
+      <span class="govuk-details__summary-text" data-testid="why-single-headline-not-available">
         Why a single headline grade might not be available
       </span>
     </summary>
@@ -26,6 +26,21 @@
       </p>
     </div>
   </details>
+  <details class="govuk-details">
+    <summary class="govuk-details__summary">
+      <span class="govuk-details__summary-text" data-testid="where-to-find-short-inspection-data">
+        Where to find short inspection data
+      </span>
+    </summary>
+    <div class="govuk-details__text">
+      <p class="govuk-body">
+        If a school has a short Ofsted inspection followed by a full one, data about the short inspection may not appear on this page.
+      </p>
+      <p class="govuk-body">
+        Ofsted's inspection report will contain this data.
+      </p>
+    </div>
+  </details>
   <hr class="govuk-section-break govuk-section-break--m">
   <table class="govuk-table" data-module="moj-sortable-table">
     <caption class="govuk-table__caption govuk-table__caption--m" data-testid="subpage-header">Single headline grades</caption>
@@ -38,6 +53,9 @@
       <th scope="col" class="govuk-table__header govuk-body column-header-date" aria-sort="none"
           data-testid="ofsted-single-headline-grades-date-joined-header">
         Date joined
+      </th>
+      <th scope="col" class="govuk-table__header govuk-body" aria-sort="none" data-testid="ofsted-single-headline-grades-has-recent-short-inspection">
+        Has recent short inspection
       </th>
       <th scope="col" class="govuk-table__header govuk-body column-header-ofsted-single-headline-grade" aria-sort="none"
           data-testid="ofsted-single-headline-grades-current-single-headline-grade-header">
@@ -66,6 +84,9 @@
         </td>
         <td class="govuk-table__cell govuk-body" data-sort-value="@academy.DateAcademyJoinedTrust.ToString(StringFormatConstants.SortableDateFormat)" data-testid="ofsted-single-headline-grades-date-joined">
           @academy.DateAcademyJoinedTrust.ToString(StringFormatConstants.DisplayDateFormat)
+        </td>
+        <td class="govuk-table__cell govuk-body" data-sort-value="@academy.HasRecentShortInspection" data-testid="ofsted-single-headline-grades-has-recent-short-inspection">
+          @(academy.HasRecentShortInspection ? "Yes" : "No")
         </td>
         <partial name="_SingleHeadlineGradeCells" model="new SingleHeadlineGradeCellsModel(academy.CurrentOfstedRating, academy.WhenDidCurrentInspectionHappen, true)"/>
         <partial name="_SingleHeadlineGradeCells" model="new SingleHeadlineGradeCellsModel(academy.PreviousOfstedRating, academy.WhenDidPreviousInspectionHappen, false)"/>

@@ -60,5 +60,16 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             var cell = _sut.Worksheet.Cell(0, (int)column);
             cell.Style.NumberFormat.Received().SetFormat(StringFormatConstants.DisplayDateFormat);
         }
+
+        [Theory]
+        [InlineData(null, "")]
+        [InlineData(true, "Yes")]
+        [InlineData(false, "No")]
+        public void SetBoolCell_should_set_correct_data(bool? value, string expected)
+        {
+            _sut.SetBoolCell((AcademyColumns)1, value);
+
+            _sut.Worksheet.CellValue(0, 1).Should().Be(expected);
+        }
     }
 }

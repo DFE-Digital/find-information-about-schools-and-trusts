@@ -12,6 +12,8 @@ class OfstedPage {
             schoolNameHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-school-name-header"]'),
             dateJoined: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-date-joined"]'),
             dateJoinedHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-date-joined-header"]'),
+            hasRecentShortInspection: () => this.elements.singleHeadlineGrades.section().find('td[data-testid="ofsted-single-headline-grades-has-recent-short-inspection"]'),
+            hasRecentShortInspectionHeader: () => cy.get('th[data-testid="ofsted-single-headline-grades-has-recent-short-inspection"]'),
             currentSHG: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-current-single-headline-grade"]'),
             currentSHGBeforeOrAfter: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-current-before-after-joining"]'),
             currentSHGHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-current-single-headline-grade-header"]'),
@@ -22,6 +24,8 @@ class OfstedPage {
             previousSHGHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-previous-single-headline-grade-header"]'),
             dateOfPreviousInspection: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-previous-date-of-inspection"]'),
             dateOfPreviousInspectionHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-date-of-previous-inspection-header"]'),
+            whereToFindShortInspectionDataDetails: () => cy.get('[data-testid="where-to-find-short-inspection-data"]').closest('details'),
+            whySingleHeadlineNotAvailableDetails: () => cy.get('[data-testid="why-single-headline-not-available"]').closest('details'),
         },
         currentRatings: {
             section: () => cy.get('[data-testid="ofsted-current-ratings-table"]'),
@@ -124,6 +128,7 @@ class OfstedPage {
     public checkOfstedSHGTableHeadersPresent(): this {
         this.elements.singleHeadlineGrades.schoolNameHeader().should('be.visible');
         this.elements.singleHeadlineGrades.dateJoinedHeader().should('be.visible');
+        this.elements.singleHeadlineGrades.hasRecentShortInspectionHeader().should('be.visible');
         this.elements.singleHeadlineGrades.currentSHGHeader().should('be.visible');
         this.elements.singleHeadlineGrades.dateOfCurrentInspectionHeader().should('be.visible');
         this.elements.singleHeadlineGrades.previousSHGHeader().should('be.visible');
@@ -139,6 +144,10 @@ class OfstedPage {
         TableUtility.checkStringSorting(
             this.elements.singleHeadlineGrades.dateJoined,
             this.elements.singleHeadlineGrades.dateJoinedHeader
+        );
+        TableUtility.checkStringSorting(
+            this.elements.singleHeadlineGrades.hasRecentShortInspection,
+            this.elements.singleHeadlineGrades.hasRecentShortInspectionHeader
         );
         TableUtility.checkStringSorting(
             this.elements.singleHeadlineGrades.currentSHG,
@@ -195,6 +204,44 @@ class OfstedPage {
         this.elements.singleHeadlineGrades.previousSHGBeforeOrAfter().each((element: JQuery<HTMLElement>) => {
             this.checkElementMatches(element, /^(Not inspected|After joining|Before joining)$/);
         });
+        return this;
+    }
+
+    public checkSHGHasRecentShortInspectionPresent(): this {
+        this.elements.singleHeadlineGrades.hasRecentShortInspection().each((element: JQuery<HTMLElement>) => {
+            this.checkElementMatches(element, /^(Yes|No)$/);
+        });
+        return this;
+    }
+
+    // Details sections functionality - following school pattern
+    public checkWhereToFindShortInspectionDataDetailsPresent(): this {
+        this.elements.singleHeadlineGrades.whereToFindShortInspectionDataDetails().should('be.visible');
+        return this;
+    }
+
+    public clickWhereToFindShortInspectionDataDetails(): this {
+        this.elements.singleHeadlineGrades.whereToFindShortInspectionDataDetails().find('summary').click();
+        return this;
+    }
+
+    public checkWhereToFindShortInspectionDataDetailsIsOpen(): this {
+        this.elements.singleHeadlineGrades.whereToFindShortInspectionDataDetails().should('have.attr', 'open');
+        return this;
+    }
+
+    public checkWhySingleHeadlineNotAvailableDetailsPresent(): this {
+        this.elements.singleHeadlineGrades.whySingleHeadlineNotAvailableDetails().should('be.visible');
+        return this;
+    }
+
+    public clickWhySingleHeadlineNotAvailableDetails(): this {
+        this.elements.singleHeadlineGrades.whySingleHeadlineNotAvailableDetails().find('summary').click();
+        return this;
+    }
+
+    public checkWhySingleHeadlineNotAvailableDetailsIsOpen(): this {
+        this.elements.singleHeadlineGrades.whySingleHeadlineNotAvailableDetails().should('have.attr', 'open');
         return this;
     }
 

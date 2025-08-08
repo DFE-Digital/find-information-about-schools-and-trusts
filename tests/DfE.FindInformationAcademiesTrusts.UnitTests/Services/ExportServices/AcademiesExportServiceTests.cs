@@ -67,7 +67,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
                 new("123456", "Academy 1", "Local Authority 1", "Type A", "Urban", DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-10)))
             ]);
             _mockAcademyService.GetAcademiesInTrustOfstedAsync(trustUid).Returns([
-                new("123456", "Academy 1", now, new OfstedRating(1, now.AddDays(-1)), new OfstedRating(1, now))
+                new("123456", "Academy 1", now, new OfstedShortInspection(now, "School remains Good"), new OfstedRating(1, now.AddDays(-1)), new OfstedRating(1, now))
             ]);
             _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid).Returns([
                 new("123456", "Academy 1", "Primary", new AgeRange(5, 11), 500, 600)
@@ -139,7 +139,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
 
             var now = DateTime.Now;
             _mockAcademyService.GetAcademiesInTrustOfstedAsync(trustUid).Returns([
-                new("123456", null, now, new OfstedRating(-1, null), new OfstedRating(-1, null))
+                new("123456", null, now, new OfstedShortInspection(now, "School remains Good"), new OfstedRating(-1, null), new OfstedRating(-1, null))
             ]);
             _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid)
                 .Returns([new("123456", null, null, new AgeRange(5, 11), null, null)]);
@@ -213,7 +213,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
                 new("123456", "Academy 1", "Local Authority 1", "Type A", "Urban", DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-10)))
             ]);
             _mockAcademyService.GetAcademiesInTrustOfstedAsync(trustUid).Returns([
-                new("123456", "Academy 1", now, new OfstedRating(-1, null), new OfstedRating(1, now))
+                new("123456", "Academy 1", now, new OfstedShortInspection(now, "School remains Good"), new OfstedRating(-1, null), new OfstedRating(1, now))
             ]);
 
             _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid).Returns([]);
@@ -248,7 +248,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             ]);
 
             _mockAcademyService.GetAcademiesInTrustOfstedAsync(trustUid).Returns([
-                new("123456", "Academy 1", now, new OfstedRating(-1, null), new OfstedRating(1, now))
+                new("123456", "Academy 1", now, new OfstedShortInspection(now, "School remains Good"), new OfstedRating(-1, null), new OfstedRating(1, now))
             ]);
 
             _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid).Returns([
