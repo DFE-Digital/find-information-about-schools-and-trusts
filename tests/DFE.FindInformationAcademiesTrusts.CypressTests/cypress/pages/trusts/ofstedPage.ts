@@ -24,8 +24,8 @@ class OfstedPage {
             previousSHGHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-previous-single-headline-grade-header"]'),
             dateOfPreviousInspection: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-previous-date-of-inspection"]'),
             dateOfPreviousInspectionHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-date-of-previous-inspection-header"]'),
-            whereToFindShortInspectionDataDetails: () => cy.contains('Where to find short inspection data').parent().parent(),
-            whySingleHeadlineNotAvailableDetails: () => cy.contains('Why a single headline grade might not be available').parent().parent(),
+            whereToFindShortInspectionDataDetails: () => cy.get('[data-testid="where-to-find-short-inspection-data"]').closest('details'),
+            whySingleHeadlineNotAvailableDetails: () => cy.get('[data-testid="why-single-headline-not-available"]').closest('details'),
         },
         currentRatings: {
             section: () => cy.get('[data-testid="ofsted-current-ratings-table"]'),
@@ -221,7 +221,7 @@ class OfstedPage {
     }
 
     public clickWhereToFindShortInspectionDataDetails(): this {
-        this.elements.singleHeadlineGrades.whereToFindShortInspectionDataDetails().click();
+        this.elements.singleHeadlineGrades.whereToFindShortInspectionDataDetails().find('summary').click();
         return this;
     }
 
@@ -236,7 +236,7 @@ class OfstedPage {
     }
 
     public clickWhySingleHeadlineNotAvailableDetails(): this {
-        this.elements.singleHeadlineGrades.whySingleHeadlineNotAvailableDetails().click();
+        this.elements.singleHeadlineGrades.whySingleHeadlineNotAvailableDetails().find('summary').click();
         return this;
     }
 
