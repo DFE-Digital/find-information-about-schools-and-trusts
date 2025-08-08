@@ -80,7 +80,7 @@
     {
       <tr class="govuk-table__row" data-testid="academy-row">
         <td class="govuk-table__cell govuk-body" data-sort-value="@academy.EstablishmentName" data-testid="ofsted-single-headline-grades-school-name">
-          @academy.EstablishmentName<br/>
+          <partial name="Trusts/_AcademyLink" model="@new AcademyLinkModel(academy.EstablishmentName, academy.Urn)" />
         </td>
         <td class="govuk-table__cell govuk-body" data-sort-value="@academy.DateAcademyJoinedTrust!.Value.ToString(StringFormatConstants.SortableDateFormat)" data-testid="ofsted-single-headline-grades-date-joined">
           @academy.DateAcademyJoinedTrust!.Value.ToString(StringFormatConstants.DisplayDateFormat)
