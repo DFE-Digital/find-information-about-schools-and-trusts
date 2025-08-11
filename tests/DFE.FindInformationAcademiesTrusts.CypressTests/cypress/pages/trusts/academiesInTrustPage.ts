@@ -106,8 +106,7 @@ class AcademiesInTrustPage {
             .and('contain', 'URN')
             .and('contain', 'Local authority')
             .and('contain', 'Type')
-            .and('contain', 'Rural or urban')
-            .and('contain', 'Get information about schools');
+            .and('contain', 'Rural or urban');
         return this;
     }
     
@@ -124,6 +123,11 @@ class AcademiesInTrustPage {
     public checkSchoolNamesAreCorrectLinksOnFreeSchoolMealsPage(): this {
         TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.freeSchoolMeals, "school-name", "urn");
         return this;
+    }
+    
+    public checkGiasHeaderNotPresent(): this {
+        const { detailsPage } = this.elements;
+        detailsPage.table().should('not.contain', 'Get information about schools');
     }
 
     public checkPupilNumbersHeadersPresent(): this {
