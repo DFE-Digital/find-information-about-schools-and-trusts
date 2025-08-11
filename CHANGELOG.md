@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased][unreleased]
 
+## [Release-45][release-45] (production-2025-08-11.6231)
+
+### Changed
+
+- Added a column to display whether an academy has had a recent short inspection in the single headline grades page for a trust
+
 ## [Release-44][release-44] (production-2025-08-06.6211)
 
 ### Changed
@@ -422,7 +428,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Updated text on "404 - Not Found" page to adhere to DfE design pattern and added the not found url to the support email template.
 
 [unreleased]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-08-06.6211...HEAD
+  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-08-11.6231...HEAD
 [release-1]:
   https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-07-18.2517
 [release-2]:
@@ -511,3 +517,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-07-31.6191
 [release-44]:
   https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-08-06.6211
+[release-45]:
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-08-11.6231
