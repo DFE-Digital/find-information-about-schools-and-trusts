@@ -8,8 +8,7 @@
 <section class="app-table-container">
   <table class="govuk-table" data-module="moj-sortable-table" aria-describedby="details-caption">
     <caption class="govuk-table__caption govuk-table__caption--m" id="details-caption" data-testid="subpage-header">
-      Details <br/>
-      <span class="govuk-body-s">The following links open in a new tab</span>
+      Details
     </caption>
 
     <thead class="govuk-table__head">
@@ -20,7 +19,6 @@
         <th scope="col" class="govuk-body govuk-table__header" aria-sort="none">Local authority</th>
         <th scope="col" class="govuk-body govuk-table__header" aria-sort="none">Type</th>
         <th scope="col" class="govuk-body govuk-table__header" aria-sort="none">Rural or urban</th>
-        <th scope="col" class="govuk-body govuk-table__header">Get information about schools</th>
       </tr>
     </thead>
     <tbody class="govuk-table__body">
@@ -37,11 +35,6 @@
           <td class="govuk-body govuk-table__cell" data-testid="local-authority">@academy.LocalAuthority</td>
           <td class="govuk-body govuk-table__cell" data-testid="type-of-establishment">@academy.TypeOfEstablishment</td>
           <td class="govuk-body govuk-table__cell" data-testid="urban-or-rural">@academy.UrbanRural</td>
-          <td class="govuk-body govuk-table__cell">
-            <a href="@Model.LinkBuilder.GetInformationAboutSchoolsListingLinkForSchool(academy.Urn)" class="govuk-link" rel="noreferrer noopener" target="_blank" aria-label="@academy.EstablishmentName on Get information about schools (opens in new tab)">
-              More information
-            </a>
-          </td>
         </tr>
       }
     </tbody>
