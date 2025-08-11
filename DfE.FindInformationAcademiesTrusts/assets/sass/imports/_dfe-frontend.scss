@@ -30,3 +30,10 @@
 .govuk-tag__auto-width {
   max-width: none;
 }
+
+.dfe-filter-select {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-direction: row;
+}

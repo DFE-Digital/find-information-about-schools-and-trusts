@@ -41,6 +41,16 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
             _indexModel.PageName.Should().Be("ManageProjectsAndCases/Overview/Index");
         }
 
+
+        [Fact]
+        public async Task OnGetAsync_HeadersShouldBeHidden()
+        {
+            // Act
+            await _indexModel.OnGetAsync();
+            // Assert
+            _indexModel.ShowHeaderSearch.Should().Be(false);
+        }
+
         [Fact]
         public async Task OnGetAsync_ShouldInitializeAvailableProjectTypes()
         {

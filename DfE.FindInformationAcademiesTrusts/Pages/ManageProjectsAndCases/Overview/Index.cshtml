@@ -32,20 +32,20 @@
         </h2>
         @if (Model.TotalProjects > 0)
         {
-            <div class="govuk-form-group">
-                <label class="govuk-label" for="sorting">
-                    Sort by:
-                </label>
-                <form id="sortForm" method="get" class="form">
+            <form id="sortForm" method="get" class="form">
+                <div class="dfe-filter-select">
+                    <label class="govuk-label" for="sorting">
+                        Sort by:
+                    </label>
                     <select class="govuk-select" id="sorting" asp-for="@Model.Sorting">
                         <option value="@ResultSorting.CreatedDesc">Newest first</option>
                         <option value="@ResultSorting.CreatedAsc">Oldest first</option>
                         <option value="@ResultSorting.UpdatedDesc">Most recently updated</option>
                         <option value="@ResultSorting.UpdatedAsc">Least recently updated</option>
                     </select>
-                </form>
-            </div>
-            <div>
+                </div>
+            </form>
+            <div class="govuk-!-margin-top-1">
                 <span class="govuk-body">Links open in a new tab</span>
             </div>
         }

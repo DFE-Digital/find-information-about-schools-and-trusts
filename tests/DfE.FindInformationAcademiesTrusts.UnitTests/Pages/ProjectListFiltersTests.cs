@@ -144,5 +144,32 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages
             // Assert
             Assert.Equal(expectedSystem, projectListFilters.SelectedSystems);
         }
+
+        [Fact]
+        public void PopulateFrom_RemovesFilters_WhenQueryStringContainsRemoveKey_WithNoValue()
+        {
+            // Arrange
+            var query = new Dictionary<string, StringValues>
+            {
+                { "remove", "true" },
+                { "SelectedSystems", new StringValues(["Systems2"]) }
+            };
+            var expectedSystem = Array.Empty<string>();
+
+            var store = new Dictionary<string, object?>
+            {
+                { ProjectListFilters.FilterSystems, null },
+            };
+            var projectListFilters = new ProjectListFilters();
+            projectListFilters.PersistUsing(store);
+
+            // Act
+            projectListFilters.PopulateFrom(query);
+
+            // Assert
+            Assert.Equal(expectedSystem, projectListFilters.SelectedSystems);
+        }
+
+
     }
 }

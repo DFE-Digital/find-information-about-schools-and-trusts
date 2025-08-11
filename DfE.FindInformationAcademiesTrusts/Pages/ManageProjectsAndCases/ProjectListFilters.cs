@@ -49,8 +49,8 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
 
             if (query.ContainsKey("remove"))
             {
-                SelectedProjectTypes = GetAndRemove(FilterProjectTypes, GetFromQuery(nameof(SelectedProjectTypes)), true);
-                SelectedSystems = GetAndRemove(FilterSystems, GetFromQuery(nameof(SelectedSystems)), true);
+                SelectedProjectTypes = GetAndRemove(FilterProjectTypes, GetFromQuery(nameof(SelectedProjectTypes)));
+                SelectedSystems = GetAndRemove(FilterSystems, GetFromQuery(nameof(SelectedSystems)));
 
                 return;
             }
@@ -63,11 +63,8 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
                 SelectedProjectTypes = Cache(FilterProjectTypes, GetFromQuery(nameof(SelectedProjectTypes)));
                 SelectedSystems = Cache(FilterSystems, GetFromQuery(nameof(SelectedSystems)));
             }
-            else
-            {
-                SelectedProjectTypes = Get(FilterProjectTypes);
-                SelectedSystems = Get(FilterSystems);
-            }
+
+            return;
 
             string[] GetFromQuery(string key)
             {
@@ -84,7 +81,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
             return value!;
         }
 
-        private string[] GetAndRemove(string key, string[]? value, bool persist = false)
+        private string[] GetAndRemove(string key, string[]? value)
         {
             if (!_store.TryGetValue(key, out var strValue)) return [];
 
@@ -92,10 +89,10 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
 
             if (value is not null && value.Length > 0 && currentValues is not null)
             {
-                currentValues = currentValues.Where(x => !value.Contains(x)).ToArray();
+                currentValues = currentValues!.Where(x => !value!.Contains(x)).ToArray();
             }
 
-            if (persist) Cache(key, currentValues);
+            Cache(key, currentValues);
 
             return currentValues ?? [];
         }
