@@ -31,6 +31,7 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
                 new AcademyOfsted(gl.Urn,
                     gl.EstablishmentName,
                     DateTime.ParseExact(gl.JoinedDate!, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    ofstedRatings[gl.Urn].ShortInspection,
                     ofstedRatings[gl.Urn].Previous,
                     ofstedRatings[gl.Urn].Current
                 ))
@@ -87,7 +88,7 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
                     "URN {Urn} was not found in Mis.Establishments or Mis.FurtherEducationEstablishments. This indicates a data integrity issue with the Ofsted data in Academies Db.",
                     urn);
                 allOfstedRatings.Add(urn,
-                    new AcademyOfstedRatings(int.Parse(urn), OfstedRating.Unknown, OfstedRating.Unknown, "none"));
+                    new AcademyOfstedRatings(int.Parse(urn), OfstedShortInspection.Unknown, OfstedRating.Unknown, OfstedRating.Unknown, "none"));
                 continue;
             }
 
@@ -172,6 +173,9 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
             .Where(me => urnMapping.Keys.Contains(me.Urn))
             .Select(me => new AcademyOfstedRatings(
                 urnMapping[me.Urn],
+                new OfstedShortInspection(
+                    me.DateOfLatestSection8Inspection.ParseAsNullableDate(),
+                    me.Section8InspectionOverallOutcome),
                 new OfstedRating(
                     me.OverallEffectiveness.ConvertOverallEffectivenessToOfstedRatingScore(),
                     me.QualityOfEducation.ToOfstedRatingScore(),
@@ -207,6 +211,9 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
                 .Where(mfe => missingUrns.Keys.Contains(mfe.ProviderUrn))
                 .Select(mfe => new AcademyOfstedRatings(
                     missingUrns[mfe.ProviderUrn],
+                    new OfstedShortInspection(
+                        mfe.DateOfLatestShortInspection.ParseAsNullableDate(),
+                        null),
                     new OfstedRating(
                         mfe.OverallEffectiveness.ConvertOverallEffectivenessToOfstedRatingScore(),
                         mfe.QualityOfEducation.ToOfstedRatingScore(),
@@ -244,5 +251,5 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
                rating.OverallEffectiveness != OfstedRatingScore.SingleHeadlineGradeNotAvailable;
     }
 
-    private sealed record AcademyOfstedRatings(int Urn, OfstedRating Current, OfstedRating Previous, string FromTable);
+    private sealed record AcademyOfstedRatings(int Urn, OfstedShortInspection ShortInspection, OfstedRating Current, OfstedRating Previous, string FromTable);
 }

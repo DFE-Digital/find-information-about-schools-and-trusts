@@ -7,10 +7,13 @@ public record AcademyOfstedServiceModel(
     string Urn,
     string? EstablishmentName,
     DateTime DateAcademyJoinedTrust,
+    OfstedShortInspection ShortInspection,
     OfstedRating PreviousOfstedRating,
     OfstedRating CurrentOfstedRating
 )
 {
+    public bool HasRecentShortInspection => ShortInspection.InspectionDate > CurrentOfstedRating.InspectionDate;
+
     public BeforeOrAfterJoining WhenDidCurrentInspectionHappen
     {
         get
