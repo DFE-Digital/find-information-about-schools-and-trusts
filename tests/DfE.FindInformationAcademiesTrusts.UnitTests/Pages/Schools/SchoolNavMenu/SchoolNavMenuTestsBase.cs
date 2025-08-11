@@ -35,7 +35,8 @@ public abstract class SchoolNavMenuTestsBase
         //Ofsted
         typeof(SingleHeadlineGradesModel),
         typeof(CurrentRatingsModel),
-        typeof(PreviousRatingsModel)
+        typeof(PreviousRatingsModel),
+        typeof(SafeguardingAndConcernsModel)
     ];
 
     public static TheoryData<Type> ContactsInDfeForSchoolsEnabledSubPageTypes =>

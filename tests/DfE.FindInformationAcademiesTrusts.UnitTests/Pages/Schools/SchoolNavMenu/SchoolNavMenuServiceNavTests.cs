@@ -177,6 +177,7 @@ public class SchoolNavMenuServiceNavTests : SchoolNavMenuTestsBase
             nameof(SingleHeadlineGradesModel) => "/Schools/Ofsted/SingleHeadlineGrades",
             nameof(CurrentRatingsModel) => "/Schools/Ofsted/SingleHeadlineGrades",
             nameof(PreviousRatingsModel) => "/Schools/Ofsted/SingleHeadlineGrades",
+            nameof(SafeguardingAndConcernsModel) => "/Schools/Ofsted/SafeguardingAndConcerns",
             _ => throw new ArgumentException("Couldn't get expected service nav asp link for given page type",
                 nameof(pageType))
         };
