@@ -1,5 +1,3 @@
-import commonPage from "../commonPage";
-
 class SchoolOfstedRatingsPage {
 
     elements = {
