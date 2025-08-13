@@ -4,6 +4,8 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
+      secrets:
+        - github_token
     command: /bin/bash -c "./docker-entrypoint.sh dotnet DfE.FindInformationAcademiesTrusts.dll"
     develop:
       watch: 
@@ -13,3 +15,6 @@ services:
       - "80:8080/tcp"
     env_file:
       - .env
+secrets:
+  github_token:
+    environment: GITHUB_TOKEN

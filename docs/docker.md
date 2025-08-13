@@ -1,11 +1,13 @@
 # Docker
 
-- [Run the web application locally in Docker](#run-the-web-application-locally-in-docker)
-  - [Why?](#why)
-  - [How?](#how)
-  - [Known issues (and their solutions)](#known-issues-and-their-solutions)
-    - [On Windows](#on-windows)
-    - [On Macs](#on-macs)
+- [Docker](#docker)
+  - [Run the web application locally in Docker](#run-the-web-application-locally-in-docker)
+    - [Why?](#why)
+    - [How?](#how)
+      - [Github Token](#github-token)
+    - [Known issues (and their solutions)](#known-issues-and-their-solutions)
+      - [On Windows](#on-windows)
+      - [On Macs](#on-macs)
 
 ## Run the web application locally in Docker
 
@@ -32,6 +34,10 @@ To start the application and have it automatically update after any changes to t
 # Make sure you are in the docker directory
 docker compose watch
 ```
+
+#### Github Token
+
+To build the docker image a token will need to be created to [add a personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic) to you get hub account with the `read:packages` permissions. This needs to be a classic token.
 
 ### Known issues (and their solutions)
 
