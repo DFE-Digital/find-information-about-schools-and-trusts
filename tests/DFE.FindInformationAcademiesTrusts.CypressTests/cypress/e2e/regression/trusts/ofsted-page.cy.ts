@@ -89,6 +89,10 @@ describe("Testing the Ofsted page and its subpages ", () => {
                 .deleteDownloadedFile();
         });
 
+        it('checks that each academy name is a link to the academy details page with the correct URN', () => {
+            ofstedPage.checkSchoolNamesAreCorrectLinksOnSingleHeadlineGradesPage();
+        });
+
     });
 
     describe("Testing the Ofsted current ratings page ", () => {

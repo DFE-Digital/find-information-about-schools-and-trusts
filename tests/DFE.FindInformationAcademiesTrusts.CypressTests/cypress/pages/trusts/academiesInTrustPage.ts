@@ -110,6 +110,21 @@ class AcademiesInTrustPage {
             .and('contain', 'Get information about schools');
         return this;
     }
+    
+    public checkSchoolNamesAreCorrectLinksOnDetailsPage(): this {
+        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.detailsPage, "school-name", "urn");
+        return this;
+    }
+
+    public checkSchoolNamesAreCorrectLinksOnPupilNumbersPage(): this {
+        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.pupilNumbersPage, "school-name", "urn");
+        return this;
+    }
+
+    public checkSchoolNamesAreCorrectLinksOnFreeSchoolMealsPage(): this {
+        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.freeSchoolMeals, "school-name", "urn");
+        return this;
+    }
 
     public checkPupilNumbersHeadersPresent(): this {
         const { pupilNumbersPage } = this.elements;
