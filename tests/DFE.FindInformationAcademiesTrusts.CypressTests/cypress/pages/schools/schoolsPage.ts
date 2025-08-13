@@ -110,6 +110,16 @@ class SchoolsPage {
             federationSchoolLinks: () => cy.get('[data-testid="federation-school-link"]'),
             federationTab: () => cy.get('[data-testid="overview-federation-subnav"]')
         },
+        ofsted: {
+            singleHeadlineGrades: {
+                inspectionTable: () => cy.get('[data-testid="ofsted-inspection-table"]'),
+            },
+            ratings: {
+                schoolOfstedRatingsTable: () => cy.get('[data-testid="ratings-table"]'),
+                subPageHeader: () => cy.get('[data-testid="subpage-header"]')
+            }
+
+        }
     };
 
     private readonly checkElementMatches = (element: JQuery<HTMLElement>, expected: RegExp) => {
@@ -771,6 +781,33 @@ class SchoolsPage {
 
     public clickOfstedSingleHeadlineGradesNavTab(): this {
         this.elements.nav.ofsted.singleHeadlineGradesTab().click();
+        return this;
+    }
+
+    public checkOfstedPageNamePresent(): this {
+        this.elements.pageName().should('contain', 'Ofsted');
+        return this;
+    }
+
+    // ofsted methods
+
+    public checkOfstedSingleHeadlineGradesSectionPresent(): this {
+        this.elements.ofsted.singleHeadlineGrades.inspectionTable().should('be.visible');
+        return this;
+    }
+    
+    public checkSchoolOfstedCurrentRatingsSubHeaderPresent(): this {
+        this.elements.ofsted.ratings.subPageHeader().should('contain', 'Current ratings');
+        return this;
+    }
+
+    public checkSchoolOfstedPreviousRatingsSubHeaderPresent(): this {
+        this.elements.ofsted.ratings.subPageHeader().should('contain', 'Previous ratings');
+        return this;
+    }
+
+    public checkSchoolOfstedRatingsTablePresent(): this {
+        this.elements.ofsted.ratings.schoolOfstedRatingsTable().should('be.visible');
         return this;
     }
 

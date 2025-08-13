@@ -58,6 +58,11 @@ class Navigation {
         schoolsGovernanceSubNav: {
             currentGovernorsSubnavButton: () => cy.get('[data-testid="current-governors-subnav"]'),
             historicGovernorsSubnavButton: () => cy.get('[data-testid="historic-governors-subnav"]'),
+        },
+        schoolsOfstedSubNav: {
+            currentOfstedSubnavButton: () => cy.get('[data-testid="ofsted-current-ratings-subnav"]'),
+            previousOfstedSubnavButton: () => cy.get('[data-testid="ofsted-previous-ratings-subnav"]'),
+            singleHeadlineGradeSubnavButton: () => cy.get('[data-testid="ofsted-single-headline-grades-subnav"]'),
         }
     };
 
@@ -335,6 +340,11 @@ class Navigation {
         return this;
     }
 
+    public clickSchoolsOfstedButton(): this {
+        this.elements.schoolsServiceNav.ofstedServiceNavButton().click();
+        return this;
+    }
+
     public clickSchoolsFederationButton(): this {
         this.elements.schoolsOverviewSubNav.schoolsFederationButton().click();
         return this;
@@ -383,7 +393,6 @@ class Navigation {
     }
 
 
-
     public checkSchoolsContactsInDfeSubnavButtonIsHighlighted(): this {
         this.elements.schoolsContactsSubNav.contactsInDfeSubnavButton().should('have.attr', 'aria-current', 'page');
         return this;
@@ -401,6 +410,43 @@ class Navigation {
 
     public checkSchoolsReferenceNumbersButtonIsHighlighted(): this {
         this.elements.schoolsOverviewSubNav.schoolsReferenceNumbersButton().should('have.attr', 'aria-current', 'page');
+        return this;
+    }
+
+    public checkSchoolsSingleHeadlineGradeDfeSubnavButtonIsHighlighted(): this {
+        this.elements.schoolsOfstedSubNav.singleHeadlineGradeSubnavButton().should('have.attr', 'aria-current', 'page');
+        return this;
+    }
+
+
+    public checkSchoolsOfstedSubNavItemsPresent(): this {
+        this.elements.schoolsOfstedSubNav.currentOfstedSubnavButton().should('be.visible');
+        this.elements.schoolsOfstedSubNav.previousOfstedSubnavButton().should('be.visible');
+        return this;
+    }
+
+    public clickSchoolsOfstedCurrentRatingsSubnavButton(): this {
+        this.elements.schoolsOfstedSubNav.currentOfstedSubnavButton().click();
+        return this;
+    }
+
+    public clickSchoolsOfstedPreviousRatingsSubnavButton(): this {
+        this.elements.schoolsOfstedSubNav.previousOfstedSubnavButton().click();
+        return this;
+    }
+
+    public clickSchoolsOfstedSingleHeadlineGradesSubnavButton(): this {
+        this.elements.schoolsOfstedSubNav.singleHeadlineGradeSubnavButton().click();
+        return this;
+    }
+    
+     public checkSchoolsOfstedCurrentRatingsSubnavButtonIsHighlighted(): this {
+        this.elements.schoolsOfstedSubNav.currentOfstedSubnavButton().should('have.attr', 'aria-current', 'page');
+        return this;
+    }
+
+    public checkSchoolsOfstedPreviousRatingsSubnavButtonIsHighlighted(): this {
+        this.elements.schoolsOfstedSubNav.previousOfstedSubnavButton().should('have.attr', 'aria-current', 'page');
         return this;
     }
 
