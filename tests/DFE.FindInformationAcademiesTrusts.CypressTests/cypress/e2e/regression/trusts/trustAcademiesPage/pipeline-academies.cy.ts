@@ -51,6 +51,9 @@ describe("Testing the Pipeline academies pages", () => {
                     .deleteDownloadedFile();
             });
 
+            it('checks that each academy name is a link to the academy details page with the correct URN', () => {
+                pipelineAcademiesPage.checkSchoolNamesAreCorrectLinksOnPreAdvisoryPage();
+            });
         });
     });
 
@@ -96,6 +99,10 @@ describe("Testing the Pipeline academies pages", () => {
             });
 
         });
+
+        it('checks that each academy name is a link to the academy details page with the correct URN', () => {
+            pipelineAcademiesPage.checkSchoolNamesAreCorrectLinksOnPostAdvisoryPage();
+        });
     });
 
     describe(`On the Free schools page`, () => {
@@ -139,6 +146,9 @@ describe("Testing the Pipeline academies pages", () => {
                     .checkFreeSchoolsCorrectProvisionalOpenDatePresent();
             });
 
+            it('checks that each academy name does not have a link as URNs are not available', () => {
+                pipelineAcademiesPage.checkSchoolNamesAreNotLinksOnFreeSchools();
+            });
         });
     });
 
