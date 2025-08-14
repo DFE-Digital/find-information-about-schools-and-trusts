@@ -10,7 +10,6 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Academies.InTrust;
 
 public class AcademiesInTrustDetailsModel(
     IDataSourceService dataSourceService,
-    IOtherServicesLinkBuilder linkBuilder,
     ITrustService trustService,
     IAcademyService academyService,
     IAcademiesExportService academiesExportService,
@@ -27,8 +26,7 @@ public class AcademiesInTrustDetailsModel(
 
     public override PageMetadata PageMetadata => base.PageMetadata with { TabName = TabName };
 
-    public AcademyDetailsServiceModel[] Academies { get; set; } = default!;
-    public IOtherServicesLinkBuilder LinkBuilder { get; } = linkBuilder;
+    public AcademyDetailsServiceModel[] Academies { get; set; } = null!;
 
     public override async Task<IActionResult> OnGetAsync()
     {

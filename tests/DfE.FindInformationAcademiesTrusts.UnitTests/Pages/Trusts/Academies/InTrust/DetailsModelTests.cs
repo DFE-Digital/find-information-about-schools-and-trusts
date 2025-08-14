@@ -11,18 +11,11 @@ public class AcademiesDetailsModelTests : AcademiesInTrustAreaModelTests<Academi
     public AcademiesDetailsModelTests()
     {
         Sut = new AcademiesInTrustDetailsModel(MockDataSourceService,
-                _mockLinkBuilder,
                 MockTrustService,
                 MockAcademyService,
                 MockAcademiesExportService,
                 MockDateTimeProvider)
             { Uid = TrustUid };
-    }
-
-    [Fact]
-    public void OtherServicesLinkBuilder_should_be_injected()
-    {
-        Sut.LinkBuilder.Should().Be(_mockLinkBuilder);
     }
 
     [Fact]
