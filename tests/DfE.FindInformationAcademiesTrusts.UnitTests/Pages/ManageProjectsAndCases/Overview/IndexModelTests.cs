@@ -112,7 +112,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
             // Act
             var result = await _indexModel.OnGetAsync();
             // Assert
-            _getCasesService.DidNotReceive();
+            await _getCasesService.DidNotReceive().GetCasesAsync(Arg.Any<GetCasesParameters>());
 
             result.Should().BeOfType<StatusCodeResult>();
             result.As<StatusCodeResult>().StatusCode.Should().Be(403);
