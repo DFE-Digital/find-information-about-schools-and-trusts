@@ -259,12 +259,12 @@ class PipelineAcademies {
     }
 
     public checkSchoolNamesAreCorrectLinksOnPreAdvisoryPage(): this {
-        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.preAdvisory, "pre-advisory-board-school-name", "pre-advisory-board-URN");
+        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.preAdvisory, "pre-advisory-board-school-name", { path: "/schools/overview/details", urnTestId: "pre-advisory-board-URN" });
         return this;
     }
 
     public checkSchoolNamesAreCorrectLinksOnPostAdvisoryPage(): this {
-        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.postAdvisory, "post-advisory-board-school-name", "post-advisory-board-URN");
+        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.postAdvisory, "post-advisory-board-school-name", { path: "/schools/overview/details", urnTestId: "post-advisory-board-URN" });
         return this;
     }
 
