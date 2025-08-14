@@ -101,7 +101,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages
         }
 
         [Fact]
-        public void PopulateFrom_PullsFromCache_WhenQueryStringHasNoValues()
+        public void PopulateFrom_ClearsCache_WhenQueryStringHasNoValues()
         {
             // Arrange
             var query = new Dictionary<string, StringValues>();
@@ -109,6 +109,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages
             var store = new Dictionary<string, object?>
             {
                 { ProjectListFilters.FilterSystems, _systems },
+                { ProjectListFilters.FilterProjectTypes, _projectList },
             };
             var projectListFilters = new ProjectListFilters();
             projectListFilters.PersistUsing(store);
@@ -117,7 +118,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages
             projectListFilters.PopulateFrom(query);
 
             // Assert
-            Assert.Equal(_systems, projectListFilters.SelectedSystems);
+            Assert.Equal([], projectListFilters.SelectedSystems);
         }
 
         [Fact]

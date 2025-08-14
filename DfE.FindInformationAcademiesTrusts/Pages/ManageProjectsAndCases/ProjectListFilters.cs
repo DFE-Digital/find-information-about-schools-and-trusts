@@ -40,10 +40,6 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
             if (query.ContainsKey("clear"))
             {
                 ClearFilters();
-
-                SelectedProjectTypes = [];
-                SelectedSystems = [];
-
                 return;
             }
 
@@ -63,9 +59,13 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
                 SelectedProjectTypes = Cache(FilterProjectTypes, GetFromQuery(nameof(SelectedProjectTypes)));
                 SelectedSystems = Cache(FilterSystems, GetFromQuery(nameof(SelectedSystems)));
             }
+            else
+            {
+                ClearFilters();
+            }
 
             return;
-
+                    
             string[] GetFromQuery(string key)
             {
                 return query.TryGetValue(key, out var value) ? value! : Array.Empty<string>();
@@ -111,6 +111,10 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases
         {
             Cache(FilterProjectTypes, default);
             Cache(FilterSystems, default);
+
+            SelectedProjectTypes = [];
+            SelectedSystems = [];
+
         }
     }
 

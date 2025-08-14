@@ -23,6 +23,8 @@
             </div>
         }
     </div>
+    
+    <form id="sortForm" method="get" class="form">
     <div class="govuk-grid-column-one-third">
         <partial name="_ProjectListFilters" model="Model.Filters" />
     </div>
@@ -32,7 +34,6 @@
         </h2>
         @if (Model.TotalProjects > 0)
         {
-            <form id="sortForm" method="get" class="form">
                 <div class="dfe-filter-select">
                     <label class="govuk-label" for="sorting">
                         Sort by:
@@ -44,7 +45,6 @@
                         <option value="@ResultSorting.UpdatedAsc">Least recently updated</option>
                     </select>
                 </div>
-            </form>
             <div class="govuk-!-margin-top-1">
                 <span class="govuk-body">Links open in a new tab</span>
             </div>
@@ -157,7 +157,8 @@
             <partial name="Shared/_Pagination" />
         }
     </div>
-
+    
+    </form>
     <script asp-add-nonce>
 
         var sortingElem =document.getElementById("sorting")

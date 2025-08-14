@@ -1,4 +1,5 @@
-﻿@using DfE.FindInformationAcademiesTrusts.Extensions
+﻿@using System.Web
+@using DfE.FindInformationAcademiesTrusts.Extensions
 @model ProjectListFilters
 @{
 
@@ -42,7 +43,7 @@
                             {
                                 <li>
                                     <a class="moj-filter__tag"
-                                       href="@Url.RouteUrl(ViewContext.RouteData.Values)?remove&SelectedProjectTypes=@projectTypes">
+                                       href="@Url.RouteUrl(ViewContext.RouteData.Values)?remove&SelectedProjectTypes=@{ HttpUtility.UrlEncode(projectTypes); }">
                                         <span class="govuk-visually-hidden">Remove this filter</span> @projectTypes.Stub()
                                     </a>
                                 </li>
@@ -71,7 +72,6 @@
             </div>
         }
         <div class="moj-filter__options">
-            <form method="get" class="form">
                 <div class="govuk-form-group">
                     <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
                         <div id="system-filter-section" class="govuk-accordion__section govuk-accordion__section--expanded">
@@ -147,7 +147,6 @@
                         Apply filters
                     </button>
                 </div>
-            </form>
         </div>
     </div>
 </div>
