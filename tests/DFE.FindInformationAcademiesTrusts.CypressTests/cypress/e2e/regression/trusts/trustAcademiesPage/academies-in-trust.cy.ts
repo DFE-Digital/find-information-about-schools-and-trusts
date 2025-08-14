@@ -58,6 +58,10 @@ describe("Testing the components of the Academies page", () => {
                 academiesInTrustPage.getTableRowCountOnDetailsPage().should('eq', expectedCount);
             });
         });
+        
+        it('checks that each academy name is a link to the academy details page with the correct URN', () => {
+            academiesInTrustPage.checkSchoolNamesAreCorrectLinksOnDetailsPage(); 
+        });
     });
 
 
@@ -104,6 +108,10 @@ describe("Testing the components of the Academies page", () => {
             academiesInTrustPage
                 .checkCorrectPhaseTypePresent();
         });
+
+        it('checks that each academy name is a link to the academy details page with the correct URN', () => {
+            academiesInTrustPage.checkSchoolNamesAreCorrectLinksOnPupilNumbersPage();
+        });
     });
 
     describe("Free school meals", () => {
@@ -145,6 +153,9 @@ describe("Testing the components of the Academies page", () => {
                 .checkFreeSchoolMealsSorting();
         });
 
+        it('checks that each academy name is a link to the academy details page with the correct URN', () => {
+            academiesInTrustPage.checkSchoolNamesAreCorrectLinksOnFreeSchoolMealsPage();
+        });
     });
 
     describe("Testing a trust that has no academies within it to ensure the issue of a 500 page appearing does not happen", () => {

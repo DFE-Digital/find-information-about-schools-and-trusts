@@ -4,14 +4,15 @@ using DfE.FindInformationAcademiesTrusts.Services.Academy;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services;
 
-public class AcademyOfstedServiceModelTests
+public class SchoolOfstedServiceModelTests
 {
-    private readonly AcademyOfstedServiceModel _sut;
+    private readonly SchoolOfstedServiceModel _sut;
     private readonly DateTime _joinDate = new(2024, 11, 29);
 
-    public AcademyOfstedServiceModelTests()
+    public SchoolOfstedServiceModelTests()
     {
-        _sut = new AcademyOfstedServiceModel("1234", "test", _joinDate, OfstedShortInspection.Unknown, OfstedRating.NotInspected,
+        _sut = new SchoolOfstedServiceModel("1234", "test", _joinDate, OfstedShortInspection.Unknown,
+            OfstedRating.NotInspected,
             OfstedRating.NotInspected);
     }
 
@@ -46,6 +47,17 @@ public class AcademyOfstedServiceModelTests
     }
 
     [Fact]
+    public void WhenDidCurrentInspectionHappen_should_be_NotApplicable_when_DateAcademyJoinedTrust_is_null()
+    {
+        var sut = _sut with
+        {
+            DateAcademyJoinedTrust = null, CurrentOfstedRating = new OfstedRating(1, _joinDate.AddYears(1))
+        };
+
+        sut.WhenDidCurrentInspectionHappen.Should().Be(BeforeOrAfterJoining.NotApplicable);
+    }
+
+    [Fact]
     public void WhenDidPreviousInspectionHappen_should_be_Before_when_PreviousInspectionDate_is_Before_joining_date()
     {
         var sut = _sut with { PreviousOfstedRating = new OfstedRating(1, _joinDate.AddYears(-1)) };
@@ -74,7 +86,18 @@ public class AcademyOfstedServiceModelTests
     {
         _sut.WhenDidPreviousInspectionHappen.Should().Be(BeforeOrAfterJoining.NotYetInspected);
     }
-    
+
+    [Fact]
+    public void WhenDidPreviousInspectionHappen_should_be_NotApplicable_when_DateAcademyJoinedTrust_is_null()
+    {
+        var sut = _sut with
+        {
+            DateAcademyJoinedTrust = null, PreviousOfstedRating = new OfstedRating(1, _joinDate.AddYears(1))
+        };
+
+        sut.WhenDidPreviousInspectionHappen.Should().Be(BeforeOrAfterJoining.NotApplicable);
+    }
+
     [Fact]
     public void
         HasRecentShortInspection_returns_true_when_ShortInspection_InspectionDate_is_after_CurrentInspection_InspectionDate()
@@ -84,7 +107,7 @@ public class AcademyOfstedServiceModelTests
             ShortInspection = new OfstedShortInspection(new DateTime(2025, 1, 1), "School remains Good"),
             CurrentOfstedRating = new OfstedRating(1, new DateTime(2021, 1, 1))
         };
-        
+
         sut.HasRecentShortInspection.Should().BeTrue();
     }
 
@@ -92,14 +115,15 @@ public class AcademyOfstedServiceModelTests
     [InlineData(2021)]
     [InlineData(2020)]
     public void
-        HasRecentShortInspection_returns_false_when_ShortInspection_InspectionDate_is_not_after_CurrentInspection_InspectionDate(int year)
+        HasRecentShortInspection_returns_false_when_ShortInspection_InspectionDate_is_not_after_CurrentInspection_InspectionDate(
+            int year)
     {
         var sut = _sut with
         {
             ShortInspection = new OfstedShortInspection(new DateTime(year, 1, 1), "School remains Good"),
             CurrentOfstedRating = new OfstedRating(1, new DateTime(2021, 1, 1))
         };
-        
+
         sut.HasRecentShortInspection.Should().BeFalse();
     }
 
@@ -111,7 +135,7 @@ public class AcademyOfstedServiceModelTests
             ShortInspection = OfstedShortInspection.Unknown,
             CurrentOfstedRating = new OfstedRating(1, new DateTime(2021, 1, 1))
         };
-        
+
         sut.HasRecentShortInspection.Should().BeFalse();
     }
 }

@@ -97,6 +97,13 @@ export class AuditPageDefinitions {
         // School Ofsted subpages
         this.auditHelper.auditPage('School Ofsted - Single Headline Grades', 'Schools', `/schools/ofsted/singleheadlinegrades?urn=${academyUrn}`);
         this.auditHelper.auditPage('LA Maintained School Ofsted - Single Headline Grades', 'Schools', `/schools/ofsted/singleheadlinegrades?urn=${laMaintainedSchoolUrn}`);
+
+        this.auditHelper.auditPage('School Ofsted - Current Ratings', 'Schools', `/schools/ofsted/currentratings?urn=${academyUrn}`);
+        this.auditHelper.auditPage('LA Maintained School Ofsted - Current Ratings', 'Schools', `/schools/ofsted/currentratings?urn=${laMaintainedSchoolUrn}`);
+
+        this.auditHelper.auditPage('School Ofsted - Previous Ratings', 'Schools', `/schools/ofsted/previousratings?urn=${academyUrn}`);
+        this.auditHelper.auditPage('LA Maintained School Ofsted - Previous Ratings', 'Schools', `/schools/ofsted/previousratings?urn=${laMaintainedSchoolUrn}`);
+
     }
 
     /***

@@ -8,6 +8,8 @@ class OfstedPage {
         downloadButton: () => cy.get('[data-testid="download-all-ofsted-data-button"]'),
         singleHeadlineGrades: {
             section: () => cy.get('[data-testid="ofsted-single-headline-grades-school-name-table"]'),
+            table: () => this.elements.singleHeadlineGrades.section().find('[aria-describedby="ofsted-caption"]'),
+            tableRows: () => this.elements.singleHeadlineGrades.table().find('tbody tr'),
             schoolName: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-school-name"]'),
             schoolNameHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-school-name-header"]'),
             dateJoined: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-date-joined"]'),
@@ -242,6 +244,11 @@ class OfstedPage {
 
     public checkWhySingleHeadlineNotAvailableDetailsIsOpen(): this {
         this.elements.singleHeadlineGrades.whySingleHeadlineNotAvailableDetails().should('have.attr', 'open');
+        return this;
+    }
+
+    public checkSchoolNamesAreCorrectLinksOnSingleHeadlineGradesPage(): this {
+        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.singleHeadlineGrades, 'ofsted-single-headline-grades-school-name');
         return this;
     }
 

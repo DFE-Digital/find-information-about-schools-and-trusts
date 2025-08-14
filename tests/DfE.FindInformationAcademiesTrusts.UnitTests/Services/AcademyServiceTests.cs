@@ -51,15 +51,15 @@ public class AcademyServiceTests
         const string uid = "1234";
         var academies = new[]
         {
-            new AcademyOfsted("1", "Academy 1", new DateTime(2022, 12, 1),
+            new SchoolOfsted("1", "Academy 1", new DateTime(2022, 12, 1),
                 new OfstedShortInspection(new DateTime(2025, 7, 1), "School remains Good"),
                 new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2023, 1, 1)),
                 new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 2, 1))),
-            new AcademyOfsted("2", "Academy 2", new DateTime(2022, 11, 2),
+            new SchoolOfsted("2", "Academy 2", new DateTime(2022, 11, 2),
                 new OfstedShortInspection(new DateTime(2025, 7, 2), "School remains Good"),
                 new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2023, 1, 2)),
                 new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 3, 1))),
-            new AcademyOfsted("3", "Academy 3", new DateTime(2022, 10, 3),
+            new SchoolOfsted("3", "Academy 3", new DateTime(2022, 10, 3),
                 new OfstedShortInspection(new DateTime(2025, 7, 3), "School remains Good"),
                 new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2023, 1, 3)),
                 new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 4, 1)))
@@ -69,7 +69,7 @@ public class AcademyServiceTests
 
         var result = await _sut.GetAcademiesInTrustOfstedAsync(uid);
 
-        result.Should().BeOfType<AcademyOfstedServiceModel[]>();
+        result.Should().BeOfType<SchoolOfstedServiceModel[]>();
         result.Should().BeEquivalentTo(academies);
     }
 

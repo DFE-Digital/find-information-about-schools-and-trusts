@@ -2,6 +2,7 @@ using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using Microsoft.FeatureManagement;
@@ -27,7 +28,14 @@ public abstract class SchoolNavMenuTestsBase
         typeof(FederationModel),
         typeof(ReferenceNumbersModel),
         //Contacts
-        typeof(InSchoolModel)
+        typeof(InSchoolModel),
+        // Governance
+        typeof(CurrentModel),
+        typeof(HistoricModel),
+        //Ofsted
+        typeof(SingleHeadlineGradesModel),
+        typeof(CurrentRatingsModel),
+        typeof(PreviousRatingsModel)
     ];
 
     public static TheoryData<Type> ContactsInDfeForSchoolsEnabledSubPageTypes =>
@@ -40,7 +48,12 @@ public abstract class SchoolNavMenuTestsBase
         typeof(InDfeModel),
         typeof(InSchoolModel),
         //Governance
-        typeof(CurrentModel)
+        typeof(CurrentModel),
+        typeof(HistoricModel),
+        //Ofsted
+        typeof(SingleHeadlineGradesModel),
+        typeof(CurrentRatingsModel),
+        typeof(PreviousRatingsModel)
     ];
 
     protected static SchoolAreaModel GetMockSchoolPage(Type pageType, int urn = 123456,
