@@ -2,7 +2,7 @@
 
 @if (Model.Urn is not null)
 {
-    <a class="govuk-link" asp-page="/Schools/Overview/Details" asp-route-urn="@Model.Urn">
+    <a class="govuk-link" asp-page="@Model.AspPage" asp-route-urn="@Model.Urn">
         @Model.EstablishmentName
     </a>
 }
