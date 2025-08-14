@@ -111,17 +111,17 @@ class AcademiesInTrustPage {
     }
     
     public checkSchoolNamesAreCorrectLinksOnDetailsPage(): this {
-        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.detailsPage, "school-name", "urn");
+        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.detailsPage, "school-name", { path: "/schools/overview/details", urnTestId: "urn" });
         return this;
     }
 
     public checkSchoolNamesAreCorrectLinksOnPupilNumbersPage(): this {
-        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.pupilNumbersPage, "school-name", "urn");
+        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.pupilNumbersPage, "school-name", { path: "/schools/overview/details", urnTestId: "urn" });
         return this;
     }
 
     public checkSchoolNamesAreCorrectLinksOnFreeSchoolMealsPage(): this {
-        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.freeSchoolMeals, "school-name", "urn");
+        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.freeSchoolMeals, "school-name", { path: "/schools/overview/details", urnTestId: "urn" });
         return this;
     }
     
