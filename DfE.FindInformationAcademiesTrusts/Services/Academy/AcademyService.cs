@@ -8,7 +8,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Academy;
 public interface IAcademyService
 {
     Task<AcademyDetailsServiceModel[]> GetAcademiesInTrustDetailsAsync(string uid);
-    Task<AcademyOfstedServiceModel[]> GetAcademiesInTrustOfstedAsync(string uid);
+    Task<SchoolOfstedServiceModel[]> GetAcademiesInTrustOfstedAsync(string uid);
     Task<AcademyPupilNumbersServiceModel[]> GetAcademiesInTrustPupilNumbersAsync(string uid);
     Task<AcademyFreeSchoolMealsServiceModel[]> GetAcademiesInTrustFreeSchoolMealsAsync(string uid);
     Task<AcademyPipelineSummaryServiceModel> GetAcademiesPipelineSummaryAsync(string trustReferenceNumber);
@@ -32,12 +32,12 @@ public class AcademyService(
                 a.UrbanRural?.Replace("(England/Wales) ", ""), a.DateAcademyJoinedTrust)).ToArray();
     }
 
-    public async Task<AcademyOfstedServiceModel[]> GetAcademiesInTrustOfstedAsync(string uid)
+    public async Task<SchoolOfstedServiceModel[]> GetAcademiesInTrustOfstedAsync(string uid)
     {
         var academies = await ofstedRepository.GetAcademiesInTrustOfstedAsync(uid);
 
         return academies.Select(a =>
-            new AcademyOfstedServiceModel(a.Urn, a.EstablishmentName, a.DateAcademyJoinedTrust, a.ShortInspection,
+            new SchoolOfstedServiceModel(a.Urn, a.EstablishmentName, a.DateAcademyJoinedTrust, a.ShortInspection,
                 a.PreviousOfstedRating, a.CurrentOfstedRating)).ToArray();
     }
 
