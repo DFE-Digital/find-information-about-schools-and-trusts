@@ -50,7 +50,8 @@ describe('Trust Navigation Core Tests', () => {
                     .checkCurrentURLIsCorrect('/trusts/academies/in-trust/details?uid=5527')
                     .checkAllServiceNavItemsPresent();
                 academiesInTrustPage
-                    .checkDetailsHeadersPresent();
+                    .checkDetailsHeadersPresent()
+                    .checkGiasHeaderNotPresent();
             });
 
             it('Should check that the Ofsted navigation button takes me to the Ofsted single headline grades page', () => {
@@ -198,7 +199,8 @@ describe('Trust Navigation Core Tests', () => {
                     .checkAllServiceNavItemsPresent()
                     .checkAllAcademiesNavItemsPresent();
                 academiesInTrustPage
-                    .checkDetailsHeadersPresent();
+                    .checkDetailsHeadersPresent()
+                    .checkGiasHeaderNotPresent();
             });
 
             it('Should check that the academies sub nav items are not present when I am not in the relevant academies page', () => {

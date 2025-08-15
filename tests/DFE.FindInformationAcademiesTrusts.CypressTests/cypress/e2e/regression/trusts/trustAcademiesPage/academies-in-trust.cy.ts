@@ -16,7 +16,8 @@ describe("Testing the components of the Academies page", () => {
 
         it("Checks the correct details page headers are present", () => {
             academiesInTrustPage
-                .checkDetailsHeadersPresent();
+                .checkDetailsHeadersPresent()
+                .checkGiasHeaderNotPresent();
         });
 
         it("Checks that the correct school types are present", () => {
