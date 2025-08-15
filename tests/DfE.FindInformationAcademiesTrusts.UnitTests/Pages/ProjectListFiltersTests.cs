@@ -1,176 +1,163 @@
 ﻿using DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases;
 using Microsoft.Extensions.Primitives;
 
-namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages
+namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages;
+
+public class ProjectListFiltersTests
 {
-    public class ProjectListFiltersTests
+    private readonly string[] _systems = ["Systems1", "Systems2"];
+    private readonly string[] _projectList = ["Project1", "Project2", "Project3"];
+
+    [Fact]
+    public void Constructor_SetsEmptyValues_WhenInitialized()
     {
-        private readonly IDictionary<string, object?> _store;
-        private readonly string[]? _systems;
-        private readonly string[]? _projectList;
+        // Arrange & Act
+        var projectListFilters = new ProjectListFilters();
 
-        public ProjectListFiltersTests()
+        // Assert
+        projectListFilters.AvailableProjectTypes.Should().BeEmpty();
+        projectListFilters.AvailableSystems.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void IsVisible_ReturnsTrue_WhenAnySelectedProjectTypeFiltersExist()
+    {
+        // Arrange
+        var projectListFilters = new ProjectListFilters
         {
-            _store = new Dictionary<string, object?>();
-            _systems = ["Systems1", "Systems2"];
-            _projectList = ["Project1", "Project2", "Project3"];
-        }
+            SelectedProjectTypes = ["Type1"]
+        };
 
-        [Fact]
-        public void Constructor_SetsEmptyValues_WhenInitialized()
+        // Act
+        var isVisible = projectListFilters.IsVisible;
+
+        // Assert
+        isVisible.Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsVisible_ReturnsTrue_WhenAnySelectedSystemFiltersExist()
+    {
+        // Arrange
+        var projectListFilters = new ProjectListFilters
         {
-            // Arrange & Act
-            var projectListFilters = new ProjectListFilters();
+            SelectedSystems = ["Type1"]
+        };
 
-            // Assert
-            Assert.Empty(projectListFilters.AvailableProjectTypes);
-            Assert.Empty(projectListFilters.AvailableSystems);
-        }
+        // Act
+        var isVisible = projectListFilters.IsVisible;
 
-        [Fact]
-        public void IsVisible_ReturnsTrue_WhenAnySelectedProjectTypeFiltersExist()
+        // Assert
+        isVisible.Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsVisible_ReturnsFalse_WhenNoSelectedFiltersExist()
+    {
+        // Arrange
+        var projectListFilters = new ProjectListFilters();
+
+        // Act
+        var isVisible = projectListFilters.IsVisible;
+
+        // Assert
+        isVisible.Should().BeFalse();
+    }
+
+    [Fact]
+    public void PopulateFrom_ClearsFilters_WhenQueryStringContainsClearKey()
+    {
+        // Arrange
+        var query = new Dictionary<string, StringValues>
         {
-            // Arrange
-            var projectListFilters = new ProjectListFilters
-            {
-                SelectedProjectTypes = ["Type1"]
-            };
+            { "clear", "true" }
+        };
 
-            // Act
-            var isVisible = projectListFilters.IsVisible;
-
-            // Assert
-            Assert.True(isVisible);
-        }
-
-
-        [Fact]
-        public void IsVisible_ReturnsTrue_WhenAnySelectedSystemFiltersExist()
+        var persist = new Dictionary<string, object?>
         {
-            // Arrange
-            var projectListFilters = new ProjectListFilters
-            {
-                SelectedSystems = ["Type1"]
-            };
+            { ProjectListFilters.FilterProjectTypes, _systems },
+            { ProjectListFilters.FilterSystems, _projectList }
+        };
 
-            // Act
-            var isVisible = projectListFilters.IsVisible;
+        var projectListFilters = new ProjectListFilters();
+        projectListFilters.PersistUsing(persist);
 
-            // Assert
-            Assert.True(isVisible);
-        }
+        // Act
+        projectListFilters.PopulateFrom(query);
 
-        [Fact]
-        public void IsVisible_ReturnsFalse_WhenNoSelectedFiltersExist()
+        // Assert
+        projectListFilters.SelectedProjectTypes.Should().BeEmpty();
+        projectListFilters.SelectedSystems.Should().BeEmpty();
+        persist.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void PopulateFrom_ClearsCache_WhenQueryStringHasNoValues()
+    {
+        // Arrange
+        var query = new Dictionary<string, StringValues>();
+
+        var store = new Dictionary<string, object?>
         {
-            // Arrange
-            var projectListFilters = new ProjectListFilters();
+            { ProjectListFilters.FilterSystems, _systems },
+            { ProjectListFilters.FilterProjectTypes, _projectList }
+        };
+        var projectListFilters = new ProjectListFilters();
+        projectListFilters.PersistUsing(store);
 
-            // Act
-            var isVisible = projectListFilters.IsVisible;
+        // Act
+        projectListFilters.PopulateFrom(query);
 
-            // Assert
-            Assert.False(isVisible);
-        }
+        // Assert
+        projectListFilters.SelectedSystems.Should().BeEmpty();
+    }
 
-        [Fact]
-        public void PopulateFrom_ClearsFilters_WhenQueryStringContainsClearKey()
+    [Fact]
+    public void PopulateFrom_RemovesFilters_WhenQueryStringContainsRemoveKey()
+    {
+        // Arrange
+        var query = new Dictionary<string, StringValues>
         {
-            // Arrange
-            var query = new Dictionary<string, StringValues>
-            {
-                { "clear", "true" }
-            };
+            { "remove", "true" },
+            { "SelectedSystems", new StringValues(["Systems1"]) }
+        };
+        var expectedSystem = new[] { "Systems2" };
 
-            var persist = new Dictionary<string, object?>
-            {
-                { ProjectListFilters.FilterProjectTypes, _systems },
-                { ProjectListFilters.FilterSystems, _projectList }
-            };
-
-            var projectListFilters = new ProjectListFilters();
-            projectListFilters.PersistUsing(persist);
-
-            // Act
-            projectListFilters.PopulateFrom(query);
-
-            // Assert
-            Assert.Empty(projectListFilters.SelectedProjectTypes);
-            Assert.Empty(projectListFilters.SelectedSystems);
-            Assert.Empty(persist);
-        }
-
-        [Fact]
-        public void PopulateFrom_ClearsCache_WhenQueryStringHasNoValues()
+        var store = new Dictionary<string, object?>
         {
-            // Arrange
-            var query = new Dictionary<string, StringValues>();
+            { ProjectListFilters.FilterSystems, _systems }
+        };
+        var projectListFilters = new ProjectListFilters();
+        projectListFilters.PersistUsing(store);
 
-            var store = new Dictionary<string, object?>
-            {
-                { ProjectListFilters.FilterSystems, _systems },
-                { ProjectListFilters.FilterProjectTypes, _projectList },
-            };
-            var projectListFilters = new ProjectListFilters();
-            projectListFilters.PersistUsing(store);
+        // Act
+        projectListFilters.PopulateFrom(query);
 
-            // Act
-            projectListFilters.PopulateFrom(query);
+        // Assert
+        projectListFilters.SelectedSystems.Should().Equal(expectedSystem);
+    }
 
-            // Assert
-            Assert.Equal([], projectListFilters.SelectedSystems);
-        }
-
-        [Fact]
-        public void PopulateFrom_RemovesFilters_WhenQueryStringContainsRemoveKey()
+    [Fact]
+    public void PopulateFrom_RemovesFilters_WhenQueryStringContainsRemoveKey_WithNoValue()
+    {
+        // Arrange
+        var query = new Dictionary<string, StringValues>
         {
-            // Arrange
-            var query = new Dictionary<string, StringValues>
-            {
-                { "remove", "true" },
-                { "SelectedSystems", new StringValues(["Systems1"]) }
-            };
-            var expectedSystem = new string[] { "Systems2" };
+            { "remove", "true" },
+            { "SelectedSystems", new StringValues(["Systems2"]) }
+        };
 
-            var store = new Dictionary<string, object?>
-            {
-                { ProjectListFilters.FilterSystems, _systems },
-            };
-            var projectListFilters = new ProjectListFilters();
-            projectListFilters.PersistUsing(store);
-
-            // Act
-            projectListFilters.PopulateFrom(query);
-
-            // Assert
-            Assert.Equal(expectedSystem, projectListFilters.SelectedSystems);
-        }
-
-        [Fact]
-        public void PopulateFrom_RemovesFilters_WhenQueryStringContainsRemoveKey_WithNoValue()
+        var store = new Dictionary<string, object?>
         {
-            // Arrange
-            var query = new Dictionary<string, StringValues>
-            {
-                { "remove", "true" },
-                { "SelectedSystems", new StringValues(["Systems2"]) }
-            };
-            var expectedSystem = Array.Empty<string>();
+            { ProjectListFilters.FilterSystems, null }
+        };
+        var projectListFilters = new ProjectListFilters();
+        projectListFilters.PersistUsing(store);
 
-            var store = new Dictionary<string, object?>
-            {
-                { ProjectListFilters.FilterSystems, null },
-            };
-            var projectListFilters = new ProjectListFilters();
-            projectListFilters.PersistUsing(store);
+        // Act
+        projectListFilters.PopulateFrom(query);
 
-            // Act
-            projectListFilters.PopulateFrom(query);
-
-            // Assert
-            Assert.Equal(expectedSystem, projectListFilters.SelectedSystems);
-        }
-
-
+        // Assert
+        projectListFilters.SelectedSystems.Should().BeEmpty();
     }
 }
