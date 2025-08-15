@@ -28,6 +28,17 @@ export class ComprehensiveAuditHelper {
     }
 
     /**
+     * Audit a page with full screenshot and reporting capability
+     */
+    auditPageWithRole(roleName: string, pageName: string, pageCategory: string, url: string): void {
+        cy.login({role: roleName});
+        cy.visit(url);
+        cy.injectAxe();
+        this.runAxeAudit(pageName, pageCategory, url, false);
+    }
+
+
+    /**
      * Audit a page without screenshots (for sensitive data like contacts/financial info)
      */
     auditPageWithoutScreenshots(pageName: string, pageCategory: string, url: string): void {

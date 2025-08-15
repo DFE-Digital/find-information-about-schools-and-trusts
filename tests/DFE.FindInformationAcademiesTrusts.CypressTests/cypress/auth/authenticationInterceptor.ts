@@ -11,7 +11,8 @@ export class AuthenticationInterceptor {
                 // Set an auth header on every request made by the browser
                 req.headers = {
                     ...req.headers,
-                    'Authorization': `Bearer ${Cypress.env("AUTH_KEY")}`
+                    'Authorization': `Bearer ${Cypress.env("AUTH_KEY")}`,
+                    ...(params?.role && { 'X-test-role': params.role }), 
                 };
             }
         ).as("AuthInterceptor");

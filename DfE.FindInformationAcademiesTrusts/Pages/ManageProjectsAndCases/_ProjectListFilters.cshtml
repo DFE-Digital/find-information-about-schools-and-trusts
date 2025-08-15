@@ -1,0 +1,152 @@
+﻿@using System.Web
+@using DfE.FindInformationAcademiesTrusts.Extensions
+@model ProjectListFilters
+@{
+
+}
+
+<div class="moj-filter">
+    <div class="moj-filter__header">
+        <div class="moj-filter__header-title">
+            <h2 class="govuk-heading-m">Filter</h2>
+        </div>
+        <div class="moj-filter__header-action">
+        </div>
+    </div>
+    <div class="moj-filter__content">
+        @if (Model.IsVisible)
+        {
+            <div class="moj-filter__selected">
+
+                <div class="moj-filter__selected-heading">
+
+                    <div class="moj-filter__heading-title">
+                        <h2 class="govuk-heading-m">Selected filters</h2>
+                        @if (!Model.IsVisible)
+                        {
+                            <p class="govuk-body">No filters selected.</p>
+                        }
+                    </div>
+                    <div class="moj-filter__heading-action">
+                        <p>
+                            <a class="govuk-link govuk-link--no-visited-state" data-testid="clear-filter"
+                               href="@Url.RouteUrl(ViewContext.RouteData.Values)?clear">Clear filters</a></p>
+                    </div>
+                </div>
+                @if (Model.SelectedProjectTypes.Length > 0)
+                {
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">Project type</h3>
+
+                    <ul class="moj-filter-tags">
+                        @{
+                            foreach (var projectTypes in Model.SelectedProjectTypes)
+                            {
+                                <li>
+                                    <a class="moj-filter__tag"
+                                       href="@Url.RouteUrl(ViewContext.RouteData.Values)?remove&SelectedProjectTypes=@{ HttpUtility.UrlEncode(projectTypes); }">
+                                        <span class="govuk-visually-hidden">Remove this filter</span> @projectTypes.Stub()
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                }
+                @if (Model.SelectedSystems.Length > 0)
+                {
+                    <h3 class="govuk-heading-s govuk-!-margin-bottom-0">System</h3>
+
+                    <ul class="moj-filter-tags">
+                        @{
+                            foreach (var system in Model.SelectedSystems)
+                            {
+                                <li>
+                                    <a class="moj-filter__tag"
+                                       href="@Url.RouteUrl(ViewContext.RouteData.Values)?remove&SelectedSystems=@system">
+                                        <span
+                                            class="govuk-visually-hidden">Remove this filter</span> @system.Stub()
+                                    </a></li>
+                            }
+                        }
+                    </ul>
+                }
+            </div>
+        }
+        <div class="moj-filter__options">
+                <div class="govuk-form-group">
+                    <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
+                        <div id="system-filter-section" class="govuk-accordion__section govuk-accordion__section--expanded">
+                            <div class="govuk-accordion__section-header">
+                                <h2 class="govuk-accordion__section-heading">
+                                    <label class="govuk-accordion__section-button"
+                                           id="accordion-systems-heading"
+                                           data-testid="select-projectlist-filter-system"
+                                           for="filter-authority-searches">
+                                        System
+                                    </label>
+                                </h2>
+                            </div>
+                            <div class="govuk-accordion__section-content" id="accordion-default-content-1">
+                                <input type="text" class="govuk-input govuk-!-display-none govuk-!-margin-bottom-2"
+                                       id="filter-authority-searches" placeholder="Type to filter system..."
+                                       aria-labelledby="accordion-systems-heading">
+                                <div class="govuk-checkboxes">
+                                    @foreach (var system in Model.AvailableSystems)
+                                    {
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input"
+                                                   id="filter-project-system-@system.Stub()"
+                                                   name="SelectedSystems" type="checkbox"
+                                                   value="@system"
+                                                   data-testid="select-system-filter-system-@system"
+                                                   @(Model.SelectedSystems.Contains(system) ? "checked" : null)/>
+                                            <label class="govuk-label govuk-checkboxes__label"
+                                                   for="filter-project-system-@system.Stub()">
+                                                @system
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div id="projecttype-filter-section" class="govuk-accordion__section" data-testid="filter-section-project-type">
+                            <div class="govuk-accordion__section-header">
+                                <h2 class="govuk-accordion__section-heading">
+
+                                    <label class="govuk-accordion__section-button" id="accordion-project-type-heading"
+                                           data-testid="select-projectlist-filter-project-type" for="filter-searches">
+                                        Project type
+                                    </label>
+                                </h2>
+                            </div>
+                            <div class="govuk-accordion__section-content" id="accordion-default-content-2">
+                                <input type="text" class="govuk-input govuk-!-display-none govuk-!-margin-bottom-2"
+                                       id="filter-searches" placeholder="Type to filter project type..."
+                                       aria-labelledby="accordion-project-type-heading">
+                                <div class="govuk-checkboxes">
+                                    @foreach (var projectType in Model.AvailableProjectTypes)
+                                    {
+                                        <div class="govuk-checkboxes__item">
+                                            <input class="govuk-checkboxes__input"
+                                                   id="filter-project-project-type-@projectType.Stub()" name="selectedProjectTypes"
+                                                   type="checkbox" value="@projectType"
+                                                   data-testid="select-projectlist-filter-project-type-@projectType"
+                                                   @(Model.SelectedProjectTypes.Contains(projectType) ? "checked" : null)/>
+                                            <label class="govuk-label govuk-checkboxes__label"
+                                                   for="filter-project-project-type-@projectType.Stub()">
+                                                @projectType
+                                            </label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="govuk-!-margin-top-2">
+                    <button class="govuk-button" data-module="govuk-button" data-testid="apply-filter-button">
+                        Apply filters
+                    </button>
+                </div>
+        </div>
+    </div>
+</div>

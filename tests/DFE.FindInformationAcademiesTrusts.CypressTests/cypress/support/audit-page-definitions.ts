@@ -105,4 +105,11 @@ export class AuditPageDefinitions {
         this.auditHelper.auditPage('LA Maintained School Ofsted - Previous Ratings', 'Schools', `/schools/ofsted/previousratings?urn=${laMaintainedSchoolUrn}`);
 
     }
-} 
+
+    /***
+     * Audit manage projects and cases pages
+     */
+    auditManageProjectsAndCasesPages(): void {
+        this.auditHelper.auditPageWithRole('User.Role.MPCViewer', 'Manage Projects and Cases - Overview', 'Manage Projects and Cases', '/manageprojectsandcases/overview');
+    }
+}

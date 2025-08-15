@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased][unreleased]
 
+### Changed
+
+- Added Manage projects and cases
+
 ## [Release-45][release-45] (production-2025-08-11.6231)
 
 ### Changed

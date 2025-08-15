@@ -38,9 +38,20 @@ public class AutomationAuthorizationHandler(
         var identity = new ClaimsIdentity(new List<Claim>
         {
             new("name", "Automation User - name"),
-            new("preferred_username", "Automation User - email")
+            new("preferred_username", "Automation User - email"),
         });
+
+        var testRole = httpContextAccessor.HttpContext?.Request.Headers["X-test-role"];
+        if (!string.IsNullOrWhiteSpace(testRole))
+        {
+            identity.AddClaim(new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
+                "FastTestUser@education.gov.uk"));
+            identity.AddClaim(new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+                testRole.Value.ToString()));
+        }
+        
         var user = new ClaimsPrincipal(identity);
+        
 
         httpContextAccessor.HttpContext!.User = user;
     }
@@ -54,6 +65,7 @@ public class AutomationAuthorizationHandler(
             SetupAutomationUser();
             context.Succeed(requirement);
         }
+        
 
         return Task.CompletedTask;
     }
