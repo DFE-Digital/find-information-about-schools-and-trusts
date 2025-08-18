@@ -69,7 +69,8 @@ export class TestDataStore {
                 subpages: [
                     { subpageName: "Single headline grades", url: `/schools/ofsted/singleheadlinegrades?urn=${urn}` },
                     { subpageName: "Current ratings", url: `/schools/ofsted/currentratings?urn=${urn}` },
-                    { subpageName: "Previous ratings", url: `/schools/ofsted/previousratings?urn=${urn}` }
+                    { subpageName: "Previous ratings", url: `/schools/ofsted/previousratings?urn=${urn}` },
+                    { subpageName: "Safeguarding and concerns", url: `/schools/ofsted/safeguardingandconcerns?urn=${urn}` }
                 ]
             },
             {
@@ -103,7 +104,8 @@ export class TestDataStore {
                 subpages: [
                     { subpageName: "Single headline grades", url: `/schools/ofsted/singleheadlinegrades?urn=${urn}` },
                     { subpageName: "Current ratings", url: `/schools/ofsted/currentratings?urn=${urn}` },
-                    { subpageName: "Previous ratings", url: `/schools/ofsted/previousratings?urn=${urn}` }
+                    { subpageName: "Previous ratings", url: `/schools/ofsted/previousratings?urn=${urn}` },
+                    { subpageName: "Safeguarding and concerns", url: `/schools/ofsted/safeguardingandconcerns?urn=${urn}` }
                 ]
             },
             {
