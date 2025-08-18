@@ -47,7 +47,7 @@
                 <tr class="govuk-table__row" data-testid="academy-row">
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.EstablishmentName"
                         data-testid="free-schools-board-school-name">
-                        <partial name="Trusts/_AcademyLink" model="@new AcademyLinkModel(academy.EstablishmentName.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText), academy.Urn)" />
+                        <partial name="Trusts/_AcademyLink" model="@(new AcademyLinkModel(academy.EstablishmentName.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText), "/Schools/Overview/Details", academy.Urn))" />
                     </td>
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.Urn"
                         data-testid="free-schools-URN">@academy.Urn.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText)</td>
