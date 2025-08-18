@@ -64,6 +64,7 @@ public class OfstedAreaModel(
             new DataSourcePageListEntry(PreviousRatingsModel.SubPageName, [
                 new DataSourceListEntry(misDataSource, "Previous Ofsted rating"),
                 new DataSourceListEntry(misDataSource, "Date of previous inspection")
+
             ]),
             new DataSourcePageListEntry(SafeguardingAndConcernsModel.SubPageName, [
                 new DataSourceListEntry(misDataSource, "Effective safeguarding"),

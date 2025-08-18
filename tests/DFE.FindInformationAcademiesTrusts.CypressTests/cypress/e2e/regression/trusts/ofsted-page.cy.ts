@@ -47,7 +47,8 @@ describe("Testing the Ofsted page and its subpages ", () => {
                 .checkSHGCurrentSHGJudgementsPresent()
                 .checkSHGPreviousSHGJudgementsPresent()
                 .checkSHGCurrentSHGBeforeOrAfterPresent()
-                .checkSHGPreviousSHGBeforeOrAfterPresent();
+                .checkSHGPreviousSHGBeforeOrAfterPresent()
+                .checkSHGHasRecentShortInspectionPresent();
         });
 
         it("Checks that the single headline grades dates are within the correct parameters", () => {
@@ -57,6 +58,28 @@ describe("Testing the Ofsted page and its subpages ", () => {
                 .checkSHGDateOfPreviousInspectionPresent();
         });
 
+        it("Checks that the 'Where to find short inspection data' details section is present", () => {
+            ofstedPage
+                .checkWhereToFindShortInspectionDataDetailsPresent();
+        });
+
+        it("Checks that the 'Why single headline grade might not be available' details section is present", () => {
+            ofstedPage
+                .checkWhySingleHeadlineNotAvailableDetailsPresent();
+        });
+
+        it("Checks that clicking 'Where to find short inspection data' details expands the content", () => {
+            ofstedPage
+                .clickWhereToFindShortInspectionDataDetails()
+                .checkWhereToFindShortInspectionDataDetailsIsOpen();
+        });
+
+        it("Checks that clicking 'Why single headline grade might not be available' details expands the content", () => {
+            ofstedPage
+                .clickWhySingleHeadlineNotAvailableDetails()
+                .checkWhySingleHeadlineNotAvailableDetailsIsOpen();
+        });
+
         it('should export academies data as an xlsx and verify it has downloaded and has content', () => {
             ofstedPage
                 .clickDownloadButton();
@@ -64,6 +87,10 @@ describe("Testing the Ofsted page and its subpages ", () => {
                 .checkFileDownloaded()
                 .checkFileHasContent()
                 .deleteDownloadedFile();
+        });
+
+        it('checks that each academy name is a link to the academy details page with the correct URN', () => {
+            ofstedPage.checkSchoolNamesAreCorrectLinksOnSingleHeadlineGradesPage();
         });
 
     });

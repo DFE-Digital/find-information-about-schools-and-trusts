@@ -107,4 +107,24 @@ export class TableUtility {
             });
         });
     }
+
+    public static checkSchoolNamesAreCorrectLinksOnPage(
+        page: { tableRows(): Cypress.Chainable<JQuery<HTMLElement>> },
+        schoolNameTestId: string,
+        urlMatches: RegExp | { path: string, urnTestId: string },
+    ) {
+        page.tableRows().each(element => {
+            const schoolNameElement = element.find(`[data-testid="${schoolNameTestId}"]`);
+
+            expect(schoolNameElement.children().length).to.equal(1);
+            expect(schoolNameElement.children('a').length).to.equal(1);
+            
+            if (urlMatches instanceof RegExp) {
+                expect(schoolNameElement.children('a').first().attr('href')).to.match(urlMatches);
+            } else {
+                const urnElement = element.find(`[data-testid="${urlMatches.urnTestId}"]`);
+                expect(schoolNameElement.children('a').first().attr('href')).to.equal(`${urlMatches.path}?urn=${urnElement.text().trim()}`);
+            }
+        });
+    }
 }

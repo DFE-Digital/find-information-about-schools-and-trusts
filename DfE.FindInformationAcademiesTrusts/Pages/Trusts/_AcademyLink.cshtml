@@ -1,0 +1,12 @@
+@model DfE.FindInformationAcademiesTrusts.Pages.Trusts.AcademyLinkModel
+
+@if (Model.Urn is not null)
+{
+    <a class="govuk-link" asp-page="@Model.AspPage" asp-route-urn="@Model.Urn">
+        @Model.EstablishmentName
+    </a>
+}
+else
+{
+    @Model.EstablishmentName
+}

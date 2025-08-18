@@ -8,6 +8,8 @@ class PipelineAcademies {
         downloadButton: () => cy.get('[data-testid="download-all-pipeline-data-button"]'),
         preAdvisory: {
             section: () => cy.get('[data-testid="pre-advisory-board-table"]'),
+            table: () => this.elements.preAdvisory.section().find('[aria-describedby="pre-advisory-caption"]'),
+            tableRows: () => this.elements.preAdvisory.table().find('tbody tr'),
             schoolName: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-school-name"]'),
             schoolNameHeader: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-school-name-header"]'),
             urn: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-URN"]'),
@@ -23,6 +25,8 @@ class PipelineAcademies {
         },
         postAdvisory: {
             section: () => cy.get('[data-testid="post-advisory-board-table"]'),
+            table: () => this.elements.postAdvisory.section().find('[aria-describedby="post-advisory-caption"]'),
+            tableRows: () => this.elements.postAdvisory.table().find('tbody tr'),
             schoolName: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-school-name"]'),
             schoolNameHeader: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-school-name-header"]'),
             urn: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-URN"]'),
@@ -39,6 +43,8 @@ class PipelineAcademies {
         },
         freeSchools: {
             section: () => cy.get('[data-testid="free-schools-table"]'),
+            table: () => this.elements.freeSchools.section().find('[aria-describedby="free-schools-caption"]'),
+            tableRows: () => this.elements.freeSchools.table().find('tbody tr'),
             schoolName: () => this.elements.freeSchools.section().find('[data-testid="free-schools-board-school-name"]'),
             schoolNameHeader: () => this.elements.freeSchools.section().find('[data-testid="free-schools-school-name-header"]'),
             urn: () => this.elements.freeSchools.section().find('[data-testid="free-schools-URN"]'),
@@ -252,6 +258,23 @@ class PipelineAcademies {
         return this;
     }
 
+    public checkSchoolNamesAreCorrectLinksOnPreAdvisoryPage(): this {
+        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.preAdvisory, "pre-advisory-board-school-name", { path: "/schools/overview/details", urnTestId: "pre-advisory-board-URN" });
+        return this;
+    }
+
+    public checkSchoolNamesAreCorrectLinksOnPostAdvisoryPage(): this {
+        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.postAdvisory, "post-advisory-board-school-name", { path: "/schools/overview/details", urnTestId: "post-advisory-board-URN" });
+        return this;
+    }
+
+    public checkSchoolNamesAreNotLinksOnFreeSchools(): this {
+        this.elements.freeSchools.schoolName().each(element => {
+            expect(element.children('a').length).to.equal(0);
+            expect(element.text().trim()).to.not.be.empty;
+        });
+        return this;
+    }
 }
 
 const pipelineAcademiesPage = new PipelineAcademies();

@@ -22,7 +22,7 @@
             {
                 <tr class="govuk-table__row" data-testid="academy-row">
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.EstablishmentName" data-testid="school-name">
-                        @academy.EstablishmentName
+                        <partial name="Trusts/_AcademyLink" model="@(new AcademyLinkModel(academy.EstablishmentName, "/Schools/Overview/Details", academy.Urn))" />
                     </td>
                     <td class="govuk-body govuk-table__cell" data-testid="urn">@academy.Urn</td>
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.PercentageFreeSchoolMeals" data-testid="pupils-eligible">

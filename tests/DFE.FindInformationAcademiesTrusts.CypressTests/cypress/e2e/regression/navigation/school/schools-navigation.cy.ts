@@ -57,7 +57,7 @@ describe('Schools Navigation Tests', () => {
         ];
 
         navigationTestData.forEach(({ type, urn }) => {
-            it(`Should validate complete navigation order for ${type}: Overview → Contacts → Governance`, () => {
+            it(`Should validate complete navigation order for ${type}: Overview → Contacts → Governance → Ofsted`, () => {
                 // Test complete navigation flow
                 cy.visit(`/schools/overview/details?urn=${urn}`);
 
@@ -75,7 +75,15 @@ describe('Schools Navigation Tests', () => {
                 schoolsPage
                     .checkGovernancePageNamePresent();
 
-                // Governance → Overview (completing the cycle)
+                // Governance → Ofsted
+                navigation
+                    .clickSchoolsOfstedButton()
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/singleheadlinegrades?urn=${urn}`)
+                    .checkOfstedServiceNavButtonIsHighlighted();
+                schoolsPage
+                    .checkOfstedPageNamePresent();
+
+                // Ofsted → Overview (completing the cycle)
                 navigation
                     .clickOverviewServiceNavButton()
                     .checkCurrentURLIsCorrect(`/schools/overview/details?urn=${urn}`);
@@ -346,5 +354,92 @@ describe('Schools Navigation Tests', () => {
                     .checkCurrentURLIsCorrect(`/schools/contacts/in-dfe?urn=${navTestSchool.schoolURN}`);
             });
         });
+    });
+
+    // Ofsted
+
+    describe("Schools Ofsted navigation tests", () => {
+        context('School Ofsted subnav navigation tests -- (School)', () => {
+            it('Should navigate from Single headlinegrades → current ratings → previous ratings and back', () => {
+                // Start single headline grades
+                cy.visit(`/schools/ofsted/singleheadlinegrades?urn=${navTestSchool.schoolURN}`);
+                navigation
+                    .checkSchoolsOfstedSubNavItemsPresent()
+                    .checkSchoolsSingleHeadlineGradeDfeSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkOfstedPageNamePresent()
+                    .checkOfstedSingleHeadlineGradesSectionPresent();
+
+                // Navigate to "Current ratings"
+                navigation
+                    .clickSchoolsOfstedCurrentRatingsSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/currentratings?urn=${navTestSchool.schoolURN}`)
+                    .checkSchoolsOfstedCurrentRatingsSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkOfstedPageNamePresent()
+                    .checkSchoolOfstedCurrentRatingsSubHeaderPresent()
+                    .checkSchoolOfstedRatingsTablePresent();
+
+                // Navigate to "Previous ratings"
+                navigation
+                    .clickSchoolsOfstedPreviousRatingsSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/previousratings?urn=${navTestSchool.schoolURN}`)
+                    .checkSchoolsOfstedPreviousRatingsSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkOfstedPageNamePresent()
+                    .checkSchoolOfstedPreviousRatingsSubHeaderPresent()
+                    .checkSchoolOfstedRatingsTablePresent();
+
+                // Navigate back to single headline grades
+                navigation
+                    .clickSchoolsOfstedSingleHeadlineGradesSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/singleheadlinegrades?urn=${navTestSchool.schoolURN}`)
+                    .checkSchoolsSingleHeadlineGradeDfeSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkOfstedPageNamePresent();
+            });
+        });
+
+        context('School Ofsted subnav navigation tests -- (Academy)', () => {
+            it('Should navigate from Single headlinegrades → current ratings → previous ratings and back', () => {
+                // Start single headline grades
+                cy.visit(`/schools/ofsted/singleheadlinegrades?urn=${navTestAcademies[0].academyURN}`);
+                navigation
+                    .checkSchoolsOfstedSubNavItemsPresent()
+                    .checkSchoolsSingleHeadlineGradeDfeSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkOfstedPageNamePresent()
+                    .checkOfstedSingleHeadlineGradesSectionPresent();
+
+                // Navigate to "Current ratings"
+                navigation
+                    .clickSchoolsOfstedCurrentRatingsSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/currentratings?urn=${navTestAcademies[0].academyURN}`)
+                    .checkSchoolsOfstedCurrentRatingsSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkOfstedPageNamePresent()
+                    .checkSchoolOfstedCurrentRatingsSubHeaderPresent()
+                    .checkSchoolOfstedRatingsTablePresent();
+
+                // Navigate to "Previous ratings"
+                navigation
+                    .clickSchoolsOfstedPreviousRatingsSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/previousratings?urn=${navTestAcademies[0].academyURN}`)
+                    .checkSchoolsOfstedPreviousRatingsSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkOfstedPageNamePresent()
+                    .checkSchoolOfstedPreviousRatingsSubHeaderPresent()
+                    .checkSchoolOfstedRatingsTablePresent();
+
+                // Navigate back to single headline grades
+                navigation
+                    .clickSchoolsOfstedSingleHeadlineGradesSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/singleheadlinegrades?urn=${navTestAcademies[0].academyURN}`)
+                    .checkSchoolsSingleHeadlineGradeDfeSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkOfstedPageNamePresent();
+            });
+        });
+
     });
 });

@@ -5,10 +5,12 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h3 class="govuk-heading-m">@Model.PageMetadata.SubPageName</h3>
+        <h3 class="govuk-heading-m" data-testid="subpage-header">
+            @Model.PageMetadata.SubPageName
+        </h3>
         
-        <dl class="govuk-summary-list govuk-!-margin-bottom-0">
-            <div class="govuk-summary-list__row">
+        <dl class="govuk-summary-list govuk-!-margin-bottom-0" data-testid="ratings-table">
+            <div class="govuk-summary-list__row" data-testid="quality-of-education-row">
                 <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     Quality of education
                 </dt>
@@ -17,7 +19,7 @@
                 </dd>
             </div>
             
-            <div class="govuk-summary-list__row">
+            <div class="govuk-summary-list__row" data-testid="behaviour-and-attitudes-row">
                 <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     Behaviour and attitudes
                 </dt>
@@ -26,7 +28,7 @@
                 </dd>
             </div>
             
-            <div class="govuk-summary-list__row">
+            <div class="govuk-summary-list__row" data-testid="personal-development-row">
                 <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     Personal development
                 </dt>
@@ -35,7 +37,7 @@
                 </dd>
             </div>
             
-            <div class="govuk-summary-list__row">
+            <div class="govuk-summary-list__row" data-testid="leadership-and-management-row">
                 <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     Leadership and management
                 </dt>
@@ -44,7 +46,7 @@
                 </dd>
             </div>
             
-            <div class="govuk-summary-list__row">
+            <div class="govuk-summary-list__row" data-testid="early-years-provision-row">
                 <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     Early years provision
                 </dt>
@@ -53,7 +55,7 @@
                 </dd>
             </div>
             
-            <div class="govuk-summary-list__row">
+            <div class="govuk-summary-list__row" data-testid="sixth-form-provision-row">
                 <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     Sixth form provision
                 </dt>
@@ -64,7 +66,7 @@
             
             @if (Model.InspectionBeforeOrAfterJoiningTrust != BeforeOrAfterJoining.NotApplicable)
             {
-                <div class="govuk-summary-list__row">
+                <div class="govuk-summary-list__row" data-testid="before-or-after-joining">
                     <dt class="govuk-summary-list__key govuk-!-width-one-half">
                         Before or after joining the trust
                     </dt>

@@ -68,6 +68,8 @@ export class TestDataStore {
                 pageName: "Ofsted",
                 subpages: [
                     { subpageName: "Single headline grades", url: `/schools/ofsted/singleheadlinegrades?urn=${urn}` },
+                    { subpageName: "Current ratings", url: `/schools/ofsted/currentratings?urn=${urn}` },
+                    { subpageName: "Previous ratings", url: `/schools/ofsted/previousratings?urn=${urn}` }
                 ]
             },
             {
@@ -100,6 +102,8 @@ export class TestDataStore {
                 pageName: "Ofsted",
                 subpages: [
                     { subpageName: "Single headline grades", url: `/schools/ofsted/singleheadlinegrades?urn=${urn}` },
+                    { subpageName: "Current ratings", url: `/schools/ofsted/currentratings?urn=${urn}` },
+                    { subpageName: "Previous ratings", url: `/schools/ofsted/previousratings?urn=${urn}` }
                 ]
             },
             {

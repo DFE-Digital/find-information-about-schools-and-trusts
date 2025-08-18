@@ -9,7 +9,7 @@
   <p class="govuk-body">The following grades are taken from the current and previous full inspection.</p>
   <details class="govuk-details">
     <summary class="govuk-details__summary">
-      <span class="govuk-details__summary-text">
+      <span class="govuk-details__summary-text" data-testid="why-single-headline-not-available">
         Why a single headline grade might not be available
       </span>
     </summary>
@@ -28,7 +28,7 @@
   </details>
   <details class="govuk-details">
     <summary class="govuk-details__summary">
-      <span class="govuk-details__summary-text">
+      <span class="govuk-details__summary-text" data-testid="where-to-find-short-inspection-data">
         Where to find short inspection data
       </span>
     </summary>
@@ -42,8 +42,8 @@
     </div>
   </details>
   <hr class="govuk-section-break govuk-section-break--m">
-  <table class="govuk-table" data-module="moj-sortable-table">
-    <caption class="govuk-table__caption govuk-table__caption--m" data-testid="subpage-header">Single headline grades</caption>
+  <table class="govuk-table" data-module="moj-sortable-table" aria-describedby="ofsted-caption">
+    <caption id="ofsted-caption" class="govuk-table__caption govuk-table__caption--m" data-testid="subpage-header">Single headline grades</caption>
     <thead class="govuk-table__head">
     <tr class="govuk-table__row">
       <th scope="col" class="govuk-table__header govuk-body" aria-sort="ascending"
@@ -80,7 +80,7 @@
     {
       <tr class="govuk-table__row" data-testid="academy-row">
         <td class="govuk-table__cell govuk-body" data-sort-value="@academy.EstablishmentName" data-testid="ofsted-single-headline-grades-school-name">
-          @academy.EstablishmentName<br/>
+          <partial name="Trusts/_AcademyLink" model="@(new AcademyLinkModel(academy.EstablishmentName, "/Schools/Ofsted/SingleHeadlineGrades", academy.Urn))" />
         </td>
         <td class="govuk-table__cell govuk-body" data-sort-value="@academy.DateAcademyJoinedTrust!.Value.ToString(StringFormatConstants.SortableDateFormat)" data-testid="ofsted-single-headline-grades-date-joined">
           @academy.DateAcademyJoinedTrust!.Value.ToString(StringFormatConstants.DisplayDateFormat)
