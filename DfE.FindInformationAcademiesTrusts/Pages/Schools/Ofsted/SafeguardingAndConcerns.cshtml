@@ -14,7 +14,7 @@
             @Model.PageMetadata.SubPageName
         </h3>
 
-        <details class="govuk-details">
+        <details class="govuk-details" data-testid="what-this-information-means-details">
             <summary class="govuk-details__summary">
                 <span class="govuk-details__summary-text">
                     What this information means
@@ -31,30 +31,30 @@
         </details>
 
         <dl class="govuk-summary-list govuk-!-margin-bottom-0">
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+            <div class="govuk-summary-list__row" data-testid="effective-safeguarding-row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half" data-testid="effective-safeguarding-label">
                     Effective safeguarding
                 </dt>
-                <dd class="govuk-summary-list__value">
+                <dd class="govuk-summary-list__value" data-testid="effective-safeguarding-value">
                     @Model.OfstedRating.SafeguardingIsEffective.ToDisplayString()
                 </dd>
             </div>
-            <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+            <div class="govuk-summary-list__row" data-testid="category-of-concern-row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half" data-testid="category-of-concern-label">
                     Category of concern
                 </dt>
-                <dd class="govuk-summary-list__value">
+                <dd class="govuk-summary-list__value" data-testid="category-of-concern-value">
                     @Model.OfstedRating.CategoryOfConcern.ToDisplayString()
                 </dd>
             </div>
 
             @if (Model.InspectionBeforeOrAfterJoiningTrust != BeforeOrAfterJoining.NotApplicable)
             {
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                <div class="govuk-summary-list__row" data-testid="before-or-after-joining-row">
+                    <dt class="govuk-summary-list__key govuk-!-width-one-half" data-testid="before-or-after-joining-label">
                         Before or after joining the trust
                     </dt>
-                    <dd class="govuk-summary-list__value">
+                    <dd class="govuk-summary-list__value" data-testid="before-or-after-joining-value">
                         @switch (Model.InspectionBeforeOrAfterJoiningTrust)
                         {
                             case BeforeOrAfterJoining.Before:
@@ -96,6 +96,6 @@
                 Download all Ofsted data
             </a>
         </section>
-
     </div>
 </div>
+

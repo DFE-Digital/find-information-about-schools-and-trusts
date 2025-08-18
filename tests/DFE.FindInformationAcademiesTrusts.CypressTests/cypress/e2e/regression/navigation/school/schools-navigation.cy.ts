@@ -360,7 +360,7 @@ describe('Schools Navigation Tests', () => {
 
     describe("Schools Ofsted navigation tests", () => {
         context('School Ofsted subnav navigation tests -- (School)', () => {
-            it('Should navigate from Single headlinegrades → current ratings → previous ratings and back', () => {
+            it('Should navigate from Single headlinegrades → current ratings → previous ratings → safeguarding and back', () => {
                 // Start single headline grades
                 cy.visit(`/schools/ofsted/singleheadlinegrades?urn=${navTestSchool.schoolURN}`);
                 navigation
@@ -390,6 +390,14 @@ describe('Schools Navigation Tests', () => {
                     .checkSchoolOfstedPreviousRatingsSubHeaderPresent()
                     .checkSchoolOfstedRatingsTablePresent();
 
+                // Navigate to "Safeguarding and concerns"
+                navigation
+                    .clickSchoolsOfstedSafeguardingAndConcernsSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/safeguardingandconcerns?urn=${navTestSchool.schoolURN}`)
+                    .checkSchoolsOfstedSafeguardingAndConcernsSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkOfstedPageNamePresent();
+
                 // Navigate back to single headline grades
                 navigation
                     .clickSchoolsOfstedSingleHeadlineGradesSubnavButton()
@@ -401,7 +409,7 @@ describe('Schools Navigation Tests', () => {
         });
 
         context('School Ofsted subnav navigation tests -- (Academy)', () => {
-            it('Should navigate from Single headlinegrades → current ratings → previous ratings and back', () => {
+            it('Should navigate from Single headlinegrades → current ratings → previous ratings → safeguarding and back', () => {
                 // Start single headline grades
                 cy.visit(`/schools/ofsted/singleheadlinegrades?urn=${navTestAcademies[0].academyURN}`);
                 navigation
@@ -430,6 +438,14 @@ describe('Schools Navigation Tests', () => {
                     .checkOfstedPageNamePresent()
                     .checkSchoolOfstedPreviousRatingsSubHeaderPresent()
                     .checkSchoolOfstedRatingsTablePresent();
+
+                // Navigate to "Safeguarding and concerns"
+                navigation
+                    .clickSchoolsOfstedSafeguardingAndConcernsSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/safeguardingandconcerns?urn=${navTestAcademies[0].academyURN}`)
+                    .checkSchoolsOfstedSafeguardingAndConcernsSubnavButtonIsHighlighted();
+                schoolsPage
+                    .checkOfstedPageNamePresent();
 
                 // Navigate back to single headline grades
                 navigation
