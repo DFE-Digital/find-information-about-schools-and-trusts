@@ -99,7 +99,7 @@ jobs:
           dotnet tool restore
 
       - name: Add nuget package source
-        run: dotnet nuget add source --username USERNAME --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/DFE-Digital/index.json"
+        run: dotnet nuget add source --username USERNAME --password $GH_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/DFE-Digital/index.json"
 
       - name: Begin SonarQube Scanner
         run: dotnet-sonarscanner begin /d:sonar.qualitygate.wait=true /d:sonar.qualitygate.timeout=450 /k:"DFE-Digital_find-information-about-academies-and-trusts" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml /o:"dfe-digital" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.scanner.skipJreProvisioning=true /d:sonar.buildString=${{ env.LAST_COMMIT_SHA }} /d:sonar.cpd.exclusions=tests/DFE.FindInformationAcademiesTrusts.CypressTests/cypress/e2e/accessibility/**/*.cy.ts,tests/DFE.FindInformationAcademiesTrusts.CypressTests/cypress/e2e/regression/**/*.cy.ts

@@ -16,7 +16,7 @@ on:
 
 env:
   DOTNET_VERSION: 8.0.x
-
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 jobs:
   build:
     name: Build & Test
@@ -34,7 +34,7 @@ jobs:
       run: dotnet tool restore
 
     - name: Add nuget package source
-      run: dotnet nuget add source --username USERNAME --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/DFE-Digital/index.json"
+      run: dotnet nuget add source --username USERNAME --password $GH_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/DFE-Digital/index.json"
 
     - name: Build solution
       run: |
