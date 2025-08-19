@@ -99,6 +99,8 @@ jobs:
           dotnet tool restore
 
       - name: Add nuget package source
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: dotnet nuget add source --username USERNAME --password $GH_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/DFE-Digital/index.json"
 
       - name: Begin SonarQube Scanner
