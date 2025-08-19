@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased][unreleased]
 
+## [Release-46][release-46] (production-2025-08-19.6326)
+
+### Changed
+
+- Add previous and current ratings page to Ofsted area of a school or academy.
+- Academy names are now links into the academy record within FAST.
+- Added safeguarding and concerns Ofsted ratings pages to a school.
+- Removed GIAS links.
+- Added links from single headline grades pages in a trust that go to the individual schools Ofsted pages within FAST.
+
 ## [Release-45][release-45] (production-2025-08-11.6231)
 
 ### Changed
@@ -428,7 +438,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Updated text on "404 - Not Found" page to adhere to DfE design pattern and added the not found url to the support email template.
 
 [unreleased]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-08-11.6231...HEAD
+  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-08-19.6326...HEAD
 [release-1]:
   https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-07-18.2517
 [release-2]:
@@ -519,3 +529,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-08-06.6211
 [release-45]:
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-08-11.6231
+[release-46]:
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-08-19.6326
