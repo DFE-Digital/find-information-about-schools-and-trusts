@@ -1,0 +1,45 @@
+﻿@page
+@model ReligiousCharacteristicsModel
+@{
+    Layout = "_SchoolLayout";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h3 class="govuk-heading-m" data-testid="subpage-header">
+            @Model.PageMetadata.SubPageName
+        </h3>
+
+        <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+
+            <div class="govuk-summary-list__row" data-testid="religious-authority-row">
+                <dt class="govuk-summary-list__key">
+                    Religious authority
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.ReligiousAuthority
+                </dd>
+            </div>
+
+            <div class="govuk-summary-list__row" data-testid="religious-character-row">
+                <dt class="govuk-summary-list__key">
+                    Religious character
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.ReligiousCharacter
+                </dd>
+            </div>
+
+            <div class="govuk-summary-list__row" data-testid="religious-ethos-row">
+                <dt class="govuk-summary-list__key">
+                    Religious ethos
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.ReligiousEthos
+                </dd>
+            </div>
+        </dl>
+        <hr class="govuk-section-break govuk-section-break--m">
+ 
+    </div>
+</div>

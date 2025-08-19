@@ -16,8 +16,10 @@ public interface ISchoolService
     Task<SchoolGovernanceServiceModel> GetSchoolGovernanceAsync(int urn);
 
     Task<OfstedHeadlineGradesServiceModel> GetOfstedHeadlineGrades(int urn);
-    
+
     Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsync(int urn);
+
+    Task<SchoolReligiousCharacteristicsServiceModel> GetReligiousCharacteristicsAsync(int urn);
 }
 
 public class SchoolService(
@@ -98,5 +100,21 @@ public class SchoolService(
             schoolOfstedRatings.PreviousOfstedRating,
             schoolOfstedRatings.CurrentOfstedRating
         );
+    }
+
+    public async Task<SchoolReligiousCharacteristicsServiceModel> GetReligiousCharacteristicsAsync(int urn)
+    {
+        var schoolDetails = await schoolRepository.GetReligiousCharacteristicsAsync(urn);
+
+        return new SchoolReligiousCharacteristicsServiceModel(
+            string.IsNullOrWhiteSpace(schoolDetails.ReligiousAuthority)
+                ? "Not applicable"
+                : schoolDetails.ReligiousAuthority,
+            string.IsNullOrWhiteSpace(schoolDetails.ReligiousCharacter)
+                ? "Not applicable"
+                : schoolDetails.ReligiousCharacter,
+            string.IsNullOrWhiteSpace(schoolDetails.ReligiousEthos)
+                ? "Not applicable"
+                : schoolDetails.ReligiousEthos);
     }
 }

@@ -100,6 +100,15 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
             "overview-sen-subnav"
         ));
 
+        links.Add(GetSubNavLinkTo<ReligiousCharacteristicsModel>(
+            OverviewAreaModel.PageName,
+            ReligiousCharacteristicsModel.SubPageName,
+            "/Schools/Overview/ReligiousCharacteristics",
+            activePage,
+            "overview-religious-characteristics-subnav"
+        ));
+
+
         return links.ToArray();
     }
 
