@@ -169,8 +169,10 @@ class SchoolOfstedPage {
 
     public checkInspectionReportsLinkValid(): this {
         this.elements.singleHeadlineGrades.inspectionReportsLink()
-            .should('have.attr', 'href')
-            .and('match', /^https:\/\/reports\.ofsted\.gov\.uk/);
+        .should(($a) => {
+            expect($a).to.have.attr('href').match(/^https:\/\/reports\.ofsted\.gov\.uk/);
+            expect($a).to.have.attr('target', '_blank');
+        });
         return this;
     }
 
