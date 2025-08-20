@@ -86,7 +86,7 @@ class Overview {
 
     public CheckAllSystemsAreComplete(): this {
         this.elements.cases.systems().each(($el) => {
-            cy.wrap($el).contains("Complete");
+            cy.wrap($el).contains("Complete conversions, transfers and changes");
         });
         return this;
     }
