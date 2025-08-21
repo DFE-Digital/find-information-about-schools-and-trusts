@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
-- Add managed caseworks and projects
+- Added Manage projects and cases
 
 ## [Release-46][release-46] (production-2025-08-19.6326)
 
