@@ -270,27 +270,30 @@ public class SchoolServiceTests
         result.Should().BeEquivalentTo(expected);
     }
 
-    public static TheoryData<ReligiousCharacteristics, SchoolReligiousCharacteristicsServiceModel>
-        ReligiousCharacteristicsCombinations => new()
+    public static IEnumerable<object[]> ReligiousCharacteristicsCombinations()
     {
-        {
+        yield return
+        [
             new ReligiousCharacteristics(null, null, null),
             new SchoolReligiousCharacteristicsServiceModel("Not available", "Not available", "Not available")
-        },
-        {
+        ];
+        yield return
+        [
             new ReligiousCharacteristics("Diocese of Nottingham", "Roman Catholic", "Church of England/Roman Catholic"),
             new SchoolReligiousCharacteristicsServiceModel("Diocese of Nottingham", "Roman Catholic",
                 "Church of England/Roman Catholic")
-        },
-        {
+        ];
+        yield return
+        [
             new ReligiousCharacteristics("", "", ""),
             new SchoolReligiousCharacteristicsServiceModel("Not available", "Not available", "Not available")
-        },
-        {
+        ];
+        yield return
+        [
             new ReligiousCharacteristics("Not applicable", "Not applicable", "Not applicable"),
             new SchoolReligiousCharacteristicsServiceModel("Does not apply", "Not applicable", "Not applicable")
-        }
-    };
+        ];
+    }
 
     [Theory]
     [MemberData(nameof(ReligiousCharacteristicsCombinations))]

@@ -115,7 +115,7 @@ public class SchoolService(
                 religiousCharacteristics.ReligiousEthos));
     }
 
-    private string GetCharacteristicsValue(string field, string? value)
+    private static string GetCharacteristicsValue(string field, string? value)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
