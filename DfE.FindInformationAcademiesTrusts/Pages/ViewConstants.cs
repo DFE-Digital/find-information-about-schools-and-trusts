@@ -28,6 +28,24 @@ public static class ViewConstants
 
     public static readonly List<ExternalServiceLink> ExternalServiceLinks =
     [
+        new("Reporting and data tools",
+            "Tools to help you gather educational data and create reports.",
+            "https://educationgovuk.sharepoint.com/sites/lvewp00299/SitePages/reportinganddata.aspx"),
+
+        new("High quality trust framework",
+            "Process guidance and tools for making trust-related project decisions.",
+            "https://educationgovuk.sharepoint.com/sites/lvewp00299/SitePages/RG%20high%20quality%20trust%20framework.aspx")
+    ];
+
+    public static readonly List<ExternalServiceLink> MpcLink =
+    [
+        new("Manage projects and cases",
+            "See and access casework across different Regions Group systems.",
+            "/manageprojectsandcases/overview/")
+    ];
+   
+    public static readonly List<ExternalServiceLink> RsdServiceLinks =
+    [
         new("Prepare conversions and transfers",
             "Create a transfer or conversion project document for an advisory board.",
             "https://educationgovuk.sharepoint.com/sites/lvewp00299/SitePages/Prepare-Conversions-and-Transfers.aspx"),
@@ -39,17 +57,5 @@ public static class ViewConstants
         new("Record concerns or support for trusts",
             "Add cases or interactions, record risks and log support and concerns for trusts.",
             "https://educationgovuk.sharepoint.com/sites/lvewp00299/SitePages/Record-concerns-and-support-for-trusts.aspx"),
-
-        new("Manage free school projects",
-            "Manage presumption projects in the pre-opening phase.",
-            "https://educationgovuk.sharepoint.com/sites/lvewp00299/SitePages/Manage-free-school-projects.aspx?web=1"),
-
-        new("Reporting and data tools",
-            "Tools to help you gather educational data and create reports.",
-            "https://educationgovuk.sharepoint.com/sites/lvewp00299/SitePages/reportinganddata.aspx"),
-
-        new("High quality trust framework",
-            "Process guidance and tools for making trust-related project decisions.",
-            "https://educationgovuk.sharepoint.com/sites/lvewp00299/SitePages/RG%20high%20quality%20trust%20framework.aspx")
     ];
 }

@@ -4,10 +4,11 @@ Use this documentation to configure your local development environment for .NET 
 
 In this doc:
 
-- [Prerequisites](#prerequisites)
-- [Configure local user secrets](#configure-local-user-secrets)
-- [Build and watch frontend assets](#build-and-watch-frontend-assets)
-- [Build and run dotnet project](#build-and-run-dotnet-project)
+- [Getting started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Configure local user secrets](#configure-local-user-secrets)
+  - [Build and watch frontend assets](#build-and-watch-frontend-assets)
+  - [Build and run dotnet project](#build-and-run-dotnet-project)
 
 Other useful docs:
 
@@ -32,6 +33,7 @@ dotnet user-secrets set "AzureAd:TenantID" "[secret goes here]"
 
 dotnet user-secrets set "ConnectionStrings:AcademiesDb" "[secret goes here for AcademiesDb]"
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "[secret goes here for FiatDb]"
+dotnet user-secrets set "CaseAggregationApiClient:ClientSecret": "[secret goes here]"
 ```
 
 See [database local development](./databases.md#local-development) for information on configuring a local database.
@@ -54,6 +56,7 @@ You will need to stop (`ctrl-c`) and rerun the script if you change any saved im
 
 - Install project tools by running `dotnet tool restore` from project directory.
 - Ensure you have [built the frontend assets](#build-and-watch-frontend-assets) before building the dotnet project.
+- Ensure you have access to the DfE nuget repository `dotnet nuget add source https://nuget.pkg.github.com/DFE-Digital/index.json -n DfE`. This will require access to the Github DfE repository, see [Working with Github Nuget](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry) for more information
 - Run/debug project as normal in your chosen IDE
 
 Note that the default `ASPNETCORE_ENVIRONMENT` for local development is `"LocalDevelopment"` (configured in `launchsettings.json`)

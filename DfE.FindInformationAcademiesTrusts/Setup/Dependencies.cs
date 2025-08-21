@@ -1,4 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Dfe.CaseAggregationService.Api.Client.Extensions;
+using Dfe.CaseAggregationService.Client.Contracts;
+using Dfe.CaseAggregationService.Client;
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
@@ -20,6 +23,7 @@ using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.FinancialDocument;
+using DfE.FindInformationAcademiesTrusts.Services.ManageProjectsAndCases;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Search;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
@@ -96,6 +100,10 @@ public static class Dependencies
 
         builder.Services.AddScoped<IOtherServicesLinkBuilder, OtherServicesLinkBuilder>();
         builder.Services.AddScoped<IFreeSchoolMealsAverageProvider, FreeSchoolMealsAverageProvider>();
+
+        builder.Services.AddScoped<IGetCasesService, GetCasesService>();
+        builder.Services.AddCaseAggregationApiClient<ICasesClient, CasesClient>(builder.Configuration);
+
         builder.Services.AddScoped<ISchoolOverviewDetailsService, SchoolOverviewDetailsService>();
         builder.Services.AddScoped<ISchoolContactsService, SchoolContactsService>();
 

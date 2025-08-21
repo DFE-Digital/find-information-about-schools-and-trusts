@@ -46,6 +46,7 @@ jobs:
               cypress/e2e/regression/navigation/trust/trust-navigation-core.cy.ts
               cypress/e2e/regression/navigation/school/schools-navigation.cy.ts
               cypress/e2e/regression/navigation/school/school-routing.cy.ts
+              cypress/e2e/regression/manageProjectAndCases/overview.cy.ts
           - group: regression-trusts-contacts-financial
             browser: "edge"
             spec: |

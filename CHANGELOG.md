@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased][unreleased]
 
+### Changed
+
+- Added Manage projects and cases
+=======
 ## [Release-46][release-46] (production-2025-08-19.6326)
 
 ### Changed
@@ -15,6 +19,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added safeguarding and concerns Ofsted ratings pages to a school.
 - Removed GIAS links.
 - Added links from single headline grades pages in a trust that go to the individual schools Ofsted pages within FAST.
+
 
 ## [Release-45][release-45] (production-2025-08-11.6231)
 

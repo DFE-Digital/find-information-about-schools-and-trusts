@@ -49,4 +49,21 @@ describe("Testing the components of the home page", () => {
       .checkWhatYouCanFindListOpen()
       .checkWhatYouCanFindListItemsPresent();
   });
+
+  it("Should not have Manage projects and cases present", () => {
+    homePage
+      .checkIfManageProjectsAndCasesNotPresent()
+  });
+});
+
+describe("Check manage projects and cases role", () => {
+  beforeEach(() => {
+    cy.login({role: "User.Role.MPCViewer"})
+    cy.visit("/");
+  });
+
+  it("Should have Manage projects and cases present", () => {
+    homePage
+      .checkIfManageProjectsAndCasesPresent()
+  });
 });

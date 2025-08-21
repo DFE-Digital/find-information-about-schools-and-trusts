@@ -1,0 +1,176 @@
+﻿@page "/manageprojectsandcases/overview/"
+@model IndexModel
+@{
+    Layout = "_MMCLayout";
+    ViewData["Title"] = "Manage projects and cases";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        @if (Model.Filters.IsVisible)
+        {
+            <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner" data-testid="filter-success-notification">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        Success
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <h3 class="govuk-notification-banner__heading">
+                        Projects filtered
+                    </h3>
+                </div>
+            </div>
+        }
+    </div>
+    
+    <form id="sortForm" method="get" class="form">
+    <div class="govuk-grid-column-one-third">
+        <partial name="_ProjectListFilters" model="Model.Filters" />
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-l" test-id="projectCount" data-testid="select-projectlist-filter-count" data-aria-controls="accordian-1">
+            @Model.Cases.PageStatus.TotalResults @((Model.Cases.PageStatus.TotalResults == 1) ? "result" : "results") found
+        </h2>
+        @if (Model.TotalProjects > 0)
+        {
+                <div class="dfe-filter-select">
+                    <label class="govuk-label" for="sorting">
+                        Sort by:
+                    </label>
+                    <select class="govuk-select" id="sorting" asp-for="@Model.Sorting">
+                        <option value="@ResultSorting.CreatedDesc">Newest first</option>
+                        <option value="@ResultSorting.CreatedAsc">Oldest first</option>
+                        <option value="@ResultSorting.UpdatedDesc">Most recently updated</option>
+                        <option value="@ResultSorting.UpdatedAsc">Least recently updated</option>
+                    </select>
+                </div>
+            <div class="govuk-!-margin-top-1">
+                <span class="govuk-body">Links open in a new tab</span>
+            </div>
+        }
+        @{
+            var caseIndex = 0;
+
+            if (Model.Cases != null)
+            {
+                foreach (var currentCase in Model.Cases)
+                {
+                    <div class="govuk-grid-row govuk-!-margin-top-6">
+                        <div class="govuk-grid-column-full">
+                            <h2 class="govuk-!-margin-bottom-1">
+                                <a id="@("case-title-" + caseIndex)" class="govuk-link" data-testid="trust-name-@caseIndex" href="@(string.IsNullOrEmpty(currentCase.TitleLink) ? "#" : currentCase.TitleLink)" target="_blank">@currentCase.Title</a>
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="govuk-hint" data-testid="case-system-@caseIndex">
+                        @currentCase.System
+                    </div>
+                    <div class="govuk-tag govuk-tag--yellow govuk-tag__auto-width govuk-!-margin-bottom-1" data-testid="case-project-type-@caseIndex">
+                        @currentCase.ProjectType
+                    </div>
+                    <dl class="govuk-summary-list" data-testid="case-items-list-@caseIndex">
+                        @{ var caseItemIndex = 0;
+                            @foreach (var caseItem in @currentCase.Info)
+                            {
+                                <div class="govuk-summary-list__row">
+                                    <dt class="govuk-summary-list__key">
+                                        <span id="case-item-@caseIndex-@caseItemIndex">@caseItem.Label:</span>
+                                    </dt>
+                                    <dd class="govuk-summary-list__value">
+                                        <span id="case-item-@caseIndex-@caseItemIndex-value">
+                                            @if (string.IsNullOrEmpty(@caseItem.Value))
+                                            {
+                                                <strong class="govuk-tag govuk-tag--grey">
+                                                    Empty
+                                                </strong>
+                                            }
+                                            else
+                                            {
+                                                @caseItem.Value
+                                            }
+                                        </span>
+                                    </dd>
+                                </div>
+
+                                caseItemIndex++;
+                            }
+                        }
+                        @if (@currentCase.Guidance.Count > 0)
+                        {
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+
+                                    <span id="@("guidance-" + caseIndex)">
+                                        Guidance:
+                                    </span>
+                                </dt>
+                                <dd>
+                                    <span id="@("guidance-item-" + caseIndex + "-value")">
+                                        @{
+                                            var guidanceCount = currentCase.Guidance.Count;
+                                        }
+                                        @for (var i = 0; i < guidanceCount; i++)
+                                        {
+                                            var guidance = currentCase.Guidance[i];
+                                            <a class="govuk-link" href="@guidance.Link" target="_blank" rel="noopener noreferrer" data-testid="guidance-link-@caseIndex">@guidance.Title</a>
+                                            @(i < guidanceCount - 1 ? "," : "")
+                                        }
+                                    </span>
+                                </dd>
+                            </div>
+                        }
+                        @if (@currentCase.Resources.Count > 0)
+                        {
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">
+
+                                    <span id="@("resource-" + caseIndex)">
+                                        Resources:
+                                    </span>
+                                </dt>
+                                <dd>
+                                    <span id="@("resource-item-" + caseIndex + "-value")">
+                                        @{
+                                            var resourceCount = currentCase.Resources.Count;
+                                            var resourceIndex = 0;
+                                        }
+                                        @foreach (var resource in currentCase.Resources)
+                                        {
+                                            <a class="govuk-link" href="@resource.Link" target="_blank" rel="noopener noreferrer" data-testid="resource-link-@caseIndex">@resource.Title</a>
+                                            @(resourceIndex < resourceCount - 1 ? "," : "")
+                                            resourceIndex++;
+                                        }
+                                    </span>
+                                </dd>
+                            </div>
+                        }
+
+                    </dl>
+
+                    caseIndex++;
+                }
+            }
+        }
+        @if (Model.PageStatus.TotalResults > 0)
+        {
+            <partial name="Shared/_Pagination" />
+        }
+    </div>
+    
+    </form>
+    <script asp-add-nonce>
+
+        var sortingElem =document.getElementById("sorting")
+        
+        if(sortingElem)
+        {
+            sortingElem.addEventListener("change", onChange);
+        }
+
+        function onChange(e)
+        {
+            document.getElementById("sortForm").submit()
+        }
+    </script>
+</div>

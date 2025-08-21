@@ -13,6 +13,10 @@ class HomePage {
             laMaintainedSchools: () => this.elements.whatYouCanFindList.list().contains('local authority maintained schools'),
             specialSchools: () => this.elements.whatYouCanFindList.list().contains('special schools'),
             trusts: () => this.elements.whatYouCanFindList.list().contains('trusts'),
+        },
+
+        usefulToolsCards: {
+            manageProjectsAndCases: () => cy.get('.dfe-card').contains('Manage projects and cases')
         }
     };
 
@@ -57,6 +61,21 @@ class HomePage {
         this.elements.whatYouCanFindList.laMaintainedSchools().should('be.visible');
         this.elements.whatYouCanFindList.specialSchools().should('be.visible');
         this.elements.whatYouCanFindList.trusts().should('be.visible');
+        return this;
+    }
+
+    public checkIfManageProjectsAndCasesPresent(): this {
+        this.elements.usefulToolsCards.manageProjectsAndCases().should('be.visible');;
+        return this;
+    }
+
+    public checkIfManageProjectsAndCasesNotPresent(): this {
+        this.elements.usefulToolsCards.manageProjectsAndCases().should('not.exist');
+        return this;
+    }
+
+    public clickManageProjectsAndCases(): this {
+        this.elements.usefulToolsCards.manageProjectsAndCases().click();
         return this;
     }
 }

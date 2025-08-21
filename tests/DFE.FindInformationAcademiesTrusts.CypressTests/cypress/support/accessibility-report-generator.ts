@@ -178,8 +178,8 @@ export const generateComprehensiveAccessibilityReport = (allResults: AuditPageRe
 
         <div class="page-results">
             <h2>📋 Detailed Results by Application Area</h2>
-            
-            ${['Core', 'Trusts', 'Schools'].map(category => {
+
+            ${['Core', 'Trusts', 'Schools', 'Manage Projects and Cases'].map(category => {
                     const categoryPages = allResults.filter(page => page.pageCategory === category);
                     if (categoryPages.length === 0) return '';
 
