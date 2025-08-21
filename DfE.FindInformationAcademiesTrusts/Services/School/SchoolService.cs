@@ -104,17 +104,30 @@ public class SchoolService(
 
     public async Task<SchoolReligiousCharacteristicsServiceModel> GetReligiousCharacteristicsAsync(int urn)
     {
-        var schoolDetails = await schoolRepository.GetReligiousCharacteristicsAsync(urn);
+        var religiousCharacteristics = await schoolRepository.GetReligiousCharacteristicsAsync(urn);
 
         return new SchoolReligiousCharacteristicsServiceModel(
-            string.IsNullOrWhiteSpace(schoolDetails.ReligiousAuthority)
-                ? "Not applicable"
-                : schoolDetails.ReligiousAuthority,
-            string.IsNullOrWhiteSpace(schoolDetails.ReligiousCharacter)
-                ? "Not applicable"
-                : schoolDetails.ReligiousCharacter,
-            string.IsNullOrWhiteSpace(schoolDetails.ReligiousEthos)
-                ? "Not applicable"
-                : schoolDetails.ReligiousEthos);
+            GetCharacteristicsValue(nameof(religiousCharacteristics.ReligiousAuthority),
+                religiousCharacteristics.ReligiousAuthority),
+            GetCharacteristicsValue(nameof(religiousCharacteristics.ReligiousCharacter),
+                religiousCharacteristics.ReligiousCharacter),
+            GetCharacteristicsValue(nameof(religiousCharacteristics.ReligiousEthos),
+                religiousCharacteristics.ReligiousEthos));
+    }
+
+    private string GetCharacteristicsValue(string field, string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return "Not available";
+        }
+
+        if (field == nameof(ReligiousCharacteristics.ReligiousAuthority) &&
+            value.Equals("Not applicable", StringComparison.CurrentCultureIgnoreCase))
+        {
+            return "Does not apply";
+        }
+
+        return value;
     }
 }

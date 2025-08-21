@@ -275,7 +275,7 @@ public class SchoolServiceTests
     {
         {
             new ReligiousCharacteristics(null, null, null),
-            new SchoolReligiousCharacteristicsServiceModel("Not applicable", "Not applicable", "Not applicable")
+            new SchoolReligiousCharacteristicsServiceModel("Not available", "Not available", "Not available")
         },
         {
             new ReligiousCharacteristics("Diocese of Nottingham", "Roman Catholic", "Church of England/Roman Catholic"),
@@ -284,7 +284,11 @@ public class SchoolServiceTests
         },
         {
             new ReligiousCharacteristics("", "", ""),
-            new SchoolReligiousCharacteristicsServiceModel("Not applicable", "Not applicable", "Not applicable")
+            new SchoolReligiousCharacteristicsServiceModel("Not available", "Not available", "Not available")
+        },
+        {
+            new ReligiousCharacteristics("Not applicable", "Not applicable", "Not applicable"),
+            new SchoolReligiousCharacteristicsServiceModel("Does not apply", "Not applicable", "Not applicable")
         }
     };
 

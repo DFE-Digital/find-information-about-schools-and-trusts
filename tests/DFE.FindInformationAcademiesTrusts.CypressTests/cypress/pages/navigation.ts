@@ -44,12 +44,13 @@ class Navigation {
             contactsServiceNavButton: () => cy.get('[data-testid="contacts-nav"]'),
             governanceServiceNavButton: () => cy.get('[data-testid="governance-nav"]'),
             ofstedServiceNavButton: () => cy.get('[data-testid="ofsted-nav"]'),
-        },
+         },
         schoolsOverviewSubNav: {
             schoolsDetailsButton: () => cy.get('[data-testid="overview-details-subnav"]'),
             schoolsSENButton: () => cy.get('[data-testid="overview-sen-subnav"]'),
             schoolsFederationButton: () => cy.get('[data-testid="overview-federation-subnav"]'),
             schoolsReferenceNumbersButton: () => cy.get('[data-testid="overview-reference-numbers-subnav"]'),
+            schoolsReligiousCharacteristicsButton: () => cy.get('[data-testid="overview-religious-characteristics-subnav"]'),
         },
         schoolsContactsSubNav: {
             contactsInDfeSubnavButton: () => cy.get('[data-testid="contacts-in-dfe-subnav"]'),
@@ -328,6 +329,11 @@ class Navigation {
 
     public clickSchoolsSENButton(): this {
         this.elements.schoolsOverviewSubNav.schoolsSENButton().click();
+        return this;
+    }
+
+    public clickSchoolsReligiousCharacteristicsButton(): this {
+        this.elements.schoolsOverviewSubNav.schoolsReligiousCharacteristicsButton().click();
         return this;
     }
 

@@ -295,6 +295,18 @@ export const testSchoolGovernanceData = [
     }
 ];
 
+// School URNs with religious characteristics data for testing religious characteristics functionality
+export const religiousCharacteristicsSchoolData = [
+    {
+        typeOfSchool: "school",
+        urn: 152130
+    },
+    {
+        typeOfSchool: "academy",
+        urn: 147669
+    }
+];
+
 
 // Trust UID for testing empty data states and error scenarios
 export const testTrustWithNoDataUid = 17728;
