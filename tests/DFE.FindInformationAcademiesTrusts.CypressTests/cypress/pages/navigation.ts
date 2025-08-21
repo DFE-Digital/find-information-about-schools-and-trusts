@@ -63,6 +63,7 @@ class Navigation {
             currentOfstedSubnavButton: () => cy.get('[data-testid="ofsted-current-ratings-subnav"]'),
             previousOfstedSubnavButton: () => cy.get('[data-testid="ofsted-previous-ratings-subnav"]'),
             singleHeadlineGradeSubnavButton: () => cy.get('[data-testid="ofsted-single-headline-grades-subnav"]'),
+            safeguardingAndConcernsSubnavButton: () => cy.get('[data-testid="ofsted-safeguarding-and-concerns-subnav"]'),
         }
     };
 
@@ -439,14 +440,24 @@ class Navigation {
         this.elements.schoolsOfstedSubNav.singleHeadlineGradeSubnavButton().click();
         return this;
     }
-    
-     public checkSchoolsOfstedCurrentRatingsSubnavButtonIsHighlighted(): this {
+
+    public clickSchoolsOfstedSafeguardingAndConcernsSubnavButton(): this {
+        this.elements.schoolsOfstedSubNav.safeguardingAndConcernsSubnavButton().click();
+        return this;
+    }
+
+    public checkSchoolsOfstedCurrentRatingsSubnavButtonIsHighlighted(): this {
         this.elements.schoolsOfstedSubNav.currentOfstedSubnavButton().should('have.attr', 'aria-current', 'page');
         return this;
     }
 
     public checkSchoolsOfstedPreviousRatingsSubnavButtonIsHighlighted(): this {
         this.elements.schoolsOfstedSubNav.previousOfstedSubnavButton().should('have.attr', 'aria-current', 'page');
+        return this;
+    }
+
+    public checkSchoolsOfstedSafeguardingAndConcernsSubnavButtonIsHighlighted(): this {
+        this.elements.schoolsOfstedSubNav.safeguardingAndConcernsSubnavButton().should('have.attr', 'aria-current', 'page');
         return this;
     }
 
