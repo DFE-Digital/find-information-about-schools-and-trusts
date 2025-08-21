@@ -4,10 +4,11 @@ Use this documentation to configure your local development environment for .NET 
 
 In this doc:
 
-- [Prerequisites](#prerequisites)
-- [Configure local user secrets](#configure-local-user-secrets)
-- [Build and watch frontend assets](#build-and-watch-frontend-assets)
-- [Build and run dotnet project](#build-and-run-dotnet-project)
+- [Getting started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Configure local user secrets](#configure-local-user-secrets)
+  - [Build and watch frontend assets](#build-and-watch-frontend-assets)
+  - [Build and run dotnet project](#build-and-run-dotnet-project)
 
 Other useful docs:
 
@@ -54,6 +55,7 @@ You will need to stop (`ctrl-c`) and rerun the script if you change any saved im
 
 - Install project tools by running `dotnet tool restore` from project directory.
 - Ensure you have [built the frontend assets](#build-and-watch-frontend-assets) before building the dotnet project.
+- Ensure you have access to the DfE nuget repository `dotnet nuget add source https://nuget.pkg.github.com/DFE-Digital/index.json -n DfE`
 - Run/debug project as normal in your chosen IDE
 
 Note that the default `ASPNETCORE_ENVIRONMENT` for local development is `"LocalDevelopment"` (configured in `launchsettings.json`)
