@@ -68,7 +68,7 @@
                 <tr class="govuk-table__row" data-testid="recent-short-inspection-row">
                     <th scope="row" class="govuk-table__cell">Recent short inspection</th>
                         <td class="govuk-table__cell" data-testid="recent-short-inspection-date">@Model.HeadlineGrades.ShortInspection.InspectionDate.ShowFullDateStringOrReplaceWithText("Not available")</td>
-                    <td class="govuk-table__cell" data-testid="recent-short-inspection-grade">@Model.HeadlineGrades.ShortInspection.InspectionOutcome</td>
+                    <td class="govuk-table__cell" data-testid="recent-short-inspection-grade">@Model.HeadlineGrades.ShortInspection.ToOutcomeDisplayString()</td>
                 </tr>
             }
 
