@@ -43,6 +43,14 @@ class SchoolsPage {
                 ukprnHeader: () => cy.get('[data-testid="reference-numbers-ukprn-header"]'),
                 ukprnValue: () => cy.get('[data-testid="reference-numbers-ukprn-value"]')
             },
+            religiousCharacteristicsTab: {
+                authorityHeader: () => cy.get('[data-testid="characteristics-authority-header"]'),
+                authorityValue: () => cy.get('[data-testid="characteristics-authority-value"]'),
+                characterHeader: () => cy.get('[data-testid="characteristics-character-header"]'),
+                characterValue: () => cy.get('[data-testid="characteristics-character-value"]'),
+                ethosHeader: () => cy.get('[data-testid="characteristics-ethos-header"]'),
+                ethosValue: () => cy.get('[data-testid="characteristics-ethos-value"]')
+            },
         },
         schoolContacts: {
             internalUseWarning: () => cy.get('[data-testid="internal-use-only-warning"]'),
@@ -266,6 +274,11 @@ class SchoolsPage {
 
     public checkSENSubpageHeaderCorrect(): this {
         this.elements.subpageHeader().should('contain', 'SEN (special educational needs)');
+        return this;
+    }
+
+    public checkReligiousCharacteristicsHeaderPresent(): this {
+        this.elements.subpageHeader().should('contain', 'Religious characteristics');
         return this;
     }
 
@@ -795,7 +808,7 @@ class SchoolsPage {
         this.elements.ofsted.singleHeadlineGrades.inspectionTable().should('be.visible');
         return this;
     }
-    
+
     public checkSchoolOfstedCurrentRatingsSubHeaderPresent(): this {
         this.elements.ofsted.ratings.subPageHeader().should('contain', 'Current ratings');
         return this;
@@ -811,6 +824,25 @@ class SchoolsPage {
         return this;
     }
 
+    // #endregion
+
+    // #region Religious Characteristics
+
+    public checkReligiousCharacteristicsCardItemsPresent(): this {
+
+        this.elements.overview.religiousCharacteristicsTab.authorityHeader().should('be.visible').and('contain.text', 'Religious authority');
+        this.elements.overview.religiousCharacteristicsTab.characterHeader().should('be.visible').and('contain.text', 'Religious character');
+        this.elements.overview.religiousCharacteristicsTab.ethosHeader().should('be.visible').and('contain.text', 'Religious ethos');
+        return this;
+    }
+
+    public checkReligiousCharacteristicsDataItemsPresent(): this {
+
+        this.elements.overview.religiousCharacteristicsTab.authorityValue().should('be.visible');
+        this.elements.overview.religiousCharacteristicsTab.characterValue().should('be.visible');
+        this.elements.overview.religiousCharacteristicsTab.ethosValue().should('be.visible');
+        return this;
+    }
     // #endregion
 }
 

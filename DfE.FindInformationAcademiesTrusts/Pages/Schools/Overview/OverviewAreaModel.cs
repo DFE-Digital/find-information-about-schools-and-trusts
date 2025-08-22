@@ -34,6 +34,8 @@ public abstract class OverviewAreaModel(
             new DataSourcePageListEntry(ReferenceNumbersModel.SubPageName,
                 [new DataSourceListEntry(giasDataSource)]),
             new DataSourcePageListEntry(SenModel.SubPageName,
+                [new DataSourceListEntry(giasDataSource)]),
+            new DataSourcePageListEntry(ReligiousCharacteristicsModel.SubPageName,
                 [new DataSourceListEntry(giasDataSource)])
         ];
 

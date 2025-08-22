@@ -164,4 +164,13 @@ public class SchoolRepository(
                 null))
             .ToArrayAsync();
     }
+
+    public async Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn)
+    {
+        return await academiesDbContext.GiasEstablishments
+            .Where(x => x.Urn == urn)
+            .Select(g =>
+                new ReligiousCharacteristics(g.DioceseName, g.ReligiousCharacterName, g.ReligiousEthosName))
+            .SingleAsync();
+    }
 }

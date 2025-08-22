@@ -77,6 +77,7 @@ export class AuditPageDefinitions {
         this.auditHelper.auditPage('School Overview - Reference numbers', 'Schools', `/schools/overview/referencenumbers?urn=${academyUrn}`);
         this.auditHelper.auditPage('School Overview - SEN Provision', 'Schools', `/schools/overview/sen?urn=${senSchoolUrn}`);
         this.auditHelper.auditPage('School Overview - Federation Details', 'Schools', `/schools/overview/federation?urn=${federationSchoolUrn}`);
+        this.auditHelper.auditPage('School Overview - Religious Characteristics', 'Schools', `/schools/overview/religiouscharacteristics?urn=${laMaintainedSchoolUrn}`);
 
         // School Contacts - In School/Academy (sensitive data - no screenshots)
         this.auditHelper.auditPageWithoutScreenshots('LA Maintained School Contacts - In School', 'Schools', `/schools/contacts/in-the-school?urn=${laMaintainedSchoolUrn}`);

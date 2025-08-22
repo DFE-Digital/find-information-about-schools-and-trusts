@@ -277,9 +277,21 @@ describe('Schools Navigation Tests', () => {
                     .checkSENSubpageHeaderCorrect();
             });
 
-            // SEN --> school details (school)
-            it('SEN → School details', () => {
+            // SEN --> religious characteristics (school)
+            it('SEN → Religious Characteristics', () => {
                 cy.visit(`/schools/overview/sen?urn=${navTestSchool.schoolURN}`);
+                navigation
+                    .clickSchoolsReligiousCharacteristicsButton()
+                    .checkCurrentURLIsCorrect(`/schools/overview/religiouscharacteristics?urn=${navTestSchool.schoolURN}`)
+                    .checkAllSchoolServiceNavItemsPresent()
+                    .checkAllSchoolOverviewSubNavItemsPresent();
+                schoolsPage
+                    .checkReligiousCharacteristicsHeaderPresent();
+            });
+
+            // Religious Characteristics --> school details (school)
+            it('Religious Characteristics → School details', () => {
+                cy.visit(`/schools/overview/religiouscharacteristics?urn=${navTestSchool.schoolURN}`);
                 navigation
                     .clickSchoolsDetailsButton()
                     .checkCurrentURLIsCorrect(`/schools/overview/details?urn=${navTestSchool.schoolURN}`)

@@ -51,6 +51,7 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             nameof(SenModel) => "Overview",
             nameof(FederationModel) => "Overview",
             nameof(ReferenceNumbersModel) => "Overview",
+            nameof(ReligiousCharacteristicsModel) => "Overview",
             nameof(CurrentModel) => "Governance",
             nameof(HistoricModel) => "Governance",
             nameof(SingleHeadlineGradesModel) => "Ofsted",
@@ -106,6 +107,7 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             nameof(SingleHeadlineGradesModel) => "/Schools/Ofsted/SingleHeadlineGrades",
             nameof(CurrentRatingsModel) => "/Schools/Ofsted/CurrentRatings",
             nameof(PreviousRatingsModel) => "/Schools/Ofsted/PreviousRatings",
+            nameof(ReligiousCharacteristicsModel) => "/Schools/Overview/ReligiousCharacteristics",
             nameof(SafeguardingAndConcernsModel) => "/Schools/Ofsted/SafeguardingAndConcerns",
             _ => throw new ArgumentException("Couldn't get expected sub page nav asp link for given page type",
                 nameof(pageType))
@@ -147,6 +149,12 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
                 l.LinkDisplayText.Should().Be("SEN (special educational needs)");
                 l.AspPage.Should().Be("/Schools/Overview/Sen");
                 l.TestId.Should().Be("overview-sen-subnav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Religious characteristics");
+                l.AspPage.Should().Be("/Schools/Overview/ReligiousCharacteristics");
+                l.TestId.Should().Be("overview-religious-characteristics-subnav");
             }
         );
     }
@@ -180,6 +188,12 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
                 l.LinkDisplayText.Should().Be("SEN (special educational needs)");
                 l.AspPage.Should().Be("/Schools/Overview/Sen");
                 l.TestId.Should().Be("overview-sen-subnav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Religious characteristics");
+                l.AspPage.Should().Be("/Schools/Overview/ReligiousCharacteristics");
+                l.TestId.Should().Be("overview-religious-characteristics-subnav");
             }
         );
     }
