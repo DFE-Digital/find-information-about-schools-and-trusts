@@ -55,6 +55,7 @@ export class TestDataStore {
                     { subpageName: "Federation details", url: `/schools/overview/federation?urn=${urn}` },
                     { subpageName: "Reference numbers", url: `/schools/overview/referencenumbers?urn=${urn}` },
                     { subpageName: "SEN (special educational needs)", url: `/schools/overview/sen?urn=${urn}` },
+                    { subpageName: "Religious characteristics", url: `/schools/overview/religious-characteristics?urn=${urn}` }
                 ]
             },
             {
@@ -90,6 +91,7 @@ export class TestDataStore {
                     { subpageName: "Academy details", url: `/schools/overview/details?urn=${urn}` },
                     { subpageName: "Reference numbers", url: `/schools/overview/referencenumbers?urn=${urn}` },
                     { subpageName: "SEN (special educational needs)", url: `/schools/overview/sen?urn=${urn}` },
+                    { subpageName: "Religious characteristics", url: `/schools/overview/religious-characteristics?urn=${urn}` }
                 ]
             },
             {
@@ -114,7 +116,7 @@ export class TestDataStore {
                     { subpageName: "Current governors", url: `/schools/governance/current?urn=${urn}` },
                     { subpageName: "Historic governors", url: `/schools/governance/historic?urn=${urn}` },
                 ]
-            },
+            }
         ];
 }
 
