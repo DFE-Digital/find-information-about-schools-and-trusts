@@ -14,6 +14,7 @@ export class AuditPageDefinitions {
         this.auditHelper.auditPage('Cookies Policy', 'Core', '/cookies');
         this.auditHelper.auditPage('Accessibility Statement', 'Core', '/accessibility');
         this.auditHelper.auditPage('Privacy Policy', 'Core', '/privacy');
+        this.auditHelper.auditPage('About the data we use', 'Core', '/aboutdata');
     }
 
     /**

@@ -1,0 +1,152 @@
+@page
+@model DfE.FindInformationAcademiesTrusts.Pages.Shared.ContentPageModel
+
+@{
+  Model.ShowBreadcrumb = false;
+  Model.BannerHeading = "About the data we use";
+  Layout = "_ContentLayout";
+  ViewData["Title"] = Model.BannerHeading;
+}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-three-quarters">
+    <!--Intro copy-->
+    <p class="govuk-body">
+      Find information about schools and trusts (FAST) brings together data from different places. 
+    </p>
+
+    <p class="govuk-body">
+      We do not own the information we show from other services. 
+    </p>
+
+    <p class="govuk-body">
+      This means we cannot:
+    </p>
+
+    <!--Bullets - what this means-->
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+        control its quality
+      </li>
+      <li>
+        make changes to it
+      </li>
+      <li>
+        remove or replace it
+      </li>
+    </ul>
+
+    <!--Intro copy 2 -->
+    <p class="govuk-body">
+      To report a problem with data taken from another source, you must contact the service responsible for it. 
+    </p>
+
+    <!--h2 When we fetch data-->
+    <h2 class="govuk-heading-m">How FAST gets updated</h2>
+
+    <!--Inset text-->
+    <div class="govuk-inset-text">
+      When we talk about updating FAST, we mean replacing the data it holds with a new copy from whoever maintains it.
+    </div>
+
+    <!--When we fetch data para -->
+    <p class="govuk-body">
+      If there are changes that FAST needs to reflect, providing the place we take the data from has been updated, you should see them the next time we take a copy.
+    </p> 
+
+    <p class="govuk-body">
+      We do this as often as we can so that the information you see is as up to date as possible. 
+    </p>
+
+    <!--h3 daily-->
+    <h3 class="govuk-heading-s">Things we update daily</h3>
+
+    <!--Daily paras -->
+    <p class="govuk-body">
+      Most FAST information comes from <a class="govuk-link" href="https://educationgovuk.sharepoint.com/sites/lvewp00299/SitePages/RSD.aspx">Regions Group tools and systems</a> or <a class="govuk-link" href="https://get-information-schools.service.gov.uk/">Get information about schools (GIAS)</a> and gets updated <strong>every morning</strong>. 
+    </p>
+
+    <p class="govuk-body">
+      This includes:
+    </p>
+
+    <!--Daily morning bullets-->
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+      names, addresses and reference numbers
+      </li>
+      <li>
+      current academies in a trust 
+      </li>
+      <li>
+      details of any academies in the pipeline
+      </li>
+    </ul>
+
+    <!--h3 Spring census updates-->
+    <h3 class="govuk-heading-s">Spring census data</h3>
+
+    <!--Spring census para -->
+    <p class="govuk-body">
+    Some information we take from GIAS comes from the Spring census. This gets updated <strong>every year</strong> and includes:
+    </p>
+
+    <!--Spring census bullets-->
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+      pupil numbers
+      </li>
+      <li>
+      free school meals figures
+      </li>
+    </ul>
+
+    <!--h3 Ofsted data-->
+    <h3 class="govuk-heading-s">Ofsted reports</h3>
+
+    <!--Ofsted data para -->
+    <p class="govuk-body">
+      We take most Ofsted information from: 
+    </p>
+
+    <ul class="govuk-list govuk-list--bullet">
+      <li>
+        <a class="govuk-link" href="https://www.gov.uk/government/collections/maintained-schools-and-academies-inspections-and-outcomes-official-statistics">
+          State-funded schools statistics: management information
+        </a>
+      </li>
+      <li>
+        <a class="govuk-link" href="https://www.gov.uk/government/collections/further-education-and-skills-inspection-outcomes#monthly-inspection-data">
+          Further education and skills inspections: management information
+        </a>
+      </li>
+    </ul>
+
+    <p class="govuk-body">
+      Both reports are upated <strong>every month</strong>.
+    </p> 
+
+    <p class="govuk-body">
+      Adding the monthly data is a manual process and we cannot give an exact date for when it will be visible in FAST.
+    </p>
+
+    <p class="govuk-body">
+      Ofsted may publish school inspection reports on their website between monthly updates.
+    </p>
+
+    <p class="govuk-body">
+      We add the new report data for these schools <strong>every week</strong>. The data for this is sent to us directly from Ofsted. 
+    </p>
+
+    <!--h3 Other data-->
+    <h3 class="govuk-heading-s">Other data we use</h3>
+
+    <p class="govuk-body">
+      Financial documents that trusts submit to us each year are held and maintained by the Regions Group Data Science team.
+    </p>
+
+    <p class="govuk-body">
+      We also take some statistical information from <a class="govuk-link" href="https://explore-education-statistics.service.gov.uk/">Explore education statistics</a> which is published every year.
+    </p>
+  </div>
+</div>

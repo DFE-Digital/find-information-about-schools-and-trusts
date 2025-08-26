@@ -4,6 +4,7 @@ class Navigation {
         privacyFooterButton: () => cy.contains('Privacy'),
         cookiesFooterButton: () => cy.get('[data-testid="cookies-footer-link"]'),
         accessibilityFooterButton: () => cy.contains('Accessibility'),
+        aboutDataFooterButton: () => cy.get('[data-testid="about-data-footer-link"]'),
         academyTypeNav: {
             inThisTrustButton: () => cy.get('[data-testid="academies-in-this-trust-subnav"]'),
             pipelineAcademiesButton: () => cy.get('[data-testid="academies-pipeline-academies-subnav"]'),
@@ -93,6 +94,16 @@ class Navigation {
 
     public checkCurrentURLIsCorrect(urlPageName: string): this {
         cy.url().should('include', urlPageName);
+        return this;
+    }
+    
+    public checkAboutDataLinkPresent(): this {
+        this.elements.aboutDataFooterButton().scrollIntoView().should('be.visible');
+        return this;
+    }
+    
+    public clickAboutDataLink(): this {
+        this.elements.aboutDataFooterButton().scrollIntoView().click();
         return this;
     }
 

@@ -134,7 +134,8 @@ testFinanceData.forEach(({ uid }) => {
                 it(`Should have an about these documents component and the correct information on ${url}`, () => {
                     financialDocumentsPage
                         .checkHasAboutTheseDocumentsComponent()
-                        .checkAboutTheseDocumentsComponentDetails();
+                        .checkAboutTheseDocumentsComponentDetails()
+                        .checkAboutTheseDocumentsDoesNotHaveAboutDataLink();
                 });
 
                 it('Should have the correct permission message', () => {
