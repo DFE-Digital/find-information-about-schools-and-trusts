@@ -277,9 +277,21 @@ describe('Schools Navigation Tests', () => {
                     .checkSENSubpageHeaderCorrect();
             });
 
-            // SEN --> school details (school)
-            it('SEN → School details', () => {
+            // SEN --> religious characteristics (school)
+            it('SEN → Religious Characteristics', () => {
                 cy.visit(`/schools/overview/sen?urn=${navTestSchool.schoolURN}`);
+                navigation
+                    .clickSchoolsReligiousCharacteristicsButton()
+                    .checkCurrentURLIsCorrect(`/schools/overview/religiouscharacteristics?urn=${navTestSchool.schoolURN}`)
+                    .checkAllSchoolServiceNavItemsPresent()
+                    .checkAllSchoolOverviewSubNavItemsPresent();
+                schoolsPage
+                    .checkReligiousCharacteristicsHeaderPresent();
+            });
+
+            // Religious Characteristics --> school details (school)
+            it('Religious Characteristics → School details', () => {
+                cy.visit(`/schools/overview/religiouscharacteristics?urn=${navTestSchool.schoolURN}`);
                 navigation
                     .clickSchoolsDetailsButton()
                     .checkCurrentURLIsCorrect(`/schools/overview/details?urn=${navTestSchool.schoolURN}`)
@@ -316,9 +328,21 @@ describe('Schools Navigation Tests', () => {
                     .checkSENSubpageHeaderCorrect();
             });
 
-            // SEN --> academy details (academy)
-            it('SEN → Academy details', () => {
+            // SEN --> religious characteristics (academy)
+            it('SEN → Religious Characteristics', () => {
                 cy.visit(`/schools/overview/sen?urn=${navTestAcademies[0].academyURN}`);
+                navigation
+                    .clickSchoolsReligiousCharacteristicsButton()
+                    .checkCurrentURLIsCorrect(`/schools/overview/religiouscharacteristics?urn=${navTestAcademies[0].academyURN}`)
+                    .checkAllSchoolServiceNavItemsPresent()
+                    .checkAllAcademyOverviewSubNavItemsPresent();
+                schoolsPage
+                    .checkReligiousCharacteristicsHeaderPresent();
+            });
+
+            // religious characteristics --> academy details (academy)
+            it('religious characteristics → Academy details', () => {
+                cy.visit(`/schools/overview/religiouscharacteristics?urn=${navTestAcademies[0].academyURN}`);
                 navigation
                     .clickSchoolsDetailsButton()
                     .checkCurrentURLIsCorrect(`/schools/overview/details?urn=${navTestAcademies[0].academyURN}`)
@@ -327,6 +351,7 @@ describe('Schools Navigation Tests', () => {
                 schoolsPage
                     .checkAcademyDetailsHeaderPresent();
             });
+
         });
     });
 

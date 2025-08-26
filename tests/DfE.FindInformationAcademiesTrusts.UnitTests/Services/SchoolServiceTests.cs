@@ -247,12 +247,12 @@ public class SchoolServiceTests
             .Returns(new OfstedInspectionHistorySummary(expectedCurrentInspection, expectedPreviousInspection));
 
         var result = await _sut.GetOfstedHeadlineGrades(urn);
-        
+
         result.ShortInspection.Should().BeEquivalentTo(expectedShortInspection);
         result.CurrentInspection.Should().BeEquivalentTo(expectedCurrentInspection);
         result.PreviousInspection.Should().BeEquivalentTo(expectedPreviousInspection);
     }
-    
+
     [Fact]
     public async Task GetSchoolOfstedRatingsAsync_returns_data_from_ofsted_repository()
     {
@@ -262,11 +262,65 @@ public class SchoolServiceTests
             new OfstedShortInspection(new DateTime(2025, 7, 1), "School remains Good"),
             new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2023, 1, 1)),
             new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 2, 1)));
-        
+
         _mockOfstedRepository.GetSchoolOfstedRatingsAsync(urn).Returns(expected);
 
         var result = await _sut.GetSchoolOfstedRatingsAsync(urn);
-        
+
         result.Should().BeEquivalentTo(expected);
+    }
+
+    [Theory]
+    [InlineData(null, "Not available")]
+    [InlineData("", "Not available")]
+    [InlineData("Not applicable", "Does not apply")]
+    [InlineData("Roman Catholic", "Roman Catholic")]
+    public async Task GetReligiousCharacteristicsAsync_for_authority_should_return_correct_data(string? authority,
+        string expectedResult)
+    {
+        const int urn = 123456;
+
+        _mockSchoolRepository.GetReligiousCharacteristicsAsync(urn)
+            .Returns(new ReligiousCharacteristics(authority, null, null));
+
+        var result = await _sut.GetReligiousCharacteristicsAsync(urn);
+
+        result.ReligiousAuthority.Should().BeEquivalentTo(expectedResult);
+    }
+
+    [Theory]
+    [InlineData(null, "Not available")]
+    [InlineData("", "Not available")]
+    [InlineData("Not applicable", "Not applicable")]
+    [InlineData("Diocese of Nottingham", "Diocese of Nottingham")]
+    public async Task GetReligiousCharacteristicsAsync_for_character_should_return_correct_data(string? character,
+        string expectedResult)
+    {
+        const int urn = 123456;
+
+        _mockSchoolRepository.GetReligiousCharacteristicsAsync(urn)
+            .Returns(new ReligiousCharacteristics(null, character, null));
+
+        var result = await _sut.GetReligiousCharacteristicsAsync(urn);
+
+        result.ReligiousCharacter.Should().BeEquivalentTo(expectedResult);
+    }
+
+    [Theory]
+    [InlineData(null, "Not available")]
+    [InlineData("", "Not available")]
+    [InlineData("Not applicable", "Not applicable")]
+    [InlineData("Church of England/Roman Catholic", "Church of England/Roman Catholic")]
+    public async Task GetReligiousCharacteristicsAsync_for_ethos_should_return_correct_data(string? ethos,
+        string expectedResult)
+    {
+        const int urn = 123456;
+
+        _mockSchoolRepository.GetReligiousCharacteristicsAsync(urn)
+            .Returns(new ReligiousCharacteristics(null, null, ethos));
+
+        var result = await _sut.GetReligiousCharacteristicsAsync(urn);
+
+        result.ReligiousEthos.Should().BeEquivalentTo(expectedResult);
     }
 }

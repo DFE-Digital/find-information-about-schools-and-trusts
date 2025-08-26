@@ -16,8 +16,10 @@ public interface ISchoolService
     Task<SchoolGovernanceServiceModel> GetSchoolGovernanceAsync(int urn);
 
     Task<OfstedHeadlineGradesServiceModel> GetOfstedHeadlineGrades(int urn);
-    
+
     Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsync(int urn);
+
+    Task<SchoolReligiousCharacteristicsServiceModel> GetReligiousCharacteristicsAsync(int urn);
 }
 
 public class SchoolService(
@@ -98,5 +100,34 @@ public class SchoolService(
             schoolOfstedRatings.PreviousOfstedRating,
             schoolOfstedRatings.CurrentOfstedRating
         );
+    }
+
+    public async Task<SchoolReligiousCharacteristicsServiceModel> GetReligiousCharacteristicsAsync(int urn)
+    {
+        var religiousCharacteristics = await schoolRepository.GetReligiousCharacteristicsAsync(urn);
+
+        return new SchoolReligiousCharacteristicsServiceModel(
+            GetCharacteristicsValue(nameof(religiousCharacteristics.ReligiousAuthority),
+                religiousCharacteristics.ReligiousAuthority),
+            GetCharacteristicsValue(nameof(religiousCharacteristics.ReligiousCharacter),
+                religiousCharacteristics.ReligiousCharacter),
+            GetCharacteristicsValue(nameof(religiousCharacteristics.ReligiousEthos),
+                religiousCharacteristics.ReligiousEthos));
+    }
+
+    private static string GetCharacteristicsValue(string field, string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return "Not available";
+        }
+
+        if (field == nameof(ReligiousCharacteristics.ReligiousAuthority) &&
+            value.Equals("Not applicable", StringComparison.CurrentCultureIgnoreCase))
+        {
+            return "Does not apply";
+        }
+
+        return value;
     }
 }

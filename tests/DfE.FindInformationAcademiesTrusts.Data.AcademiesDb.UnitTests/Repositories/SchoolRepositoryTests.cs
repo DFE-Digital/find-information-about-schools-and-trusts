@@ -480,4 +480,29 @@ public class SchoolRepositoryTests
         result[0].DateOfAppointment.Should().Be(DateTime.UtcNow.AddDays(-100).Date);
         result[0].DateOfTermEnd.Should().Be(DateTime.UtcNow.AddDays(100).Date);
     }
+
+    [Fact]
+    public async Task GetReligiousCharacteristicsAsync_should_return_religious_characteristics()
+    {
+        var urn = 123456;
+
+        _mockAcademiesDbContext.GiasEstablishments.AddRange(
+        [
+            new GiasEstablishment
+            {
+                Urn = urn,
+                EstablishmentName = "cool school",
+                EstablishmentTypeGroupName = "Local authority maintained schools",
+                DioceseName = "Diocese of Nottingham",
+                ReligiousCharacterName = "Roman Catholic",
+                ReligiousEthosName = "Church of England/Roman Catholic",
+                EstablishmentStatusName = "Open"
+            }
+        ]);
+
+        var result = await _sut.GetReligiousCharacteristicsAsync(urn);
+
+        result.Should().BeEquivalentTo(new ReligiousCharacteristics("Diocese of Nottingham", "Roman Catholic",
+            "Church of England/Roman Catholic"));
+    }
 }
