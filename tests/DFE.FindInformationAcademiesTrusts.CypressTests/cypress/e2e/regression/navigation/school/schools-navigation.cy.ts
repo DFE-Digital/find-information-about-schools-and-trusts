@@ -328,9 +328,21 @@ describe('Schools Navigation Tests', () => {
                     .checkSENSubpageHeaderCorrect();
             });
 
-            // SEN --> academy details (academy)
-            it('SEN → Academy details', () => {
+            // SEN --> religious characteristics (academy)
+            it('SEN → Religious Characteristics', () => {
                 cy.visit(`/schools/overview/sen?urn=${navTestAcademies[0].academyURN}`);
+                navigation
+                    .clickSchoolsReligiousCharacteristicsButton()
+                    .checkCurrentURLIsCorrect(`/schools/overview/religiouscharacteristics?urn=${navTestAcademies[0].academyURN}`)
+                    .checkAllSchoolServiceNavItemsPresent()
+                    .checkAllAcademyOverviewSubNavItemsPresent();
+                schoolsPage
+                    .checkReligiousCharacteristicsHeaderPresent();
+            });
+
+            // religious characteristics --> academy details (academy)
+            it('religious characteristics → Academy details', () => {
+                cy.visit(`/schools/overview/religiouscharacteristics?urn=${navTestAcademies[0].academyURN}`);
                 navigation
                     .clickSchoolsDetailsButton()
                     .checkCurrentURLIsCorrect(`/schools/overview/details?urn=${navTestAcademies[0].academyURN}`)
@@ -339,6 +351,7 @@ describe('Schools Navigation Tests', () => {
                 schoolsPage
                     .checkAcademyDetailsHeaderPresent();
             });
+
         });
     });
 
