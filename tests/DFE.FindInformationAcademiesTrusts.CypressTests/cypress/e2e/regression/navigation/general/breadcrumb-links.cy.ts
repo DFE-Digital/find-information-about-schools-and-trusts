@@ -15,7 +15,7 @@ describe('Testing breadcrumb functionality across FAST', () => {
             });
         });
 
-        ['/', '/error'].forEach((url) => {
+        ['/', '/error', '/aboutdata'].forEach((url) => {
             it(`Should have no breadcrumb on ${url}`, () => {
                 cy.visit(url);
 

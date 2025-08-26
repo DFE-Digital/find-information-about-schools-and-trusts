@@ -6,6 +6,16 @@ describe('Testing Navigation', () => {
         beforeEach(() => {
             cy.visit('/');
         });
+        
+        it("Should check that the home page footer bar 'Learn more about the data we use' link is present and functional", () => {
+            navigation
+                .checkAboutDataLinkPresent()
+                .clickAboutDataLink();
+
+            navigation
+                .checkCurrentURLIsCorrect('aboutdata');
+
+        });
 
         it("Should check that the home page footer bar privacy link is present and functional", () => {
             navigation

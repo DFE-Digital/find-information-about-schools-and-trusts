@@ -92,6 +92,13 @@ class CommonPage {
 
         return this;
     }
+    
+    public checkDataSourcesHasLinkToAboutDataPage(): this {
+        const { dataSources } = this.elements;
+        dataSources.section().find('[data-testid="data-source-more-info-link"]').should('be.visible');
+        dataSources.section().find('[data-testid="data-source-more-info-link"]').should('have.attr', 'href', '/aboutdata');
+        return this;   
+    }
 
     public checkPageContentHasLoaded(): this {
         const { elementPresentOnEveryPage } = this.elements;

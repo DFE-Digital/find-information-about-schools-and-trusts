@@ -96,6 +96,14 @@ class FinancialDocuments {
 
         return this;
     }
+    
+    public checkAboutTheseDocumentsDoesNotHaveAboutDataLink(): this {
+        this.elements.aboutTheseDocuments().expandDetailsElement();
+        
+        this.elements.aboutTheseDocuments().find('a[href="/aboutdata"]').should('not.exist');
+        
+        return this;
+    }
 
     public checkForCorrectInternalUseMessage(internalUseMessage: string): this {
         this.elements.internalUseOnlyMessage().should('contain.text', internalUseMessage);

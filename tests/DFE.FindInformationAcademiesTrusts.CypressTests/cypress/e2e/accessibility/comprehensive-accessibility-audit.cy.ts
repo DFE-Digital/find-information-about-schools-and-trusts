@@ -8,7 +8,7 @@ import { AuditPageDefinitions } from '../../support/audit-page-definitions';
  * Comprehensive Accessibility Audit Report Generator
  * 
  * Generates ONE comprehensive HTML audit report covering ALL application areas:
- * - Core pages (home, search, cookies, accessibility, privacy)
+ * - Core pages (home, search, cookies, accessibility, privacy, about data)
  * - Trust pages (all overview, contacts, governance, ofsted, academies, financial subpages)
  * - School pages (all overview, contacts, SEN, federation subpages)
  * 

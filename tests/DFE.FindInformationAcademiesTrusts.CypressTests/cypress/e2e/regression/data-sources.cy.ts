@@ -5,7 +5,7 @@ import { TestDataStore } from "../../support/test-data-store";
 describe("Testing the data sources component", () => {
 
     describe("Content pages", () => {
-        ['/', '/search', '/accessibility', '/cookies', '/privacy', '/error'].forEach((url) => {
+        ['/', '/search', '/accessibility', '/cookies', '/privacy', '/error', '/aboutdata'].forEach((url) => {
             it(`Should not have a data sources component on ${url}`, () => {
                 cy.visit(url); // don't turn off fail on status code because we want the test to fail if visit returns 404 as that means our test urls are incorrect
 
@@ -41,7 +41,8 @@ describe("Testing the data sources component", () => {
                         // Check that the data sources component has a subheading for each subnav
                         commonPage
                             .checkHasDataSourcesComponent()
-                            .checkDataSourcesComponentHasSubpageHeadings(subpageNames);
+                            .checkDataSourcesComponentHasSubpageHeadings(subpageNames)
+                            .checkDataSourcesHasLinkToAboutDataPage();
                     });
                 });
             });
@@ -66,7 +67,8 @@ describe("Testing the data sources component", () => {
 
                         commonPage
                             .checkHasDataSourcesComponent()
-                            .checkDataSourcesComponentHasSubpageHeadings(expectedHeadings);
+                            .checkDataSourcesComponentHasSubpageHeadings(expectedHeadings)
+                            .checkDataSourcesHasLinkToAboutDataPage();
                     });
                 });
             });
@@ -86,7 +88,8 @@ describe("Testing the data sources component", () => {
 
                         commonPage
                             .checkHasDataSourcesComponent()
-                            .checkDataSourcesComponentHasSubpageHeadings(expectedHeadings);
+                            .checkDataSourcesComponentHasSubpageHeadings(expectedHeadings)
+                            .checkDataSourcesHasLinkToAboutDataPage();
                     });
                 });
             });

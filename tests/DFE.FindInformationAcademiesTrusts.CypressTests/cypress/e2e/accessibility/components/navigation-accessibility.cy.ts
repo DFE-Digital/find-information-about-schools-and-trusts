@@ -48,7 +48,7 @@ describe('Navigation Accessibility', () => {
                 });
             });
 
-            ['/', '/error'].forEach((url) => {
+            ['/', '/error', '/aboutdata'].forEach((url) => {
                 it(`Should have accessible page structure without breadcrumb on ${url}`, () => {
                     cy.visit(url);
 
@@ -155,6 +155,7 @@ describe('Navigation Accessibility', () => {
 
         // Use navigation POM to check footer links
         navigation
+            .checkAboutDataLinkPresent()
             .checkPrivacyLinkPresent()
             .checkCookiesLinkPresent()
             .checkAccessibilityStatementLinkPresent();
