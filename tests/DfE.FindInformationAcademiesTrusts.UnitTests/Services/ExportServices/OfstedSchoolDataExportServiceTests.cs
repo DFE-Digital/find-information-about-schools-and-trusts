@@ -2,6 +2,8 @@ using ClosedXML.Excel;
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Exceptions;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Extensions;
+using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 
@@ -23,7 +25,8 @@ public class OfstedSchoolDataExportServiceTests
     private readonly SchoolSummaryServiceModel _academySummary;
     private readonly SchoolOverviewServiceModel _schoolOverview;
     private readonly SchoolOverviewServiceModel _academyOverview;
-    private readonly OfstedHeadlineGradesServiceModel _headlineGrades;
+    private readonly SchoolOfstedServiceModel _schoolOfstedRatings;
+    private readonly SchoolOfstedServiceModel _academyOfstedRatings;
 
     public OfstedSchoolDataExportServiceTests()
     {
@@ -39,10 +42,43 @@ public class OfstedSchoolDataExportServiceTests
                 "Devon and Cornwall", "Secondary", new AgeRange(11, 18), NurseryProvision.NoClasses)
             { DateJoinedTrust = DateOnly.Parse("2014-09-01") };
 
-        _headlineGrades = new OfstedHeadlineGradesServiceModel(
+        _schoolOfstedRatings = new SchoolOfstedServiceModel(
+            SchoolUrn.ToString(),
+            "Test School",
+            null,
             new OfstedShortInspection(DateTime.Parse("2025-07-01"), "School remains Good"),
-            new OfstedFullInspectionSummary(DateTime.Parse("2020-07-01"), OfstedRatingScore.Good),
-            new OfstedFullInspectionSummary(DateTime.Parse("2010-07-01"), OfstedRatingScore.RequiresImprovement));
+            new OfstedRating(
+                OfstedRatingScore.RequiresImprovement,
+                OfstedRatingScore.RequiresImprovement,
+                OfstedRatingScore.RequiresImprovement,
+                OfstedRatingScore.RequiresImprovement,
+                OfstedRatingScore.RequiresImprovement,
+                OfstedRatingScore.RequiresImprovement,
+                OfstedRatingScore.RequiresImprovement,
+                CategoriesOfConcern.NoticeToImprove,
+                SafeguardingScore.No,
+                DateTime.Parse("2010-07-01")
+            ),
+            new OfstedRating(
+                OfstedRatingScore.Good,
+                OfstedRatingScore.Good,
+                OfstedRatingScore.Good,
+                OfstedRatingScore.Good,
+                OfstedRatingScore.Good,
+                OfstedRatingScore.Good,
+                OfstedRatingScore.Good,
+                CategoriesOfConcern.NoConcerns,
+                SafeguardingScore.Yes,
+                DateTime.Parse("2020-07-01")
+            )
+        );
+
+        _academyOfstedRatings = _schoolOfstedRatings with
+        {
+            Urn = AcademyUrn.ToString(),
+            EstablishmentName = "Test Academy",
+            DateAcademyJoinedTrust = DateTime.Parse("2014-09-01")
+        };
 
         _mockSchoolService.GetSchoolSummaryAsync(SchoolUrn).Returns(_schoolSummary);
         _mockSchoolService.GetSchoolSummaryAsync(AcademyUrn).Returns(_academySummary);
@@ -52,8 +88,8 @@ public class OfstedSchoolDataExportServiceTests
         _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(AcademyUrn, SchoolCategory.Academy)!.Returns(
             _academyOverview);
 
-        _mockSchoolService.GetOfstedHeadlineGrades(SchoolUrn)!.Returns(_headlineGrades);
-        _mockSchoolService.GetOfstedHeadlineGrades(AcademyUrn)!.Returns(_headlineGrades);
+        _mockSchoolService.GetSchoolOfstedRatingsAsync(SchoolUrn)!.Returns(_schoolOfstedRatings);
+        _mockSchoolService.GetSchoolOfstedRatingsAsync(AcademyUrn)!.Returns(_academyOfstedRatings);
 
         _sut = new OfstedSchoolDataExportService(_mockSchoolService, _mockSchoolOverviewDetailsService);
     }
@@ -63,7 +99,22 @@ public class OfstedSchoolDataExportServiceTests
     {
         var result = await GetWorksheetAsync(123456);
 
-        result.AssertSpreadsheetMatches(3, ["Inspection type", "Date of inspection", "Grade"]);
+        result.AssertSpreadsheetMatches(
+            3,
+            [
+                "Inspection type",
+                "Date of inspection",
+                "Grade",
+                "Quality of education",
+                "Behaviour and attitudes",
+                "Personal development",
+                "Leadership and management",
+                "Early years provision",
+                "Sixth form provision",
+                "Effective safeguarding",
+                "Category of concern",
+                "Before or after joining the trust",
+            ]);
     }
 
     [Fact]
@@ -96,71 +147,133 @@ public class OfstedSchoolDataExportServiceTests
     }
 
     [Fact]
-    public async Task BuildAsync_includes_expected_data()
+    public async Task BuildAsync_includes_expected_data_for_school()
     {
         var result = await GetWorksheetAsync(SchoolUrn);
 
-        AssertResultContainsExpectedRow(result, 4, "Recent short inspection",
-            _headlineGrades.ShortInspection.InspectionDate, _headlineGrades.ShortInspection.InspectionOutcome);
+        AssertResultContainsExpectedRow(result, 4, new ExpectedRow(_schoolOfstedRatings.ShortInspection, BeforeOrAfterJoining.NotApplicable));
 
-        AssertResultContainsExpectedRow(result, 5, "Current inspection",
-            _headlineGrades.CurrentInspection.InspectionDate, "Good");
-        AssertResultContainsExpectedRow(result, 6, "Previous inspection",
-            _headlineGrades.PreviousInspection.InspectionDate, "Requires improvement");
+        AssertResultContainsExpectedRow(result, 5, new ExpectedRow("Current inspection", _schoolOfstedRatings.CurrentOfstedRating, BeforeOrAfterJoining.NotApplicable));
+        AssertResultContainsExpectedRow(result, 6, new ExpectedRow("Previous inspection", _schoolOfstedRatings.PreviousOfstedRating, BeforeOrAfterJoining.NotApplicable));
     }
 
     [Fact]
-    public async Task BuildAsync_when_no_recent_short_inspection_then_includes_expected_data()
+    public async Task BuildAsync_includes_expected_data_for_academy()
     {
-        _mockSchoolService.GetOfstedHeadlineGrades(SchoolUrn)!.Returns(_headlineGrades with
+        var result = await GetWorksheetAsync(AcademyUrn);
+
+        AssertResultContainsExpectedRow(result, 4, new ExpectedRow(_academyOfstedRatings.ShortInspection, BeforeOrAfterJoining.After));
+
+        AssertResultContainsExpectedRow(result, 5, new ExpectedRow("Current inspection", _academyOfstedRatings.CurrentOfstedRating, BeforeOrAfterJoining.After));
+        AssertResultContainsExpectedRow(result, 6, new ExpectedRow("Previous inspection", _academyOfstedRatings.PreviousOfstedRating, BeforeOrAfterJoining.Before));
+    }
+
+    [Fact]
+    public async Task BuildAsync_when_no_recent_short_inspection_then_includes_expected_data_for_school()
+    {
+        _mockSchoolService.GetSchoolOfstedRatingsAsync(SchoolUrn)!.Returns(_schoolOfstedRatings with
         {
             ShortInspection = OfstedShortInspection.Unknown
         });
 
         var result = await GetWorksheetAsync(SchoolUrn);
 
-        AssertResultContainsExpectedRow(result, 4, "Current inspection",
-            _headlineGrades.CurrentInspection.InspectionDate, "Good");
-        AssertResultContainsExpectedRow(result, 5, "Previous inspection",
-            _headlineGrades.PreviousInspection.InspectionDate, "Requires improvement");
+        AssertResultContainsExpectedRow(result, 4, new ExpectedRow("Current inspection", _schoolOfstedRatings.CurrentOfstedRating, BeforeOrAfterJoining.NotApplicable));
+        AssertResultContainsExpectedRow(result, 5, new ExpectedRow("Previous inspection", _schoolOfstedRatings.PreviousOfstedRating, BeforeOrAfterJoining.NotApplicable));
     }
 
     [Fact]
-    public async Task BuildAsync_when_inspection_dates_are_missing_then_includes_expected_data()
+    public async Task BuildAsync_when_no_recent_short_inspection_then_includes_expected_data_for_academy()
     {
-        _mockSchoolService.GetOfstedHeadlineGrades(SchoolUrn)!.Returns(
-            _headlineGrades with
+        _mockSchoolService.GetSchoolOfstedRatingsAsync(AcademyUrn)!.Returns(_academyOfstedRatings with
+        {
+            ShortInspection = OfstedShortInspection.Unknown
+        });
+
+        var result = await GetWorksheetAsync(AcademyUrn);
+
+        AssertResultContainsExpectedRow(result, 4, new ExpectedRow("Current inspection", _academyOfstedRatings.CurrentOfstedRating, BeforeOrAfterJoining.After));
+        AssertResultContainsExpectedRow(result, 5, new ExpectedRow("Previous inspection", _academyOfstedRatings.PreviousOfstedRating, BeforeOrAfterJoining.Before));
+    }
+
+    [Fact]
+    public async Task BuildAsync_when_inspection_dates_are_missing_then_includes_expected_data_for_school()
+    {
+        var currentOfstedRating = _schoolOfstedRatings.CurrentOfstedRating with { InspectionDate = null };
+        var previousOfstedRating = _schoolOfstedRatings.PreviousOfstedRating with { InspectionDate = null };
+        
+        _mockSchoolService.GetSchoolOfstedRatingsAsync(SchoolUrn)!.Returns(
+            _schoolOfstedRatings with
             {
-                CurrentInspection = _headlineGrades.CurrentInspection with { InspectionDate = null },
-                PreviousInspection = _headlineGrades.PreviousInspection with { InspectionDate = null }
+                CurrentOfstedRating = currentOfstedRating,
+                PreviousOfstedRating = previousOfstedRating,
             }
         );
 
         var result = await GetWorksheetAsync(SchoolUrn);
 
-        AssertResultContainsExpectedRow(result, 4, "Current inspection", null, "Good");
-        AssertResultContainsExpectedRow(result, 5, "Previous inspection", null, "Requires improvement");
+        AssertResultContainsExpectedRow(result, 4, new ExpectedRow("Current inspection", currentOfstedRating, BeforeOrAfterJoining.NotApplicable));
+        AssertResultContainsExpectedRow(result, 5, new ExpectedRow("Previous inspection", previousOfstedRating, BeforeOrAfterJoining.NotApplicable));
     }
 
     [Fact]
-    public async Task BuildAsync_when_short_inspection_grade_is_missing_then_includes_expected_data()
+    public async Task BuildAsync_when_inspection_dates_are_missing_then_includes_expected_data_for_academy()
     {
-        _mockSchoolService.GetOfstedHeadlineGrades(SchoolUrn)!.Returns(
-            _headlineGrades with
+        var currentOfstedRating = _academyOfstedRatings.CurrentOfstedRating with { InspectionDate = null };
+        var previousOfstedRating = _academyOfstedRatings.PreviousOfstedRating with { InspectionDate = null };
+        
+        _mockSchoolService.GetSchoolOfstedRatingsAsync(AcademyUrn)!.Returns(
+            _academyOfstedRatings with
             {
-                ShortInspection = _headlineGrades.ShortInspection with { InspectionOutcome = null }
+                CurrentOfstedRating = currentOfstedRating,
+                PreviousOfstedRating = previousOfstedRating,
+            }
+        );
+
+        var result = await GetWorksheetAsync(AcademyUrn);
+
+        AssertResultContainsExpectedRow(result, 4, new ExpectedRow("Current inspection", currentOfstedRating, BeforeOrAfterJoining.NotApplicable));
+        AssertResultContainsExpectedRow(result, 5, new ExpectedRow("Previous inspection", previousOfstedRating, BeforeOrAfterJoining.NotApplicable));
+    }
+
+    [Fact]
+    public async Task BuildAsync_when_short_inspection_grade_is_missing_then_includes_expected_data_for_school()
+    {
+        var shortInspection = _schoolOfstedRatings.ShortInspection with { InspectionOutcome = null };
+        
+        _mockSchoolService.GetSchoolOfstedRatingsAsync(SchoolUrn)!.Returns(
+            _schoolOfstedRatings with
+            {
+                ShortInspection = shortInspection
             }
         );
 
         var result = await GetWorksheetAsync(SchoolUrn);
 
-        AssertResultContainsExpectedRow(result, 4, "Recent short inspection",
-            _headlineGrades.ShortInspection.InspectionDate, null);
+        AssertResultContainsExpectedRow(result, 4, new ExpectedRow(shortInspection, BeforeOrAfterJoining.NotApplicable));
 
-        AssertResultContainsExpectedRow(result, 5, "Current inspection",
-            _headlineGrades.CurrentInspection.InspectionDate, "Good");
-        AssertResultContainsExpectedRow(result, 6, "Previous inspection",
-            _headlineGrades.PreviousInspection.InspectionDate, "Requires improvement");
+        AssertResultContainsExpectedRow(result, 5, new ExpectedRow("Current inspection", _schoolOfstedRatings.CurrentOfstedRating, BeforeOrAfterJoining.NotApplicable));
+        AssertResultContainsExpectedRow(result, 6, new ExpectedRow("Previous inspection", _schoolOfstedRatings.PreviousOfstedRating, BeforeOrAfterJoining.NotApplicable));
+    }
+
+    [Fact]
+    public async Task BuildAsync_when_short_inspection_grade_is_missing_then_includes_expected_data_for_academy()
+    {
+        var shortInspection = _academyOfstedRatings.ShortInspection with { InspectionOutcome = null };
+        
+        _mockSchoolService.GetSchoolOfstedRatingsAsync(AcademyUrn)!.Returns(
+            _academyOfstedRatings with
+            {
+                ShortInspection = shortInspection
+            }
+        );
+
+        var result = await GetWorksheetAsync(AcademyUrn);
+
+        AssertResultContainsExpectedRow(result, 4, new ExpectedRow(shortInspection, BeforeOrAfterJoining.After));
+
+        AssertResultContainsExpectedRow(result, 5, new ExpectedRow("Current inspection", _schoolOfstedRatings.CurrentOfstedRating, BeforeOrAfterJoining.After));
+        AssertResultContainsExpectedRow(result, 6, new ExpectedRow("Previous inspection", _schoolOfstedRatings.PreviousOfstedRating, BeforeOrAfterJoining.Before));
     }
 
     private async Task<IXLWorksheet> GetWorksheetAsync(int urn)
@@ -174,12 +287,59 @@ public class OfstedSchoolDataExportServiceTests
         return worksheet;
     }
 
-    private static void AssertResultContainsExpectedRow(IXLWorksheet result, int row, string expectedInspectionType,
-        DateTime? expectedInspectionDate, string? expectedGrade)
+    private record ExpectedRow(
+        string InspectionType,
+        DateTime? InspectionDate,
+        string? Grade,
+        OfstedRatingScore QualityOfEducation,
+        OfstedRatingScore BehaviourAndAttitudes,
+        OfstedRatingScore PersonalDevelopment,
+        OfstedRatingScore LeadershipAndManagement,
+        OfstedRatingScore EarlyYearsProvision,
+        OfstedRatingScore SixthFormProvision,
+        SafeguardingScore EffectiveSafeguarding,
+        CategoriesOfConcern CategoryOfConcern,
+        BeforeOrAfterJoining BeforeOrAfterJoiningTrust
+    )
     {
-        result.CellValue(row, ExportColumns.OfstedSchoolColumns.InspectionType).Should().Be(expectedInspectionType);
+        public ExpectedRow(string inspectionType, OfstedRating ofstedRating, BeforeOrAfterJoining beforeOrAfterJoiningTrust)
+            : this(
+                inspectionType,
+                ofstedRating.InspectionDate,
+                ofstedRating.OverallEffectiveness.ToDisplayString(false),
+                ofstedRating.QualityOfEducation,
+                ofstedRating.BehaviourAndAttitudes,
+                ofstedRating.PersonalDevelopment,
+                ofstedRating.EffectivenessOfLeadershipAndManagement,
+                ofstedRating.EarlyYearsProvision,
+                ofstedRating.SixthFormProvision,
+                ofstedRating.SafeguardingIsEffective,
+                ofstedRating.CategoryOfConcern,
+                beforeOrAfterJoiningTrust)
+        { }
+        
+        public ExpectedRow(OfstedShortInspection ofstedShortInspection, BeforeOrAfterJoining beforeOrAfterJoiningTrust)
+            : this(
+                "Recent short inspection",
+                ofstedShortInspection.InspectionDate,
+                ofstedShortInspection.InspectionOutcome,
+                OfstedRatingScore.SingleHeadlineGradeNotAvailable,
+                OfstedRatingScore.SingleHeadlineGradeNotAvailable,
+                OfstedRatingScore.SingleHeadlineGradeNotAvailable,
+                OfstedRatingScore.SingleHeadlineGradeNotAvailable,
+                OfstedRatingScore.SingleHeadlineGradeNotAvailable,
+                OfstedRatingScore.SingleHeadlineGradeNotAvailable,
+                SafeguardingScore.Unknown,
+                CategoriesOfConcern.Unknown,
+                beforeOrAfterJoiningTrust)
+        { }
+    };
 
-        if (expectedInspectionDate is null)
+    private static void AssertResultContainsExpectedRow(IXLWorksheet result, int row, ExpectedRow expected)
+    {
+        result.CellValue(row, ExportColumns.OfstedSchoolColumns.InspectionType).Should().Be(expected.InspectionType);
+
+        if (expected.InspectionDate is null)
         {
             result.CellValue(row, ExportColumns.OfstedSchoolColumns.DateOfInspection).Should().Be(string.Empty);
         }
@@ -188,9 +348,46 @@ public class OfstedSchoolDataExportServiceTests
             result.Cell(row, ExportColumns.OfstedSchoolColumns.DateOfInspection).DataType.Should()
                 .Be(XLDataType.DateTime);
             result.Cell(row, ExportColumns.OfstedSchoolColumns.DateOfInspection).GetValue<DateTime>().Should()
-                .Be(expectedInspectionDate);
+                .Be(expected.InspectionDate);
         }
 
-        result.CellValue(row, ExportColumns.OfstedSchoolColumns.Grade).Should().Be(expectedGrade ?? string.Empty);
+        result.CellValue(row, ExportColumns.OfstedSchoolColumns.Grade).Should().Be(expected.Grade ?? string.Empty);
+        
+        AssertCellContainsExpectedOfstedRatingScore(result, row, ExportColumns.OfstedSchoolColumns.QualityOfEducation, expected.QualityOfEducation);
+        AssertCellContainsExpectedOfstedRatingScore(result, row, ExportColumns.OfstedSchoolColumns.BehaviourAndAttitudes, expected.BehaviourAndAttitudes);
+        AssertCellContainsExpectedOfstedRatingScore(result, row, ExportColumns.OfstedSchoolColumns.PersonalDevelopment, expected.PersonalDevelopment);
+        AssertCellContainsExpectedOfstedRatingScore(result, row, ExportColumns.OfstedSchoolColumns.LeadershipAndManagement, expected.LeadershipAndManagement);
+        AssertCellContainsExpectedOfstedRatingScore(result, row, ExportColumns.OfstedSchoolColumns.EarlyYearsProvision, expected.EarlyYearsProvision);
+        AssertCellContainsExpectedOfstedRatingScore(result, row, ExportColumns.OfstedSchoolColumns.SixthFormProvision, expected.SixthFormProvision);
+        
+        AssertCellContainsExpectedSafeguardingScore(result, row, ExportColumns.OfstedSchoolColumns.EffectiveSafeguarding, expected.EffectiveSafeguarding);
+        
+        AssertCellContainsExpectedCategoryOfConcern(result, row, ExportColumns.OfstedSchoolColumns.CategoryOfConcern, expected.CategoryOfConcern);
+
+        result.CellValue(row, ExportColumns.OfstedSchoolColumns.BeforeOrAfterJoiningTrust).Should()
+            .Be(expected.BeforeOrAfterJoiningTrust.ToDisplayString());
+    }
+
+    private static void AssertCellContainsExpectedOfstedRatingScore(IXLWorksheet result, int row,
+        ExportColumns.OfstedSchoolColumns column, OfstedRatingScore expected)
+    {
+        var expectedString = expected.ToDisplayString(false);
+        result.CellValue(row, column).Should().Be(expectedString);
+    }
+    
+    private static void AssertCellContainsExpectedSafeguardingScore(IXLWorksheet result, int row,
+        ExportColumns.OfstedSchoolColumns column, SafeguardingScore expected)
+    {
+        var expectedString = expected.ToDisplayString();
+        if (expectedString == "Unknown") expectedString = "Not available";
+        result.CellValue(row, column).Should().Be(expectedString);
+    }
+
+    private static void AssertCellContainsExpectedCategoryOfConcern(IXLWorksheet result, int row,
+        ExportColumns.OfstedSchoolColumns column, CategoriesOfConcern expected)
+    {
+        var expectedString = expected.ToDisplayString();
+        if (expectedString == "Unknown") expectedString = "Not available";
+        result.CellValue(row, column).Should().Be(expectedString);
     }
 }
