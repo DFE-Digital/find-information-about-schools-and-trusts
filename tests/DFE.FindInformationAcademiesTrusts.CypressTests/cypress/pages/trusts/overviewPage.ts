@@ -7,10 +7,13 @@ class OverviewPage {
         tableRowSortValues: () => cy.get('tbody.govuk-table__body tr td[data-sort-value]'),
         firstRowRatingText: () => cy.get('tbody.govuk-table__body tr:first-child td:first-child'),
         detailsHeader: () => cy.get('[data-testid="page-name"]'),
-        trustDetailsCard: () => cy.get('[data-testid="trust-details-summary-card"]'),
+        trustDetails: () => cy.get('[data-testid="trust-details-summary"]'),
         referenceNumberCard: () => cy.get('[data-testid="reference-numbers-summary-card"]'),
         trustDetailsSubHeader: () => cy.get('[data-testid="reference-numbers-summary-card"]'),
-
+        informationForOtherServicesHeader: () => cy.get('[data-testid="details-information-from-other-services-header"]'),
+        giasLink: () => cy.get('[data-testid="details-gias-link"]'),
+        financialBenchmarkingLink: () => cy.get('[data-testid="details-financial-benchmarking-link"]'),
+        findSchoolPerformanceDataLink: () => cy.get('[data-testid="details-find-school-performance-link"]'),
         subNav: {
             trustDetailsSubnavButton: () => cy.get('[data-testid="overview-trust-details-subnav"]'),
             trustSummarySubnavButton: () => cy.get('[data-testid="overview-trust-summary-subnav"]'),
@@ -41,17 +44,23 @@ class OverviewPage {
         return this;
     }
 
-    public checkTrustDetailsCardPresent(): this {
-        this.elements.trustDetailsCard().should('be.visible');
-        this.elements.trustDetailsCard().should('contain', 'Trust details');
+    public checkTrustDetailsPresent(): this {
+        this.elements.trustDetails().should('be.visible');
+        this.elements.trustDetails().should('contain', 'Trust details');
         return this;
     }
 
-    public checkTrustDetailsCardItemsPresent(): this {
-        this.elements.trustDetailsCard().should('contain', 'Address');
-        this.elements.trustDetailsCard().should('contain', 'Opened on');
-        this.elements.trustDetailsCard().should('contain', 'Region and territory');
-        this.elements.trustDetailsCard().should('contain', 'Information from other services');
+    public checkTrustDetailsItemsPresent(): this {
+        this.elements.trustDetails().should('contain', 'Address');
+        this.elements.trustDetails().should('contain', 'Opened on');
+        this.elements.trustDetails().should('contain', 'Region and territory');
+        return this;
+    }
+
+    public checkInformationFromOtherServicesPresent(): this {
+        this.elements.giasLink().should('be.visible').and('contain.text', 'Get information about schools');
+        this.elements.financialBenchmarkingLink().should('be.visible').and('contain.text', 'Financial benchmarking');
+        this.elements.findSchoolPerformanceDataLink().should('be.visible').and('contain.text', 'Find school college and performance data');
         return this;
     }
 

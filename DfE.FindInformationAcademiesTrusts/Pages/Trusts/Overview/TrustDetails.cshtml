@@ -2,90 +2,98 @@
 @model TrustDetailsModel
 
 @{
-  Layout = "_TrustLayout";
+    Layout = "_TrustLayout";
 }
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m" data-testid="subpage-header">
-      Trust details
-    </h2>
-    <div class="govuk-summary-card" data-testid="trust-details-summary-card">
-      <div class="govuk-summary-card__title-wrapper">
-        <h3 class="govuk-summary-card__title">Trust details</h3>
-      </div>
-      <div class="govuk-summary-card__content">
-        <dl class="govuk-summary-list">
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Address
-            </dt>
-            <dd class="govuk-summary-list__value" data-testid="address">
-              @Model.TrustOverview.Address
-            </dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Opened on
-            </dt>
-            <dd class="govuk-summary-list__value" data-testid="opened-on">
-              @if (Model.TrustOverview.OpenedDate is not null)
-              {
-                @Model.TrustOverview.OpenedDate.Value.ToString(StringFormatConstants.DisplayDateFormat)
-              }
-            </dd>
-          </div>
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Region and territory
-            </dt>
-            <dd class="govuk-summary-list__value" data-testid="region-and-territory">
-              @Model.TrustOverview.RegionAndTerritory
-            </dd>
-          </div>
-          @if (Model.SharepointLink is not null)
-          {
+
+<div class="govuk-grid-row" data-testid="trust-details-summary">
+    <div class="govuk-grid-column-two-thirds">
+        <h3 class="govuk-heading-m" data-testid="subpage-header">
+            @Model.PageMetadata.SubPageName
+        </h3>
+
+        <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+
             <div class="govuk-summary-list__row">
-              <dt class="govuk-summary-list__key">
-                SharePoint folder (opens in a new tab)
-              </dt>
-              <dd class="govuk-summary-list__value" data-testid="sharepoint-link">
-                <a class="govuk-link" rel="noreferrer noopener" target="_blank" href="@Model.SharepointLink">Find this trust's SharePoint folder</a>
-              </dd>
+                <dt class="govuk-summary-list__key" data-testid="address">
+                    Address
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.TrustOverview.Address
+                </dd>
             </div>
-          }
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key">
-              Information from other services (opens in a new tab)
-            </dt>
-            <dd class="govuk-summary-list__value">
-              @if (Model.CompaniesHouseLink is not null)
-              {
-                  <p class="govuk-body">
-                    <a class="govuk-link" rel="noreferrer noopener" target="_blank" href="@Model.CompaniesHouseLink">Companies House</a>
-                  </p>
-              }
-              @if (Model.GetInformationAboutSchoolsLink is not null)
-              {
-                  <p class="govuk-body">
-                    <a class="govuk-link" rel="noreferrer noopener" target="_blank" href="@Model.GetInformationAboutSchoolsLink">Get information about schools</a>
-                  </p>
-              }
-              @if (Model.FinancialBenchmarkingInsightsToolLink is not null)
-              {
-                  <p class="govuk-body">
-                    <a class="govuk-link" rel="noreferrer noopener" target="_blank" href="@Model.FinancialBenchmarkingInsightsToolLink">Financial Benchmarking and Insights Tool</a>
-                  </p>
-              }
-              @if (Model.FindSchoolPerformanceLink is not null)
-              {
-                  <p class="govuk-body">
-                    <a class="govuk-link" rel="noreferrer noopener" target="_blank" href="@Model.FindSchoolPerformanceLink">Find school college and performance data in England</a>
-                  </p>
-              }
-            </dd>
-          </div>
+
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key" data-testid="opened-on">
+                    Opened on
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @if (Model.TrustOverview.OpenedDate is not null)
+                    {
+                        @Model.TrustOverview.OpenedDate.Value.ToString(StringFormatConstants.DisplayDateFormat)
+                    }
+                </dd>
+            </div>
+
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key" data-testid="region-and-territory">
+                    Region and territory
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.TrustOverview.RegionAndTerritory
+                </dd>
+            </div>
+
+            @if (Model.SharepointLink is not null)
+            {
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">
+                        SharePoint folder (opens in a new tab)
+                    </dt>
+                    <dd class="govuk-summary-list__value" data-testid="sharepoint-link">
+                        <a class="govuk-link" rel="noreferrer noopener" target="_blank" href="@Model.SharepointLink">Find this trust's SharePoint folder</a>
+                    </dd>
+                </div>
+            }
         </dl>
-      </div>
+
+        <hr class="govuk-section-break govuk-section-break--m">
+        <h3 class="govuk-heading-m" data-testid="details-information-from-other-services-header">
+            Information from other
+            services
+        </h3>
+        <p class="govuk-body">Links open in a new tab</p>
+        <ul class="govuk-list govuk-list--bullet">
+
+            @if (Model.GetInformationAboutSchoolsLink is not null)
+            {
+                <li>
+                    <a class="govuk-link" rel="noreferrer noopener" target="_blank" data-testid="details-gias-link"
+                       href="@Model.GetInformationAboutSchoolsLink">
+                        Get information about schools
+                    </a>
+                </li>
+            }
+            @if (Model.FinancialBenchmarkingInsightsToolLink is not null)
+            {
+                <li>
+                    <a class="govuk-link" rel="noreferrer noopener" target="_blank"
+                       data-testid="details-financial-benchmarking-link"
+                       href="@Model.FinancialBenchmarkingInsightsToolLink">
+                        Financial benchmarking
+                    </a>
+                </li>
+            }
+            @if (Model.FindSchoolPerformanceLink is not null)
+            {
+                <li>
+                    <a class="govuk-link" rel="noreferrer noopener" target="_blank"
+                       data-testid="details-find-school-performance-link" href="@Model.FindSchoolPerformanceLink">
+                        Find school college and performance data
+                    </a>
+                </li>
+            }
+        </ul>
+
+        <hr class="govuk-section-break govuk-section-break--m">
     </div>
-  </div>
 </div>
