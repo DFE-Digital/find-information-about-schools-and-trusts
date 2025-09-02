@@ -5,6 +5,7 @@ using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Pupils;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.NavMenu;
 using Microsoft.FeatureManagement;
 using GovernanceAreaModel = DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance.GovernanceAreaModel;
@@ -29,6 +30,7 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
         [
             GetServiceNavLinkTo<OverviewAreaModel>(OverviewAreaModel.PageName, "/Schools/Overview/Details",
                 activePage),
+            GetServiceNavLinkTo<PupilsAreaModel>(PupilsAreaModel.PageName, "/Schools/Pupils/Population", activePage),
             GetServiceNavLinkTo<ContactsAreaModel>(ContactsAreaModel.PageName, contactLink, activePage),
             GetServiceNavLinkTo<GovernanceAreaModel>(GovernanceAreaModel.PageName, "/Schools/Governance/Current",
                 activePage),
@@ -52,6 +54,7 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
         return activePage switch
         {
             OverviewAreaModel => BuildLinksForOverviewPage(activePage),
+            PupilsAreaModel => BuildLinksForPupilsPage(activePage),
             ContactsAreaModel => await BuildLinksForContactsPageAsync(activePage),
             GovernanceAreaModel governanceAreaModel => BuildLinksForGovernancePage(governanceAreaModel),
             OfstedAreaModel => BuildLinksForOfstedPage(activePage),
@@ -110,6 +113,18 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
 
 
         return links.ToArray();
+    }
+
+    private static NavLink[] BuildLinksForPupilsPage(ISchoolAreaModel activePage)
+    {
+        return
+        [
+            GetSubNavLinkTo<PopulationModel>(PupilsAreaModel.PageName,
+                PopulationModel.SubPageName,
+                "/Schools/Pupils/Population",
+                activePage,
+                "pupils-population-subnav")
+        ];
     }
 
     private async Task<NavLink[]> BuildLinksForContactsPageAsync(ISchoolAreaModel activePage)

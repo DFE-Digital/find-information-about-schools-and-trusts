@@ -4,6 +4,7 @@ using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Pupils;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using Microsoft.FeatureManagement;
 using Sut = DfE.FindInformationAcademiesTrusts.Pages.Schools.SchoolNavMenu;
@@ -27,6 +28,8 @@ public abstract class SchoolNavMenuTestsBase
         typeof(SenModel),
         typeof(FederationModel),
         typeof(ReferenceNumbersModel),
+        // Pupils
+        typeof(PopulationModel),
         //Contacts
         typeof(InSchoolModel),
         // Governance
@@ -45,6 +48,8 @@ public abstract class SchoolNavMenuTestsBase
         typeof(DetailsModel),
         typeof(SenModel),
         typeof(ReferenceNumbersModel),
+        // Pupils
+        typeof(PopulationModel),
         //Contacts
         typeof(InDfeModel),
         typeof(InSchoolModel),
