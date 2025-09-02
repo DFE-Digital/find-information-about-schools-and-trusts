@@ -22,6 +22,7 @@ public class DataSourceRepository(
             Source.Prepare
             or Source.Complete
             or Source.ManageFreeSchoolProjects => await GetDataSourceFromMstr(source),
+            Source.CompareSchoolCollegePerformanceEngland => await GetMostRecentEdperfIngestion(source),
             _ => throw new ArgumentOutOfRangeException(nameof(source), source, null)
         };
     }
@@ -87,5 +88,18 @@ public class DataSourceRepository(
         }
 
         return new DataSource(source, lastEntry.Value, updateFrequency);
+    }
+    
+    private async Task<DataSource> GetMostRecentEdperfIngestion(Source source)
+    {
+        var mostRecentIngestion =
+            await academiesDbContext.EdperfFiats.MaxAsync(edperfFiat => edperfFiat.MetaCensusIngestionDatetime);
+
+        if (mostRecentIngestion is null)
+        {
+            logger.LogError("Unable to find when Compare School and College Performance in England dataset was last ingested");
+        }
+        
+        return new DataSource(source, mostRecentIngestion, UpdateFrequency.Annually);
     }
 }
