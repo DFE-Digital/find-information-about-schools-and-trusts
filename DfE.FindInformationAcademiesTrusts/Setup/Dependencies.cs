@@ -95,6 +95,7 @@ public static class Dependencies
         builder.Services.AddScoped<IAcademyService, AcademyService>();
         builder.Services.AddScoped<IFinancialDocumentService, FinancialDocumentService>();
         builder.Services.AddScoped<ISchoolService, SchoolService>();
+        builder.Services.AddScoped<ISchoolPupilService, SchoolPupilService>();
 
         builder.Services.AddScoped<IPipelineAcademiesExportService, PipelineAcademiesExportService>();
         builder.Services.AddScoped<IOfstedTrustDataExportService, OfstedTrustDataExportService>();
