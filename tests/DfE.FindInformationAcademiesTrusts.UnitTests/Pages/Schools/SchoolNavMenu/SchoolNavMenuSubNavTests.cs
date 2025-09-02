@@ -6,6 +6,7 @@ using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Pupils;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.SchoolNavMenu;
@@ -52,6 +53,7 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             nameof(FederationModel) => "Overview",
             nameof(ReferenceNumbersModel) => "Overview",
             nameof(ReligiousCharacteristicsModel) => "Overview",
+            nameof(PopulationModel) => "Pupils",
             nameof(CurrentModel) => "Governance",
             nameof(HistoricModel) => "Governance",
             nameof(SingleHeadlineGradesModel) => "Ofsted",
@@ -102,6 +104,7 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             nameof(SenModel) => "/Schools/Overview/Sen",
             nameof(FederationModel) => "/Schools/Overview/Federation",
             nameof(ReferenceNumbersModel) => "/Schools/Overview/ReferenceNumbers",
+            nameof(PopulationModel) => "/Schools/Pupils/Population",
             nameof(CurrentModel) => "/Schools/Governance/Current",
             nameof(HistoricModel) => "/Schools/Governance/Historic",
             nameof(SingleHeadlineGradesModel) => "/Schools/Ofsted/SingleHeadlineGrades",
