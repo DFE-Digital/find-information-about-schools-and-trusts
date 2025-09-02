@@ -15,8 +15,9 @@ describe("Testing the components of the Trust overview page", () => {
 
             overviewPage
                 .checkTrustDetailsSubHeaderPresent()
-                .checkTrustDetailsCardPresent()
-                .checkTrustDetailsCardItemsPresent();
+                .checkTrustDetailsPresent()
+                .checkTrustDetailsItemsPresent()
+                .checkInformationFromOtherServicesPresent();
 
             navigation
                 .checkPageNameBreadcrumbPresent("Overview");
@@ -75,7 +76,7 @@ describe("Testing the components of the Trust overview page", () => {
 
             overviewPage
                 .checkAllSubNavItemsPresent()
-                .checkTrustDetailsCardPresent();
+                .checkTrustDetailsPresent();
         });
 
         it('Should check that the trust summary navigation button takes me to the correct page', () => {
