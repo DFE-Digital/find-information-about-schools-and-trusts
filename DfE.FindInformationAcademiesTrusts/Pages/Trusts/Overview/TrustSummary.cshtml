@@ -2,65 +2,66 @@
 @model TrustSummaryModel
 
 @{
-  Layout = "_TrustLayout";
+    Layout = "_TrustLayout";
 }
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m" data-testid="subpage-header">
-      Trust summary
-    </h2>
-    <div class="govuk-summary-card" data-testid="trust-summary">
-      <div class="govuk-summary-card__title-wrapper">
-        <h3 class="govuk-summary-card__title" id="trust-information">Trust summary</h3>
-      </div>
-      <div class="govuk-summary-card__content">
-        <dl class="govuk-summary-list">
-          <!-- Total Academies -->
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key govuk-!-width-one-half">
-              Total academies
-            </dt>
-            <dd class="govuk-summary-list__value" data-testid="total-academies">
-              @Model.TrustOverview.TotalAcademies
-            </dd>
-          </div>
-          <!-- Academies in Each Local Authority -->
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key govuk-!-width-one-half">
-              Academies in each local authority
-            </dt>
-            <dd class="govuk-summary-list__value" data-testid="academies-in-each-authority">
-              @foreach (var (authority, total) in Model.AcademiesInEachLocalAuthority)
-              {
-                <p class="govuk-body govuk-!-margin-bottom-1">@total in @authority</p>
-              }
-            </dd>
-          </div>
-          <!-- Pupil Numbers -->
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key govuk-!-width-one-half">
-              Pupil numbers
-            </dt>
-            <dd class="govuk-summary-list__value" data-testid="number-of-pupils">
-              @($"{Model.TrustOverview.TotalPupilNumbers:n0}")
-            </dd>
-          </div>
-          <!-- Pupil Capacity and Percentage Full -->
-          <div class="govuk-summary-list__row">
-            <dt class="govuk-summary-list__key govuk-!-width-one-half">
-              Pupil capacity <br>(% full)
-            </dt>
-            <dd class="govuk-summary-list__value" data-testid="pupil-capacity">
-              @($"{Model.TrustOverview.TotalCapacity:n0}")
-              @if (Model.TrustOverview.PercentageFull is not null)
-              {
-                <br>
-                @($"({Model.TrustOverview.PercentageFull}%)")
-              }
-            </dd>
-          </div>
+
+<div class="govuk-grid-row" data-testid="trust-summary">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m" data-testid="subpage-header">
+            @Model.PageMetadata.SubPageName
+        </h2>
+
+        <dl class="govuk-summary-list govuk-!-margin-bottom-0">
+
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-two-thirds">
+                    Total academies
+                </dt>
+                <dd class="govuk-summary-list__value" data-testid="total-academies">
+                    @Model.TrustOverview.TotalAcademies
+                </dd>
+            </div>
+
+            <!-- Academies in Each Local Authority -->
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-two-thirds">
+                    Academies in each local authority
+                </dt>
+                <dd class="govuk-summary-list__value" data-testid="academies-in-each-authority">
+                    @foreach (var (authority, total) in Model.AcademiesInEachLocalAuthority)
+                    {
+                        <p class="govuk-body govuk-!-margin-bottom-1">@total in @authority</p>
+                    }
+                </dd>
+            </div>
+
+            <!-- Pupil Numbers -->
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-two-thirds">
+                    Pupil numbers
+                </dt>
+                <dd class="govuk-summary-list__value" data-testid="number-of-pupils">
+                    @($"{Model.TrustOverview.TotalPupilNumbers:n0}")
+                </dd>
+            </div>
+
+            <!-- Pupil Capacity and Percentage Full -->
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-two-thirds">
+                    Pupil capacity <br>(% full)
+                </dt>
+                <dd class="govuk-summary-list__value" data-testid="pupil-capacity">
+                    @($"{Model.TrustOverview.TotalCapacity:n0}")
+                    @if (Model.TrustOverview.PercentageFull is not null)
+                    {
+                        <br>
+                        @($"({Model.TrustOverview.PercentageFull}%)")
+                    }
+                </dd>
+            </div>
+
         </dl>
-      </div>
+
+        <hr class="govuk-section-break govuk-section-break--m">
     </div>
-  </div>
 </div>

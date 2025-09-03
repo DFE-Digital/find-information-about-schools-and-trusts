@@ -36,8 +36,8 @@ describe("Testing the components of the Trust overview page", () => {
             overviewPage
                 .checkTrustSummarySubHeaderPresent()
                 .checkOverviewHeaderPresent()
-                .checkTrustSummaryCardPresent()
-                .checkTrustSummaryCardItemsPresent();
+                .checkTrustSummaryDetailsPresent()
+                .checkTrustSummaryItemsPresent();
 
             navigation
                 .checkPageNameBreadcrumbPresent("Overview");
@@ -55,8 +55,8 @@ describe("Testing the components of the Trust overview page", () => {
 
             overviewPage
                 .checkReferenceNumbersSubHeaderPresent()
-                .checkReferenceNumbersCardPresent()
-                .checkReferenceNumbersCardItemsPresent();
+                .checkReferenceNumbersSectionPresent()
+                .checkReferenceNumbersItemsPresent();
 
             navigation
                 .checkPageNameBreadcrumbPresent("Overview");
@@ -90,7 +90,7 @@ describe("Testing the components of the Trust overview page", () => {
 
             overviewPage
                 .checkAllSubNavItemsPresent()
-                .checkTrustSummaryCardPresent();
+                .checkTrustSummaryDetailsPresent();
         });
 
         it('Should check that the reference numbers navigation button takes me to the correct page', () => {
@@ -104,7 +104,7 @@ describe("Testing the components of the Trust overview page", () => {
 
             overviewPage
                 .checkAllSubNavItemsPresent()
-                .checkReferenceNumbersCardPresent();
+                .checkReferenceNumbersSectionPresent();
         });
 
         it('Should check that the overview sub nav items are not present when I am not on the overview page', () => {
