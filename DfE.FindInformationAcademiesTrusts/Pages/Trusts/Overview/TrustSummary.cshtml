@@ -14,7 +14,7 @@
         <dl class="govuk-summary-list govuk-!-margin-bottom-0">
 
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key govuk-!-width-two-thirds">
+                <dt class="govuk-summary-list__key">
                     Total academies
                 </dt>
                 <dd class="govuk-summary-list__value" data-testid="total-academies">
@@ -24,7 +24,7 @@
 
             <!-- Academies in Each Local Authority -->
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key govuk-!-width-two-thirds">
+                <dt class="govuk-summary-list__key">
                     Academies in each local authority
                 </dt>
                 <dd class="govuk-summary-list__value" data-testid="academies-in-each-authority">
@@ -37,7 +37,7 @@
 
             <!-- Pupil Numbers -->
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key govuk-!-width-two-thirds">
+                <dt class="govuk-summary-list__key">
                     Pupil numbers
                 </dt>
                 <dd class="govuk-summary-list__value" data-testid="number-of-pupils">
@@ -47,14 +47,13 @@
 
             <!-- Pupil Capacity and Percentage Full -->
             <div class="govuk-summary-list__row">
-                <dt class="govuk-summary-list__key govuk-!-width-two-thirds">
-                    Pupil capacity <br>(% full)
+                <dt class="govuk-summary-list__key">
+                    Pupil capacity (% full)
                 </dt>
                 <dd class="govuk-summary-list__value" data-testid="pupil-capacity">
                     @($"{Model.TrustOverview.TotalCapacity:n0}")
                     @if (Model.TrustOverview.PercentageFull is not null)
                     {
-                        <br>
                         @($"({Model.TrustOverview.PercentageFull}%)")
                     }
                 </dd>
