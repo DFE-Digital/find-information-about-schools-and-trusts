@@ -53,8 +53,7 @@
     }
 
     .si-row-colours-table, .si-row-colours-table--school {
-
-        tr.govuk-table__row:nth-child(even) {
+        .govuk-table__row:nth-child(even) {
             background: #f6f6f6;
         }
     }
