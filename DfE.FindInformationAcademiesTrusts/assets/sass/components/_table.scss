@@ -63,8 +63,10 @@
     }
   }
 
-  .govuk-table__header,
-  .govuk-table__cell {
-    padding: 15px;
+  .trust-single-headline-grades {
+    .govuk-table__cell,
+    .govuk-table__header {
+      padding: 15px;
+    }
   }
 }
