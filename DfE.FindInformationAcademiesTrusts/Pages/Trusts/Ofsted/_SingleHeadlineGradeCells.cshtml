@@ -1,15 +1,15 @@
 @model SingleHeadlineGradeCellsModel
 
 @* Single headline grade *@
-<td class="govuk-table__cell govuk-body cell-ofsted-single-headline-grade"
+<td class="govuk-table__cell cell-ofsted-single-headline-grade"
   data-sort-value="@Model.SingleHeadlineGradeSort">
   <span class=@(Model.RatingShouldBeBold ? "govuk-!-font-weight-bold" : null)
     data-testid="@Model.DataTestIdPrefix-single-headline-grade">
     @Model.SingleHeadlineGradeText
   </span>
   @if (Model.HasInspection)
-  {
-    <strong class="govuk-tag @(Model.IsBeforeJoining ? "govuk-tag--orange" : "") govuk-!-text-align-centre govuk-!-width-three-quarters"
+  { 
+      <strong class="govuk-tag @(Model.IsBeforeJoining ? "govuk-tag--orange" : "") govuk-!-margin-top-1"
       data-testid="@Model.DataTestIdPrefix-before-after-joining">
       @Model.TagLabel
     </strong>
@@ -17,7 +17,7 @@
 </td>
 
 @* Inspection date *@
-<td class="govuk-table__cell govuk-body" data-sort-value="@Model.InspectionDateSort"
+<td class="govuk-table__cell" data-sort-value="@Model.InspectionDateSort"
   data-testid="@Model.DataTestIdPrefix-date-of-inspection">
   @Model.InspectionDateText
 </td>

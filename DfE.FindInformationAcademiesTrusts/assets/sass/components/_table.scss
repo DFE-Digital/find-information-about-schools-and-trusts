@@ -40,6 +40,10 @@
     }
   }
 
+  .table-col--13 {
+    width: 13%;
+  }
+
   .si-row-colours-table {
     .govuk-table__head {
       background: #ebf2f6;
@@ -57,5 +61,10 @@
     .govuk-table__row:nth-child(even) {
       background: #f6f6f6;
     }
+  }
+
+  .govuk-table__header,
+  .govuk-table__cell {
+    padding: 15px;
   }
 }
