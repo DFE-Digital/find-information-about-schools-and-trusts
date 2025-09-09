@@ -268,6 +268,7 @@ class OfstedPage {
         this.elements.currentRatings.personalDevelopmentHeader().should('be.visible');
         this.elements.currentRatings.leadershipAndManagementHeader().should('be.visible');
         this.elements.currentRatings.earlyYearsProvisionHeader().should('be.visible');
+        this.elements.currentRatings.sixthFormProvisionHeader().scrollIntoView();
         this.elements.currentRatings.sixthFormProvisionHeader().should('be.visible');
         this.elements.currentRatings.beforeOrAfterJoiningHeader().scrollIntoView();
         this.elements.currentRatings.beforeOrAfterJoiningHeader().should('be.visible');
@@ -365,6 +366,7 @@ class OfstedPage {
         this.elements.previousRatings.personalDevelopmentHeader().should('be.visible');
         this.elements.previousRatings.leadershipAndManagementHeader().should('be.visible');
         this.elements.previousRatings.earlyYearsProvisionHeader().should('be.visible');
+        this.elements.previousRatings.sixthFormProvisionHeader().scrollIntoView();
         this.elements.previousRatings.sixthFormProvisionHeader().should('be.visible');
         this.elements.previousRatings.beforeOrAfterJoiningHeader().scrollIntoView();
         this.elements.previousRatings.beforeOrAfterJoiningHeader().should('be.visible');

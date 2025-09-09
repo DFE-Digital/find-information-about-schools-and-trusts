@@ -1,72 +1,66 @@
 .app-table-container {
-  overflow: auto;
+    overflow: auto;
 
-  [aria-sort] button {
-    // increase padding slightly to add space between the column header and the sort icon
-    // as we have removed the negative position below
-    padding-right: 1rem;
-    // Fix sort icons provided by MOJ design system overlapping slightly on Chrome and Edge
-    &::before {
-      top: 11px;
+    [aria-sort] button {
+        // increase padding slightly to add space between the column header and the sort icon
+        // as we have removed the negative position below
+        padding-right: 1rem;
+        // Fix sort icons provided by MOJ design system overlapping slightly on Chrome and Edge
+        &::before {
+            top: 11px;
+        }
+        // Fix sort icons causing content to always overflow container
+        // this causes horizontal scroll to always visible when using overflow:auto
+        &::before,
+        &::after {
+            right: 0;
+        }
     }
-    // Fix sort icons causing content to always overflow container
-    // this causes horizontal scroll to always visible when using overflow:auto
-    &::before,
-    &::after {
-      right: 0;
+
+    .column-header-date {
+        width: 13%;
     }
-  }
 
-  .column-header-ofsted-rating {
-    width: 10%;
-  }
-
-  .column-header-date {
-    width: 13%;
-  }
-
-  .column-header-ofsted-single-headline-grade {
-    width: 16%;
-  }
-
-  .column-header-ofsted-concern {
-    width: 18%;
-  }
-
-  .cell-ofsted-single-headline-grade {
-    .govuk-tag {
-      margin-top: 10px;
-      margin-bottom: 7px;
+    .column-header-ofsted-school-name {
+        width: 17%;
     }
-  }
 
-  .table-col--13 {
-    width: 13%;
-  }
-
-  .si-row-colours-table {
-    .govuk-table__head {
-      background: #ebf2f6;
+    .column-header-ofsted-concern {
+        width: 18%;
     }
-  }
 
-  .si-row-colours-table--school {
-    .govuk-table__head {
-      background-color: #edeaf4;
+    .cell-ofsted-single-headline-grade {
+        .govuk-tag {
+            margin-top: 10px;
+            margin-bottom: 7px;
+        }
     }
-  }
 
-  .si-row-colours-table,
-  .si-row-colours-table--school {
-    .govuk-table__row:nth-child(even) {
-      background: #f6f6f6;
+    .table-col--13 {
+        width: 13%;
     }
-  }
 
-  .trust-single-headline-grades {
+    .si-row-colours-table {
+        .govuk-table__head {
+            background: #ebf2f6;
+        }
+    }
+
+    .si-row-colours-table--school {
+        .govuk-table__head {
+            background-color: #edeaf4;
+        }
+    }
+
+    .si-row-colours-table,
+    .si-row-colours-table--school {
+        .govuk-table__row:nth-child(even) {
+            background: #f6f6f6;
+        }
+    }
+
     .govuk-table__cell,
     .govuk-table__header {
-      padding: 15px;
+        padding: 15px;
     }
-  }
 }
