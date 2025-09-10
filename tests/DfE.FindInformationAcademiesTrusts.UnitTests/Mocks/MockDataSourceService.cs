@@ -44,6 +44,7 @@ public static class MockDataSourceService
             Source.Mis => UpdateFrequency.Monthly,
             Source.MisFurtherEducation => UpdateFrequency.Monthly,
             Source.ExploreEducationStatistics => UpdateFrequency.Annually,
+            Source.CompareSchoolCollegePerformanceEngland => UpdateFrequency.Annually,
             _ => throw new ArgumentOutOfRangeException(nameof(source), source, null)
         });
     }
@@ -58,4 +59,7 @@ public static class MockDataSourceService
 
     public static DataSourceServiceModel ManageFreeSchool { get; } =
         GetDummyDataSource(Source.ManageFreeSchoolProjects);
+    
+    public static DataSourceServiceModel CompareSchoolCollegePerformanceEngland { get; } =
+        GetDummyDataSource(Source.CompareSchoolCollegePerformanceEngland);
 }
