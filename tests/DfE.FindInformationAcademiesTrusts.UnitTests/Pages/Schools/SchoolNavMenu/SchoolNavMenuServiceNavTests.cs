@@ -4,6 +4,7 @@ using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Pupils;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.SchoolNavMenu;
 
@@ -72,6 +73,12 @@ public class SchoolNavMenuServiceNavTests : SchoolNavMenuTestsBase
             },
             l =>
             {
+                l.LinkDisplayText.Should().Be("Pupils");
+                l.AspPage.Should().Be("/Schools/Pupils/Population");
+                l.TestId.Should().Be("pupils-nav");
+            },
+            l =>
+            {
                 l.LinkDisplayText.Should().Be("Contacts");
                 l.AspPage.Should().Be("/Schools/Contacts/InSchool");
                 l.TestId.Should().Be("contacts-nav");
@@ -106,6 +113,12 @@ public class SchoolNavMenuServiceNavTests : SchoolNavMenuTestsBase
                 l.LinkDisplayText.Should().Be("Overview");
                 l.AspPage.Should().Be("/Schools/Overview/Details");
                 l.TestId.Should().Be("overview-nav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Pupils");
+                l.AspPage.Should().Be("/Schools/Pupils/Population");
+                l.TestId.Should().Be("pupils-nav");
             },
             l =>
             {
@@ -172,6 +185,7 @@ public class SchoolNavMenuServiceNavTests : SchoolNavMenuTestsBase
             nameof(SenModel) => "/Schools/Overview/Details",
             nameof(FederationModel) => "/Schools/Overview/Details",
             nameof(ReferenceNumbersModel) => "/Schools/Overview/Details",
+            nameof(PopulationModel) => "/Schools/Pupils/Population",
             nameof(CurrentModel) => "/Schools/Governance/Current",
             nameof(HistoricModel) => "/Schools/Governance/Current",
             nameof(SingleHeadlineGradesModel) => "/Schools/Ofsted/SingleHeadlineGrades",

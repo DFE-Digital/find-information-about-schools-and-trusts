@@ -1,0 +1,91 @@
+@page "/schools/pupils/population"
+@model PopulationModel
+
+@{
+  Layout = "_SchoolLayout";
+}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h3 class="govuk-heading-m" data-testid="subpage-header">Pupil population</h3>
+    <p class="govuk-body" data-testid="spring-census-text">The following data is taken from the spring census of each
+      year, where available.</p>
+
+    <table class="govuk-table" data-testid="population-census-table">
+
+      <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">
+          <span class="govuk-visually-hidden">Data type</span>
+        </th>
+        @foreach (var year in Model.PopulationData.Select(vm => vm.Year))
+        {
+          <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none"
+              data-testid="@year-year-header">
+            @year
+          </th>
+        }
+      </tr>
+      </thead>
+
+      <tbody class="govuk-table__body">
+      <tr class="govuk-table__row" data-testid="number-of-pupils-on-role-row">
+        <td class="govuk-table__cell">Number of pupils on role (NOR)</td>
+        @foreach (var population in Model.PopulationData)
+        {
+          <td class="govuk-table__cell govuk-table__cell--numeric"
+              data-testid="@population.Year-number-of-pupils-on-role"
+              data-sort-value="@population.NumberOfPupilsOnRoleSort">
+            @population.NumberOfPupilsOnRoleDisplay
+          </td>
+        }
+      </tr>
+
+      <tr class="govuk-table__row" data-testid="eligible-pupils-with-ehc-plan-row">
+        <td class="govuk-table__cell">Eligible pupils with EHC plan</td>
+        @foreach (var population in Model.PopulationData)
+        {
+          <td class="govuk-table__cell govuk-table__cell--numeric"
+              data-testid="@population.Year-eligible-pupils-with-ehc-plan"
+              data-sort-value="@population.EligiblePupilsWithEhcPlanSort">
+            @population.EligiblePupilsWithEhcPlanDisplay
+          </td>
+        }
+      </tr>
+      <tr class="govuk-table__row" data-testid="eligible-pupils-with-sen-support-row">
+        <td class="govuk-table__cell">Eligible pupils with SEN support</td>
+        @foreach (var population in Model.PopulationData)
+        {
+          <td class="govuk-table__cell govuk-table__cell--numeric"
+              data-testid="@population.Year-eligible-pupils-with-sen-support"
+              data-sort-value="@population.EligiblePupilsWithSenSupportSort">
+            @population.EligiblePupilsWithSenSupportDisplay
+          </td>
+        }
+      </tr>
+      <tr class="govuk-table__row" data-testid="english-as-an-additional-language-row">
+        <td class="govuk-table__cell">English as an additional language</td>
+        @foreach (var population in Model.PopulationData)
+        {
+          <td class="govuk-table__cell govuk-table__cell--numeric"
+              data-testid="@population.Year-english-as-an-additional-language"
+              data-sort-value="@population.EnglishAsAnAdditionalLanguageSort">
+            @population.EnglishAsAnAdditionalLanguageDisplay
+          </td>
+        }
+      </tr>
+      <tr class="govuk-table__row" data-testid="eligible-for-free-school-meals-row">
+        <td class="govuk-table__cell">Eligible for free school meals</td>
+        @foreach (var population in Model.PopulationData)
+        {
+          <td class="govuk-table__cell govuk-table__cell--numeric"
+              data-testid="@population.Year-eligible-for-free-school-meals"
+              data-sort-value="@population.EligibleForFreeSchoolMealsSort">
+            @population.EligibleForFreeSchoolMealsDisplay
+          </td>
+        }
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
