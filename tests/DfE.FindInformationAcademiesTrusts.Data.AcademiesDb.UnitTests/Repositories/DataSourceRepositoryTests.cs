@@ -1,4 +1,5 @@
-﻿using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
+﻿using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Edperf_Mstr;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.DataSource;
 using Microsoft.Extensions.Logging;
@@ -37,6 +38,7 @@ public class DataSourceRepositoryTests
     [InlineData(Source.Prepare, UpdateFrequency.Daily)]
     [InlineData(Source.Complete, UpdateFrequency.Daily)]
     [InlineData(Source.ManageFreeSchoolProjects, UpdateFrequency.Daily)]
+    [InlineData(Source.CompareSchoolCollegePerformanceEngland, UpdateFrequency.Annually)]
     public async Task GetAsync_WhenEntryExists_ShouldReturnLatestSuccessfullyFinishedDataSourceUpdate(Source source,
         UpdateFrequency updateFrequency)
     {
@@ -67,6 +69,7 @@ public class DataSourceRepositoryTests
     [InlineData(Source.Complete, "Unable to find last data refresh for MSTR source 'Complete'", UpdateFrequency.Daily)]
     [InlineData(Source.ManageFreeSchoolProjects,
         "Unable to find last data refresh for MSTR source 'ManageFreeSchoolProjects'", UpdateFrequency.Daily)]
+    [InlineData(Source.CompareSchoolCollegePerformanceEngland, "Unable to find when Compare School and College Performance in England dataset was last ingested", UpdateFrequency.Annually)]
     public async Task GetAsync_WhenNoEntryForPipelineExists_ShouldReturnDataSource_WithNullDate_AndLogError(
         Source source, string expectedErrorMessage, UpdateFrequency updateFrequency)
     {
@@ -106,6 +109,12 @@ public class DataSourceRepositoryTests
         _mockAcademiesDbContext.AddMstrAcademyTransfer("", "", true, false, lastDataRefresh: updateTime);
         _mockAcademiesDbContext.AddMstrAcademyTransfer("", "", false, true, lastDataRefresh: updateTime);
         _mockAcademiesDbContext.AddMstrFreeSchoolProject("", "", lastDataRefresh: updateTime);
+        _mockAcademiesDbContext.EdperfFiats.Add(new EdperfFiat
+        {
+            MetaCensusIngestionDatetime = updateTime,
+            Urn = 100000,
+            DownloadYear = "2025-2026"
+        });
     }
 
     private void AddSuccessfulDataSourceUpdatesExceptFor(Source source)
@@ -124,5 +133,12 @@ public class DataSourceRepositoryTests
             _mockAcademiesDbContext.AddMstrAcademyTransfer("", "", false, true, lastDataRefresh: lastUpdateTime);
         if (source is not Source.ManageFreeSchoolProjects)
             _mockAcademiesDbContext.AddMstrFreeSchoolProject("", "", lastDataRefresh: lastUpdateTime);
+        if (source is not Source.CompareSchoolCollegePerformanceEngland)
+            _mockAcademiesDbContext.EdperfFiats.Add(new EdperfFiat
+            {
+                MetaCensusIngestionDatetime = lastUpdateTime,
+                Urn = 100000,
+                DownloadYear = "2025-2026"
+            });
     }
 }

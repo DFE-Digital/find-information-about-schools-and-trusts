@@ -1,4 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Edperf_Mstr;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Mis_Mstr;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Mstr;
@@ -47,6 +48,9 @@ public class MockAcademiesDbContext
     //tad
     public MockDbSet<TadHeadTeacherContact> TadHeadTeacherContacts { get; } = new();
     public MockDbSet<TadTrustGovernance> TadTrustGovernances { get; } = new();
+    
+    // Pupil Census
+    public MockDbSet<EdperfFiat> EdperfFiats { get; } = new();
 
     public MockAcademiesDbContext()
     {
@@ -72,6 +76,8 @@ public class MockAcademiesDbContext
         //tad
         Object.TadHeadTeacherContacts.Returns(TadHeadTeacherContacts.Object);
         Object.TadTrustGovernances.Returns(TadTrustGovernances.Object);
+        // Pupil Census
+        Object.EdperfFiats.Returns(EdperfFiats.Object);
 
         //Set up some unused data to ensure we are actually retrieving the right data in our tests
         var otherTrust = AddGiasGroupForTrust(name: "Some other trust");
@@ -95,6 +101,8 @@ public class MockAcademiesDbContext
                 { Gid = $"{i}", Uid = otherTrust.GroupUid!, Forename1 = $"Governor {i}" });
             TadTrustGovernances.Add(new TadTrustGovernance { Gid = $"{i}", Email = $"governor{i}@othertrust.com" });
             AddMstrFreeSchoolProject(otherTrust.GroupId!);
+            
+            EdperfFiats.Add(new EdperfFiat{ Urn = i, DownloadYear = "1999-2000" });
         }
     }
 

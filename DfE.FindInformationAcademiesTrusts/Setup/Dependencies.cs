@@ -13,6 +13,7 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.DataSource;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PipelineAcademy;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Search;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
@@ -87,12 +88,14 @@ public static class Dependencies
         builder.Services.AddScoped<IPipelineEstablishmentRepository, PipelineEstablishmentRepository>();
         builder.Services.AddScoped<ITrustDocumentRepository, TrustDocumentRepository>();
         builder.Services.AddScoped<ISchoolRepository, SchoolRepository>();
+        builder.Services.AddScoped<IPupilCensusRepository, PupilCensusRepository>();
 
         builder.Services.AddScoped<IDataSourceService, DataSourceService>();
         builder.Services.AddScoped<ITrustService, TrustService>();
         builder.Services.AddScoped<IAcademyService, AcademyService>();
         builder.Services.AddScoped<IFinancialDocumentService, FinancialDocumentService>();
         builder.Services.AddScoped<ISchoolService, SchoolService>();
+        builder.Services.AddScoped<ISchoolPupilService, SchoolPupilService>();
 
         builder.Services.AddScoped<IPipelineAcademiesExportService, PipelineAcademiesExportService>();
         builder.Services.AddScoped<IOfstedTrustDataExportService, OfstedTrustDataExportService>();

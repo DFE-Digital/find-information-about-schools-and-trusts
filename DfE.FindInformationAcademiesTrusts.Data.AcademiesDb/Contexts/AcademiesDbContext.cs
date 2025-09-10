@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Edperf_Mstr;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Mis_Mstr;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Mstr;
@@ -32,6 +33,7 @@ public interface IAcademiesDbContext
 
     DbSet<TadHeadTeacherContact> TadHeadTeacherContacts { get; }
     DbSet<TadTrustGovernance> TadTrustGovernances { get; }
+    DbSet<EdperfFiat> EdperfFiats { get; }
 }
 
 [ExcludeFromCodeCoverage]
@@ -68,5 +70,7 @@ public partial class AcademiesDbContext : DbContext, IAcademiesDbContext
 
         OnModelCreatingTadHeadTeacherContacts(modelBuilder);
         OnModelCreatingTadTrustGovernances(modelBuilder);
+        
+        OnModelCreatingEdperfFiats(modelBuilder);
     }
 }
