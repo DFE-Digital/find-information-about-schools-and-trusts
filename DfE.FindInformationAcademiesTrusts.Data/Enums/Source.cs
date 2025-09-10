@@ -11,5 +11,6 @@ public enum Source
     FiatDb,
     Prepare,
     Complete,
-    ManageFreeSchoolProjects
+    ManageFreeSchoolProjects,
+    CompareSchoolCollegePerformanceEngland
 }
