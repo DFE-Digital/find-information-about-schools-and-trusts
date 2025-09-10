@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+## [Release-50][release-50] (production-2025-09-10.6449)
+
+### Changed
+
+- Added governance turnover to trust pages.
+- Added additional information to the individual schools' ofsted downloads.
+
 ## [Release-49][release-49] (production-2025-09-04.6416)
 
 ### Changed
@@ -461,7 +468,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Updated text on "404 - Not Found" page to adhere to DfE design pattern and added the not found url to the support email template.
 
 [unreleased]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-09-04.6416...HEAD
+  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-09-10.6449...HEAD
 [release-1]:
   https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-07-18.2517
 [release-2]:
@@ -560,3 +567,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-08-28.6382
 [release-49]:
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-09-04.6416
+[release-50]:
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-09-10.6449
