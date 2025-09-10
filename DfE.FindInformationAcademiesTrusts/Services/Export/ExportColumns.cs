@@ -46,6 +46,15 @@
             InspectionType = 1,
             DateOfInspection = 2,
             Grade = 3,
+            QualityOfEducation = 4,
+            BehaviourAndAttitudes = 5,
+            PersonalDevelopment = 6,
+            LeadershipAndManagement = 7,
+            EarlyYearsProvision = 8,
+            SixthFormProvision = 9,
+            EffectiveSafeguarding = 10,
+            CategoryOfConcern = 11,
+            BeforeOrAfterJoiningTrust = 12,
         }
 
         public enum AcademyColumns
