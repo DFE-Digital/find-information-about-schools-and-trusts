@@ -7,6 +7,8 @@ public interface ISchoolPupilService
 {
     public Task<AnnualStatistics<SchoolPopulation>> GetSchoolPopulationStatisticsAsync(int urn, CensusYear from,
         CensusYear to);
+
+    public Task<AnnualStatistics<Attendance>> GetAttendanceStatisticsAsync(int urn, CensusYear from, CensusYear to);
 }
 
 public class SchoolPupilService(
@@ -14,27 +16,52 @@ public class SchoolPupilService(
     IPupilCensusRepository pupilCensusRepository
 ) : ISchoolPupilService
 {
-    public async Task<AnnualStatistics<SchoolPopulation>> GetSchoolPopulationStatisticsAsync(int urn, CensusYear from, CensusYear to)
+    public async Task<AnnualStatistics<SchoolPopulation>> GetSchoolPopulationStatisticsAsync(int urn, CensusYear from,
+        CensusYear to)
+    {
+        var allAvailableStatistics = await pupilCensusRepository.GetSchoolPopulationStatisticsAsync(urn);
+        return GetCompleteStatisticsBetweenYears(
+            Census.Spring,
+            from,
+            to,
+            allAvailableStatistics,
+            SchoolPopulation.Unknown,
+            SchoolPopulation.NotYetSubmitted
+        );
+    }
+
+    public async Task<AnnualStatistics<Attendance>> GetAttendanceStatisticsAsync(int urn, CensusYear from, CensusYear to)
+    {
+        var allAvailableStatistics = await pupilCensusRepository.GetAttendanceStatisticsAsync(urn);
+        return GetCompleteStatisticsBetweenYears(
+            Census.Autumn,
+            from,
+            to,
+            allAvailableStatistics,
+            Attendance.Unknown,
+            Attendance.NotYetSubmitted
+        );
+    }
+
+    private AnnualStatistics<T> GetCompleteStatisticsBetweenYears<T>(Census census, CensusYear from, CensusYear to,
+        AnnualStatistics<T> allAvailableStatistics, T unknownValue, T notYetSubmittedValue)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(to.Value, from.Value);
-        Console.WriteLine(dateTimeProvider);
-        
-        var allAvailableStatistics = await pupilCensusRepository.GetSchoolPopulationStatisticsAsync(urn);
-        var result = new AnnualStatistics<SchoolPopulation>();
 
+        var result = new AnnualStatistics<T>();
         foreach (var year in Enumerable.Range(from.Value, to.Value - from.Value + 1))
         {
-            if (year > CensusYear.Current(dateTimeProvider, Census.Spring).Value)
+            if (year > CensusYear.Current(dateTimeProvider, census).Value)
             {
-                result.Add(year, SchoolPopulation.NotYetSubmitted);
+                result.Add(year, notYetSubmittedValue);
             }
             else
             {
-                var schoolPopulation = allAvailableStatistics.TryGetValue(year, out var value)
+                var statistic = allAvailableStatistics.TryGetValue(year, out var value)
                     ? value
-                    : SchoolPopulation.Unknown;
-        
-                result.Add(year, schoolPopulation);
+                    : unknownValue;
+
+                result.Add(year, statistic);
             }
         }
 
