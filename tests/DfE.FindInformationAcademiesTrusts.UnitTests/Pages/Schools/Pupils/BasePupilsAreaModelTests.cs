@@ -24,6 +24,11 @@ public abstract class BasePupilsAreaModelTests<T> : BaseSchoolPageTests<T> where
         new Statistic<decimal>.WithValue(13.5m)
     );
 
+    protected readonly Attendance DummyAttendance = new(
+        new Statistic<decimal>.WithValue(10.0m),
+        new Statistic<decimal>.WithValue(8.5m)
+    );
+
     protected BasePupilsAreaModelTests()
     {
         MockDateTimeProvider.Today.Returns(new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc));
@@ -38,6 +43,21 @@ public abstract class BasePupilsAreaModelTests<T> : BaseSchoolPageTests<T> where
                 foreach (var year in Enumerable.Range(from.Value, to.Value - from.Value + 1))
                 {
                     result[year] = DummySchoolPopulation;
+                }
+
+                return result;
+            });
+        MockSchoolPupilService
+            .GetAttendanceStatisticsAsync(Arg.Any<int>(), Arg.Any<CensusYear>(), Arg.Any<CensusYear>())
+            .Returns(call =>
+            {
+                var from = call.ArgAt<CensusYear>(1);
+                var to = call.ArgAt<CensusYear>(2);
+
+                var result = new AnnualStatistics<Attendance>();
+                foreach (var year in Enumerable.Range(from.Value, to.Value - from.Value + 1))
+                {
+                    result[year] = DummyAttendance;
                 }
 
                 return result;
@@ -62,6 +82,9 @@ public abstract class BasePupilsAreaModelTests<T> : BaseSchoolPageTests<T> where
         Sut.DataSourcesPerPage.Should().BeEquivalentTo([
             new DataSourcePageListEntry("Population", [
                 new DataSourceListEntry(Mocks.MockDataSourceService.CompareSchoolCollegePerformanceEnglandPopulation)
+            ]),
+            new DataSourcePageListEntry("Attendance", [
+                new DataSourceListEntry(Mocks.MockDataSourceService.CompareSchoolCollegePerformanceEnglandAttendance)
             ])
         ]);
     }
