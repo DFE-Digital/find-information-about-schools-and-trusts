@@ -30,6 +30,7 @@ public abstract class SchoolNavMenuTestsBase
         typeof(ReferenceNumbersModel),
         // Pupils
         typeof(PopulationModel),
+        typeof(AttendanceModel),
         //Contacts
         typeof(InSchoolModel),
         // Governance
@@ -50,6 +51,7 @@ public abstract class SchoolNavMenuTestsBase
         typeof(ReferenceNumbersModel),
         // Pupils
         typeof(PopulationModel),
+        typeof(AttendanceModel),
         //Contacts
         typeof(InDfeModel),
         typeof(InSchoolModel),

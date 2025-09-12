@@ -123,7 +123,12 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
                 PopulationModel.SubPageName,
                 "/Schools/Pupils/Population",
                 activePage,
-                "pupils-population-subnav")
+                "pupils-population-subnav"),
+            GetSubNavLinkTo<AttendanceModel>(PupilsAreaModel.PageName,
+                AttendanceModel.SubPageName,
+                "/Schools/Pupils/Attendance",
+                activePage,
+                "pupils-attendance-subnav"),
         ];
     }
 
