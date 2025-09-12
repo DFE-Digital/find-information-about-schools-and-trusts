@@ -37,7 +37,9 @@ public class DataSourceService(
                 or Source.Prepare
                 or Source.Complete
                 or Source.ManageFreeSchoolProjects
-                or Source.CompareSchoolCollegePerformanceEngland => await dataSourceRepository.GetAsync(source),
+                or Source.CompareSchoolCollegePerformanceEnglandPopulation
+                or Source.CompareSchoolCollegePerformanceEnglandAttendance =>
+                    await dataSourceRepository.GetAsync(source),
             Source.ExploreEducationStatistics => freeSchoolMealsAverageProvider.GetFreeSchoolMealsUpdated(),
             _ => throw new ArgumentOutOfRangeException(nameof(source), source, null)
         };

@@ -57,11 +57,11 @@ public abstract class BasePupilsAreaModelTests<T> : BaseSchoolPageTests<T> where
     {
         await Task.CompletedTask;
         _ = await Sut.OnGetAsync();
-        await MockDataSourceService.Received(1).GetAsync(Source.CompareSchoolCollegePerformanceEngland);
+        await MockDataSourceService.Received(1).GetAsync(Source.CompareSchoolCollegePerformanceEnglandPopulation);
 
         Sut.DataSourcesPerPage.Should().BeEquivalentTo([
             new DataSourcePageListEntry("Population", [
-                new DataSourceListEntry(Mocks.MockDataSourceService.CompareSchoolCollegePerformanceEngland)
+                new DataSourceListEntry(Mocks.MockDataSourceService.CompareSchoolCollegePerformanceEnglandPopulation)
             ])
         ]);
     }

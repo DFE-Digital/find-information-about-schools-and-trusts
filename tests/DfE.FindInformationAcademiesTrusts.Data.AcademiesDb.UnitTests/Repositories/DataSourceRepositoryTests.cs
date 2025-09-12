@@ -38,7 +38,8 @@ public class DataSourceRepositoryTests
     [InlineData(Source.Prepare, UpdateFrequency.Daily)]
     [InlineData(Source.Complete, UpdateFrequency.Daily)]
     [InlineData(Source.ManageFreeSchoolProjects, UpdateFrequency.Daily)]
-    [InlineData(Source.CompareSchoolCollegePerformanceEngland, UpdateFrequency.Annually)]
+    [InlineData(Source.CompareSchoolCollegePerformanceEnglandPopulation, UpdateFrequency.Annually)]
+    [InlineData(Source.CompareSchoolCollegePerformanceEnglandAttendance, UpdateFrequency.Annually)]
     public async Task GetAsync_WhenEntryExists_ShouldReturnLatestSuccessfullyFinishedDataSourceUpdate(Source source,
         UpdateFrequency updateFrequency)
     {
@@ -69,7 +70,8 @@ public class DataSourceRepositoryTests
     [InlineData(Source.Complete, "Unable to find last data refresh for MSTR source 'Complete'", UpdateFrequency.Daily)]
     [InlineData(Source.ManageFreeSchoolProjects,
         "Unable to find last data refresh for MSTR source 'ManageFreeSchoolProjects'", UpdateFrequency.Daily)]
-    [InlineData(Source.CompareSchoolCollegePerformanceEngland, "Unable to find when Compare School and College Performance in England dataset was last ingested", UpdateFrequency.Annually)]
+    [InlineData(Source.CompareSchoolCollegePerformanceEnglandPopulation, "Unable to find when Compare School and College Performance in England dataset was last ingested", UpdateFrequency.Annually)]
+    [InlineData(Source.CompareSchoolCollegePerformanceEnglandAttendance, "Unable to find when Compare School and College Performance in England dataset was last ingested", UpdateFrequency.Annually)]
     public async Task GetAsync_WhenNoEntryForPipelineExists_ShouldReturnDataSource_WithNullDate_AndLogError(
         Source source, string expectedErrorMessage, UpdateFrequency updateFrequency)
     {
@@ -112,6 +114,7 @@ public class DataSourceRepositoryTests
         _mockAcademiesDbContext.EdperfFiats.Add(new EdperfFiat
         {
             MetaCensusIngestionDatetime = updateTime,
+            MetaAbsenceIngestionDatetime = updateTime,
             Urn = 100000,
             DownloadYear = "2025-2026"
         });
@@ -133,10 +136,17 @@ public class DataSourceRepositoryTests
             _mockAcademiesDbContext.AddMstrAcademyTransfer("", "", false, true, lastDataRefresh: lastUpdateTime);
         if (source is not Source.ManageFreeSchoolProjects)
             _mockAcademiesDbContext.AddMstrFreeSchoolProject("", "", lastDataRefresh: lastUpdateTime);
-        if (source is not Source.CompareSchoolCollegePerformanceEngland)
+        if (source is not Source.CompareSchoolCollegePerformanceEnglandPopulation)
             _mockAcademiesDbContext.EdperfFiats.Add(new EdperfFiat
             {
                 MetaCensusIngestionDatetime = lastUpdateTime,
+                Urn = 100000,
+                DownloadYear = "2025-2026"
+            });
+        if (source is not Source.CompareSchoolCollegePerformanceEnglandAttendance)
+            _mockAcademiesDbContext.EdperfFiats.Add(new EdperfFiat
+            {
+                MetaAbsenceIngestionDatetime = lastUpdateTime,
                 Urn = 100000,
                 DownloadYear = "2025-2026"
             });
