@@ -1,0 +1,58 @@
+@page "/schools/pupils/attendance"
+@using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus
+@model AttendanceModel
+
+@{
+  Layout = "_SchoolLayout";
+}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h3 class="govuk-heading-m" data-testid="subpage-header">Pupil attendance</h3>
+    <partial name="_CensusText" model="Census.Autumn"/>
+
+    <table class="govuk-table" data-testid="attendance-census-table">
+
+      <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">
+          <span class="govuk-visually-hidden">Data type</span>
+        </th>
+        @foreach (var year in Model.AttendanceData.Select(vm => vm.Year))
+        {
+          <th scope="col" class="govuk-table__header govuk-table__header--numeric" aria-sort="none"
+              data-testid="@year-year-header">
+            @year
+          </th>
+        }
+      </tr>
+      </thead>
+
+      <tbody class="govuk-table__body">
+      <tr class="govuk-table__row" data-testid="number-of-pupils-on-role-row">
+        <td class="govuk-table__cell">Percentage of overall absence</td>
+        @foreach (var attendance in Model.AttendanceData)
+        {
+          <td class="govuk-table__cell govuk-table__cell--numeric"
+              data-testid="@attendance.Year-number-of-pupils-on-role"
+              data-sort-value="@attendance.PercentageOfOverallAbsenceSort">
+            @attendance.PercentageOfOverallAbsenceDisplay
+          </td>
+        }
+      </tr>
+
+      <tr class="govuk-table__row" data-testid="eligible-pupils-with-ehc-plan-row">
+        <td class="govuk-table__cell">Percentage of enrolments who are persistent absentees</td>
+        @foreach (var attendance in Model.AttendanceData)
+        {
+          <td class="govuk-table__cell govuk-table__cell--numeric"
+              data-testid="@attendance.Year-eligible-pupils-with-ehc-plan"
+              data-sort-value="@attendance.PercentageOfEnrolmentsWhoArePersistentAbsenteesSort">
+            @attendance.PercentageOfEnrolmentsWhoArePersistentAbsenteesDisplay
+          </td>
+        }
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
