@@ -24,7 +24,7 @@ public class SchoolPupilService(
 
         foreach (var year in Enumerable.Range(from.Value, to.Value - from.Value + 1))
         {
-            if (year > CensusYear.Current(dateTimeProvider).Value)
+            if (year > CensusYear.Current(dateTimeProvider, Census.Spring).Value)
             {
                 result.Add(year, SchoolPopulation.NotYetSubmitted);
             }
