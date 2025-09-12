@@ -12,5 +12,6 @@ public enum Source
     Prepare,
     Complete,
     ManageFreeSchoolProjects,
-    CompareSchoolCollegePerformanceEngland
+    CompareSchoolCollegePerformanceEnglandPopulation,
+    CompareSchoolCollegePerformanceEnglandAttendance,
 }

@@ -23,7 +23,7 @@ public class PupilsAreaModel(
         var pageResult = await base.OnGetAsync();
         if (pageResult is NotFoundResult) return pageResult;
 
-        var compareDataSource = await dataSourceService.GetAsync(Source.CompareSchoolCollegePerformanceEngland);
+        var compareDataSource = await dataSourceService.GetAsync(Source.CompareSchoolCollegePerformanceEnglandPopulation);
 
         DataSourcesPerPage.AddRange([
             new DataSourcePageListEntry(PopulationModel.SubPageName, [new DataSourceListEntry(compareDataSource)]),
