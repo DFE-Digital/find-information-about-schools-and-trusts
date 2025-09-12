@@ -60,7 +60,7 @@ jobs:
     needs: [ set-env ]
     steps:
       - name: Validate Packages
-        uses: DFE-Digital/rsd-github-actions/.github/actions/validate-packages@9a7a6a7c9aa5914f76a1f34aee8dd2dcc00702bc # v1.1.2
+        uses: DFE-Digital/rsd-github-actions/.github/actions/validate-packages@5d9289aaafc5d0a591dab9d93a93be27381fc5e5 # v1.1.3
         with:
           environment: ${{ needs.set-env.outputs.environment }}
 
