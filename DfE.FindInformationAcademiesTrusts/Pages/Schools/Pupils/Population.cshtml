@@ -1,4 +1,5 @@
 @page "/schools/pupils/population"
+@using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus
 @model PopulationModel
 
 @{
@@ -8,8 +9,7 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">
     <h3 class="govuk-heading-m" data-testid="subpage-header">Pupil population</h3>
-    <p class="govuk-body" data-testid="spring-census-text">The following data is taken from the spring census of each
-      year, where available.</p>
+    <partial name="_CensusText" model="Census.Spring"/>
 
     <table class="govuk-table" data-testid="population-census-table">
 
