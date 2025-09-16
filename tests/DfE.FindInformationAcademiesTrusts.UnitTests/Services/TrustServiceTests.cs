@@ -27,6 +27,7 @@ public class TrustServiceTests
     private readonly ITrustRepository _mockTrustRepository = Substitute.For<ITrustRepository>();
     private readonly ITrustGovernanceRepository _mockTrustGovernanceRepository = Substitute.For<ITrustGovernanceRepository>();
     private readonly IContactRepository _mockContactRepository = Substitute.For<IContactRepository>();
+    private readonly ITrustPupilService _mockTrustPupilService = Substitute.For<ITrustPupilService>();
     private readonly IDateTimeProvider _mockDateTimeProvider = Substitute.For<IDateTimeProvider>();
     private readonly MockMemoryCache _mockMemoryCache = new();
 
@@ -36,6 +37,7 @@ public class TrustServiceTests
             _mockTrustRepository,
             _mockTrustGovernanceRepository,
             _mockContactRepository,
+            _mockTrustPupilService,
             _mockMemoryCache.Object,
             _mockDateTimeProvider);
 
@@ -263,13 +265,14 @@ public class TrustServiceTests
         var uid = "1234";
         var academiesOverview = new AcademyOverview[]
         {
-            new("1001", "LocalAuthorityA", 500, 600),
-            new("1002", "LocalAuthorityB", 400, 500),
-            new("1003", "LocalAuthorityA", 300, 400)
+            new("1001", "LocalAuthorityA", null, 600),
+            new("1002", "LocalAuthorityB", null, 500),
+            new("1003", "LocalAuthorityA", null, 400)
         };
 
         _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(uid).Returns(Task.FromResult(academiesOverview));
         _mockTrustRepository.GetTrustOverviewAsync(uid).Returns(Task.FromResult(BaseTrustOverview with { Uid = uid }));
+        _mockTrustPupilService.GetTotalPupilCountForTrustAsync(uid).Returns(1200);
 
         // Act
         var result = await _sut.GetTrustOverviewAsync(uid);
@@ -282,7 +285,7 @@ public class TrustServiceTests
             { "LocalAuthorityA", 2 },
             { "LocalAuthorityB", 1 }
         });
-        result.TotalPupilNumbers.Should().Be(500 + 400 + 300);
+        result.TotalPupilNumbers.Should().Be(1200);
         result.TotalCapacity.Should().Be(600 + 500 + 400);
     }
 

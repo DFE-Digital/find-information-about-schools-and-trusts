@@ -15,6 +15,7 @@ public class TrustServiceGovernanceTurnoverTests
     private readonly ITrustRepository _mockTrustRepository = Substitute.For<ITrustRepository>();
     private readonly ITrustGovernanceRepository _mockTrustGovernanceRepository = Substitute.For<ITrustGovernanceRepository>();
     private readonly IContactRepository _mockContactRepository = Substitute.For<IContactRepository>();
+    private readonly ITrustPupilService _mockTrustPupilService = Substitute.For<ITrustPupilService>();
     private readonly IDateTimeProvider _mockDateTimeProvider = Substitute.For<IDateTimeProvider>();
     private readonly MockMemoryCache _mockMemoryCache = new();
 
@@ -24,6 +25,7 @@ public class TrustServiceGovernanceTurnoverTests
             _mockTrustRepository,
             _mockTrustGovernanceRepository,
             _mockContactRepository,
+            _mockTrustPupilService,
             _mockMemoryCache.Object,
             _mockDateTimeProvider);
     }

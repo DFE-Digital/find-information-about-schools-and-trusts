@@ -25,6 +25,9 @@ public abstract class BaseTrustPageTests<T> where T : TrustsAreaModel
     protected readonly DataSourceServiceModel EesDataSource = new(Source.ExploreEducationStatistics,
         new DateTime(2023, 11, 9), UpdateFrequency.Annually);
 
+    protected readonly DataSourceServiceModel CompareDataSource =
+        new(Source.CompareSchoolCollegePerformanceEngland, new DateTime(2023, 11, 9), UpdateFrequency.Annually);
+
     protected const string TrustUid = "1234";
     protected readonly TrustSummaryServiceModel DummyTrustSummary = new(TrustUid, "My Trust", "Multi-academy trust", 3);
 
