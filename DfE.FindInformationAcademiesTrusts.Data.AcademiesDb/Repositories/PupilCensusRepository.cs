@@ -23,29 +23,53 @@ public class PupilCensusRepository(IAcademiesDbContext dbContext) : IPupilCensus
             // so the second of the two years should be used.
             CensusYear year = int.Parse(result.DownloadYear.Split('-')[1]);
             
-            var pupilsOnRole = ParseIntStatistic(result.CensusNor);
-            var pupilsEligibleForFreeSchoolMeals = ParseIntStatistic(result.CensusNumfsm);
-            var pupilsEligibleForFreeSchoolMealsPercentage = pupilsEligibleForFreeSchoolMeals.Compute(
-                pupilsOnRole,
-                (fsm, por) => Math.Round(100.0m * fsm / por, 1)
-            );
+            var statistics = ConvertEdperfFiatToSchoolPopulation(result);
 
-            var statistics = new SchoolPopulation(
-                pupilsOnRole,
-                ParseIntStatistic(result.CensusTsenelse),
-                ParseDecimalStatistic(result.CensusPsenelse),
-                ParseIntStatistic(result.CensusTsenelk),
-                ParseDecimalStatistic(result.CensusPsenelk),
-                ParseIntStatistic(result.CensusNumeal),
-                ParseDecimalStatistic(result.CensusPnumeal),
-                pupilsEligibleForFreeSchoolMeals,
-                pupilsEligibleForFreeSchoolMealsPercentage
-            );
-            
             annualStatistics.Add(year, statistics);
         }
         
         return annualStatistics;
+    }
+
+    public async Task<TrustStatistics<SchoolPopulation>> GetMostRecentPopulationStatisticsForTrustAsync(string uid)
+    {
+        var results = await dbContext.GiasGroupLinks
+            .Where(gl => gl.GroupUid == uid)
+            .Join(dbContext.EdperfFiats, gl => gl.Urn, ef => ef.Urn.ToString(), (gl, ef) => ef)
+            .GroupBy(ef => ef.Urn)
+            .Select(grp => grp.OrderByDescending(ef => ef.DownloadYear).First())
+            .ToListAsync();
+
+        var trustStatistics = new TrustStatistics<SchoolPopulation>();
+
+        foreach (var result in results)
+        {
+            trustStatistics.Add(result.Urn, ConvertEdperfFiatToSchoolPopulation(result));
+        }
+        
+        return trustStatistics;
+    }
+
+    private static SchoolPopulation ConvertEdperfFiatToSchoolPopulation(EdperfFiat edperfFiat)
+    {
+        var pupilsOnRole = ParseIntStatistic(edperfFiat.CensusNor);
+        var pupilsEligibleForFreeSchoolMeals = ParseIntStatistic(edperfFiat.CensusNumfsm);
+        var pupilsEligibleForFreeSchoolMealsPercentage = pupilsEligibleForFreeSchoolMeals.Compute(
+            pupilsOnRole,
+            (fsm, por) => Math.Round(100.0m * fsm / por, 1)
+        );
+
+        return new SchoolPopulation(
+            pupilsOnRole,
+            ParseIntStatistic(edperfFiat.CensusTsenelse),
+            ParseDecimalStatistic(edperfFiat.CensusPsenelse),
+            ParseIntStatistic(edperfFiat.CensusTsenelk),
+            ParseDecimalStatistic(edperfFiat.CensusPsenelk),
+            ParseIntStatistic(edperfFiat.CensusNumeal),
+            ParseDecimalStatistic(edperfFiat.CensusPnumeal),
+            pupilsEligibleForFreeSchoolMeals,
+            pupilsEligibleForFreeSchoolMealsPercentage
+        );
     }
 
     private static Statistic<int> ParseIntStatistic(string? input) =>
