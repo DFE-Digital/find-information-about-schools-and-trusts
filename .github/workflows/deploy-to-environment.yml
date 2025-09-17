@@ -172,5 +172,5 @@ jobs:
        environment: ${{ needs.set-env.outputs.environment }}
        branch-name: ${{ needs.set-env.outputs.branch }}
      secrets:
-        TEST_OVERRIDE_CYPRESS_TEST_SECRET: $ {{secrets.TEST_OVERRIDE_CYPRESS_TEST_SECRET}}
-        BASE_URL: $ {{secrets.BASE_URL}}
+       TEST_OVERRIDE_CYPRESS_TEST_SECRET: ${{ secrets.TEST_OVERRIDE_CYPRESS_TEST_SECRET }}
+       BASE_URL: ${{ secrets.BASE_URL }}
