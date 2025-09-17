@@ -829,9 +829,10 @@ public class OfstedRepositoryTests
     {
         _mockAcademiesDbContext.AddGiasGroupLinks(GroupUid, "987654");
         _mockAcademiesDbContext.MisMstrEstablishmentFiat.Add(
-            new MisMstrEstablishmentFiat()
+            new MisMstrEstablishmentFiat
             {
-                Urn = 987654, DateOfLatestSection8Inspection = "15/05/2023", Section8InspectionOverallOutcome = "School remains Good",
+                Urn = 987654, DateOfLatestSection8Inspection = "15/05/2023",
+                Section8InspectionOverallOutcome = "School remains Good"
             });
 
         var result = await _sut.GetAcademiesInTrustOfstedAsync(GroupUid);
@@ -845,11 +846,12 @@ public class OfstedRepositoryTests
     public async Task GetAcademiesInTrustOfstedAsync_should_include_short_inspection_data_when_further_education()
     {
         _mockAcademiesDbContext.AddGiasGroupLinks(GroupUid, "987654");
-        _mockAcademiesDbContext.MisMstrFurtherEducationEstablishmentFiat.Add(new MisMstrFurtherEducationEstablishmentFiat()
-        {
-            ProviderUrn = 987654,
-            DateOfLatestShortInspection = "01/07/2025"
-        });
+        _mockAcademiesDbContext.MisMstrFurtherEducationEstablishmentFiat.Add(
+            new MisMstrFurtherEducationEstablishmentFiat
+            {
+                ProviderUrn = 987654,
+                DateOfLatestShortInspection = "01/07/2025"
+            });
 
         var result = await _sut.GetAcademiesInTrustOfstedAsync(GroupUid);
 
@@ -863,11 +865,29 @@ public class OfstedRepositoryTests
     public async Task GetAcademiesInTrustOfstedAsync_should_include_unknown_short_inspection_when_urn_is_unknown()
     {
         _mockAcademiesDbContext.AddGiasGroupLinks(GroupUid, "987654");
-        
+
         var result = await _sut.GetAcademiesInTrustOfstedAsync(GroupUid);
-        
+
         result.Should().ContainSingle()
             .Which.ShortInspection.Should().BeEquivalentTo(OfstedShortInspection.Unknown);
+    }
+
+    [Fact]
+    public async Task
+        GetAcademiesInTrustOfstedAsync_should_have_IsFurtherEducationalEstablishment_true_when_further_education()
+    {
+        _mockAcademiesDbContext.AddGiasGroupLinks(GroupUid, "987654");
+        _mockAcademiesDbContext.MisMstrFurtherEducationEstablishmentFiat.Add(
+            new MisMstrFurtherEducationEstablishmentFiat
+            {
+                ProviderUrn = 987654,
+                DateOfLatestShortInspection = "01/07/2025"
+            });
+
+        var result = await _sut.GetAcademiesInTrustOfstedAsync(GroupUid);
+
+        var actual = result.Should().ContainSingle().Subject;
+        actual.IsFurtherEducationalEstablishment.Should().BeTrue();
     }
 
     private void VerifyLogs(int[] urns, bool shouldLogError)
@@ -1109,7 +1129,7 @@ public class OfstedRepositoryTests
 
         result.InspectionOutcome.Should().BeNull();
     }
-    
+
     [Fact]
     public async Task GetSchoolOfstedRatingsAsync_should_return_Unknown_for_unknown_urn()
     {
@@ -1147,7 +1167,8 @@ public class OfstedRepositoryTests
     }
 
     [Fact]
-    public async Task GetSchoolOfstedRatingsAsync_should_set_DateAcademyJoinedTrust_from_giasGroupLink_when_linked_to_trust()
+    public async Task
+        GetSchoolOfstedRatingsAsync_should_set_DateAcademyJoinedTrust_from_giasGroupLink_when_linked_to_trust()
     {
         var giasGroupLinks = _mockAcademiesDbContext.AddGiasGroupLinks(GroupUid, "987654");
         giasGroupLinks[0].JoinedDate = "01/01/2022";
@@ -1475,9 +1496,10 @@ public class OfstedRepositoryTests
     {
         _mockAcademiesDbContext.AddGiasGroupLinks(GroupUid, "987654");
         _mockAcademiesDbContext.MisMstrEstablishmentFiat.Add(
-            new MisMstrEstablishmentFiat()
+            new MisMstrEstablishmentFiat
             {
-                Urn = 987654, DateOfLatestSection8Inspection = "15/05/2023", Section8InspectionOverallOutcome = "School remains Good",
+                Urn = 987654, DateOfLatestSection8Inspection = "15/05/2023",
+                Section8InspectionOverallOutcome = "School remains Good"
             });
 
         var result = await _sut.GetSchoolOfstedRatingsAsync(987654);
@@ -1491,11 +1513,12 @@ public class OfstedRepositoryTests
     public async Task GetSchoolOfstedRatingsAsync_should_include_short_inspection_data_when_further_education()
     {
         _mockAcademiesDbContext.AddGiasGroupLinks(GroupUid, "987654");
-        _mockAcademiesDbContext.MisMstrFurtherEducationEstablishmentFiat.Add(new MisMstrFurtherEducationEstablishmentFiat()
-        {
-            ProviderUrn = 987654,
-            DateOfLatestShortInspection = "01/07/2025"
-        });
+        _mockAcademiesDbContext.MisMstrFurtherEducationEstablishmentFiat.Add(
+            new MisMstrFurtherEducationEstablishmentFiat
+            {
+                ProviderUrn = 987654,
+                DateOfLatestShortInspection = "01/07/2025"
+            });
 
         var result = await _sut.GetSchoolOfstedRatingsAsync(987654);
 
@@ -1508,9 +1531,9 @@ public class OfstedRepositoryTests
     public async Task GetSchoolOfstedRatingsAsync_should_include_unknown_short_inspection_when_urn_is_unknown()
     {
         _mockAcademiesDbContext.AddGiasGroupLinks(GroupUid, "987654");
-        
+
         var result = await _sut.GetSchoolOfstedRatingsAsync(987654);
-        
+
         result.Should().NotBeNull();
         result.ShortInspection.Should().BeEquivalentTo(OfstedShortInspection.Unknown);
     }

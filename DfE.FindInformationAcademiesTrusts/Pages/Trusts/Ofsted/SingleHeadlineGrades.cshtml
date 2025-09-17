@@ -33,12 +33,9 @@
       </span>
     </summary>
     <div class="govuk-details__text">
-      <p class="govuk-body">
-        If a school has a short Ofsted inspection followed by a full one, data about the short inspection may not appear on this page.
-      </p>
-      <p class="govuk-body">
-        Ofsted's inspection report will contain this data.
-      </p>
+        <p class="govuk-body">If a school has a short Ofsted inspection followed by a full one, data about the short inspection may not appear on this page.</p>
+        <p class="govuk-body">Short inspection data for Further Education providers may not appear on this page.</p>
+        <p class="govuk-body">Ofsted's inspection report will contain this data.</p>
     </div>
   </details>
   <hr class="govuk-section-break govuk-section-break--m">
@@ -86,7 +83,14 @@
           @academy.DateAcademyJoinedTrust!.Value.ToString(StringFormatConstants.DisplayDateFormat)
         </td>
         <td class="govuk-table__cell govuk-body" data-sort-value="@academy.HasRecentShortInspection" data-testid="ofsted-single-headline-grades-has-recent-short-inspection">
-          @(academy.HasRecentShortInspection ? "Yes" : "No")
+         @if (academy.IsFurtherEducationalEstablishment)
+         {
+             @Html.Raw("Not available")
+         }
+         else
+         {
+             @(academy.HasRecentShortInspection ? "Yes" : "No")
+         }
         </td>
         <partial name="_SingleHeadlineGradeCells" model="new SingleHeadlineGradeCellsModel(academy.CurrentOfstedRating, academy.WhenDidCurrentInspectionHappen, true)"/>
         <partial name="_SingleHeadlineGradeCells" model="new SingleHeadlineGradeCellsModel(academy.PreviousOfstedRating, academy.WhenDidPreviousInspectionHappen, false)"/>

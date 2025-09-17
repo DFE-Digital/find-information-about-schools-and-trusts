@@ -13,7 +13,7 @@ public class SchoolOfstedServiceModelTests
     {
         _sut = new SchoolOfstedServiceModel("1234", "test", _joinDate, OfstedShortInspection.Unknown,
             OfstedRating.NotInspected,
-            OfstedRating.NotInspected);
+            OfstedRating.NotInspected, false);
     }
 
     [Fact]

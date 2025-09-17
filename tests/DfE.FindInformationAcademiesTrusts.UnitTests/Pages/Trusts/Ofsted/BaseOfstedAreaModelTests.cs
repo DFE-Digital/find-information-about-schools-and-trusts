@@ -61,15 +61,17 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseTrustPageTests<T>, ITest
             new SchoolOfstedServiceModel("1", "Academy 1", new DateTime(2022, 12, 1),
                 new OfstedShortInspection(new DateTime(2025, 7, 1), "School remains Good"),
                 new OfstedRating(2, new DateTime(2023, 1, 1)),
-                new OfstedRating(3, new DateTime(2023, 2, 1))),
+                new OfstedRating(3, new DateTime(2023, 2, 1)), false),
+
             new SchoolOfstedServiceModel("2", "Academy 2", new DateTime(2022, 11, 2),
                 new OfstedShortInspection(new DateTime(2025, 7, 1), "School remains Good"),
                 new OfstedRating(2, new DateTime(2023, 1, 2)),
-                new OfstedRating(3, new DateTime(2023, 3, 1))),
+                new OfstedRating(3, new DateTime(2023, 3, 1)), false),
+
             new SchoolOfstedServiceModel("3", "Academy 3", new DateTime(2022, 10, 3),
                 new OfstedShortInspection(new DateTime(2025, 7, 1), "School remains Good"),
                 new OfstedRating(2, new DateTime(2023, 1, 3)),
-                new OfstedRating(3, new DateTime(2023, 4, 1)))
+                new OfstedRating(3, new DateTime(2023, 4, 1)), false)
         };
         MockAcademyService.GetAcademiesInTrustOfstedAsync(Sut.Uid).Returns(academies);
 

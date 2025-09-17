@@ -2,7 +2,7 @@ import ofstedPage from "../../../pages/trusts/ofstedPage";
 import navigation from "../../../pages/navigation";
 import dataDownload from "../../../pages/trusts/dataDownload";
 import commonPage from "../../../pages/commonPage";
-import { TestDataStore, testTrustOfstedData, testOfstedWithDataUid } from "../../../support/test-data-store";
+import { TestDataStore, testTrustOfstedData, testOfstedWithDataUid, testTrustWithFurtherEducationEstablishments } from "../../../support/test-data-store";
 
 describe("Testing the Ofsted page and its subpages ", () => {
 
@@ -318,5 +318,16 @@ describe("Testing the Ofsted page and its subpages ", () => {
                 });
             });
         });
+    });
+
+    describe("Testing the Ofsted page for a trust with a further education provider", () => {
+         beforeEach(() => {
+            cy.visit(`/trusts/ofsted/single-headline-grades?uid=${testTrustWithFurtherEducationEstablishments}`);
+       });
+
+        it("Checks the has recent short inspections data is correct", () => {
+            ofstedPage
+                .checkSHGHasRecentShortInspectionPresent();
+         });
     });
 });

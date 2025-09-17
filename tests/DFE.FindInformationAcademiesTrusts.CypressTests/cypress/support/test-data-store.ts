@@ -358,3 +358,5 @@ export const referenceNumbersTestData = [
         description: 'school in a trust'
     }
 ];
+
+export const testTrustWithFurtherEducationEstablishments = 15795;
