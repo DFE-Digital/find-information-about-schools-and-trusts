@@ -75,6 +75,13 @@ export class TestDataStore {
                 ]
             },
             {
+                pageName: "Pupils",
+                subpages: [
+                    { subpageName: "Population", url: `/schools/pupils/population?urn=${urn}` },
+                    { subpageName: "Attendance", url: `/schools/pupils/attendance?urn=${urn}` },
+                ]
+            },
+            {
                 pageName: "Governance",
                 subpages: [
                     { subpageName: "Current governors", url: `/schools/governance/current?urn=${urn}` },
@@ -108,6 +115,13 @@ export class TestDataStore {
                     { subpageName: "Current ratings", url: `/schools/ofsted/currentratings?urn=${urn}` },
                     { subpageName: "Previous ratings", url: `/schools/ofsted/previousratings?urn=${urn}` },
                     { subpageName: "Safeguarding and concerns", url: `/schools/ofsted/safeguardingandconcerns?urn=${urn}` }
+                ]
+            },
+            {
+                pageName: "Pupils",
+                subpages: [
+                    { subpageName: "Population", url: `/schools/pupils/population?urn=${urn}` },
+                    { subpageName: "Attendance", url: `/schools/pupils/attendance?urn=${urn}` },
                 ]
             },
             {

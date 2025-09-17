@@ -42,10 +42,11 @@ class Navigation {
         },
         schoolsServiceNav: {
             overviewServiceNavButton: () => cy.get('[data-testid="overview-nav"]'),
+            pupilsServiceNavButton: () => cy.get('[data-testid="pupils-nav"]'),
             contactsServiceNavButton: () => cy.get('[data-testid="contacts-nav"]'),
             governanceServiceNavButton: () => cy.get('[data-testid="governance-nav"]'),
             ofstedServiceNavButton: () => cy.get('[data-testid="ofsted-nav"]'),
-         },
+        },
         schoolsOverviewSubNav: {
             schoolsDetailsButton: () => cy.get('[data-testid="overview-details-subnav"]'),
             schoolsSENButton: () => cy.get('[data-testid="overview-sen-subnav"]'),
@@ -96,12 +97,12 @@ class Navigation {
         cy.url().should('include', urlPageName);
         return this;
     }
-    
+
     public checkAboutDataLinkPresent(): this {
         this.elements.aboutDataFooterButton().scrollIntoView().should('be.visible');
         return this;
     }
-    
+
     public clickAboutDataLink(): this {
         this.elements.aboutDataFooterButton().scrollIntoView().click();
         return this;
@@ -310,8 +311,9 @@ class Navigation {
     //#region Schools navigation
 
     public checkAllSchoolServiceNavItemsPresent(): this {
-        // Validates school navigation order: Overview → Contacts → Governance
+        // Validates school navigation order: Overview → Pupils → Contacts → Governance → Ofsted
         this.elements.schoolsServiceNav.overviewServiceNavButton().should('be.visible');
+        this.elements.schoolsServiceNav.pupilsServiceNavButton().should('be.visible');
         this.elements.schoolsServiceNav.contactsServiceNavButton().should('be.visible');
         this.elements.schoolsServiceNav.governanceServiceNavButton().should('be.visible');
         this.elements.schoolsServiceNav.ofstedServiceNavButton().should('be.visible');
@@ -345,6 +347,11 @@ class Navigation {
 
     public clickSchoolsReligiousCharacteristicsButton(): this {
         this.elements.schoolsOverviewSubNav.schoolsReligiousCharacteristicsButton().click();
+        return this;
+    }
+
+    public clickSchoolsPupilsButton(): this {
+        this.elements.schoolsServiceNav.pupilsServiceNavButton().click();
         return this;
     }
 
