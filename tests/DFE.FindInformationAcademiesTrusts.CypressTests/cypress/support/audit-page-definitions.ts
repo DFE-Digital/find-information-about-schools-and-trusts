@@ -80,6 +80,10 @@ export class AuditPageDefinitions {
         this.auditHelper.auditPage('School Overview - Federation Details', 'Schools', `/schools/overview/federation?urn=${federationSchoolUrn}`);
         this.auditHelper.auditPage('School Overview - Religious Characteristics', 'Schools', `/schools/overview/religiouscharacteristics?urn=${laMaintainedSchoolUrn}`);
 
+        // School Pupils subpages
+        this.auditHelper.auditPage('School Pupils - Population', 'Schools', `/schools/pupils/population?urn=${academyUrn}`);
+        this.auditHelper.auditPage('School Pupils - Attendance', 'Schools', `/schools/pupils/attendance?urn=${academyUrn}`);
+
         // School Contacts - In School/Academy (sensitive data - no screenshots)
         this.auditHelper.auditPageWithoutScreenshots('LA Maintained School Contacts - In School', 'Schools', `/schools/contacts/in-the-school?urn=${laMaintainedSchoolUrn}`);
         this.auditHelper.auditPageWithoutScreenshots('Academy Contacts - In Academy', 'Schools', `/schools/contacts/in-the-school?urn=${academyUrn}`);

@@ -1,5 +1,6 @@
 import commonPage from "../../../../pages/commonPage";
 import schoolsPage from "../../../../pages/schools/schoolsPage";
+import schoolPupilsPage from "../../../../pages/schools/schoolPupilsPage";
 import navigation from "../../../../pages/navigation";
 import overviewPage from "../../../../pages/trusts/overviewPage";
 
@@ -57,11 +58,16 @@ describe('Schools Navigation Tests', () => {
         ];
 
         navigationTestData.forEach(({ type, urn }) => {
-            it(`Should validate complete navigation order for ${type}: Overview → Contacts → Governance → Ofsted`, () => {
+            it(`Should validate complete navigation order for ${type}: Overview → Pupils → Contacts → Governance → Ofsted`, () => {
                 // Test complete navigation flow
                 cy.visit(`/schools/overview/details?urn=${urn}`);
 
-                // Overview → Contacts
+                // Overview → Pupils (Population)
+                navigation
+                    .clickSchoolsPupilsButton()
+                    .checkCurrentURLIsCorrect(`/schools/pupils/population?urn=${urn}`);
+
+                // Pupils → Contacts
                 navigation
                     .clickSchoolsContactsButton()
                     .checkCurrentURLIsCorrect(`/schools/contacts/in-dfe?urn=${urn}`)
@@ -87,6 +93,38 @@ describe('Schools Navigation Tests', () => {
                 navigation
                     .clickOverviewServiceNavButton()
                     .checkCurrentURLIsCorrect(`/schools/overview/details?urn=${urn}`);
+            });
+        });
+    });
+
+    describe("Schools pupils sub navigation tests", () => {
+        context('School pupils subnav navigation tests -- (School)', () => {
+            it('Should navigate from Population to Attendance and back', () => {
+                // Start at Population
+                cy.visit(`/schools/pupils/population?urn=${navTestSchool.schoolURN}`);
+
+                // Population → Attendance
+                schoolPupilsPage.clickAttendanceTab();
+                navigation.checkCurrentURLIsCorrect(`/schools/pupils/attendance?urn=${navTestSchool.schoolURN}`);
+
+                // Attendance → Population  
+                schoolPupilsPage.clickPopulationTab();
+                navigation.checkCurrentURLIsCorrect(`/schools/pupils/population?urn=${navTestSchool.schoolURN}`);
+            });
+        });
+
+        context('Academy pupils subnav navigation tests -- (Academy)', () => {
+            it('Should navigate from Population to Attendance and back', () => {
+                // Start at Population
+                cy.visit(`/schools/pupils/population?urn=${navTestAcademies[0].academyURN}`);
+
+                // Population → Attendance
+                schoolPupilsPage.clickAttendanceTab();
+                navigation.checkCurrentURLIsCorrect(`/schools/pupils/attendance?urn=${navTestAcademies[0].academyURN}`);
+
+                // Attendance → Population  
+                schoolPupilsPage.clickPopulationTab();
+                navigation.checkCurrentURLIsCorrect(`/schools/pupils/population?urn=${navTestAcademies[0].academyURN}`);
             });
         });
     });
