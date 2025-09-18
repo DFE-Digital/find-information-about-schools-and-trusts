@@ -2,6 +2,7 @@ using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PipelineAcademy;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services;
@@ -89,13 +90,18 @@ public class AcademyServiceTests
             BuildDummyAcademyPupilNumbers("9876", "phase1", new AgeRange(2, 15), 100, 200),
             BuildDummyAcademyPupilNumbers("8765", "phase2", new AgeRange(7, 12), 2, 5)
         ];
-
+AcademyPupilNumbersServiceModel[] expected =
+        [
+            new("9876", "Academy 9876", "phase1", new AgeRange(2, 15), new Statistic<int>.WithValue(100), 200),
+            new("8765", "Academy 8765", "phase2", new AgeRange(7, 12), new Statistic<int>.WithValue(2), 5)
+        ];
+        
         _mockAcademyRepository.GetAcademiesInTrustPupilNumbersAsync(uid).Returns(academies);
 
         var result = await _sut.GetAcademiesInTrustPupilNumbersAsync(uid);
 
         result.Should().BeOfType<AcademyPupilNumbersServiceModel[]>();
-        result.Should().BeEquivalentTo(academies);
+        result.Should().BeEquivalentTo(expected);
     }
 
     private static AcademyPupilNumbers BuildDummyAcademyPupilNumbers(string urn,

@@ -1,4 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Academy;
 
@@ -7,21 +8,19 @@ public record AcademyPupilNumbersServiceModel(
     string? EstablishmentName,
     string? PhaseOfEducation,
     AgeRange AgeRange,
-    int? NumberOfPupils,
+    Statistic<int> NumberOfPupils,
     int? SchoolCapacity
 )
 {
-    public float? PercentageFull
+    public Statistic<float> PercentageFull
     {
         get
         {
-            if (this is { NumberOfPupils: not null, SchoolCapacity: not null } &&
-                SchoolCapacity != 0)
-            {
-                return (float)Math.Round((int)NumberOfPupils / (float)SchoolCapacity * 100);
-            }
+            var schoolCapacity = SchoolCapacity is not null and not 0
+                ? new Statistic<int>.WithValue((int)SchoolCapacity)
+                : Statistic<int>.NotAvailable;
 
-            return null;
+            return NumberOfPupils.Compute(schoolCapacity, (nop, sc) => (float)Math.Round(nop / (float)sc * 100.0f));
         }
     }
 }
