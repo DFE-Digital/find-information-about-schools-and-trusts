@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Exceptions;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
@@ -70,7 +71,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
                 new("123456", "Academy 1", now, new OfstedShortInspection(now, "School remains Good"), new OfstedRating(1, now.AddDays(-1)), new OfstedRating(1, now))
             ]);
             _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid).Returns([
-                new("123456", "Academy 1", "Primary", new AgeRange(5, 11), 500, 600)
+                new("123456", "Academy 1", "Primary", new AgeRange(5, 11), new Statistic<int>.WithValue(500), 600)
             ]);
             _mockAcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(trustUid)
                 .Returns([new("123456", "Academy 1", 20, 25, 15)]);
@@ -142,7 +143,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
                 new("123456", null, now, new OfstedShortInspection(now, "School remains Good"), new OfstedRating(-1, null), new OfstedRating(-1, null))
             ]);
             _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid)
-                .Returns([new("123456", null, null, new AgeRange(5, 11), null, null)]);
+                .Returns([new("123456", null, null, new AgeRange(5, 11), Statistic<int>.NotAvailable, null)]);
             _mockAcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(trustUid)
                 .Returns([new("123456", null, null, 0, 0)]);
 
@@ -169,9 +170,9 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
 
             worksheet.CellValue(4, AcademyColumns.PhaseOfEducation).Should().Be(string.Empty);
             worksheet.CellValue(4, AcademyColumns.AgeRange).Should().Be("5-11");
-            worksheet.CellValue(4, AcademyColumns.PupilNumbers).Should().Be(string.Empty);
+            worksheet.CellValue(4, AcademyColumns.PupilNumbers).Should().Be("Not available");
             worksheet.CellValue(4, AcademyColumns.Capacity).Should().Be(string.Empty);
-            worksheet.CellValue(4, AcademyColumns.PercentFull).Should().Be(string.Empty);
+            worksheet.CellValue(4, AcademyColumns.PercentFull).Should().Be("Not available");
             worksheet.CellValue(4, AcademyColumns.PupilsEligibleFreeSchoolMeals).Should().Be(string.Empty);
             worksheet.CellValue(4, AcademyColumns.LaPupilsEligibleFreeSchoolMeals).Should().Be(string.Empty);
             worksheet.CellValue(4, AcademyColumns.NationalPupilsEligibleFreeSchoolMeals).Should().Be(string.Empty);
@@ -186,7 +187,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             _mockAcademyService.GetAcademiesInTrustOfstedAsync(trustUid).Returns([]);
 
             _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid).Returns([
-                new("123456", "Academy 1", "Primary", new AgeRange(5, 11), 500, 600)
+                new("123456", "Academy 1", "Primary", new AgeRange(5, 11), new Statistic<int>.WithValue(500), 600)
             ]);
             _mockAcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(trustUid)
                 .Returns([new("123456", "Academy 1", 20, 25, 15)]);
@@ -252,7 +253,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             ]);
 
             _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid).Returns([
-                new("123456", "Academy 1", "Primary", new AgeRange(5, 11), 500, 600)
+                new("123456", "Academy 1", "Primary", new AgeRange(5, 11), new Statistic<int>.WithValue(500), 600)
             ]);
 
             _mockAcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(trustUid).Returns([]);

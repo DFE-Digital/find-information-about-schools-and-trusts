@@ -2,6 +2,7 @@ using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PipelineAcademy;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Academy;
 
@@ -47,7 +48,10 @@ public class AcademyService(
 
         return academies.Select(a =>
             new AcademyPupilNumbersServiceModel(a.Urn, a.EstablishmentName, a.PhaseOfEducation,
-                a.AgeRange, a.NumberOfPupils,
+                a.AgeRange,
+                a.NumberOfPupils is null
+                    ? Statistic<int>.NotAvailable
+                    : new Statistic<int>.WithValue((int)a.NumberOfPupils),
                 a.SchoolCapacity)).ToArray();
     }
 

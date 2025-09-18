@@ -85,7 +85,7 @@ public class AcademiesExportService(ITrustService trustService, IAcademyService 
     {
         var previousRating = ofstedData?.PreviousOfstedRating;
         var currentRating = ofstedData?.CurrentOfstedRating;
-        var percentageFull = pupilNumbersData?.PercentageFull ?? 0;
+        var percentageFull = pupilNumbersData?.PercentageFull;
 
         SetTextCell(AcademyColumns.SchoolName, academy.EstablishmentName ?? string.Empty);
         SetTextCell(AcademyColumns.Urn, academy.Urn);
@@ -117,9 +117,9 @@ public class AcademiesExportService(ITrustService trustService, IAcademyService 
 
         SetTextCell(AcademyColumns.AgeRange, pupilNumbersData?.AgeRange.ToTabularDisplayString() ?? string.Empty);
 
-        SetTextCell(AcademyColumns.PupilNumbers, pupilNumbersData?.NumberOfPupils?.ToString() ?? string.Empty);
+        SetTextCell(AcademyColumns.PupilNumbers, pupilNumbersData?.NumberOfPupils.DisplayValue() ?? string.Empty);
         SetTextCell(AcademyColumns.Capacity, pupilNumbersData?.SchoolCapacity?.ToString() ?? string.Empty);
-        SetTextCell(AcademyColumns.PercentFull, percentageFull > 0 ? $"{percentageFull}%" : string.Empty);
+        SetTextCell(AcademyColumns.PercentFull, percentageFull?.DisplayPercentage() ?? string.Empty);
         SetTextCell(AcademyColumns.PupilsEligibleFreeSchoolMeals,
             freeSchoolMealsData is { PercentageFreeSchoolMeals: not null }
                 ? $"{freeSchoolMealsData.PercentageFreeSchoolMeals}%"
