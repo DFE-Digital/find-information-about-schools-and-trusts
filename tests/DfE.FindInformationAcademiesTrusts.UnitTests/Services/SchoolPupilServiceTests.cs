@@ -24,10 +24,17 @@ public class SchoolPupilServiceTests
         new Statistic<decimal>.WithValue(13.0m)
     );
 
+    private readonly Attendance _dummyAttendance = new(
+        new Statistic<decimal>.WithValue(14.0m),
+        new Statistic<decimal>.WithValue(15.0m)
+    );
+
     public SchoolPupilServiceTests()
     {
         _mockPupilCensusRepository.GetSchoolPopulationStatisticsAsync(Arg.Any<int>())
             .Returns(new AnnualStatistics<SchoolPopulation>());
+        _mockPupilCensusRepository.GetAttendanceStatisticsAsync(Arg.Any<int>())
+            .Returns(new AnnualStatistics<Attendance>());
 
         var dummySchoolPopulationStatistics = new AnnualStatistics<SchoolPopulation>
         {
@@ -45,6 +52,22 @@ public class SchoolPupilServiceTests
         };
         _mockPupilCensusRepository.GetSchoolPopulationStatisticsAsync(Urn).Returns(dummySchoolPopulationStatistics);
 
+        var dummyAttendanceStatistics = new AnnualStatistics<Attendance>
+        {
+            { 2025, _dummyAttendance },
+            { 2024, _dummyAttendance },
+            { 2023, _dummyAttendance },
+            { 2022, _dummyAttendance },
+            { 2021, _dummyAttendance },
+            { 2020, _dummyAttendance },
+            { 2019, _dummyAttendance },
+            { 2018, _dummyAttendance },
+            { 2017, _dummyAttendance },
+            { 2016, _dummyAttendance },
+            { 2015, _dummyAttendance }
+        };
+        _mockPupilCensusRepository.GetAttendanceStatisticsAsync(Urn).Returns(dummyAttendanceStatistics);
+
         _mockDateTimeProvider.Today.Returns(new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc));
 
         _sut = new SchoolPupilService(_mockDateTimeProvider, _mockPupilCensusRepository);
@@ -54,7 +77,10 @@ public class SchoolPupilServiceTests
     [InlineData(2019, 2024, 6)]
     [InlineData(2014, 2018, 5)]
     [InlineData(2009, 2012, 4)]
-    public async Task GetSchoolPopulationStatisticsAsync_returns_Unknown_results_when_no_data_for_the_urn_could_be_found(int from, int to, int expectedNumberOfYears)
+    public async Task
+        GetSchoolPopulationStatisticsAsync_returns_Unknown_results_when_no_data_for_the_urn_could_be_found(int from,
+            int to,
+            int expectedNumberOfYears)
     {
         var result = await _sut.GetSchoolPopulationStatisticsAsync(999999, from, to);
 
@@ -81,14 +107,15 @@ public class SchoolPupilServiceTests
     {
         var act = () => _sut.GetSchoolPopulationStatisticsAsync(Urn, from, to);
 
-        await act.Should().ThrowAsync<ArgumentOutOfRangeException>().WithMessage($"to.Value ('{to}') must be greater than or equal to '{from}'. (Parameter 'to.Value')\nActual value was {to}.");
+        await act.Should().ThrowAsync<ArgumentOutOfRangeException>().WithMessage(
+            $"to.Value ('{to}') must be greater than or equal to '{from}'. (Parameter 'to.Value')\nActual value was {to}.");
     }
 
     [Fact]
     public async Task GetSchoolPopulationStatisticsAsync_fills_in_future_years_with_NotYetSubmitted_SchoolPopulation()
     {
         var result = await _sut.GetSchoolPopulationStatisticsAsync(Urn, 3000, 3005);
-        
+
         result.Should().NotBeEmpty();
         result.Should().HaveCount(6);
         result.Values.Should().AllBeEquivalentTo(SchoolPopulation.NotYetSubmitted);
@@ -98,12 +125,13 @@ public class SchoolPupilServiceTests
     [InlineData(2025, 1, 1, 2024)]
     [InlineData(2024, 6, 15, 2023)]
     [InlineData(2023, 9, 30, 2022)]
-    public async Task GetSchoolPopulationStatisticsAsync_considers_this_years_result_to_be_NotYetSubmitted_when_today_is_before_october_31st(
-        int year,
-        int month,
-        int day,
-        int expectedMostRecentYearOfData
-    )
+    public async Task
+        GetSchoolPopulationStatisticsAsync_considers_this_years_result_to_be_NotYetSubmitted_when_today_is_before_october_31st(
+            int year,
+            int month,
+            int day,
+            int expectedMostRecentYearOfData
+        )
     {
         _mockDateTimeProvider.Today.Returns(new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Utc));
 
@@ -114,7 +142,9 @@ public class SchoolPupilServiceTests
         foreach (var y in Enumerable.Range(2021, 5))
         {
             result[y].Should()
-                .BeEquivalentTo(y > expectedMostRecentYearOfData ? SchoolPopulation.NotYetSubmitted : _dummySchoolPopulation);
+                .BeEquivalentTo(y > expectedMostRecentYearOfData
+                    ? SchoolPopulation.NotYetSubmitted
+                    : _dummySchoolPopulation);
         }
     }
 
@@ -122,12 +152,13 @@ public class SchoolPupilServiceTests
     [InlineData(2025, 10, 31, 2025)]
     [InlineData(2024, 11, 1, 2024)]
     [InlineData(2023, 12, 31, 2023)]
-    public async Task GetSchoolPopulationStatisticsAsync_considers_this_years_result_to_be_available_when_today_is_october_31st_or_later(
-        int year,
-        int month,
-        int day,
-        int expectedMostRecentYearOfData
-    )
+    public async Task
+        GetSchoolPopulationStatisticsAsync_considers_this_years_result_to_be_available_when_today_is_october_31st_or_later(
+            int year,
+            int month,
+            int day,
+            int expectedMostRecentYearOfData
+        )
     {
         _mockDateTimeProvider.Today.Returns(new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Utc));
 
@@ -138,7 +169,9 @@ public class SchoolPupilServiceTests
         foreach (var y in Enumerable.Range(2021, 5))
         {
             result[y].Should()
-                .BeEquivalentTo(y > expectedMostRecentYearOfData ? SchoolPopulation.NotYetSubmitted : _dummySchoolPopulation);
+                .BeEquivalentTo(y > expectedMostRecentYearOfData
+                    ? SchoolPopulation.NotYetSubmitted
+                    : _dummySchoolPopulation);
         }
     }
 
@@ -162,5 +195,123 @@ public class SchoolPupilServiceTests
         result[2023].Should().BeEquivalentTo(_dummySchoolPopulation);
         result[2022].Should().BeEquivalentTo(SchoolPopulation.Unknown);
         result[2021].Should().BeEquivalentTo(_dummySchoolPopulation);
+    }
+
+    [Theory]
+    [InlineData(2019, 2024, 6)]
+    [InlineData(2014, 2018, 5)]
+    [InlineData(2009, 2012, 4)]
+    public async Task GetAttendanceStatisticsAsync_returns_Unknown_results_when_no_data_for_the_urn_could_be_found(
+        int from, int to, int expectedNumberOfYears)
+    {
+        var result = await _sut.GetAttendanceStatisticsAsync(999999, from, to);
+
+        result.Should().HaveCount(expectedNumberOfYears);
+        result.Values.Should().AllBeEquivalentTo(Attendance.Unknown);
+    }
+
+    [Theory]
+    [InlineData(2025)]
+    [InlineData(2020)]
+    [InlineData(2015)]
+    public async Task GetAttendanceStatisticsAsync_returns_one_result_when_from_and_to_are_the_same_year(int year)
+    {
+        var result = await _sut.GetAttendanceStatisticsAsync(Urn, year, year);
+
+        result.Should().HaveCount(1);
+    }
+
+    [Theory]
+    [InlineData(2020, 2019)]
+    [InlineData(2025, 1999)]
+    public async Task
+        GetAttendanceStatisticsAsync_throws_ArgumentOutOfRangeException_when_from_is_after_to(int from, int to)
+    {
+        var act = () => _sut.GetAttendanceStatisticsAsync(Urn, from, to);
+
+        await act.Should().ThrowAsync<ArgumentOutOfRangeException>().WithMessage(
+            $"to.Value ('{to}') must be greater than or equal to '{from}'. (Parameter 'to.Value')\nActual value was {to}.");
+    }
+
+    [Fact]
+    public async Task GetAttendanceStatisticsAsync_fills_in_future_years_with_NotYetSubmitted_Attendance()
+    {
+        var result = await _sut.GetAttendanceStatisticsAsync(Urn, 3000, 3005);
+
+        result.Should().NotBeEmpty();
+        result.Should().HaveCount(6);
+        result.Values.Should().AllBeEquivalentTo(Attendance.NotYetSubmitted);
+    }
+
+    [Theory]
+    [InlineData(2025, 1, 1, 2024)]
+    [InlineData(2024, 3, 15, 2023)]
+    [InlineData(2023, 4, 29, 2022)]
+    public async Task
+        GetAttendanceStatisticsAsync_considers_this_years_result_to_be_NotYetSubmitted_when_today_is_before_april_30th(
+            int year,
+            int month,
+            int day,
+            int expectedMostRecentYearOfData
+        )
+    {
+        _mockDateTimeProvider.Today.Returns(new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Utc));
+
+        var result = await _sut.GetAttendanceStatisticsAsync(Urn, 2021, 2025);
+
+        result.Should().NotBeEmpty();
+        result.Should().HaveCount(5);
+        foreach (var y in Enumerable.Range(2021, 5))
+        {
+            result[y].Should()
+                .BeEquivalentTo(y > expectedMostRecentYearOfData ? Attendance.NotYetSubmitted : _dummyAttendance);
+        }
+    }
+
+    [Theory]
+    [InlineData(2025, 4, 30, 2025)]
+    [InlineData(2024, 5, 1, 2024)]
+    [InlineData(2023, 12, 31, 2023)]
+    public async Task
+        GetAttendanceStatisticsAsync_considers_this_years_result_to_be_available_when_today_is_april_30th_or_later(
+            int year,
+            int month,
+            int day,
+            int expectedMostRecentYearOfData
+        )
+    {
+        _mockDateTimeProvider.Today.Returns(new DateTime(year, month, day, 0, 0, 0, DateTimeKind.Utc));
+
+        var result = await _sut.GetAttendanceStatisticsAsync(Urn, 2021, 2025);
+
+        result.Should().NotBeEmpty();
+        result.Should().HaveCount(5);
+        foreach (var y in Enumerable.Range(2021, 5))
+        {
+            result[y].Should()
+                .BeEquivalentTo(y > expectedMostRecentYearOfData ? Attendance.NotYetSubmitted : _dummyAttendance);
+        }
+    }
+
+    [Fact]
+    public async Task GetAttendanceStatisticsAsync_fills_in_missing_years_with_Unknown_Attendance()
+    {
+        var attendanceStatistics = new AnnualStatistics<Attendance>
+        {
+            { 2023, _dummyAttendance },
+            { 2021, _dummyAttendance },
+            { 2020, _dummyAttendance }
+        };
+
+        _mockPupilCensusRepository.GetAttendanceStatisticsAsync(Urn).Returns(attendanceStatistics);
+
+        var result = await _sut.GetAttendanceStatisticsAsync(Urn, 2021, 2024);
+
+        result.Should().NotBeEmpty();
+        result.Should().HaveCount(4);
+        result[2024].Should().BeEquivalentTo(Attendance.Unknown);
+        result[2023].Should().BeEquivalentTo(_dummyAttendance);
+        result[2022].Should().BeEquivalentTo(Attendance.Unknown);
+        result[2021].Should().BeEquivalentTo(_dummyAttendance);
     }
 }

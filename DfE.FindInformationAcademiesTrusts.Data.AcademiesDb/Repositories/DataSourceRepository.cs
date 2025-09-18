@@ -22,7 +22,9 @@ public class DataSourceRepository(
             Source.Prepare
             or Source.Complete
             or Source.ManageFreeSchoolProjects => await GetDataSourceFromMstr(source),
-            Source.CompareSchoolCollegePerformanceEngland => await GetMostRecentEdperfIngestion(source),
+            Source.CompareSchoolCollegePerformanceEnglandPopulation
+                or Source.CompareSchoolCollegePerformanceEnglandAttendance =>
+                    await GetMostRecentEdperfIngestion(source),
             _ => throw new ArgumentOutOfRangeException(nameof(source), source, null)
         };
     }
@@ -92,8 +94,14 @@ public class DataSourceRepository(
     
     private async Task<DataSource> GetMostRecentEdperfIngestion(Source source)
     {
-        var mostRecentIngestion =
-            await academiesDbContext.EdperfFiats.MaxAsync(edperfFiat => edperfFiat.MetaCensusIngestionDatetime);
+        var mostRecentIngestion = source switch
+        {
+            Source.CompareSchoolCollegePerformanceEnglandPopulation =>
+                await academiesDbContext.EdperfFiats.MaxAsync(edperfFiat => edperfFiat.MetaCensusIngestionDatetime),
+            Source.CompareSchoolCollegePerformanceEnglandAttendance =>
+                await academiesDbContext.EdperfFiats.MaxAsync(edperfFiat => edperfFiat.MetaAbsenceIngestionDatetime),
+            _ => throw new ArgumentOutOfRangeException(nameof(source), source, null)
+        };
 
         if (mostRecentIngestion is null)
         {

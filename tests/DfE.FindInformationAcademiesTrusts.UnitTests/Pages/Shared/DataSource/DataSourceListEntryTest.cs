@@ -66,7 +66,8 @@ public class DataSourceListEntryTest
         "Further education and skills inspections and outcomes: management information")]
     [InlineData(Source.ExploreEducationStatistics, "Explore education statistics")]
     [InlineData(Source.FiatDb, "Find information about schools and trusts")]
-    [InlineData(Source.CompareSchoolCollegePerformanceEngland, "Compare school and college performance in England")]
+    [InlineData(Source.CompareSchoolCollegePerformanceEnglandPopulation, "Compare school and college performance in England")]
+    [InlineData(Source.CompareSchoolCollegePerformanceEnglandAttendance, "Compare school and college performance in England")]
     public void GetName_should_return_the_correct_string_for_each_source(Source source, string expected)
     {
         DataSourceListEntry.GetName(_dataSourceServiceModel with { Source = source }).Should().Be(expected);

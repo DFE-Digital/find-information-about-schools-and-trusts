@@ -30,8 +30,8 @@ public class PopulationModel(
 
         var statistics = await schoolPupilService.GetSchoolPopulationStatisticsAsync(
             Urn,
-            CensusYear.Previous(dateTimeProvider, 3),
-            CensusYear.Next(dateTimeProvider)
+            CensusYear.Previous(dateTimeProvider, Census.Spring, 3),
+            CensusYear.Next(dateTimeProvider, Census.Spring)
         );
 
         PopulationData = statistics.OrderByDescending(kvp => kvp.Key.Value)

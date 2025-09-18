@@ -9,20 +9,14 @@ public class PupilCensusRepository(IAcademiesDbContext dbContext) : IPupilCensus
 {
     public async Task<AnnualStatistics<SchoolPopulation>> GetSchoolPopulationStatisticsAsync(int urn)
     {
-        var results = await dbContext
-            .EdperfFiats
-            .Where(edperfFiat => edperfFiat.Urn == urn)
-            .ToListAsync();
+        var results = await GetCensusDataForUrn(urn);
 
         var annualStatistics = new AnnualStatistics<SchoolPopulation>();
 
         foreach (var result in results)
         {
-            // The year is stored in the database in the format '2021-2022'.
-            // The academic year starts in the autumn, but the census is produced in the spring,
-            // so the second of the two years should be used.
-            CensusYear year = int.Parse(result.DownloadYear.Split('-')[1]);
-            
+            var year = ParseCensusYearFromAcademicYear(result.DownloadYear, Census.Spring);
+
             var pupilsOnRole = ParseIntStatistic(result.CensusNor);
             var pupilsEligibleForFreeSchoolMeals = ParseIntStatistic(result.CensusNumfsm);
             var pupilsEligibleForFreeSchoolMealsPercentage = pupilsEligibleForFreeSchoolMeals.Compute(
@@ -41,15 +35,56 @@ public class PupilCensusRepository(IAcademiesDbContext dbContext) : IPupilCensus
                 pupilsEligibleForFreeSchoolMeals,
                 pupilsEligibleForFreeSchoolMealsPercentage
             );
-            
+
             annualStatistics.Add(year, statistics);
         }
-        
+
         return annualStatistics;
     }
 
-    private static Statistic<int> ParseIntStatistic(string? input) =>
-        input switch
+    public async Task<AnnualStatistics<Attendance>> GetAttendanceStatisticsAsync(int urn)
+    {
+        var results = await GetCensusDataForUrn(urn);
+
+        var annualStatistics = new AnnualStatistics<Attendance>();
+
+        foreach (var result in results)
+        {
+            var year = ParseCensusYearFromAcademicYear(result.DownloadYear, Census.Autumn);
+
+            var statistics = new Attendance(
+                ParseDecimalStatistic(result.AbsencePerctot),
+                ParseDecimalStatistic(result.AbsencePpersabs10)
+            );
+
+            annualStatistics.Add(year, statistics);
+        }
+
+        return annualStatistics;
+    }
+
+    private async Task<List<EdperfFiat>> GetCensusDataForUrn(int urn)
+    {
+        return await dbContext
+            .EdperfFiats
+            .Where(edperfFiat => edperfFiat.Urn == urn)
+            .ToListAsync();
+    }
+
+    private static CensusYear ParseCensusYearFromAcademicYear(string academicYearText, Census census)
+    {
+        // The academic year is from September until July and is stored in the database in the format '2021-2022'.
+        // For the above example, the autumn census would be conducted in 2021, and the spring census in 2022.
+        // Therefore, for the autumn census, the first year should be used, and for the spring census, the second year.
+        var index = census == Census.Autumn ? 0 : 1;
+
+        CensusYear year = int.Parse(academicYearText.Split('-')[index]);
+        return year;
+    }
+
+    private static Statistic<int> ParseIntStatistic(string? input)
+    {
+        return input switch
         {
             "SUPP" => Statistic<int>.Suppressed,
             "NP" => Statistic<int>.NotPublished,
@@ -57,9 +92,11 @@ public class PupilCensusRepository(IAcademiesDbContext dbContext) : IPupilCensus
             _ when int.TryParse(input, out var value) => new Statistic<int>.WithValue(value),
             _ => Statistic<int>.NotAvailable
         };
+    }
 
-    private static Statistic<decimal> ParseDecimalStatistic(string? input) =>
-        input switch
+    private static Statistic<decimal> ParseDecimalStatistic(string? input)
+    {
+        return input switch
         {
             null => Statistic<decimal>.NotAvailable,
             "SUPP" => Statistic<decimal>.Suppressed,
@@ -69,4 +106,5 @@ public class PupilCensusRepository(IAcademiesDbContext dbContext) : IPupilCensus
             _ when decimal.TryParse(input, out var value) => new Statistic<decimal>.WithValue(value),
             _ => Statistic<decimal>.NotAvailable
         };
+    }
 }
