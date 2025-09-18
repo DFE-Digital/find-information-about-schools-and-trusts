@@ -56,6 +56,29 @@ public class StatisticDisplayExtensionsTests
     }
 
     [Theory]
+    [InlineData(StatisticKind.Suppressed, "Suppressed")]
+    [InlineData(StatisticKind.NotPublished, "Not published")]
+    [InlineData(StatisticKind.NotApplicable, "Not applicable")]
+    [InlineData(StatisticKind.NotAvailable, "Not available")]
+    [InlineData(StatisticKind.NotYetSubmitted, "Not yet submitted")]
+    public void DisplayPercentage_returns_expected_value_for_statistics_without_value(StatisticKind kind, string expected)
+    {
+        var statistic = Statistic<float>.FromKind(kind);
+        
+        statistic.DisplayValue().Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData(1, "1%")]
+    [InlineData(3.4, "3.4%")]
+    public void DisplayPercentage_returns_expected_value_for_statistics_with_value(double value, string expected)
+    {
+        var statistic = new Statistic<double>.WithValue(value);
+        
+        statistic.DisplayPercentage().Should().Be(expected);
+    }
+
+    [Theory]
     [InlineData(StatisticKind.Suppressed,  "Suppressed")]
     [InlineData(StatisticKind.NotPublished, "Not published")]
     [InlineData(StatisticKind.NotApplicable, "Not applicable")]
