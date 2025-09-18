@@ -2,7 +2,7 @@ name: Deploy to environment
 
 on:
   pull_request:
-    branches: [ main, '**-feature' ]
+    branches: [ main, 'feature/**' ]
   push:
     branches: [ main ]
   workflow_dispatch:
