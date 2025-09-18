@@ -4,6 +4,7 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PipelineAcademy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
+using DfE.FindInformationAcademiesTrusts.Services.Trust;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services;
 
@@ -12,6 +13,8 @@ public class AcademyServiceTests
     private readonly AcademyService _sut;
     private readonly IAcademyRepository _mockAcademyRepository = Substitute.For<IAcademyRepository>();
     private readonly IOfstedRepository _mockOfstedRepository = Substitute.For<IOfstedRepository>();
+    
+    private readonly ITrustPupilService _mockTrustPupilService = Substitute.For<ITrustPupilService>();
 
     private readonly IPipelineEstablishmentRepository _mockPipelineEstablishmentRepository =
         Substitute.For<IPipelineEstablishmentRepository>();
@@ -22,7 +25,7 @@ public class AcademyServiceTests
     public AcademyServiceTests()
     {
         _sut = new AcademyService(_mockAcademyRepository, _mockOfstedRepository, _mockPipelineEstablishmentRepository,
-            _mockFreeSchoolMealsAverageProvider);
+            _mockTrustPupilService, _mockFreeSchoolMealsAverageProvider);
     }
 
     [Fact]
@@ -87,8 +90,8 @@ public class AcademyServiceTests
         const string uid = "1234";
         AcademyPupilNumbers[] academies =
         [
-            BuildDummyAcademyPupilNumbers("9876", "phase1", new AgeRange(2, 15), 100, 200),
-            BuildDummyAcademyPupilNumbers("8765", "phase2", new AgeRange(7, 12), 2, 5)
+            BuildDummyAcademyPupilNumbers("9876", "phase1", new AgeRange(2, 15), null, 200),
+            BuildDummyAcademyPupilNumbers("8765", "phase2", new AgeRange(7, 12), null, 5)
         ];
 AcademyPupilNumbersServiceModel[] expected =
         [
@@ -97,7 +100,13 @@ AcademyPupilNumbersServiceModel[] expected =
         ];
         
         _mockAcademyRepository.GetAcademiesInTrustPupilNumbersAsync(uid).Returns(academies);
-
+        
+        _mockTrustPupilService.GetPupilCountsForSchoolsInTrustAsync(uid).Returns(new TrustStatistics<Statistic<int>>
+        {
+            [9876] = new Statistic<int>.WithValue(100),
+            [8765] = new Statistic<int>.WithValue(2)
+        });
+        
         var result = await _sut.GetAcademiesInTrustPupilNumbersAsync(uid);
 
         result.Should().BeOfType<AcademyPupilNumbersServiceModel[]>();
