@@ -34,6 +34,7 @@ public abstract class AcademiesInTrustAreaModel(
 
         var giasDataSource = await DataSourceService.GetAsync(Source.Gias);
         var eesDataSource = await DataSourceService.GetAsync(Source.ExploreEducationStatistics);
+        var compareDataSource = await DataSourceService.GetAsync(Source.CompareSchoolCollegePerformanceEnglandPopulation);
 
         TabList =
         [
@@ -45,7 +46,10 @@ public abstract class AcademiesInTrustAreaModel(
         DataSourcesPerPage.AddRange([
             new DataSourcePageListEntry(AcademiesInTrustDetailsModel.TabName,
                 [new DataSourceListEntry(giasDataSource)]),
-            new DataSourcePageListEntry(PupilNumbersModel.TabName, [new DataSourceListEntry(giasDataSource)]),
+            new DataSourcePageListEntry(PupilNumbersModel.TabName, [
+                new DataSourceListEntry(compareDataSource, "Pupil numbers"),
+                new DataSourceListEntry(giasDataSource, "All other information was")
+            ]),
             new DataSourcePageListEntry(FreeSchoolMealsModel.TabName, [
                 new DataSourceListEntry(giasDataSource, "Pupils eligible for free school meals"),
                 new DataSourceListEntry(eesDataSource, "Local authority average 2023/24"),

@@ -28,7 +28,7 @@ public class OverviewAreaModel(
 
         // Add data sources
         var giasDataSource = await DataSourceService.GetAsync(Source.Gias);
-        var compareDataSource = await DataSourceService.GetAsync(Source.CompareSchoolCollegePerformanceEngland);
+        var compareDataSource = await DataSourceService.GetAsync(Source.CompareSchoolCollegePerformanceEnglandPopulation);
         DataSourcesPerPage.AddRange([
             new DataSourcePageListEntry(TrustDetailsModel.SubPageName, [new DataSourceListEntry(giasDataSource)]),
             new DataSourcePageListEntry(TrustSummaryModel.SubPageName, [new DataSourceListEntry(compareDataSource, "Pupil numbers"), new DataSourceListEntry(giasDataSource, "All other information was")]),
