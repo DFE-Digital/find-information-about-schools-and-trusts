@@ -87,7 +87,10 @@ public abstract class AcademiesInTrustAreaModelTests<T> : BaseAcademiesAreaModel
             new DataSourcePageListEntry("Details",
                 [new DataSourceListEntry(GiasDataSource)]),
             new DataSourcePageListEntry("Pupil numbers",
-                [new DataSourceListEntry(GiasDataSource)]),
+            [
+                new DataSourceListEntry(CompareDataSource, "Pupil numbers"),
+                new DataSourceListEntry(GiasDataSource, "All other information was")
+            ]),
             new DataSourcePageListEntry("Free school meals",
             [
                 new DataSourceListEntry(GiasDataSource, "Pupils eligible for free school meals"),
