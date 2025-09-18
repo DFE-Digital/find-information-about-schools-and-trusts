@@ -1,0 +1,24 @@
+﻿@using System.ComponentModel
+@using DfE.FindInformationAcademiesTrusts.Data.Enums
+@model BeforeOrAfterJoining
+
+@switch (Model)
+{
+    case BeforeOrAfterJoining.Before:
+        <strong class="govuk-tag govuk-tag--orange">
+            Before joining
+        </strong>
+        break;
+    case BeforeOrAfterJoining.After:
+        <strong class="govuk-tag">
+            After joining
+        </strong>
+        break;
+    case BeforeOrAfterJoining.NotYetInspected:
+        <strong class="govuk-tag govuk-tag--grey">
+            Not yet inspected
+        </strong>
+        break;
+    default:
+        throw new InvalidEnumArgumentException($"Unknown value of BeforeOrAfterJoining: {Model}");
+}
