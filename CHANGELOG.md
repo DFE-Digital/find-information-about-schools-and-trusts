@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Fix accessibility issue in the 'About the data we use' page.
 - Alternate row colours on tables and added table header colours.
+- For Oftsed pages changed "Joined before" tag from grey to orange.
 
 ## [Release-50][release-50] (production-2025-09-10.6449)
 
