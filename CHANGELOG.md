@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+## [Release-51][release-51] (production-2025-09-18.6482)
+
+### Changed
+
+- Fix accessibility issue in the 'About the data we use' page.
+- Alternate row colours on tables and added table header colours.
+
 ## [Release-50][release-50] (production-2025-09-10.6449)
 
 ### Changed
@@ -468,7 +475,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Updated text on "404 - Not Found" page to adhere to DfE design pattern and added the not found url to the support email template.
 
 [unreleased]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-09-10.6449...HEAD
+  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-09-18.6482...HEAD
 [release-1]:
   https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-07-18.2517
 [release-2]:
@@ -569,3 +576,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-09-04.6416
 [release-50]:
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-09-10.6449
+[release-51]:
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-09-18.6482
