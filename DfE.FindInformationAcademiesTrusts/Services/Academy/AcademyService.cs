@@ -2,6 +2,8 @@ using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PipelineAcademy;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
+using DfE.FindInformationAcademiesTrusts.Services.Trust;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Academy;
 
@@ -21,6 +23,7 @@ public class AcademyService(
     IAcademyRepository academyRepository,
     IOfstedRepository ofstedRepository,
     IPipelineEstablishmentRepository pipelineEstablishmentRepository,
+    ITrustPupilService trustPupilService,
     IFreeSchoolMealsAverageProvider freeSchoolMealsAverageProvider) : IAcademyService
 {
     public async Task<AcademyDetailsServiceModel[]> GetAcademiesInTrustDetailsAsync(string uid)
@@ -44,11 +47,18 @@ public class AcademyService(
     public async Task<AcademyPupilNumbersServiceModel[]> GetAcademiesInTrustPupilNumbersAsync(string uid)
     {
         var academies = await academyRepository.GetAcademiesInTrustPupilNumbersAsync(uid);
+        var pupilNumbers = await trustPupilService.GetPupilCountsForSchoolsInTrustAsync(uid);
 
         return academies.Select(a =>
-            new AcademyPupilNumbersServiceModel(a.Urn, a.EstablishmentName, a.PhaseOfEducation,
-                a.AgeRange, a.NumberOfPupils,
-                a.SchoolCapacity)).ToArray();
+            new AcademyPupilNumbersServiceModel(a.Urn, a.EstablishmentName, a.PhaseOfEducation, a.AgeRange,
+                GetNumberOfPupils(a), a.SchoolCapacity)).ToArray();
+
+        Statistic<int> GetNumberOfPupils(AcademyPupilNumbers p)
+        {
+            if (!int.TryParse(p.Urn, out var urn)) return Statistic<int>.NotAvailable;
+
+            return pupilNumbers.TryGetValue(urn, out var value) ? value : Statistic<int>.NotAvailable;
+        }
     }
 
     public async Task<AcademyFreeSchoolMealsServiceModel[]> GetAcademiesInTrustFreeSchoolMealsAsync(string uid)

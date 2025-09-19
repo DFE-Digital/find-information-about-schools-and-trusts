@@ -1,3 +1,4 @@
+using System.Numerics;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 
 namespace DfE.FindInformationAcademiesTrusts.Extensions;
@@ -24,6 +25,11 @@ public static class StatisticDisplayExtensions
             "Not available",
             "Not yet submitted"
         );
+    }
+
+    public static string DisplayPercentage<T>(this Statistic<T> statistic) where T: INumber<T>
+    {
+        return statistic.Compute(s => $"{s}%").DisplayValue();
     }
 
     public static string DisplayValueWithPercentage(this Statistic<int> absolute, Statistic<decimal> percentage) =>

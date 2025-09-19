@@ -27,6 +27,7 @@ public class TrustService(
     ITrustRepository trustRepository,
     ITrustGovernanceRepository trustGovernanceRepository,
     IContactRepository contactRepository,
+    ITrustPupilService trustPupilService,
     IMemoryCache memoryCache,
     IDateTimeProvider dateTimeProvider)
     : ITrustService
@@ -131,7 +132,7 @@ public class TrustService(
             .GroupBy(a => a.LocalAuthority)
             .ToDictionary(g => g.Key, g => g.Count());
 
-        var totalPupilNumbers = academiesOverview.Sum(a => a.NumberOfPupils ?? 0);
+        var totalPupilNumbers = await trustPupilService.GetTotalPupilCountForTrustAsync(uid);
         var totalCapacity = academiesOverview.Sum(a => a.SchoolCapacity ?? 0);
 
         var overviewModel = new TrustOverviewServiceModel(

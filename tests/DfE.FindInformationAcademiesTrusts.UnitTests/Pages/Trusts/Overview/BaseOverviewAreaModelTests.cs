@@ -31,7 +31,7 @@ public abstract class BaseOverviewAreaModelTests<T> : BaseTrustPageTests<T>, ITe
 
         Sut.DataSourcesPerPage.Should().BeEquivalentTo([
             new DataSourcePageListEntry("Trust details", [new DataSourceListEntry(GiasDataSource)]),
-            new DataSourcePageListEntry("Trust summary", [new DataSourceListEntry(GiasDataSource)]),
+            new DataSourcePageListEntry("Trust summary", [new DataSourceListEntry(CompareDataSource, "Pupil numbers"), new DataSourceListEntry(GiasDataSource, "All other information was")]),
             new DataSourcePageListEntry("Reference numbers", [new DataSourceListEntry(GiasDataSource)])
         ]);
     }
