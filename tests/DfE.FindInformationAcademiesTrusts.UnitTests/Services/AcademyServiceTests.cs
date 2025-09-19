@@ -36,7 +36,7 @@ public class AcademyServiceTests
             new("9876", "Academy 2", "Academy sponsor led", "Lincolnshire",
                 "Rural town and fringe", DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-5)))
         ];
-        
+
         _mockAcademyRepository.GetAcademiesInTrustDetailsAsync(uid).Returns(academies);
 
         var result = await _sut.GetAcademiesInTrustDetailsAsync(uid);
@@ -54,15 +54,22 @@ public class AcademyServiceTests
             new SchoolOfsted("1", "Academy 1", new DateTime(2022, 12, 1),
                 new OfstedShortInspection(new DateTime(2025, 7, 1), "School remains Good"),
                 new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2023, 1, 1)),
-                new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 2, 1))),
+                new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 2, 1)), false),
+
             new SchoolOfsted("2", "Academy 2", new DateTime(2022, 11, 2),
                 new OfstedShortInspection(new DateTime(2025, 7, 2), "School remains Good"),
                 new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2023, 1, 2)),
-                new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 3, 1))),
+                new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 3, 1)), false),
+
             new SchoolOfsted("3", "Academy 3", new DateTime(2022, 10, 3),
                 new OfstedShortInspection(new DateTime(2025, 7, 3), "School remains Good"),
                 new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2023, 1, 3)),
-                new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 4, 1)))
+                new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 4, 1)), false),
+
+            new SchoolOfsted("4", "Academy 4", new DateTime(2022, 10, 3),
+                new OfstedShortInspection(null, null),
+                new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2023, 1, 3)),
+                new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 4, 1)), true)
         };
 
         _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(academies);
@@ -82,9 +89,9 @@ public class AcademyServiceTests
             BuildDummyAcademyPupilNumbers("9876", "phase1", new AgeRange(2, 15), 100, 200),
             BuildDummyAcademyPupilNumbers("8765", "phase2", new AgeRange(7, 12), 2, 5)
         ];
-        
+
         _mockAcademyRepository.GetAcademiesInTrustPupilNumbersAsync(uid).Returns(academies);
-        
+
         var result = await _sut.GetAcademiesInTrustPupilNumbersAsync(uid);
 
         result.Should().BeOfType<AcademyPupilNumbersServiceModel[]>();
@@ -120,9 +127,9 @@ public class AcademyServiceTests
             academy with { Urn = "4", EstablishmentName = "Academy 4", PercentageFreeSchoolMeals = null },
             academy with { Urn = "5", EstablishmentName = "Academy 5", PercentageFreeSchoolMeals = 100 }
         ];
-        
+
         _mockAcademyRepository.GetAcademiesInTrustFreeSchoolMealsAsync(uid).Returns(academies);
-        
+
         var result = await _sut.GetAcademiesInTrustFreeSchoolMealsAsync(uid);
 
         result.Should().BeOfType<AcademyFreeSchoolMealsServiceModel[]>();
@@ -179,7 +186,7 @@ public class AcademyServiceTests
         // Arrange
         const string trustReferenceNumber = "TRN123";
         var repoSummary = new PipelineSummary(5, 3, 2);
-        
+
         _mockPipelineEstablishmentRepository.GetAcademiesPipelineSummaryAsync(trustReferenceNumber).Returns(
             Task.FromResult(repoSummary));
 
@@ -201,10 +208,10 @@ public class AcademyServiceTests
         const string trustReferenceNumber = "TRN123";
         _mockPipelineEstablishmentRepository
             .GetAdvisoryConversionEstablishmentsAsync(trustReferenceNumber, AdvisoryType.PreAdvisory)
-            .Returns(Task.FromResult<PipelineEstablishment[]>([]));
+            .Returns([]);
         _mockPipelineEstablishmentRepository
             .GetAdvisoryTransferEstablishmentsAsync(trustReferenceNumber, AdvisoryType.PreAdvisory)
-            .Returns(Task.FromResult<PipelineEstablishment[]>([]));
+            .Returns([]);
 
         // Act
         var result = await _sut.GetAcademiesPipelinePreAdvisoryAsync(trustReferenceNumber);
@@ -235,10 +242,12 @@ public class AcademyServiceTests
             ProjectType.Transfer,
             new DateTime(2023, 2, 1));
 
-        _mockPipelineEstablishmentRepository.GetAdvisoryConversionEstablishmentsAsync(trustReferenceNumber, AdvisoryType.PreAdvisory).Returns(
-            Task.FromResult(new[] { conversionEstablishment }));
-        _mockPipelineEstablishmentRepository.GetAdvisoryTransferEstablishmentsAsync(trustReferenceNumber, AdvisoryType.PreAdvisory).Returns(
-            Task.FromResult(new[] { transferEstablishment }));
+        _mockPipelineEstablishmentRepository
+            .GetAdvisoryConversionEstablishmentsAsync(trustReferenceNumber, AdvisoryType.PreAdvisory)
+            .Returns([conversionEstablishment]);
+        _mockPipelineEstablishmentRepository
+            .GetAdvisoryTransferEstablishmentsAsync(trustReferenceNumber, AdvisoryType.PreAdvisory)
+            .Returns([transferEstablishment]);
 
         // Act
         var result = await _sut.GetAcademiesPipelinePreAdvisoryAsync(trustReferenceNumber);
@@ -270,10 +279,10 @@ public class AcademyServiceTests
     {
         // Arrange
         const string trustReferenceNumber = "TRN123";
-        _mockPipelineEstablishmentRepository.GetAdvisoryConversionEstablishmentsAsync(trustReferenceNumber, AdvisoryType.PostAdvisory).Returns(
-            Task.FromResult(Array.Empty<PipelineEstablishment>()));
-        _mockPipelineEstablishmentRepository.GetAdvisoryTransferEstablishmentsAsync(trustReferenceNumber, AdvisoryType.PostAdvisory).Returns(
-            Task.FromResult(Array.Empty<PipelineEstablishment>()));
+        _mockPipelineEstablishmentRepository
+            .GetAdvisoryConversionEstablishmentsAsync(trustReferenceNumber, AdvisoryType.PostAdvisory).Returns([]);
+        _mockPipelineEstablishmentRepository
+            .GetAdvisoryTransferEstablishmentsAsync(trustReferenceNumber, AdvisoryType.PostAdvisory).Returns([]);
 
         // Act
         var result = await _sut.GetAcademiesPipelinePostAdvisoryAsync(trustReferenceNumber);
@@ -304,10 +313,12 @@ public class AcademyServiceTests
             "Transfer",
             new DateTime(2023, 4, 1));
 
-        _mockPipelineEstablishmentRepository.GetAdvisoryConversionEstablishmentsAsync(trustReferenceNumber, AdvisoryType.PostAdvisory).Returns(
-            Task.FromResult(new[] { conversionEstablishment }));
-        _mockPipelineEstablishmentRepository.GetAdvisoryTransferEstablishmentsAsync(trustReferenceNumber, AdvisoryType.PostAdvisory).Returns(
-            Task.FromResult(new[] { transferEstablishment }));
+        _mockPipelineEstablishmentRepository
+            .GetAdvisoryConversionEstablishmentsAsync(trustReferenceNumber, AdvisoryType.PostAdvisory)
+            .Returns([conversionEstablishment]);
+        _mockPipelineEstablishmentRepository
+            .GetAdvisoryTransferEstablishmentsAsync(trustReferenceNumber, AdvisoryType.PostAdvisory)
+            .Returns([transferEstablishment]);
 
         // Act
         var result = await _sut.GetAcademiesPipelinePostAdvisoryAsync(trustReferenceNumber);
@@ -340,7 +351,7 @@ public class AcademyServiceTests
         // Arrange
         const string trustReferenceNumber = "TRN123";
         _mockPipelineEstablishmentRepository.GetPipelineFreeSchoolProjectsAsync(trustReferenceNumber)
-            .Returns(Task.FromResult<PipelineEstablishment[]>([]));
+            .Returns([]);
 
         // Act
         var result = await _sut.GetAcademiesPipelineFreeSchoolsAsync(trustReferenceNumber);
@@ -350,12 +361,13 @@ public class AcademyServiceTests
     }
 
     [Fact]
-    public async Task GetAcademiesPipelineFreeSchoolsAsync_should_return_empty_array_when_repository_returns_empty_array()
+    public async Task
+        GetAcademiesPipelineFreeSchoolsAsync_should_return_empty_array_when_repository_returns_empty_array()
     {
         // Arrange
         const string trustReferenceNumber = "TRN123";
         _mockPipelineEstablishmentRepository.GetPipelineFreeSchoolProjectsAsync(trustReferenceNumber)
-            .Returns(Task.FromResult<PipelineEstablishment[]>([]));
+            .Returns([]);
 
         // Act
         var result = await _sut.GetAcademiesPipelineFreeSchoolsAsync(trustReferenceNumber);
@@ -386,9 +398,8 @@ public class AcademyServiceTests
             "FreeSchool",
             new DateTime(2023, 6, 1));
 
-        _mockPipelineEstablishmentRepository.GetPipelineFreeSchoolProjectsAsync(trustReferenceNumber).Returns(
-            Task.FromResult<PipelineEstablishment[]>(
-                [freeSchoolEstablishment1, freeSchoolEstablishment2]));
+        _mockPipelineEstablishmentRepository.GetPipelineFreeSchoolProjectsAsync(trustReferenceNumber)
+            .Returns([freeSchoolEstablishment1, freeSchoolEstablishment2]);
 
         // Act
         var result = await _sut.GetAcademiesPipelineFreeSchoolsAsync(trustReferenceNumber);
@@ -417,7 +428,7 @@ public class AcademyServiceTests
     public async Task GetAcademiesInTrustDetailsAsync_ShouldRemoveEnglandWalesFromUrbanRural()
     {
         const string uid = "1234";
-        
+
         AcademyDetails[] academies =
         [
             new("9876", "Academy 1", "Academy converter", "Oxfordshire",
@@ -428,7 +439,7 @@ public class AcademyServiceTests
 
         _mockAcademyRepository.GetAcademiesInTrustDetailsAsync(uid).Returns(academies);
 
-        AcademyDetailsServiceModel[] result = await _sut.GetAcademiesInTrustDetailsAsync(uid);
+        var result = await _sut.GetAcademiesInTrustDetailsAsync(uid);
 
         result[0].UrbanRural.Should().Be("Urban city and town");
         result[1].UrbanRural.Should().Be("Rural town and fringe");

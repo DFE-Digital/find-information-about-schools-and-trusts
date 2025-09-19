@@ -8,22 +8,23 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted;
 
 public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRatingsModel>
 {
-    private readonly SchoolOfstedServiceModel _dummySchoolOfstedServiceModel = new SchoolOfstedServiceModel(
+    private readonly SchoolOfstedServiceModel _dummySchoolOfstedServiceModel = new(
         SchoolUrn.ToString(),
         null,
         null,
         OfstedShortInspection.Unknown,
         OfstedRating.Unknown,
-        OfstedRating.Unknown
+        OfstedRating.Unknown,
+        false
     );
 
-    private readonly TrustSummaryServiceModel _dummyTrustSummaryServiceModel = new TrustSummaryServiceModel(
+    private readonly TrustSummaryServiceModel _dummyTrustSummaryServiceModel = new(
         "1234",
         "Some Trust",
         "Some Trust Type",
         23
     );
-    
+
     public PreviousRatingsModelTests()
     {
         Sut = new PreviousRatingsModel(
@@ -98,12 +99,13 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
 
         Sut.InspectionBeforeOrAfterJoiningTrust.Should().Be(BeforeOrAfterJoining.NotApplicable);
     }
-    
+
     [Fact]
-    public async Task OnGetAsync_should_set_InspectionBeforeOrAfterJoiningTrust_to_after_when_school_is_academy_and_previous_inspection_date_is_after_date_joined_trust()
+    public async Task
+        OnGetAsync_should_set_InspectionBeforeOrAfterJoiningTrust_to_after_when_school_is_academy_and_previous_inspection_date_is_after_date_joined_trust()
     {
         Sut.Urn = AcademyUrn;
-        
+
         var expectedRating = new OfstedRating(
             OfstedRatingScore.Good,
             OfstedRatingScore.Good,
@@ -129,12 +131,13 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
 
         Sut.InspectionBeforeOrAfterJoiningTrust.Should().Be(BeforeOrAfterJoining.After);
     }
-    
+
     [Fact]
-    public async Task OnGetAsync_should_set_InspectionBeforeJoiningTrust_to_before_when_school_is_academy_and_previous_inspection_date_is_before_date_joined_trust()
+    public async Task
+        OnGetAsync_should_set_InspectionBeforeJoiningTrust_to_before_when_school_is_academy_and_previous_inspection_date_is_before_date_joined_trust()
     {
         Sut.Urn = AcademyUrn;
-        
+
         var expectedRating = new OfstedRating(
             OfstedRatingScore.Good,
             OfstedRatingScore.Good,

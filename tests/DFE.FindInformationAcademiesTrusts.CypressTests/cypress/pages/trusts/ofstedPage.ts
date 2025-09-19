@@ -211,7 +211,7 @@ class OfstedPage {
 
     public checkSHGHasRecentShortInspectionPresent(): this {
         this.elements.singleHeadlineGrades.hasRecentShortInspection().each((element: JQuery<HTMLElement>) => {
-            this.checkElementMatches(element, /^(Yes|No)$/);
+            this.checkElementMatches(element, /^(Yes|No|Not available)$/);
         });
         return this;
     }

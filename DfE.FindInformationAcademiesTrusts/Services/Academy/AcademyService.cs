@@ -38,7 +38,7 @@ public class AcademyService(
 
         return academies.Select(a =>
             new SchoolOfstedServiceModel(a.Urn, a.EstablishmentName, a.DateAcademyJoinedTrust, a.ShortInspection,
-                a.PreviousOfstedRating, a.CurrentOfstedRating)).ToArray();
+                a.PreviousOfstedRating, a.CurrentOfstedRating, a.IsFurtherEducationalEstablishment)).ToArray();
     }
 
     public async Task<AcademyPupilNumbersServiceModel[]> GetAcademiesInTrustPupilNumbersAsync(string uid)
