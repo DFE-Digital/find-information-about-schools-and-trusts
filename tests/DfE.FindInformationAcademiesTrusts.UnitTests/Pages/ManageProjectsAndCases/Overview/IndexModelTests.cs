@@ -48,7 +48,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
             // Act
             await _indexModel.OnGetAsync();
             // Assert
-            _indexModel.ShowHeaderSearch.Should().Be(false);
+            _indexModel.ShowHeaderSearch.Should().Be(true);
         }
 
         [Fact]
