@@ -35,7 +35,6 @@ public class IndexModel : BasePageModel, IPaginationModel
     {
         _getCasesService = getCasesService;
         _environment = environment;
-        ShowHeaderSearch = false;
     }
 
 
