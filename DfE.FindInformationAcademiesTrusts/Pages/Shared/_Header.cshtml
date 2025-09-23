@@ -12,11 +12,7 @@
       </div>
     </div>
     <div class="dfe-header__content">
-      <ul class="dfe-header__action-links">
-        <li>
-          <a href="/" class="govuk-link govuk-link--inverse">Manage projects and cases</a>
-        </li>
-      </ul>
+      <partial name="_HeaderActionLinks" model="Model"/>
       @if (Model.ShowHeaderSearch)
       {
         <div class="dfe-header__search">
