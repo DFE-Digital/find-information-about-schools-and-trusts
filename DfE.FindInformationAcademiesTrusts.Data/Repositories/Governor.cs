@@ -24,5 +24,5 @@ public record Governor(
 
     private bool HasRoleChiefFinancialOfficer => Role == "Chief Financial Officer";
 
-    private bool HasRoleChairOfTrustees => Role == "Chair of Trustees";
+    public bool HasRoleChairOfTrustees => Role == "Chair of Trustees";
 }

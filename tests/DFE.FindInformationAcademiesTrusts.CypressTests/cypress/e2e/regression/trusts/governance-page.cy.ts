@@ -116,6 +116,36 @@ describe("Testing the components of the Governance page", () => {
                 cy.visit(`/trusts/governance/historic-members?uid=${uid}`);
                 governancePage.checkHistoricMembersLinkValueMatchesNumberOfHistoricMembers();
             });
+            
+            it("Governor turnover rate information is displayed", () => {
+                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}`);
+                governancePage
+                    .checkTurnoverRateIsPresent()
+                    .checkTurnoverRateSummaryIsPresent()
+                    .checkTurnoverCalculationExplanationIsPresent()
+                    .checkTurnoverCalculationExplanationDetails();
+
+                cy.visit(`/trusts/governance/trustees?uid=${uid}`);
+                governancePage
+                    .checkTurnoverRateIsPresent()
+                    .checkTurnoverRateSummaryIsPresent()
+                    .checkTurnoverCalculationExplanationIsPresent()
+                    .checkTurnoverCalculationExplanationDetails();
+
+                cy.visit(`/trusts/governance/members?uid=${uid}`);
+                governancePage
+                    .checkTurnoverRateIsPresent()
+                    .checkTurnoverRateSummaryIsPresent()
+                    .checkTurnoverCalculationExplanationIsPresent()
+                    .checkTurnoverCalculationExplanationDetails();
+
+                cy.visit(`/trusts/governance/historic-members?uid=${uid}`);
+                governancePage
+                    .checkTurnoverRateIsPresent()
+                    .checkTurnoverRateSummaryIsPresent()
+                    .checkTurnoverCalculationExplanationIsPresent()
+                    .checkTurnoverCalculationExplanationDetails();
+            });
         });
     });
 
@@ -154,6 +184,35 @@ describe("Testing the components of the Governance page", () => {
                 governancePage.checkHistoricMembersSubnavButtonHasZeroInBrackets();
             });
 
+            it("Governor turnover rate information is displayed", () => {
+                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}`);
+                governancePage
+                    .checkTurnoverRateIsPresent()
+                    .checkTurnoverRateSummaryIsPresent()
+                    .checkTurnoverCalculationExplanationIsPresent()
+                    .checkTurnoverCalculationExplanationDetails();
+
+                cy.visit(`/trusts/governance/trustees?uid=${uid}`);
+                governancePage
+                    .checkTurnoverRateIsPresent()
+                    .checkTurnoverRateSummaryIsPresent()
+                    .checkTurnoverCalculationExplanationIsPresent()
+                    .checkTurnoverCalculationExplanationDetails();
+
+                cy.visit(`/trusts/governance/members?uid=${uid}`);
+                governancePage
+                    .checkTurnoverRateIsPresent()
+                    .checkTurnoverRateSummaryIsPresent()
+                    .checkTurnoverCalculationExplanationIsPresent()
+                    .checkTurnoverCalculationExplanationDetails();
+
+                cy.visit(`/trusts/governance/historic-members?uid=${uid}`);
+                governancePage
+                    .checkTurnoverRateIsPresent()
+                    .checkTurnoverRateSummaryIsPresent()
+                    .checkTurnoverCalculationExplanationIsPresent()
+                    .checkTurnoverCalculationExplanationDetails();
+            });
         });
     });
 

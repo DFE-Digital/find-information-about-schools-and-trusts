@@ -261,7 +261,7 @@ public class SchoolServiceTests
         var expected = new SchoolOfsted("1", "Academy 1", new DateTime(2022, 12, 1),
             new OfstedShortInspection(new DateTime(2025, 7, 1), "School remains Good"),
             new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2023, 1, 1)),
-            new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 2, 1)));
+            new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 2, 1)), false);
 
         _mockOfstedRepository.GetSchoolOfstedRatingsAsync(urn).Returns(expected);
 

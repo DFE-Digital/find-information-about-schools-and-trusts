@@ -14,7 +14,8 @@ public class SafeguardingAndConcernsModelTests : BaseOfstedAreaModelTests<Safegu
         null,
         OfstedShortInspection.Unknown,
         OfstedRating.Unknown,
-        OfstedRating.Unknown
+        OfstedRating.Unknown,
+        false
     );
 
     private readonly TrustSummaryServiceModel _dummyTrustSummaryServiceModel = new(

@@ -66,6 +66,11 @@ class GovernancePage {
         subHeaders: {
             subHeader: () => cy.get('[data-testid="subpage-header"]')
         },
+        turnover: {
+            rateHeadline: () => cy.get('[data-testid="turnover-rate-headline"]'),
+            rateSummary: () => cy.get('[data-testid="turnover-rate-summary"]'),
+            calculationExplanation: () => cy.get('[data-testid="turnover-calculation-explanation"]'),
+        }
     };
 
     // *************
@@ -256,6 +261,49 @@ class GovernancePage {
         this.elements.trustLeadership.roles().each(element => {
             expect(element.text().trim()).to.be.oneOf(["Chief Financial Officer", "Accounting Officer", "Chair of Trustees"]);
         });
+        return this;
+    }
+    
+    // ***********
+    //
+    // TURNOVER CHECKS
+    //
+    // ***********
+    
+    public checkTurnoverRateIsPresent(): this {
+        this.elements.turnover.rateHeadline().should('be.visible');
+        return this;
+    }
+    
+    public checkTurnoverRateSummaryIsPresent(): this {
+        this.elements.turnover.rateSummary().should('be.visible');
+        return this;
+    }
+    public checkTurnoverCalculationExplanationIsPresent(): this {
+        this.elements.turnover.calculationExplanation().should('be.visible');
+        return this;
+    }
+
+    public checkTurnoverCalculationExplanationDetails(): this {
+        // Expand the details element so we can see its contents on any screenshots if this fails
+        this.elements.turnover.calculationExplanation().expandDetailsElement();
+
+        // Check for the presence of each line of text
+        const expectedTexts = [
+            "Governance turnover % is calculated based on the total number of appointments and resignations in the past calendar year, divided by the total number of current governors.",
+            "This calculation includes:",
+            "Chair of Trustees",
+            "Trustees",
+            "This calculation does not include:",
+            "Accounting Officer",
+            "Chief Financial Officer",
+            "Members",
+        ];
+
+        expectedTexts.forEach(text => {
+            this.elements.turnover.calculationExplanation().contains(text).should('exist');
+        });
+
         return this;
     }
 

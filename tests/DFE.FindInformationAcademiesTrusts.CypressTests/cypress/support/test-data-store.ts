@@ -264,8 +264,8 @@ export const senSchoolData = [
 export const schoolsWithGovernanceData = [
     {
         typeOfSchool: "community school with governance data",
-        urn: 100099,
-        description: "Abbey Wood Nursery School - Local authority nursery school with current and historic governors"
+        urn: 107188,
+        description: "Abbey Green Nursery School - Local authority nursery school with current and historic governors"
     },
     {
         typeOfSchool: "academy with governance data",
@@ -358,3 +358,5 @@ export const referenceNumbersTestData = [
         description: 'school in a trust'
     }
 ];
+
+export const testTrustWithFurtherEducationEstablishments = 15795;

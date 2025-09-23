@@ -2,7 +2,7 @@ name: Deploy to environment
 
 on:
   pull_request:
-    branches: [ main, '**-feature' ]
+    branches: [ main, 'feature/**' ]
   push:
     branches: [ main ]
   workflow_dispatch:
@@ -60,7 +60,7 @@ jobs:
     needs: [ set-env ]
     steps:
       - name: Validate Packages
-        uses: DFE-Digital/rsd-github-actions/.github/actions/validate-packages@9a7a6a7c9aa5914f76a1f34aee8dd2dcc00702bc # v1.1.2
+        uses: DFE-Digital/rsd-github-actions/.github/actions/validate-packages@5d9289aaafc5d0a591dab9d93a93be27381fc5e5 # v1.1.3
         with:
           environment: ${{ needs.set-env.outputs.environment }}
 
@@ -80,7 +80,7 @@ jobs:
           git push origin ${{ needs.set-env.outputs.release }}
 
       - name: Create release
-        uses: "actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea" # v7
+        uses: "actions/github-script@f28e40c7f34bde8b3046d885e986cb6290c5673b" # v7
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           script: |
@@ -171,4 +171,6 @@ jobs:
      with:
        environment: ${{ needs.set-env.outputs.environment }}
        branch-name: ${{ needs.set-env.outputs.branch }}
-     secrets: inherit
+     secrets:
+       TEST_OVERRIDE_CYPRESS_TEST_SECRET: ${{ secrets.TEST_OVERRIDE_CYPRESS_TEST_SECRET }}
+       BASE_URL: ${{ secrets.BASE_URL }}

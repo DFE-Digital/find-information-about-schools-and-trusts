@@ -15,7 +15,6 @@ public class TrustRepositoryTests
 
     private readonly DateTime _lastYear = DateTime.Today.AddYears(-1);
     private readonly DateTime _nextYear = DateTime.Today.AddYears(1);
-    private readonly DateTime _lastDecade = DateTime.Today.AddYears(-10);
     private readonly DateTime _yesterday = DateTime.Today.AddDays(-1);
     private readonly DateTime _today = DateTime.Today;
     private readonly DateTime _tomorrow = DateTime.Today.AddDays(1);
@@ -132,101 +131,6 @@ public class TrustRepositoryTests
             "",
             new DateTime(2007, 6, 28, 0, 0, 0, DateTimeKind.Utc)
         ));
-    }
-
-    [Fact]
-    public async Task GetTrustGovernanceAsync_ShouldReturnEmpty_WithNoGovernanceSet()
-    {
-        var result = await _sut.GetTrustGovernanceAsync("1234");
-
-        result.Should().BeEquivalentTo(new TrustGovernance([], [], [], []));
-    }
-
-    [Theory]
-    [InlineData("Member")]
-    [InlineData("Trustee")]
-    [InlineData("Accounting Officer")]
-    [InlineData("Chief Financial Officer")]
-    [InlineData("Chair of Trustees")]
-    public async Task GetTrustGovernanceAsync_ShouldReturnValidGovernors_WithTheCorrectRole(string role)
-    {
-        var output = CreateGovernor("1234", "9999", _lastYear, _nextYear, role, email: null);
-
-        var result = await _sut.GetTrustGovernanceAsync("1234");
-
-        var members = new List<Governor>();
-        var trustees = new List<Governor>();
-        var trustLeadership = new List<Governor>();
-
-        switch (role)
-        {
-            case "Member":
-                members.Add(output);
-                break;
-            case "Trustee":
-                trustees.Add(output);
-                break;
-            case "Accounting Officer":
-            case "Chief Financial Officer":
-            case "Chair of Trustees":
-                trustLeadership.Add(output);
-                break;
-        }
-
-        result.Should().BeEquivalentTo(
-            new TrustGovernance(trustLeadership.ToArray(), members.ToArray(), trustees.ToArray(), [])
-        );
-    }
-
-    [Theory]
-    [InlineData("Shared Chair of Local Governing Body - Group")]
-    [InlineData("Shared Local Governor - Group")]
-    [InlineData("Governor")]
-    [InlineData("Local Govenor")]
-    public async Task GetTrustGovernanceAsync_ShouldReturnNoGovernors_WithTheIncorrectRole(string role)
-    {
-        _ = CreateGovernor("1234", "9999", _lastYear, _nextYear, role);
-        var result = await _sut.GetTrustGovernanceAsync("1234");
-
-        result.Should().BeEquivalentTo(
-            new TrustGovernance([], [], [], [])
-        );
-    }
-
-    [Theory]
-    [InlineData("Member")]
-    [InlineData("Trustee")]
-    [InlineData("Accounting Officer")]
-    [InlineData("Chief Financial Officer")]
-    [InlineData("Chair of Trustees")]
-    [InlineData("Shared Chair of Local Governing Body - Group")]
-    [InlineData("Shared Local Governor - Group")]
-    [InlineData("Governor")]
-    [InlineData("Local Govenor")]
-    public async Task GetTrustGovernanceAsync_ShouldReturnHistoricGovernors_WhenTheyExist_IrrespectiveOfRole(
-        string role)
-    {
-        var output = CreateGovernor("1234", "9999", _lastDecade, _lastYear, role, email: null);
-
-        var result = await _sut.GetTrustGovernanceAsync("1234");
-
-        result.Should().BeEquivalentTo(
-            new TrustGovernance([], [], [], [output])
-        );
-    }
-
-    [Fact]
-    public async Task GetTrustGovernanceAsync_ShouldSortHistoricAndCurrentGovernors()
-    {
-        var currentMember1 = CreateGovernor("1234", "9999", _lastDecade, _today, email: null);
-        var currentMember2 = CreateGovernor("1234", "9998", _lastDecade, _tomorrow, email: null);
-        var historicMember = CreateGovernor("1234", "9997", _lastDecade, _yesterday, email: null);
-
-        var result = await _sut.GetTrustGovernanceAsync("1234");
-
-        result.Should().BeEquivalentTo(
-            new TrustGovernance([], [currentMember1, currentMember2], [], [historicMember])
-        );
     }
 
     [Fact]

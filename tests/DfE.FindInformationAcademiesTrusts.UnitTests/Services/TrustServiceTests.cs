@@ -25,6 +25,7 @@ public class TrustServiceTests
     private readonly TrustService _sut;
     private readonly IAcademyRepository _mockAcademyRepository = Substitute.For<IAcademyRepository>();
     private readonly ITrustRepository _mockTrustRepository = Substitute.For<ITrustRepository>();
+    private readonly ITrustGovernanceRepository _mockTrustGovernanceRepository = Substitute.For<ITrustGovernanceRepository>();
     private readonly IContactRepository _mockContactRepository = Substitute.For<IContactRepository>();
     private readonly IDateTimeProvider _mockDateTimeProvider = Substitute.For<IDateTimeProvider>();
     private readonly MockMemoryCache _mockMemoryCache = new();
@@ -33,6 +34,7 @@ public class TrustServiceTests
     {
         _sut = new TrustService(_mockAcademyRepository,
             _mockTrustRepository,
+            _mockTrustGovernanceRepository,
             _mockContactRepository,
             _mockMemoryCache.Object,
             _mockDateTimeProvider);
@@ -150,8 +152,7 @@ public class TrustServiceTests
             AppointingBody: "Nick Warms",
             Email: null
         );
-        _mockTrustRepository.GetTrustGovernanceAsync("1234")
-            .Returns(Task.FromResult(new TrustGovernance([leader], [member], [trustee], [historic])));
+        _mockTrustGovernanceRepository.GetTrustGovernanceAsync("1234").Returns([leader, member, trustee, historic]);
 
         var result = await _sut.GetTrustGovernanceAsync("1234");
 

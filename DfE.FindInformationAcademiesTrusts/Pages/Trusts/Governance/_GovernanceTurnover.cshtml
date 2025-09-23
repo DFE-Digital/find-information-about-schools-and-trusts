@@ -1,15 +1,33 @@
 ﻿@using DfE.FindInformationAcademiesTrusts.Configuration
 @model GovernanceAreaModel
 <feature name="@FeatureFlags.GovernanceTurnover">
-<div class="govuk-summary-card">
-  <div class="govuk-summary-card__title-wrapper">
-    <h2 class="govuk-summary-card__title">Governance turnover</h2>
-  </div>
-  <div class="govuk-summary-card__content">
-    <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-top-2 govuk-!-margin-bottom-2">
-      @Model.TrustGovernance.TurnoverRate.ToString("0.#")% within the last 12 months
+  <div class="govuk-inset-text govuk-!-margin-top-0">
+    <p class="govuk-body govuk-!-font-weight-bold" data-testid="turnover-rate-headline">
+      The governance turnover rate is @Model.TrustGovernance.TurnoverRate.ToString("0.#")% within the last 12 months
     </p>
-    <p class="govuk-body">Governance turnover % is calculated based on the total number of appointments and resignations in the past calendar year, divided by the total number of current governors.</p>
+    <p class="govuk-body" data-testid="turnover-rate-summary">
+      This is the number of trustees appointed or resigned as a proportion of the number of trustees on the board.
+    </p>
   </div>
-</div>
+  <details class="govuk-details" data-testid="turnover-calculation-explanation">
+    <summary class="govuk-details__summary">
+      <span class="govuk-details__summary-text">
+        How governance turnover is calculated
+      </span>
+    </summary>
+    <div class="govuk-details__text">
+      <p class="govuk-body">Governance turnover % is calculated based on the total number of appointments and resignations in the past calendar year, divided by the total number of current governors.</p>
+      <p class="govuk-body">This calculation includes:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>Chair of Trustees</li>
+        <li>Trustees</li>
+      </ul>
+      <p class="govuk-body">This calculation <span class="govuk-!-font-weight-bold">does not</span> include:</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>Accounting Officer</li>
+        <li>Chief Financial Officer</li>
+        <li>Members</li>
+      </ul>
+    </div>
+  </details>
 </feature>

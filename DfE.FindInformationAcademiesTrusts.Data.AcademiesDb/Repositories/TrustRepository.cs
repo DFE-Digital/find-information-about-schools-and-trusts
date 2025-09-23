@@ -68,33 +68,6 @@ public class TrustRepository(
         return trustOverview;
     }
 
-    public async Task<TrustGovernance> GetTrustGovernanceAsync(string uid, string? urn = null)
-    {
-        IQueryable<GiasGovernance> query = academiesDbContext.GiasGovernances;
-
-        var governors = await FilterBySatOrMat(uid, urn, query)
-            .Select(governance => new Governor(
-                governance.Gid!,
-                governance.Uid!,
-                stringFormattingUtilities.GetFullName(governance.Forename1!, governance.Forename2!,
-                    governance.Surname!),
-                governance.Role!,
-                governance.AppointingBody!,
-                governance.DateOfAppointment.ParseAsNullableDate(),
-                governance.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
-                null))
-            .ToArrayAsync();
-
-        var governersDto = new TrustGovernance(
-            governors.Where(g => g.IsCurrentOrFutureGovernor && g.HasRoleLeadership).ToArray(),
-            governors.Where(g => g.IsCurrentOrFutureGovernor && g.HasRoleMember).ToArray(),
-            governors.Where(g => g.IsCurrentOrFutureGovernor && g.HasRoleTrustee).ToArray(),
-            governors.Where(g => !g.IsCurrentOrFutureGovernor).ToArray()
-        );
-
-        return governersDto;
-    }
-
     public static IQueryable<GiasGovernance> FilterBySatOrMat(string uid, string? urn, IQueryable<GiasGovernance> query)
     {
         if (!string.IsNullOrEmpty(urn))

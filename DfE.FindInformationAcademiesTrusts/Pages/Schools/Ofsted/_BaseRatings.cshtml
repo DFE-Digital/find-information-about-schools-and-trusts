@@ -71,26 +71,7 @@
                         Before or after joining the trust
                     </dt>
                     <dd class="govuk-summary-list__value">
-                        @switch (Model.InspectionBeforeOrAfterJoiningTrust)
-                        {
-                            case BeforeOrAfterJoining.Before:
-                                <strong class="govuk-tag govuk-tag--grey">
-                                    Before joining
-                                </strong>
-                                break;
-                            case BeforeOrAfterJoining.After:
-                                <strong class="govuk-tag">
-                                    After joining
-                                </strong>
-                                break;
-                            case BeforeOrAfterJoining.NotYetInspected:
-                                <strong class="govuk-tag govuk-tag--grey">
-                                    Not yet inspected
-                                </strong>
-                                break;
-                            default:
-                                throw new InvalidEnumArgumentException($"Unknown value of BeforeOrAfterJoining: {Model.InspectionBeforeOrAfterJoiningTrust}");
-                        }
+                        <partial name="_InspectionBeforeOrAfter" model="Model.InspectionBeforeOrAfterJoiningTrust" />
                     </dd>
                 </div>
             }
