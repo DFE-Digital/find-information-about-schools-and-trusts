@@ -98,7 +98,8 @@ public class SchoolService(
             schoolOfstedRatings.DateAcademyJoinedTrust,
             schoolOfstedRatings.ShortInspection,
             schoolOfstedRatings.PreviousOfstedRating,
-            schoolOfstedRatings.CurrentOfstedRating
+            schoolOfstedRatings.CurrentOfstedRating,
+            schoolOfstedRatings.IsFurtherEducationalEstablishment
         );
     }
 

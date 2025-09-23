@@ -33,7 +33,8 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
                     DateTime.ParseExact(gl.JoinedDate!, "dd/MM/yyyy", CultureInfo.InvariantCulture),
                     ofstedRatings[gl.Urn].ShortInspection,
                     ofstedRatings[gl.Urn].Previous,
-                    ofstedRatings[gl.Urn].Current
+                    ofstedRatings[gl.Urn].Current,
+                    ofstedRatings[gl.Urn].IsFurtherEducationalEstablishment
                 ))
             .ToArray();
 
@@ -63,10 +64,10 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
     public async Task<SchoolOfsted> GetSchoolOfstedRatingsAsync(int urn)
     {
         var urnString = urn.ToString();
-        
+
         var result = await GetOfstedRatings([urnString]);
         var ofstedRatings = result[urnString];
-        
+
         var giasGroupLink = await academiesDbContext.GiasGroupLinks
             .Where(gl => gl.Urn == urnString)
             .Select(gl => new
@@ -83,7 +84,8 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
             giasGroupLink?.JoinedDate.ParseAsNullableDate(),
             ofstedRatings.ShortInspection,
             ofstedRatings.Previous,
-            ofstedRatings.Current
+            ofstedRatings.Current,
+            ofstedRatings.IsFurtherEducationalEstablishment
         );
     }
 
@@ -115,7 +117,8 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
                     "URN {Urn} was not found in Mis.Establishments or Mis.FurtherEducationEstablishments. This indicates a data integrity issue with the Ofsted data in Academies Db.",
                     urn);
                 allOfstedRatings.Add(urn,
-                    new AcademyOfstedRatings(int.Parse(urn), OfstedShortInspection.Unknown, OfstedRating.Unknown, OfstedRating.Unknown, "none"));
+                    new AcademyOfstedRatings(int.Parse(urn), OfstedShortInspection.Unknown, OfstedRating.Unknown,
+                        OfstedRating.Unknown, false));
                 continue;
             }
 
@@ -128,8 +131,7 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
             }
 
             // Ensure that there are no current single headline grades after policy change on 2nd September 2024 - only applies to non-further ed establishments
-            if (foundRating.FromTable == nameof(academiesDbContext.MisMstrEstablishmentsFiat) &&
-                HasShgIssuedAfterPolicyChange(foundRating.Current))
+            if (!foundRating.IsFurtherEducationalEstablishment && HasShgIssuedAfterPolicyChange(foundRating.Current))
             {
                 logger.LogError(
                     "URN {Urn} has a current Ofsted single headline grade of {score} issued on {InspectionDate} which was after single headline grades stopped being issued on 2nd September. This could be a data integrity issue with the Ofsted data in Academies Db.",
@@ -145,8 +147,7 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
             }
 
             // Ensure that there are no previous single headline grades after policy change on 2nd September 2024 - only applies to non-further ed establishments
-            if (foundRating.FromTable == nameof(academiesDbContext.MisMstrEstablishmentsFiat) &&
-                HasShgIssuedAfterPolicyChange(foundRating.Previous))
+            if (!foundRating.IsFurtherEducationalEstablishment && HasShgIssuedAfterPolicyChange(foundRating.Previous))
             {
                 logger.LogError(
                     "URN {Urn} has a previous Ofsted single headline grade of {score} issued on {InspectionDate} which was after single headline grades stopped being issued on 2nd September. This could be a data integrity issue with the Ofsted data in Academies Db.",
@@ -225,7 +226,7 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
                     me.PreviousCategoryOfConcern.ToCategoriesOfConcern(),
                     me.PreviousSafeguardingIsEffective.ToSafeguardingScore(),
                     me.PreviousInspectionStartDate.ParseAsNullableDate()),
-                nameof(academiesDbContext.MisMstrEstablishmentsFiat)
+                false
             ))
             .ToListAsync();
 
@@ -263,7 +264,7 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
                         CategoriesOfConcern.DoesNotApply,
                         mfe.PreviousSafeguarding.ToSafeguardingScore(),
                         mfe.PreviousLastDayOfInspection.ParseAsNullableDate()),
-                    nameof(academiesDbContext.MisMstrFurtherEducationEstablishmentsFiat)
+                    true
                 ))
                 .ToArrayAsync()
             );
@@ -278,5 +279,10 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<Ac
                rating.OverallEffectiveness != OfstedRatingScore.SingleHeadlineGradeNotAvailable;
     }
 
-    private sealed record AcademyOfstedRatings(int Urn, OfstedShortInspection ShortInspection, OfstedRating Current, OfstedRating Previous, string FromTable);
+    private sealed record AcademyOfstedRatings(
+        int Urn,
+        OfstedShortInspection ShortInspection,
+        OfstedRating Current,
+        OfstedRating Previous,
+        bool IsFurtherEducationalEstablishment);
 }

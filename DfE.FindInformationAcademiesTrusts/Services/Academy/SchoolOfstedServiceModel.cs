@@ -9,7 +9,8 @@ public record SchoolOfstedServiceModel(
     DateTime? DateAcademyJoinedTrust,
     OfstedShortInspection ShortInspection,
     OfstedRating PreviousOfstedRating,
-    OfstedRating CurrentOfstedRating
+    OfstedRating CurrentOfstedRating,
+    bool IsFurtherEducationalEstablishment
 )
 {
     public bool HasRecentShortInspection => ShortInspection.InspectionDate > CurrentOfstedRating.InspectionDate;

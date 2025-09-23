@@ -6,5 +6,6 @@ public record SchoolOfsted(
     DateTime? DateAcademyJoinedTrust,
     OfstedShortInspection ShortInspection,
     OfstedRating PreviousOfstedRating,
-    OfstedRating CurrentOfstedRating
+    OfstedRating CurrentOfstedRating,
+    bool IsFurtherEducationalEstablishment
 );
