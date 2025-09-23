@@ -102,6 +102,7 @@ public static class Dependencies
         builder.Services.AddScoped<IOfstedTrustDataExportService, OfstedTrustDataExportService>();
         builder.Services.AddScoped<IOfstedSchoolDataExportService, OfstedSchoolDataExportService>();
         builder.Services.AddScoped<IAcademiesExportService, AcademiesExportService>();
+        builder.Services.AddScoped<ISchoolPupilsExportService, SchoolPupilsExportService>();
 
         builder.Services.AddScoped<IOtherServicesLinkBuilder, OtherServicesLinkBuilder>();
         builder.Services.AddScoped<IFreeSchoolMealsAverageProvider, FreeSchoolMealsAverageProvider>();

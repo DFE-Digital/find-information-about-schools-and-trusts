@@ -90,5 +90,21 @@
             ProjectType = 5,
             ChangeDate = 6
         }
+
+        public enum SchoolPopulationColumns
+        {
+            Year = 1,
+            NumberOfPupilsOnRole = 2,
+            NumberOfEligiblePupilsWithEhcPlan = 3,
+            PercentageOfEligiblePupilsWithEhcPlan = 4,
+            NumberOfEligiblePupilsWithSenSupport = 5,
+            PercentageOfEligiblePupilsWithSenSupport = 6,
+            NumberOfPupilsWithEnglishAsAnAdditionalLanguage = 7,
+            PercentageOfPupilsWithEnglishAsAnAdditionalLanguage = 8,
+            NumberOfPupilsEligibleForFreeSchoolMeals = 9,
+            PercentageOfPupilsEligibleForFreeSchoolMeals = 10,
+            PercentageOfOverallAbsence = 11,
+            PercentageOfEnrolmentsWhoArePersistentAbsentees = 12
+        }
     }
 }
