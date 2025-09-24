@@ -14,7 +14,7 @@
         <main id="main-content">
           @await RenderSectionAsync("SchoolPageMessage", false)
           <header>
-            <h1 class="govuk-heading-l" data-testid="page-name">@Model.PageMetadata.PageName</h1>
+            <h2 class="govuk-heading-l" data-testid="page-name">@Model.PageMetadata.PageName</h2>
           </header>
           <partial name="Shared/NavMenu/_SubNav" model="@Model.SubNavLinks"/>
           @RenderBody()
