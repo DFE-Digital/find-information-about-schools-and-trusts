@@ -5,7 +5,7 @@ import { testSchoolData } from "../../../../support/test-data-store";
 describe("School Pupils Pages", () => {
 
     describe('Population page', () => {
-        testSchoolData.forEach(({ typeOfSchool, urn }) => {
+        for (const {typeOfSchool, urn} of testSchoolData) {
             it(`Checks population page basics for ${typeOfSchool} on urn ${urn}`, () => {
                 cy.visit(`/schools/pupils/population?urn=${urn}`);
 
@@ -26,7 +26,7 @@ describe("School Pupils Pages", () => {
                     .checkPopulationDataRowsPresent()
                     .verifyPopulationDataIntegrity();
             });
-        });
+        }
 
         it(`Verifies population table has 5 data rows`, () => {
             cy.visit(`/schools/pupils/population?urn=${testSchoolData[0].urn}`);
@@ -43,7 +43,7 @@ describe("School Pupils Pages", () => {
     });
 
     describe('Attendance page', () => {
-        testSchoolData.forEach(({ typeOfSchool, urn }) => {
+        for (const { typeOfSchool, urn} of testSchoolData) {
             it(`Checks attendance page basics for ${typeOfSchool} on urn ${urn}`, () => {
                 cy.visit(`/schools/pupils/attendance?urn=${urn}`);
 
@@ -64,7 +64,7 @@ describe("School Pupils Pages", () => {
                     .checkAttendanceDataRowsPresent()
                     .verifyAttendanceDataIntegrity();
             });
-        });
+        }
 
         it(`Verifies attendance table has 2 data rows`, () => {
             cy.visit(`/schools/pupils/attendance?urn=${testSchoolData[0].urn}`);
