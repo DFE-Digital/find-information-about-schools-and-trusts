@@ -1,5 +1,6 @@
 @page "/trusts/academies/in-trust/pupil-numbers"
 @using DfE.FindInformationAcademiesTrusts.Extensions
+@using DfE.FindInformationAcademiesTrusts.Pages.Shared
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model PupilNumbersModel
 
@@ -50,7 +51,7 @@
 @section Export
 {
   @{
-    var exportModel = new AcademiesExportButtonModel(Model.TrustSummary.Uid, "Download all academy data", "export-academy-data");
+    var exportModel = new ExportButtonModel("uid", Model.TrustSummary.Uid, "Download all academy data", "export-academy-data");
   }
-  <partial name="Trusts/Academies/_AcademiesExportButton" model="exportModel" />
+  <partial name="Shared/_ExportButton" model="exportModel" />
 }
