@@ -8,9 +8,10 @@ public class AttendanceModelTests : BasePupilsAreaModelTests<AttendanceModel>
     public AttendanceModelTests()
     {
         Sut = new AttendanceModel(
-            MockDateTimeProvider,
             MockSchoolPupilService,
+            MockDateTimeProvider,
             MockDataSourceService,
+            MockSchoolPupilsExportService,
             MockSchoolService,
             MockTrustService,
             MockSchoolNavMenu)
