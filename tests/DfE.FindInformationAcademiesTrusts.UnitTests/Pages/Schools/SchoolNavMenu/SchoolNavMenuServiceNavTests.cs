@@ -186,6 +186,7 @@ public class SchoolNavMenuServiceNavTests : SchoolNavMenuTestsBase
             nameof(FederationModel) => "/Schools/Overview/Details",
             nameof(ReferenceNumbersModel) => "/Schools/Overview/Details",
             nameof(PopulationModel) => "/Schools/Pupils/Population",
+            nameof(AttendanceModel) => "/Schools/Pupils/Population",
             nameof(CurrentModel) => "/Schools/Governance/Current",
             nameof(HistoricModel) => "/Schools/Governance/Current",
             nameof(SingleHeadlineGradesModel) => "/Schools/Ofsted/SingleHeadlineGrades",

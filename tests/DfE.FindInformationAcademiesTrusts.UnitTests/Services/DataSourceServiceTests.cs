@@ -33,7 +33,8 @@ public class DataSourceServiceTests
         { Source.MisFurtherEducation, GetDummyDataSource(Source.MisFurtherEducation, UpdateFrequency.Monthly) },
         { Source.Mstr, GetDummyDataSource(Source.Mstr, UpdateFrequency.Daily) },
         { Source.Prepare, GetDummyDataSource(Source.Prepare, UpdateFrequency.Daily) },
-        { Source.CompareSchoolCollegePerformanceEngland, GetDummyDataSource(Source.CompareSchoolCollegePerformanceEngland, UpdateFrequency.Annually) }
+        { Source.CompareSchoolCollegePerformanceEnglandPopulation, GetDummyDataSource(Source.CompareSchoolCollegePerformanceEnglandPopulation, UpdateFrequency.Annually) },
+        { Source.CompareSchoolCollegePerformanceEnglandAttendance, GetDummyDataSource(Source.CompareSchoolCollegePerformanceEnglandAttendance, UpdateFrequency.Annually) }
     };
 
     private readonly DataSource _dummyInternalContactDataSource =
@@ -49,7 +50,8 @@ public class DataSourceServiceTests
             Source.Cdm, Source.Complete, Source.Gias, Source.ManageFreeSchoolProjects, Source.Mis,
             Source.MisFurtherEducation, Source.Mstr,
             Source.Prepare,
-            Source.CompareSchoolCollegePerformanceEngland,
+            Source.CompareSchoolCollegePerformanceEnglandPopulation,
+            Source.CompareSchoolCollegePerformanceEnglandAttendance,
         ];
 
         _mockDataSourceRepository.GetAsync(Arg.Is<Source>(source => supportedAcademiesDbSources.Contains(source)))
@@ -84,7 +86,8 @@ public class DataSourceServiceTests
     [InlineData(Source.Mis, UpdateFrequency.Monthly)]
     [InlineData(Source.MisFurtherEducation, UpdateFrequency.Monthly)]
     [InlineData(Source.Mstr, UpdateFrequency.Daily)]
-    [InlineData(Source.CompareSchoolCollegePerformanceEngland, UpdateFrequency.Annually)]
+    [InlineData(Source.CompareSchoolCollegePerformanceEnglandPopulation, UpdateFrequency.Annually)]
+    [InlineData(Source.CompareSchoolCollegePerformanceEnglandAttendance, UpdateFrequency.Annually)]
     public async Task GetAsync_cached_should_return_cached_result(Source source, UpdateFrequency updateFrequency)
     {
         var dataSource = new DataSourceServiceModel(source, new DateTime(2024, 01, 01), updateFrequency);
@@ -105,7 +108,8 @@ public class DataSourceServiceTests
     [InlineData(Source.MisFurtherEducation, UpdateFrequency.Monthly)]
     [InlineData(Source.Mstr, UpdateFrequency.Daily)]
     [InlineData(Source.Prepare, UpdateFrequency.Daily)]
-    [InlineData(Source.CompareSchoolCollegePerformanceEngland, UpdateFrequency.Annually)]
+    [InlineData(Source.CompareSchoolCollegePerformanceEnglandPopulation, UpdateFrequency.Annually)]
+    [InlineData(Source.CompareSchoolCollegePerformanceEnglandAttendance, UpdateFrequency.Annually)]
     public async Task GetAsync_uncached_should_call_dataSourceRepository(Source source, UpdateFrequency updateFrequency)
     {
         var expectedCacheTimeSpan =
@@ -130,7 +134,8 @@ public class DataSourceServiceTests
     [InlineData(Source.MisFurtherEducation)]
     [InlineData(Source.Mstr)]
     [InlineData(Source.Prepare)]
-    [InlineData(Source.CompareSchoolCollegePerformanceEngland)]
+    [InlineData(Source.CompareSchoolCollegePerformanceEnglandPopulation)]
+    [InlineData(Source.CompareSchoolCollegePerformanceEnglandAttendance)]
     public async Task GetAsync_uncached_should_call_academiesDbDataSourceRepository(Source source)
     {
         var result = await _sut.GetAsync(source);
@@ -149,7 +154,8 @@ public class DataSourceServiceTests
     [InlineData(Source.MisFurtherEducation, UpdateFrequency.Monthly)]
     [InlineData(Source.Mstr, UpdateFrequency.Daily)]
     [InlineData(Source.Prepare, UpdateFrequency.Daily)]
-    [InlineData(Source.CompareSchoolCollegePerformanceEngland, UpdateFrequency.Annually)]
+    [InlineData(Source.CompareSchoolCollegePerformanceEnglandPopulation, UpdateFrequency.Annually)]
+    [InlineData(Source.CompareSchoolCollegePerformanceEnglandAttendance, UpdateFrequency.Annually)]
     public async Task GetAsync_uncached_should_cache_result(Source source, UpdateFrequency updateFrequency)
     {
         var expectedCacheTimeSpan =

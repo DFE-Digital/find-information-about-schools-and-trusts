@@ -43,7 +43,9 @@ public record DataSourceListEntry(List<DataSourceServiceModel> DataSources, stri
             Source.Prepare => "Prepare",
             Source.Complete => "Complete",
             Source.ManageFreeSchoolProjects => "Manage free school projects",
-            Source.CompareSchoolCollegePerformanceEngland => "Compare school and college performance in England",
+            Source.CompareSchoolCollegePerformanceEnglandPopulation
+                or Source.CompareSchoolCollegePerformanceEnglandAttendance =>
+                    "Compare school and college performance in England",
             _ => "Unknown"
         };
     }

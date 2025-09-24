@@ -1,0 +1,17 @@
+@using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus
+@model DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus.Census
+
+@{
+    var censusText = Model switch
+    {
+        Census.Spring => "spring",
+        Census.Autumn => "autumn",
+        _ => throw new ArgumentOutOfRangeException($"Unknown census type '{Model}'.")
+    };
+}
+
+<p class="govuk-body" data-testid="@censusText-census-text">
+    The following data is taken from the
+    <span class="govuk-!-font-weight-bold">@censusText</span>
+    census of each year, where available.
+</p>
