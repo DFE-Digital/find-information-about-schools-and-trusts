@@ -36,16 +36,11 @@
         </td>
 
         <td class="govuk-body govuk-table__cell" data-sort-value="@academy.NumberOfPupils"
-            data-testid="pupil-numbers">@academy.NumberOfPupils?.ToString("N0")</td>
+            data-testid="pupil-numbers">@academy.NumberOfPupils.DisplayValue()</td>
         <td class="govuk-body govuk-table__cell" data-sort-value="@academy.SchoolCapacity"
             data-testid="pupil-capacity">@academy.SchoolCapacity?.ToString("N0")</td>
         <td class="govuk-body govuk-table__cell" data-sort-value="@academy.PercentageFull"
-            data-testid="percentage-full">
-          @if (academy.PercentageFull is not null)
-          {
-            @($"{academy.PercentageFull?.ToString("N0")}%")
-          }
-        </td>
+            data-testid="percentage-full">@academy.PercentageFull.DisplayPercentage()</td>
       </tr>
     }
     </tbody>

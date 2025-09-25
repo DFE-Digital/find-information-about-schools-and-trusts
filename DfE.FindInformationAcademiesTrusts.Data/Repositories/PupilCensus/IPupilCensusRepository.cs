@@ -4,4 +4,5 @@ public interface IPupilCensusRepository
 {
     public Task<AnnualStatistics<SchoolPopulation>> GetSchoolPopulationStatisticsAsync(int urn);
     public Task<AnnualStatistics<Attendance>> GetAttendanceStatisticsAsync(int urn);
+    public Task<TrustStatistics<SchoolPopulation>> GetMostRecentPopulationStatisticsForTrustAsync(string uid);
 }

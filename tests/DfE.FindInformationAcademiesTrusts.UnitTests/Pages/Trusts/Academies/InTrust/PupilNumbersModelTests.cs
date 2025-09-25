@@ -1,4 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Academies.InTrust;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
 
@@ -28,7 +29,7 @@ public class PupilNumbersModelTests : AcademiesInTrustAreaModelTests<PupilNumber
         var ageRange = new AgeRange(minAge, maxAge);
         var testAcademyUrn = "1234";
         var testAcademyName = "Test Academy";
-        var testAcademyNumberOfPupils = 100;
+        var testAcademyNumberOfPupils = new Statistic<int>.WithValue(100);
         var testAcademySchoolCapacity = 100;
 
         var result = PupilNumbersModel.PhaseAndAgeRangeSortValue(new AcademyPupilNumbersServiceModel(testAcademyUrn,
@@ -40,7 +41,7 @@ public class PupilNumbersModelTests : AcademiesInTrustAreaModelTests<PupilNumber
     [Fact]
     public override async Task OnGetAsync_sets_academies_from_academyService()
     {
-        var academy = new AcademyPupilNumbersServiceModel("", null, null, new AgeRange(5, 11), null, null);
+        var academy = new AcademyPupilNumbersServiceModel("", null, null, new AgeRange(5, 11), Statistic<int>.NotAvailable, null);
         var academies = new[]
         {
             academy with { Urn = "1" },

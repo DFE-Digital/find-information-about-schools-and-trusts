@@ -1,4 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Edperf_Mstr;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 
@@ -6,8 +7,13 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Reposito
 
 public class PupilCensusRepositoryTests
 {
-    private const int Urn = 123456;
+    private const int SchoolUrn = 123456;
 
+    private const int AcademyUrn1 = 234567;
+    private const int AcademyUrn2 = 345678;
+    
+    private const string Uid = "1234";
+    
     private readonly PupilCensusRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
 
@@ -15,7 +21,7 @@ public class PupilCensusRepositoryTests
     [
         new()
         {
-            Urn = Urn,
+            Urn = SchoolUrn,
             DownloadYear = "2020-2021",
             CensusNor = "100",
             CensusTsenelse = "10",
@@ -32,7 +38,7 @@ public class PupilCensusRepositoryTests
         },
         new()
         {
-            Urn = Urn,
+            Urn = SchoolUrn,
             DownloadYear = "2021-2022",
             CensusNor = "200",
             CensusTsenelse = "20",
@@ -49,7 +55,7 @@ public class PupilCensusRepositoryTests
         },
         new()
         {
-            Urn = Urn,
+            Urn = SchoolUrn,
             DownloadYear = "2022-2023",
             CensusNor = "300",
             CensusTsenelse = "30",
@@ -66,7 +72,7 @@ public class PupilCensusRepositoryTests
         },
         new()
         {
-            Urn = Urn,
+            Urn = SchoolUrn,
             DownloadYear = "2023-2024",
             CensusNor = "400",
             CensusTsenelse = "40",
@@ -83,7 +89,7 @@ public class PupilCensusRepositoryTests
         },
         new()
         {
-            Urn = Urn,
+            Urn = SchoolUrn,
             DownloadYear = "2024-2025",
             CensusNor = "500",
             CensusTsenelse = "50",
@@ -97,6 +103,48 @@ public class PupilCensusRepositoryTests
             AbsencePpersabs10 = "55.0",
             MetaCensusIngestionDatetime = DateTime.Parse("2024-08-31"),
             MetaAbsenceIngestionDatetime = DateTime.Parse("2024-08-31")
+        },
+        new()
+        {
+            Urn = AcademyUrn1,
+            DownloadYear = "2020-2021",
+            CensusNor = "600",
+            CensusTsenelse = "60",
+            CensusPsenelse = "60.0",
+            CensusTsenelk = "61",
+            CensusPsenelk = "61.0",
+            CensusNumeal = "62",
+            CensusPnumeal = "62.0",
+            CensusNumfsm = "63",
+            AbsencePerctot = "64.0",
+        },
+        new()
+        {
+            Urn = AcademyUrn2,
+            DownloadYear = "2021-2022",
+            CensusNor = "700",
+            CensusTsenelse = "70",
+            CensusPsenelse = "70.0",
+            CensusTsenelk = "71",
+            CensusPsenelk = "71.0",
+            CensusNumeal = "72",
+            CensusPnumeal = "72.0",
+            CensusNumfsm = "73",
+            AbsencePerctot = "74.0",
+        },
+        new()
+        {
+            Urn = AcademyUrn2,
+            DownloadYear = "2022-2023",
+            CensusNor = "800",
+            CensusTsenelse = "80",
+            CensusPsenelse = "80.0",
+            CensusTsenelk = "81",
+            CensusPsenelk = "81.0",
+            CensusNumeal = "82",
+            CensusPnumeal = "82.0",
+            CensusNumfsm = "83",
+            AbsencePerctot = "84.0",
         }
     ];
 
@@ -215,9 +263,46 @@ public class PupilCensusRepositoryTests
             }
         };
 
+    private readonly Dictionary<int, SchoolPopulation> _dummySchoolPopulationsForTrust =
+        new()
+        {
+            {
+                AcademyUrn1,
+                new SchoolPopulation(
+                    new Statistic<int>.WithValue(600),
+                    new Statistic<int>.WithValue(60),
+                    new Statistic<decimal>.WithValue(60.0m),
+                    new Statistic<int>.WithValue(61),
+                    new Statistic<decimal>.WithValue(61.0m),
+                    new Statistic<int>.WithValue(62),
+                    new Statistic<decimal>.WithValue(62.0m),
+                    new Statistic<int>.WithValue(63),
+                    new Statistic<decimal>.WithValue(63.0m)
+                )
+            },
+            {
+                AcademyUrn2,
+                new SchoolPopulation(
+                    new Statistic<int>.WithValue(800),
+                    new Statistic<int>.WithValue(80),
+                    new Statistic<decimal>.WithValue(80.0m),
+                    new Statistic<int>.WithValue(81),
+                    new Statistic<decimal>.WithValue(81.0m),
+                    new Statistic<int>.WithValue(82),
+                    new Statistic<decimal>.WithValue(82.0m),
+                    new Statistic<int>.WithValue(83),
+                    new Statistic<decimal>.WithValue(83.0m)
+                )
+            }
+        };
+
     public PupilCensusRepositoryTests()
     {
         _mockAcademiesDbContext.EdperfFiats.AddRange(_dummyEdperfFiats);
+        _mockAcademiesDbContext.GiasGroupLinks.AddRange([
+            new GiasGroupLink { GroupUid = Uid, Urn = AcademyUrn1.ToString(), GroupStatusCode = "OPEN", JoinedDate = "01/01/2020" },
+            new GiasGroupLink { GroupUid = Uid, Urn = AcademyUrn2.ToString(), GroupStatusCode = "OPEN", JoinedDate = "01/01/2020" }
+        ]);
 
         _sut = new PupilCensusRepository(_mockAcademiesDbContext.Object);
     }
@@ -237,14 +322,14 @@ public class PupilCensusRepositoryTests
         mockDbContext.EdperfFiats.AddRange([
             new EdperfFiat
             {
-                Urn = Urn,
+                Urn = SchoolUrn,
                 DownloadYear = "2019-2020"
             }
         ]);
 
         var sut = new PupilCensusRepository(mockDbContext.Object);
 
-        var result = await sut.GetSchoolPopulationStatisticsAsync(Urn);
+        var result = await sut.GetSchoolPopulationStatisticsAsync(SchoolUrn);
 
         result.Should().NotBeEmpty();
         result.Should().HaveCount(1);
@@ -255,8 +340,7 @@ public class PupilCensusRepositoryTests
     public async Task
         GetSchoolPopulationStatisticsAsync_should_return_school_population_statistics_when_school_is_found()
     {
-        var result = await _sut.GetSchoolPopulationStatisticsAsync(Urn);
-
+        var result = await _sut.GetSchoolPopulationStatisticsAsync(SchoolUrn);
         result.Should().BeEquivalentTo(_dummySchoolPopulations);
     }
 
@@ -274,7 +358,7 @@ public class PupilCensusRepositoryTests
         mockDbContext.EdperfFiats.AddRange([
             new EdperfFiat
             {
-                Urn = Urn,
+                Urn = SchoolUrn,
                 DownloadYear = "2019-2020",
                 CensusNor = statisticValue,
                 CensusTsenelse = statisticValue,
@@ -289,8 +373,7 @@ public class PupilCensusRepositoryTests
 
         var sut = new PupilCensusRepository(mockDbContext.Object);
 
-        var result = await sut.GetSchoolPopulationStatisticsAsync(Urn);
-
+        var result = await sut.GetSchoolPopulationStatisticsAsync(SchoolUrn);
         result.Should().NotBeEmpty();
         result.Should().HaveCount(1);
         result[2020].PupilsOnRole.Should().Be(Statistic<int>.FromKind(expectedKind));
@@ -312,7 +395,7 @@ public class PupilCensusRepositoryTests
         mockDbContext.EdperfFiats.AddRange([
             new EdperfFiat
             {
-                Urn = Urn,
+                Urn = SchoolUrn,
                 DownloadYear = "2019-2020",
                 CensusNor = "100",
                 CensusTsenelse = "10",
@@ -327,8 +410,7 @@ public class PupilCensusRepositoryTests
 
         var sut = new PupilCensusRepository(mockDbContext.Object);
 
-        var result = await sut.GetSchoolPopulationStatisticsAsync(Urn);
-
+        var result = await sut.GetSchoolPopulationStatisticsAsync(SchoolUrn);
         result.Should().NotBeEmpty();
         result.Should().HaveCount(1);
         result[2020].PupilsWithEhcPlanPercentage.Should().Be(new Statistic<decimal>.WithValue(10.0m));
@@ -353,14 +435,14 @@ public class PupilCensusRepositoryTests
         mockDbContext.EdperfFiats.AddRange([
             new EdperfFiat
             {
-                Urn = Urn,
+                Urn = SchoolUrn,
                 DownloadYear = "2019-2020"
             }
         ]);
 
         var sut = new PupilCensusRepository(mockDbContext.Object);
 
-        var result = await sut.GetAttendanceStatisticsAsync(Urn);
+        var result = await sut.GetAttendanceStatisticsAsync(SchoolUrn);
 
         result.Should().NotBeEmpty();
         result.Should().HaveCount(1);
@@ -370,7 +452,7 @@ public class PupilCensusRepositoryTests
     [Fact]
     public async Task GetAttendanceStatisticsAsync_should_return_attendance_statistics_when_school_is_found()
     {
-        var result = await _sut.GetAttendanceStatisticsAsync(Urn);
+        var result = await _sut.GetAttendanceStatisticsAsync(SchoolUrn);
 
         result.Should().BeEquivalentTo(_dummyAttendances);
     }
@@ -389,7 +471,7 @@ public class PupilCensusRepositoryTests
         mockDbContext.EdperfFiats.AddRange([
             new EdperfFiat
             {
-                Urn = Urn,
+                Urn = SchoolUrn,
                 DownloadYear = "2019-2020",
                 AbsencePerctot = statisticValue,
                 AbsencePpersabs10 = statisticValue
@@ -398,7 +480,7 @@ public class PupilCensusRepositoryTests
 
         var sut = new PupilCensusRepository(mockDbContext.Object);
 
-        var result = await sut.GetAttendanceStatisticsAsync(Urn);
+        var result = await sut.GetAttendanceStatisticsAsync(SchoolUrn);
 
         result.Should().NotBeEmpty();
         result.Should().HaveCount(1);
@@ -414,7 +496,7 @@ public class PupilCensusRepositoryTests
         mockDbContext.EdperfFiats.AddRange([
             new EdperfFiat
             {
-                Urn = Urn,
+                Urn = SchoolUrn,
                 DownloadYear = "2019-2020",
                 AbsencePerctot = "10.0%",
                 AbsencePpersabs10 = "11.0%"
@@ -423,11 +505,104 @@ public class PupilCensusRepositoryTests
 
         var sut = new PupilCensusRepository(mockDbContext.Object);
 
-        var result = await sut.GetAttendanceStatisticsAsync(Urn);
+        var result = await sut.GetAttendanceStatisticsAsync(SchoolUrn);
 
         result.Should().NotBeEmpty();
         result.Should().HaveCount(1);
         result[2019].OverallAbsencePercentage.Should().Be(new Statistic<decimal>.WithValue(10.0m));
         result[2019].EnrolmentsWhoArePersistentAbsenteesPercentage.Should().Be(new Statistic<decimal>.WithValue(11.0m));
+    }
+
+    [Fact]
+    public async Task GetMostRecentPopulationStatisticsForTrustAsync_should_return_empty_when_trust_is_not_found()
+    {
+        var result = await _sut.GetMostRecentPopulationStatisticsForTrustAsync("9999");
+        
+        result.Should().BeEmpty();
+    }
+    
+    [Fact]
+    public async Task GetMostRecentPopulationStatisticsForTrustAsync_should_return_trust_population_statistics_when_trust_is_found()
+    {
+        var result = await _sut.GetMostRecentPopulationStatisticsForTrustAsync(Uid);
+        
+        result.Should().BeEquivalentTo(_dummySchoolPopulationsForTrust);
+    }
+    
+    [Theory]
+    [InlineData("SUPP", StatisticKind.Suppressed)]
+    [InlineData("NP", StatisticKind.NotPublished)]
+    [InlineData("NA", StatisticKind.NotApplicable)]
+    [InlineData("Other text", StatisticKind.NotAvailable)]
+    [InlineData("Different text", StatisticKind.NotAvailable)]
+    [InlineData("", StatisticKind.NotAvailable)]
+    public async Task GetMostRecentPopulationStatisticsForTrustAsync_parses_statistics_without_values_correctly(string statisticValue, StatisticKind expectedKind)
+    {
+        var mockDbContext = new MockAcademiesDbContext();
+        mockDbContext.EdperfFiats.AddRange([
+            new EdperfFiat
+            {
+                Urn = AcademyUrn1,
+                DownloadYear = "2019-2020",
+                CensusNor = statisticValue,
+                CensusTsenelse = statisticValue,
+                CensusPsenelse = statisticValue,
+                CensusTsenelk = statisticValue,
+                CensusPsenelk = statisticValue,
+                CensusNumeal = statisticValue,
+                CensusPnumeal = statisticValue,
+                CensusNumfsm = statisticValue,
+            }
+        ]);
+        mockDbContext.GiasGroupLinks.Add(new GiasGroupLink { GroupUid = Uid, Urn = AcademyUrn1.ToString(), GroupStatusCode = "OPEN", JoinedDate = "01/01/2020" });
+
+        var sut = new PupilCensusRepository(mockDbContext.Object);
+        
+        var result = await sut.GetMostRecentPopulationStatisticsForTrustAsync(Uid);
+        
+        result.Should().NotBeEmpty();
+        result.Should().HaveCount(1);
+        result[AcademyUrn1].PupilsOnRole.Should().Be(Statistic<int>.FromKind(expectedKind));
+        result[AcademyUrn1].PupilsWithEhcPlan.Should().Be(Statistic<int>.FromKind(expectedKind));
+        result[AcademyUrn1].PupilsWithEhcPlanPercentage.Should().Be(Statistic<decimal>.FromKind(expectedKind));
+        result[AcademyUrn1].PupilsWithSenSupport.Should().Be(Statistic<int>.FromKind(expectedKind));
+        result[AcademyUrn1].PupilsWithSenSupportPercentage.Should().Be(Statistic<decimal>.FromKind(expectedKind));
+        result[AcademyUrn1].PupilsWithEnglishAsAdditionalLanguage.Should().Be(Statistic<int>.FromKind(expectedKind));
+        result[AcademyUrn1].PupilsWithEnglishAsAdditionalLanguagePercentage.Should().Be(Statistic<decimal>.FromKind(expectedKind));
+        result[AcademyUrn1].PupilsEligibleForFreeSchoolMeals.Should().Be(Statistic<int>.FromKind(expectedKind));
+        result[AcademyUrn1].PupilsEligibleForFreeSchoolMealsPercentage.Should().Be(Statistic<decimal>.FromKind(expectedKind));
+    }
+
+    [Fact]
+    public async Task GetMostRecentPopulationStatisticsForTrustAsync_parses_decimal_statistics_with_percent_signs_correctly()
+    {
+        var mockDbContext = new MockAcademiesDbContext();
+        mockDbContext.EdperfFiats.AddRange([
+            new EdperfFiat
+            {
+                Urn = AcademyUrn2,
+                DownloadYear = "2019-2020",
+                CensusNor = "100",
+                CensusTsenelse = "10",
+                CensusPsenelse = "10.0%",
+                CensusTsenelk = "11",
+                CensusPsenelk = "11.0%",
+                CensusNumeal = "12",
+                CensusPnumeal = "12.0%",
+                CensusNumfsm = "13",
+            }
+        ]);
+        mockDbContext.GiasGroupLinks.Add(new GiasGroupLink { GroupUid = Uid, Urn = AcademyUrn2.ToString(), GroupStatusCode = "OPEN", JoinedDate = "01/01/2020" });
+
+        var sut = new PupilCensusRepository(mockDbContext.Object);
+        
+        var result = await sut.GetMostRecentPopulationStatisticsForTrustAsync(Uid);
+        
+        result.Should().NotBeEmpty();
+        result.Should().HaveCount(1);
+        result[AcademyUrn2].PupilsWithEhcPlanPercentage.Should().Be(new Statistic<decimal>.WithValue(10.0m));
+        result[AcademyUrn2].PupilsWithSenSupportPercentage.Should().Be(new Statistic<decimal>.WithValue(11.0m));
+        result[AcademyUrn2].PupilsWithEnglishAsAdditionalLanguagePercentage.Should().Be(new Statistic<decimal>.WithValue(12.0m));
+        result[AcademyUrn2].PupilsEligibleForFreeSchoolMealsPercentage.Should().Be(new Statistic<decimal>.WithValue(13.0m));
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DfE.FindInformationAcademiesTrusts.Data;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services;
@@ -17,48 +18,41 @@ public class AcademyPupilNumbersServiceModelTests
     {
         var sut =
             BuildDummyAcademyPupilNumbersServiceModel("111",
-                numberOfPupils: numberOfPupils, schoolCapacity: capacity);
+                numberOfPupils: new Statistic<int>.WithValue(numberOfPupils), schoolCapacity: capacity);
         var result = sut.PercentageFull;
-        result.Should().BeApproximately(expected, 0.01F);
+        result.Should().BeOfType<Statistic<float>.WithValue>()
+            .Which.Value.Should().BeApproximately(expected, 0.01F);
     }
 
-    [Fact]
-    public void PercentageFull_should_return_null_string_if_number_of_pupils_has_no_value()
+    [Theory]
+    [InlineData(StatisticKind.Suppressed)]
+    [InlineData(StatisticKind.NotPublished)]
+    [InlineData(StatisticKind.NotApplicable)]
+    [InlineData(StatisticKind.NotAvailable)]
+    [InlineData(StatisticKind.NotYetSubmitted)]
+    public void PercentageFull_should_return_null_string_if_number_of_pupils_has_no_value(StatisticKind kind)
     {
         var sut =
-            BuildDummyAcademyPupilNumbersServiceModel("111", numberOfPupils: null,
+            BuildDummyAcademyPupilNumbersServiceModel("111", numberOfPupils: Statistic<int>.FromKind(kind),
                 schoolCapacity: 12);
         var result = sut.PercentageFull;
-        result.Should().BeNull();
+        result.Should().BeEquivalentTo(Statistic<float>.FromKind(kind));
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData(0)]
-    public void PercentageFull_should_return_null_if_school_capacity_has_no_value(int? schoolCapacity)
+    public void PercentageFull_should_return_NotAvailable_if_school_capacity_has_no_value(int? schoolCapacity)
     {
         var sut = BuildDummyAcademyPupilNumbersServiceModel("111",
-            numberOfPupils: 100, schoolCapacity: schoolCapacity);
+            numberOfPupils: new Statistic<int>.WithValue(100), schoolCapacity: schoolCapacity);
         var result = sut.PercentageFull;
-        result.Should().BeNull();
-    }
-
-    [Theory]
-    [InlineData(null, null)]
-    [InlineData(null, 0)]
-    public void PercentageFull_should_return_null_if_both_values_are_null_or_capacity_0(int? numberOfPupils,
-        int? capacity)
-    {
-        var sut =
-            BuildDummyAcademyPupilNumbersServiceModel("111",
-                numberOfPupils: numberOfPupils, schoolCapacity: capacity);
-        var result = sut.PercentageFull;
-        result.Should().BeNull();
+        result.Should().Be(Statistic<float>.NotAvailable);
     }
 
     private static AcademyPupilNumbersServiceModel BuildDummyAcademyPupilNumbersServiceModel(string urn,
+        Statistic<int> numberOfPupils,
         string phaseOfEducation = "test",
-        int? numberOfPupils = 300,
         int? schoolCapacity = 400,
         AgeRange? ageRange = null)
     {
