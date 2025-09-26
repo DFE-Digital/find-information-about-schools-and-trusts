@@ -39,5 +39,22 @@ describe('Trust Routing and 404 Tests', () => {
                 });
             });
         });
+
+        context("Tests a trust with a school within it that has no pupils on role within it to ensure the issue of a 500 page appearing does not happen", () => {
+            beforeEach(() => {
+                commonPage
+                    .interceptAndVerifyNo500Errors();
+            });
+
+            it(`Should have no 500 error on the pupils population page for a school with no pupils`, () => {
+                cy.visit('/trusts/overview/trust-details?uid=15776');
+
+                // Verify page loads successfully without 500 errors
+                cy.get('body').should('be.visible');
+
+                // The interceptor will automatically fail if any 500 errors occur
+                cy.wait('@allRequests');
+            });
+        });
     });
 }); 
