@@ -6,8 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased][unreleased]
 
+
 ### Changed
 
+## [Release-52][release-52] (production-2025-09-26.6564)
+
+### Changed
+
+- Accessibility bug fixes for headers.
+- Add 'Pupil population' page to display spring census data.
+- Add 'Pupil attendance' page to display autumn census data.
+- Get pupil numbers for trusts from Compare census data.
+- Show not available for further education single headline grades
+  
 ## [Release-51][release-51] (production-2025-09-18.6482)
 
 ### Changed
@@ -476,7 +487,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Updated text on "404 - Not Found" page to adhere to DfE design pattern and added the not found url to the support email template.
 
 [unreleased]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-09-18.6482...HEAD
+  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-09-26.6564...HEAD
 [release-1]:
   https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-07-18.2517
 [release-2]:
@@ -579,3 +590,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-09-10.6449
 [release-51]:
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-09-18.6482
+[release-52]:
+https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-09-26.6564
