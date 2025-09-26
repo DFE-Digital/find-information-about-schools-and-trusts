@@ -50,7 +50,7 @@ public class PupilCensusRepository(IAcademiesDbContext dbContext) : IPupilCensus
         var pupilsEligibleForFreeSchoolMeals = ParseIntStatistic(edperfFiat.CensusNumfsm);
         var pupilsEligibleForFreeSchoolMealsPercentage = pupilsEligibleForFreeSchoolMeals.Compute(
             pupilsOnRole,
-            (fsm, por) => Math.Round(100.0m * fsm / por, 1)
+            (fsm, por) => por == 0 ? 0m : Math.Round(100.0m * fsm / por, 1)
         );
 
         return new SchoolPopulation(

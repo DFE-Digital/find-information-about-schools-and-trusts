@@ -420,6 +420,34 @@ public class PupilCensusRepositoryTests
         result[2020].PupilsEligibleForFreeSchoolMealsPercentage.Should().Be(new Statistic<decimal>.WithValue(13.0m));
     }
 
+    [Theory]
+    [InlineData(1)]
+    [InlineData(27)]
+    [InlineData(44)]
+    [InlineData(86)]
+    public async Task GetSchoolPopulationStatisticsAsync_handles_zero_pupils_on_role_correctly(int freeSchoolMeals)
+    {
+        var mockDbContext = new MockAcademiesDbContext();
+        mockDbContext.EdperfFiats.AddRange([
+            new EdperfFiat
+            {
+                Urn = SchoolUrn,
+                DownloadYear = "2019-2020",
+                CensusNor = "0",
+                CensusNumfsm = freeSchoolMeals.ToString()
+            }
+        ]);
+
+        var sut = new PupilCensusRepository(mockDbContext.Object);
+
+        var result = await sut.GetSchoolPopulationStatisticsAsync(SchoolUrn);
+
+        result.Should().NotBeEmpty();
+        result.Should().HaveCount(1);
+        result[2020].PupilsOnRole.Should().Be(new Statistic<int>.WithValue(0));
+        result[2020].PupilsEligibleForFreeSchoolMealsPercentage.Should().Be(new Statistic<decimal>.WithValue(0.0m));
+    }
+
     [Fact]
     public async Task GetAttendanceStatisticsAsync_should_return_empty_when_school_is_not_found()
     {
@@ -604,5 +632,35 @@ public class PupilCensusRepositoryTests
         result[AcademyUrn2].PupilsWithSenSupportPercentage.Should().Be(new Statistic<decimal>.WithValue(11.0m));
         result[AcademyUrn2].PupilsWithEnglishAsAdditionalLanguagePercentage.Should().Be(new Statistic<decimal>.WithValue(12.0m));
         result[AcademyUrn2].PupilsEligibleForFreeSchoolMealsPercentage.Should().Be(new Statistic<decimal>.WithValue(13.0m));
+    }
+
+    [Theory]
+    [InlineData(1)]
+    [InlineData(27)]
+    [InlineData(44)]
+    [InlineData(86)]
+    public async Task GetMostRecentPopulationStatisticsForTrustAsync_handles_zero_pupils_on_role_correctly(int freeSchoolMeals)
+    {
+        var mockDbContext = new MockAcademiesDbContext();
+        mockDbContext.EdperfFiats.AddRange([
+            new EdperfFiat
+            {
+                Urn = AcademyUrn2,
+                DownloadYear = "2019-2020",
+                CensusNor = "0",
+                CensusNumfsm = freeSchoolMeals.ToString(),
+            }
+        ]);
+
+        mockDbContext.GiasGroupLinks.Add(new GiasGroupLink { GroupUid = Uid, Urn = AcademyUrn2.ToString(), GroupStatusCode = "OPEN", JoinedDate = "01/01/2020" });
+
+        var sut = new PupilCensusRepository(mockDbContext.Object);
+        
+        var result = await sut.GetMostRecentPopulationStatisticsForTrustAsync(Uid);
+
+        result.Should().NotBeEmpty();
+        result.Should().HaveCount(1);
+        result[AcademyUrn2].PupilsOnRole.Should().Be(new Statistic<int>.WithValue(0));
+        result[AcademyUrn2].PupilsEligibleForFreeSchoolMealsPercentage.Should().Be(new Statistic<decimal>.WithValue(0.0m));
     }
 }
