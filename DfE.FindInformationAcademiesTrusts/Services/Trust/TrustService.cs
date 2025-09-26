@@ -77,9 +77,9 @@ public class TrustService(
         var governors = await trustGovernanceRepository.GetTrustGovernanceAsync(urn ?? uid);
 
         return new TrustGovernanceServiceModel(
-            governors.Where(g => g.IsCurrentOrFutureGovernor && g.HasRoleLeadership).ToArray(),
-            governors.Where(g => g.IsCurrentOrFutureGovernor && g.HasRoleMember).ToArray(),
-            governors.Where(g => g.IsCurrentOrFutureGovernor && g.HasRoleTrustee).ToArray(),
+            governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleLeadership: true }).ToArray(),
+            governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleMember: true }).ToArray(),
+            governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleTrustee: true }).ToArray(),
             governors.Where(g => !g.IsCurrentOrFutureGovernor).ToArray(),
             GetGovernanceTurnoverRate(governors));
     }
@@ -193,7 +193,7 @@ public class TrustService(
     private static List<Governor> GetGovernorsEligibleForTurnoverCalculation(List<Governor> governors)
     {
         var result = governors.Where(g => g.HasRoleTrustee || g.HasRoleChairOfTrustees).ToList();
-        
+
         // To avoid double counting, Chairs of Trustees should be removed when they are also listed as Trustees.
         // They shouldn't be removed when they are only listed as the Chair of Trustees, or if they are listed as some
         // other non-trustee role.
@@ -202,7 +202,7 @@ public class TrustService(
             .Where(chair => result.Exists(g => g.FullName == chair.FullName && g.HasRoleTrustee))
             .ToList();
         result.RemoveAll(g => chairsToRemove.Contains(g));
-        
+
         return result;
     }
 
