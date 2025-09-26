@@ -54,6 +54,11 @@ describe("Testing the components of the home page", () => {
     homePage
       .checkIfManageProjectsAndCasesNotPresent()
   });
+
+  it("Should not have Manage projects and cases header link present", () => {
+    homePage
+      .checkIfManageProjectsAndCasesHeaderLinkNotPresent()
+  });
 });
 
 describe("Check manage projects and cases role", () => {
@@ -65,5 +70,10 @@ describe("Check manage projects and cases role", () => {
   it("Should have Manage projects and cases present", () => {
     homePage
       .checkIfManageProjectsAndCasesPresent()
+  });
+
+  it("Should have Manage projects and cases header link present", () => {
+    homePage
+      .checkIfManageProjectsAndCasesHeaderLinkPresent()
   });
 });

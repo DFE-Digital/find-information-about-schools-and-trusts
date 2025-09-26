@@ -1,0 +1,15 @@
+﻿@page
+@model BasePageModel
+@{
+    var mpcLink = ViewConstants.MpcLink[0].Url;
+    var mpcVisible = User.IsInRole("User.Role.MPCViewer");
+}
+
+@if (mpcVisible)
+{
+    <ul class="dfe-header__action-links">
+        <li>
+            <a data-testid="mpcHeaderLink" href=@mpcLink class="govuk-link govuk-link--inverse">Manage projects and cases</a>
+        </li>
+    </ul>
+}
