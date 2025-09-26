@@ -22,7 +22,7 @@ public class AutomationAuthorizationHandlerTests
         _mockWebHostEnvironment = Substitute.For<IWebHostEnvironment>();
         _mockTestOverrideOptions = Substitute.For<IOptions<TestOverrideOptions>>();
         _httpContext = new DefaultHttpContext();
-        
+
         _mockHttpAccessor.HttpContext.Returns(_httpContext);
         _mockTestOverrideOptions.Value.Returns(new TestOverrideOptions { CypressTestSecret = "123" });
         _mockWebHostEnvironment.EnvironmentName.Returns("Development");
@@ -97,6 +97,27 @@ public class AutomationAuthorizationHandlerTests
         {
             new("name", "Automation User - name"),
             new("preferred_username", "Automation User - email")
+        }));
+        var actual = _httpContext.User;
+        // Exclude subject due to cyclical references
+        actual.Claims.Should().BeEquivalentTo(expected.Claims, options => options.Excluding(claim => claim.Subject));
+    }
+
+    [Fact]
+    public void IfTestRoleInHeaderIsSet_ShouldAddClaims()
+    {
+        var testRole = "TestRole";
+
+        _httpContext.Request.Headers.Append("X-Test-Role", testRole);
+
+        _sut.SetupAutomationUser();
+
+        var expected = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
+        {
+            new("name", "Automation User - name"),
+            new("preferred_username", "Automation User - email"),
+            new("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", "FastTestUser@education.gov.uk"),
+            new("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", testRole)
         }));
         var actual = _httpContext.User;
         // Exclude subject due to cyclical references
