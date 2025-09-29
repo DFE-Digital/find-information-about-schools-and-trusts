@@ -9,6 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 
+## [Release-53][release-53] (production-2025-09-26.6575)
+
+### Changed
+
+- Bug fix for a divide by 0 error when calculating free school meal percentages.
+
 ## [Release-52][release-52] (production-2025-09-26.6564)
 
 ### Changed
@@ -487,7 +493,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Updated text on "404 - Not Found" page to adhere to DfE design pattern and added the not found url to the support email template.
 
 [unreleased]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-09-26.6564...HEAD
+  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-09-26.6575...HEAD
 [release-1]:
   https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-07-18.2517
 [release-2]:
@@ -591,4 +597,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [release-51]:
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-09-18.6482
 [release-52]:
-https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-09-26.6564
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-09-26.6564
+[release-53]:
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-09-26.6575
