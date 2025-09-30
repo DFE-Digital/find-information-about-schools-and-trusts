@@ -1,3 +1,5 @@
+import { AutocompleteHelper } from '../support/autocompleteHelper';
+
 class HomePage {
 
     elements = {
@@ -25,7 +27,7 @@ class HomePage {
     };
 
     public enterMainSearchText(searchText: string): this {
-        this.elements.mainSearchBox().type(searchText);
+        AutocompleteHelper.typeWithAutocomplete(this.elements.mainSearchBox, searchText);
         return this;
     }
 
