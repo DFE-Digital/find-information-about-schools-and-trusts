@@ -168,7 +168,7 @@ public class TrustServiceTests
     }
 
     [Fact]
-    public async Task GetTrustGovernanceAsync_should_use_urn_if_uid_if_for_single_academy_trust()
+    public async Task GetTrustGovernanceAsync_should_use_urn_instead_of_uid_for_single_academy_trust()
     {
         var urn = "5678";
         var uid = "1234";
