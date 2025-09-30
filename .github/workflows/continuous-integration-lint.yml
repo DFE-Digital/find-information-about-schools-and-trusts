@@ -95,7 +95,7 @@ jobs:
 
       - name: Install SonarCloud scanner & .NET Tools
         run: |
-          dotnet tool install --global dotnet-sonarscanner --version 10.1.0
+          dotnet tool install --global dotnet-sonarscanner --version 10.4.1
           dotnet tool restore
 
       - name: Add nuget package source
