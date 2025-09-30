@@ -3,7 +3,9 @@ using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Pupils;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
+using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.School;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Pupils;
 
@@ -11,6 +13,7 @@ public abstract class BasePupilsAreaModelTests<T> : BaseSchoolPageTests<T> where
 {
     protected readonly IDateTimeProvider MockDateTimeProvider = Substitute.For<IDateTimeProvider>();
     protected readonly ISchoolPupilService MockSchoolPupilService = Substitute.For<ISchoolPupilService>();
+    protected readonly ISchoolPupilsExportService MockSchoolPupilsExportService = Substitute.For<ISchoolPupilsExportService>();
     
     protected readonly SchoolPopulation DummySchoolPopulation = new(
         new Statistic<int>.WithValue(1000),
@@ -32,6 +35,7 @@ public abstract class BasePupilsAreaModelTests<T> : BaseSchoolPageTests<T> where
     protected BasePupilsAreaModelTests()
     {
         MockDateTimeProvider.Today.Returns(new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+        MockDateTimeProvider.Now.Returns(new DateTime(2025, 7, 1, 0, 0, 0, DateTimeKind.Utc));
         MockSchoolPupilService
             .GetSchoolPopulationStatisticsAsync(Arg.Any<int>(), Arg.Any<CensusYear>(), Arg.Any<CensusYear>())
             .Returns(call =>
@@ -87,5 +91,35 @@ public abstract class BasePupilsAreaModelTests<T> : BaseSchoolPageTests<T> where
                 new DataSourceListEntry(Mocks.MockDataSourceService.CompareSchoolCollegePerformanceEnglandAttendance)
             ])
         ]);
+    }
+
+    [Fact]
+    public async Task OnGetExportAsync_returns_NotFoundResult_for_unknown_urn()
+    {
+        var result = await Sut.OnGetExportAsync(999111);
+
+        result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public async Task OnGetExportAsync_returns_expected_file()
+    {
+        var result = await Sut.OnGetExportAsync(SchoolUrn);
+
+        result.Should().BeOfType<FileContentResult>();
+        result.As<FileContentResult>().FileDownloadName.Should().Be("Pupil population-Cool school-2025-07-01.xlsx");
+    }
+
+    [Fact]
+    public async Task OnGetExportAsync_sanitises_school_name_for_file()
+    {
+        MockSchoolService.GetSchoolSummaryAsync(SchoolUrn)
+            .Returns(DummySchoolSummary with { Name = "  School name with invalid characters\0/ " });
+
+        var result = await Sut.OnGetExportAsync(SchoolUrn);
+
+        result.Should().BeOfType<FileContentResult>();
+        result.As<FileContentResult>().FileDownloadName.Should()
+            .Be("Pupil population-School name with invalid characters-2025-07-01.xlsx");
     }
 }

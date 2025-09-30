@@ -8,9 +8,10 @@ public class PopulationModelTests : BasePupilsAreaModelTests<PopulationModel>
     public PopulationModelTests()
     {
         Sut = new PopulationModel(
-            MockDateTimeProvider,
             MockSchoolPupilService,
+            MockDateTimeProvider,
             MockDataSourceService,
+            MockSchoolPupilsExportService,
             MockSchoolService,
             MockTrustService,
             MockSchoolNavMenu)

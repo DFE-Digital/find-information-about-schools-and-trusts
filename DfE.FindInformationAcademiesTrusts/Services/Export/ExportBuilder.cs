@@ -1,4 +1,5 @@
-﻿using ClosedXML.Excel;
+﻿using System.Numerics;
+using ClosedXML.Excel;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages;
 using DfE.FindInformationAcademiesTrusts.Services.School;
@@ -59,6 +60,30 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Export
             return this;
         }
 
+        public ExportBuilder WriteSchoolNameAndUrn(SchoolSummaryServiceModel schoolSummary)
+        {
+            var nameLabel = schoolSummary.Category switch
+            {
+                SchoolCategory.LaMaintainedSchool => "School name",
+                SchoolCategory.Academy => "Academy name",
+                _ => throw new ArgumentException($"Unknown school category '{schoolSummary.Category}'")
+            };
+            
+            Worksheet.Cell(1, 1).Value = nameLabel;
+            Worksheet.Cell(1, 1).Style.Font.Bold = true;
+            
+            Worksheet.Cell(1, 2).Value = schoolSummary.Name;
+            
+            Worksheet.Cell(2, 1).Value = "URN";
+            Worksheet.Cell(2, 1).Style.Font.Bold = true;
+            
+            Worksheet.Cell(2, 2).Value = schoolSummary.Urn;
+            
+            CurrentRow += 4;
+            
+            return this;
+        }
+
         public ExportBuilder WriteHeaders(List<string> headers)
         {
             for (var i = 0; i < headers.Count; i++)
@@ -102,6 +127,20 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Export
             else
             {
                 cell.Value = string.Empty;
+            }
+        }
+
+        public void SetNumberCell<T>(Enum column, T? numberValue, string numberFormat = "0") where T : INumber<T>
+        {
+            var cell = Worksheet.Cell(CurrentRow, (int)(object)column);
+            if (numberValue is null)
+            {
+                cell.Value = string.Empty;
+            }
+            else
+            {
+                cell.Value = XLCellValue.FromObject(numberValue);
+                cell.Style.NumberFormat.SetFormat(numberFormat);
             }
         }
 

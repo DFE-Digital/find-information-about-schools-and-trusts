@@ -3,6 +3,7 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
+using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using Microsoft.AspNetCore.Mvc;
@@ -10,13 +11,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Pupils;
 
 public class AttendanceModel(
-    IDateTimeProvider dateTimeProvider,
     ISchoolPupilService schoolPupilService,
+    IDateTimeProvider dateTimeProvider,
     IDataSourceService dataSourceService,
+    ISchoolPupilsExportService schoolPupilsExportService,
     ISchoolService schoolService,
     ITrustService trustService,
     ISchoolNavMenu schoolNavMenu
-) : PupilsAreaModel(dataSourceService, schoolService, trustService, schoolNavMenu)
+) : PupilsAreaModel(dateTimeProvider, dataSourceService, schoolPupilsExportService, schoolService, trustService, schoolNavMenu)
 {
     public const string SubPageName = "Attendance";
     public override PageMetadata PageMetadata => base.PageMetadata with { SubPageName = SubPageName };
@@ -30,8 +32,8 @@ public class AttendanceModel(
 
         var statistics = await schoolPupilService.GetAttendanceStatisticsAsync(
             Urn,
-            CensusYear.Previous(dateTimeProvider, Census.Autumn, 3),
-            CensusYear.Next(dateTimeProvider, Census.Autumn)
+            CensusYear.Previous(DateTimeProvider, Census.Autumn, 3),
+            CensusYear.Next(DateTimeProvider, Census.Autumn)
         );
 
         AttendanceData = statistics.OrderByDescending(kvp => kvp.Key.Value)
