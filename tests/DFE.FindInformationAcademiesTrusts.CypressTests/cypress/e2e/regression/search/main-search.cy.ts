@@ -7,18 +7,14 @@ describe('Testing the main/home page search functionality', () => {
     cy.visit("/");
   });
 
-  describe('Testing autocomplete functionality', () => {
-    it('Should check that the home pages search bar and autocomplete is present and functional', () => {
+  describe('Checking that the main search bar and autocomplete is present and functional', () => {
+    it('Should check that the main search bar and autocomplete is present and functional', () => {
       homePage
-        .enterMainSearchText('West');
-
-      searchPage
-        .checkMainAutocompleteIsPresent();
-
-      homePage
+        .enterMainSearchText('West')
         .checkMainSearchButtonPresent();
 
       searchPage
+        .checkMainAutocompleteIsPresent()
         .checkAutocompleteContainsTypedText('West');
     });
 
@@ -32,18 +28,20 @@ describe('Testing the main/home page search functionality', () => {
     });
 
     it('Checks that when a URN is entered the autocomplete lists the correct school', () => {
+      const expectedUrn = 123452;
+      const expectedSchoolName = 'The Meadows Primary School';
+
       homePage
-        .enterMainSearchText('123452');
+        .enterMainSearchText(expectedUrn.toString());
 
       searchPage
         .checkMainAutocompleteIsPresent()
-        .checkAutocompleteContainsTypedText('The Meadows Primary School');
+        .checkAutocompleteContainsTypedText(expectedSchoolName);
     });
-
   });
 
-  describe('Testing search results functionality', () => {
-    it('Should check that search results are returned with a valid name entered when using the main search bar ', () => {
+  describe('Checking the search results functionality', () => {
+    it('Should check that search results are returned with a valid name entered when using the main search bar', () => {
       homePage
         .enterMainSearchText('west')
         .clickMainSearchButton();

@@ -1,3 +1,5 @@
+import { AutocompleteHelper } from '../support/autocompleteHelper';
+
 class SearchPage {
 
     elements = {
@@ -31,33 +33,20 @@ class SearchPage {
     }
 
     public checkAutocompleteContainsTypedText(searchText: string): this {
-        cy.log(`Searching for text: "${searchText}" in autocomplete suggestions`);
+        cy.log(`Searching for text: "${searchText}" in main autocomplete suggestions`);
 
-        // First ensure the autocomplete is visible
-        this.elements.mainAutocomplete().should('be.visible');
+        AutocompleteHelper.waitForResponse();
 
-        // Get suggestions and log them
-        this.elements.mainAutocomplete().then(($listbox) => {
-            const suggestions = Array.from($listbox.children()).map(el => el.innerText);
-            cy.log(`Found ${suggestions.length} suggestions:`);
-            cy.log(suggestions.join('\n'));
-        });
-
-        // Verify suggestions contain our text
         this.elements.mainAutocomplete()
-            .should('exist', { timeout: 10000 })
-            .should(($listbox) => {
-                const suggestions = Array.from($listbox.children()).map(el => el.innerText);
-                expect(suggestions.length, 'Expected to find suggestions in dropdown').to.be.greaterThan(0);
-                const hasMatch = suggestions.some(text => text.toLowerCase().includes(searchText.toLowerCase()));
-                assert.isTrue(hasMatch, `Expected to find "${searchText}" in suggestions`);
-            });
+            .should('be.visible', { timeout: 10000 })
+            .and('not.be.empty')
+            .should('contain.text', searchText);
 
         return this;
     }
 
     public enterSearchResultsSearchText(searchText: string): this {
-        this.elements.searchPageSearchBox().type(searchText);
+        AutocompleteHelper.typeWithAutocomplete(this.elements.searchPageSearchBox, searchText);
         return this;
     }
 

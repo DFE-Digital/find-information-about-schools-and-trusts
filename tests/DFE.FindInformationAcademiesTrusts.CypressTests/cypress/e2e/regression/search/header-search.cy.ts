@@ -1,55 +1,96 @@
 import searchPage from '../../../pages/searchPage';
 import headerPage from '../../../pages/headerPage';
+import { TestDataStore } from '../../../support/test-data-store';
 
-describe(`Testing the components of the header search`, () => {
+describe('Header Search Tests', () => {
 
-    [`/schools/overview/details?urn=123452`, `/trusts/overview/trust-details?uid=5527`].forEach((url) => {
-        beforeEach(() => {
-            cy.visit(url);
-        });
+    describe('Header Search Presence Tests', () => {
 
-        describe(`Checking that the header search bar and autocomplete is present and functional for ${url}`, () => {
+        describe('School Pages', () => {
+            const schoolUrn = 107188;
 
-            it(`Should check that the header search bar and autocomplete is present and functional for ${url})`, () => {
-                headerPage
-                    .enterHeaderSearchText(`West`)
-                    .checkHeaderAutocompleteIsPresent()
-                    .checkHeaderSearchButtonPresent()
-                    .checkAutocompleteContainsTypedText(`West`);
-            });
-
-            it(`Should check that the autocomplete does not return results when entry does not exist for ${url}`, () => {
-                headerPage
-                    .enterHeaderSearchText(`KnowWhere`)
-                    .checkHeaderAutocompleteIsPresent()
-                    .checkAutocompleteContainsTypedText(`No results found`);
-            });
-
-            it('Checks that when a URN is entered the autocomplete lists the correct school', () => {
-                headerPage
-                    .enterHeaderSearchText('123452')
-                    .checkHeaderAutocompleteIsPresent()
-                    .checkAutocompleteContainsTypedText('The Meadows Primary School');
+            TestDataStore.GetAllSchoolSubpagesForUrn(schoolUrn).forEach(({ pageName, subpages }) => {
+                describe(`${pageName}`, () => {
+                    subpages.forEach(({ subpageName, url }) => {
+                        it(`Should have header search present - ${pageName} > ${subpageName}`, () => {
+                            cy.visit(url);
+                            headerPage.checkHeaderSearchButtonPresent();
+                        });
+                    });
+                });
             });
         });
 
-        describe(`Checking the search results functionality for ${url}`, () => {
-            it(`Should check that search results are returned with a valid name entered when using the header search bar for ${url}`, () => {
-                headerPage
-                    .enterHeaderSearchText(`west`)
-                    .clickHeaderSearchButton();
+        describe('Trust Pages', () => {
+            const trustUid = 5527;
 
-                searchPage
-                    .checkSearchResultsReturned('west');
+            TestDataStore.GetAllTrustSubpagesForUid(trustUid).forEach(({ pageName, subpages }) => {
+                describe(`${pageName}`, () => {
+                    subpages.forEach(({ subpageName, url }) => {
+                        it(`Should have header search present - ${pageName} > ${subpageName}`, () => {
+                            cy.visit(url);
+                            headerPage.checkHeaderSearchButtonPresent();
+                        });
+                    });
+                });
             });
+        });
+    });
 
-            it(`Should return the correct trust when searching by TRN using the header search for ${url}`, () => {
-                headerPage
-                    .enterHeaderSearchText(`TR02343`)
-                    .clickHeaderSearchButton();
+    describe('Header Search Functionality Tests', () => {
 
-                searchPage
-                    .checkSearchResultsReturned(`UNITED LEARNING TRUST`);
+        const testPages = [
+            {
+                type: 'school',
+                url: '/schools/overview/details?urn=107188',
+                urnTest: { urn: 107188, name: 'Abbey Green Nursery School' }
+            },
+            {
+                type: 'trust',
+                url: '/trusts/overview/trust-details?uid=5527',
+                urnTest: { urn: 123452, name: 'The Meadows Primary School' }
+            }
+        ];
+
+        testPages.forEach(({ type, url, urnTest }) => {
+            describe(`${type} page functionality`, () => {
+                beforeEach(() => {
+                    cy.visit(url);
+                });
+
+                it(`Should check that the header search bar and autocomplete is present and functional - ${type}`, () => {
+                    headerPage
+                        .enterHeaderSearchText('West')
+                        .checkHeaderAutocompleteIsPresent()
+                        .checkHeaderSearchButtonPresent()
+                        .checkAutocompleteContainsTypedText('West');
+                });
+
+                it(`Should check that the autocomplete does not return results when entry does not exist - ${type}`, () => {
+                    headerPage
+                        .enterHeaderSearchText('KnowWhere')
+                        .checkHeaderAutocompleteIsPresent()
+                        .checkAutocompleteContainsTypedText('No results found');
+                });
+
+                it(`Checks that when a URN is entered the autocomplete lists the correct school - ${type}`, () => {
+                    headerPage
+                        .enterHeaderSearchText(urnTest.urn.toString())
+                        .checkHeaderAutocompleteIsPresent()
+                        .checkAutocompleteContainsTypedText(urnTest.name);
+                });
+
+                it(`Should check that search results are returned with a valid name entered - ${type}`, () => {
+                    const searchTerm = type === 'trust' ? 'TR02343' : 'west';
+                    const expectedResult = type === 'trust' ? 'UNITED LEARNING TRUST' : 'west';
+
+                    headerPage
+                        .enterHeaderSearchText(searchTerm)
+                        .clickHeaderSearchButton();
+
+                    searchPage
+                        .checkSearchResultsReturned(expectedResult);
+                });
             });
         });
     });
