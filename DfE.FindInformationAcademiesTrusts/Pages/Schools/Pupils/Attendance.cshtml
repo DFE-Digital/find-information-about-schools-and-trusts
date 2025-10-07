@@ -1,5 +1,6 @@
 @page "/schools/pupils/attendance"
 @using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus
+@using DfE.FindInformationAcademiesTrusts.Pages.Shared
 @model AttendanceModel
 
 @{
@@ -54,5 +55,10 @@
       </tr>
       </tbody>
     </table>
+    
+    @{
+      var exportModel = new ExportButtonModel("urn", Model.Urn, "Download all pupil data", "download-all-pupil-data-button");
+    }
+    <partial name="Shared/_ExportButton" model="exportModel"/>
   </div>
 </div>

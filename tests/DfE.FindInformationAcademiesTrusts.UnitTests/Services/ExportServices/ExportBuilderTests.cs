@@ -71,5 +71,21 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
 
             _sut.Worksheet.CellValue(0, 1).Should().Be(expected);
         }
+        
+        [Theory]
+        [InlineData(1, "0")]
+        [InlineData(1234, "0")]
+        [InlineData(123.4567, "#.##")]
+        [InlineData(1234567890, "#,##0")]
+        [InlineData(0.123456789, "#.##%")]
+        [InlineData(0.1, "#.00%")]
+        public void SetNumberCell_should_set_correct_data_with_expected_format(double value, string format)
+        {
+            _sut.SetNumberCell((AcademyColumns)1, value, format);
+
+            var cell = _sut.Worksheet.Cell(0, 1);
+            cell.Value.Should().Be(XLCellValue.FromObject(value));
+            cell.Style.NumberFormat.Received().SetFormat(format);
+        }
     }
 }
