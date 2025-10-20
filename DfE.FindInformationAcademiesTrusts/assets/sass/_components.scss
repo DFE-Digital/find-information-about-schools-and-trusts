@@ -6,7 +6,7 @@
 @import "components/sourceList";
 @import "components/internalUseOnlyWarning";
 @import "components/footer";
-@import "components/_header.scss";
+@import "components/header";
 
 .app-banner {
   @include govuk-responsive-padding(3, "top");
