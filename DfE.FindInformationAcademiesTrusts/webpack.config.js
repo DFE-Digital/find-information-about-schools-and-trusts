@@ -15,11 +15,11 @@ module.exports = {
           from: '*.{png,svg}',
           to: path.join(__dirname, 'wwwroot/dist/images'),
           context: 'node_modules/govuk-frontend/dist/govuk/assets/rebrand/images'
-        }, 
+        },
         {
-            from: 'manifest.json',
-            to: path.join(__dirname, 'wwwroot/dist/images'),
-            context: 'node_modules/govuk-frontend/dist/govuk/assets/rebrand'
+          from: 'manifest.json',
+          to: path.join(__dirname, 'wwwroot/dist/images'),
+          context: 'node_modules/govuk-frontend/dist/govuk/assets/rebrand'
         },
         {
           from: '*.{png,svg}',
