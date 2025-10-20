@@ -1,24 +1,19 @@
 @model BasePageModel
-<header class="dfe-header">
-  <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
-  <div class="dfe-width-container dfe-header__container">
-    <div class="dfe-header__logo">
-      <a class="dfe-header__link govuk-link" href="/">
-        <img src="~/dist/images/dfe-logo.png" class="dfe-logo" alt="Department for Education">
-        <img src="~/dist/images/dfe-logo-alt.png" class="dfe-logo-hover" alt="Department for Education">
-      </a>
-      <div class="dfe-header__service-name">
-        <a href="/" class="dfe-header__link--service govuk-link">@ViewConstants.ServiceName</a>
-      </div>
-    </div>
-    <div class="dfe-header__content">
-      <partial name="_HeaderActionLinks" model="Model"/>
-      @if (Model.ShowHeaderSearch)
-      {
-        <div class="dfe-header__search">
-          <partial name="_HeaderSearchForm" model="Model"/>
+<header class="govuk-header">
+    <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+    <div class="govuk-header__container govuk-width-container">
+        <div class="govuk-header__logo">
+            <a class="govuk-header__link govuk-header__link--homepage" href="/">
+                <img src="~/dist/images/department-for-education_white.png" class="govuk-header__logotype" alt="Department for Education">
+            </a>
         </div>
-      }
+        <div class="govuk-header__search">
+            <partial name="_HeaderActionLinks" model="Model"/>
+            @if (Model.ShowHeaderSearch)
+            {
+                <partial name="_HeaderSearchForm" model="Model"/>
+            }
+        </div>
     </div>
-  </div>
 </header>
+

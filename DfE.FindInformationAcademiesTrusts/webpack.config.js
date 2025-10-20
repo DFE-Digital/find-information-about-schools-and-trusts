@@ -12,9 +12,14 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: 'govuk-*.{png,svg}',
+          from: '*.{png,svg}',
           to: path.join(__dirname, 'wwwroot/dist/images'),
-          context: 'node_modules/govuk-frontend/dist/govuk/assets/images'
+          context: 'node_modules/govuk-frontend/dist/govuk/assets/rebrand/images'
+        }, 
+        {
+            from: 'manifest.json',
+            to: path.join(__dirname, 'wwwroot/dist/images'),
+            context: 'node_modules/govuk-frontend/dist/govuk/assets/rebrand'
         },
         {
           from: '*.{png,svg}',
