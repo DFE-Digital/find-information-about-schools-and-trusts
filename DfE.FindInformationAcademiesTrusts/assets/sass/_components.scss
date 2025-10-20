@@ -8,8 +8,6 @@
 @import "components/footer";
 @import "components/_header.scss";
 
-
-
 .app-banner {
   @include govuk-responsive-padding(3, "top");
   @include govuk-responsive-padding(3, "bottom");
