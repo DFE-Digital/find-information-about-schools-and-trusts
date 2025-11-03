@@ -21,7 +21,7 @@ public class SchoolPupilsExportService(
     private static readonly List<string> Headers =
     [
         "Year",
-        "Number of pupils on role (NOR)",
+        "Number of pupils on roll (NOR)",
         "Number of eligible pupils with EHC plan",
         "Percentage of eligible pupils with EHC plan",
         "Number of eligible pupils with SEN support",
