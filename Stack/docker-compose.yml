@@ -31,7 +31,6 @@ services:
 
    dfe.fast.datamigration: 
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
       - SQL_SERVER=host.docker.internal,1433
       - SQL_DATABASE=fastdb
       - SQL_USER=sa
