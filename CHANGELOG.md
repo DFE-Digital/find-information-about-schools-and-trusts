@@ -6,8 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased][unreleased]
 
+### Changed
+
+## [Release-55][release-55] (production-2025-11-07.6683)
 
 ### Changed
+
+- Text change 'Roll' not 'Role'
 
 ## [Release-54][release-54] (production-2025-10-07.6605)
 
@@ -499,7 +504,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Updated text on "404 - Not Found" page to adhere to DfE design pattern and added the not found url to the support email template.
 
 [unreleased]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-10-07.6605...HEAD
+  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-11-07.6683...HEAD
 [release-1]:
   https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-07-18.2517
 [release-2]:
@@ -608,3 +613,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-09-26.6575
 [release-54]:
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-10-07.6605
+[release-55]:
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-11-07.6683
