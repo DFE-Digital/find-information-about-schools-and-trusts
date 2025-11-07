@@ -206,7 +206,7 @@ public class SchoolPupilsExportServiceTests
             4,
             [
                 "Year",
-                "Number of pupils on role (NOR)",
+                "Number of pupils on roll (NOR)",
                 "Number of eligible pupils with EHC plan",
                 "Percentage of eligible pupils with EHC plan",
                 "Number of eligible pupils with SEN support",

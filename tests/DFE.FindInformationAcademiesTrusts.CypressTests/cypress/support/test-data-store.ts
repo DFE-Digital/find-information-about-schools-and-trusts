@@ -277,9 +277,9 @@ export const senSchoolData = [
 // School URNs with governance data for testing school governance functionality
 export const schoolsWithGovernanceData = [
     {
-        typeOfSchool: "community school with governance data",
-        urn: 107188,
-        description: "Abbey Green Nursery School - Local authority nursery school with current and historic governors"
+        typeOfSchool: "academy with governance data",
+        urn: 136174,
+        description: "Co-Op Academy Manchester - Academy sponsor led with governance information"
     },
     {
         typeOfSchool: "academy with governance data",

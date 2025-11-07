@@ -22,7 +22,7 @@ describe('Pagination Tests', () => {
         navigation
             .checkCurrentURLIsCorrect('pagenumber=2');
         commonPage
-            .checkThatBrowserTitleMatches('Search (page 2 of 72) - tru - Find information about schools and trusts');
+            .checkThatBrowserTitleMatches('Search (page 2 of 71) - tru - Find information about schools and trusts');
 
         paginationPage
             .clickPageNumber(3);
@@ -30,15 +30,15 @@ describe('Pagination Tests', () => {
         navigation
             .checkCurrentURLIsCorrect('pagenumber=3');
         commonPage
-            .checkThatBrowserTitleMatches('Search (page 3 of 72) - tru - Find information about schools and trusts');
+            .checkThatBrowserTitleMatches('Search (page 3 of 71) - tru - Find information about schools and trusts');
 
         paginationPage
-            .clickPageNumber(72);
+            .clickPageNumber(71);
 
         navigation
-            .checkCurrentURLIsCorrect('pagenumber=72');
+            .checkCurrentURLIsCorrect('pagenumber=71');
         commonPage
-            .checkThatBrowserTitleMatches('Search (page 72 of 72) - tru - Find information about schools and trusts');
+            .checkThatBrowserTitleMatches('Search (page 71 of 71) - tru - Find information about schools and trusts');
     });
 
     it('Should navigate to the next page on next button click', () => {
@@ -101,7 +101,7 @@ describe('Pagination Tests', () => {
             .checkExpectedPageNumberInPaginationBar(32)
             .checkExpectedPageNumberInPaginationBar(33)
             .checkResultIsNotInPaginationBar(34)
-            .checkExpectedPageNumberInPaginationBar(72)
+            .checkResultIsNotInPaginationBar(72)
             .checkResultIsNotInPaginationBar(74);
     });
 
