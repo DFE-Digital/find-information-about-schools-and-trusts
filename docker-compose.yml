@@ -1,0 +1,13 @@
+services:
+  dfe.findinformationacademiestrusts:
+    image: ${DOCKER_REGISTRY-}dfefindinformationacademiestrusts
+    build:
+      context: .
+      dockerfile: DfE.FindInformationAcademiesTrusts/Dockerfile
+    ports:
+       - 5163:8080
+    networks:
+      - local-dev
+
+networks:
+  local-dev:
