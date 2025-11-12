@@ -1,0 +1,50 @@
+services:     
+   fastdb:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: mySuperStrong_pa55word!!!
+    ports:
+      - "1433:1433"
+    networks:
+      - local-dev
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U sa -P mySuperStrong_pa55word!!! -C -Q 'SELECT 1' || exit 1
+      interval: 2s
+      retries: 10
+    restart: always 
+
+   fastdb.configurator:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    volumes:
+      - ./init:/initdb.d
+    networks:
+      - local-dev
+    depends_on:
+      fastdb:
+        condition: service_healthy
+    command: >
+      bash -c '
+      /opt/mssql-tools18/bin/sqlcmd -S fastdb -U sa -P mySuperStrong_pa55word!!! -C -d master -i initdb.d/init-sqldatabase.sql;
+      echo "All done!";
+      '
+
+   dfe.fast.datamigration: 
+    environment:
+      - SQL_SERVER=host.docker.internal,1433
+      - SQL_DATABASE=fastdb
+      - SQL_USER=sa
+      - SQL_PASSWORD=mySuperStrong_pa55word!!!
+    build:
+        context: ..
+        dockerfile: Stack/FastDb.Dockerfile
+    depends_on:
+         fastdb.configurator:
+            condition: service_completed_successfully
+    tty: true
+    networks:
+      - local-dev
+      
+networks:
+  local-dev:
+    

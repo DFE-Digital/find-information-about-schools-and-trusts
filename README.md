@@ -5,6 +5,7 @@ We are a tool for everyone in DfE to find information which is collated from mul
 ## Developer set up
 
 - [Get started](docs/getting-started.md)
+- [:star2:NEW:star2: - Docker compose for local development](docs/docker-compose.md)
 - [Docker](docs/docker.md)
 - [Databases](docs/databases.md)
 - [Run tests locally](docs/run-tests-locally.md)
