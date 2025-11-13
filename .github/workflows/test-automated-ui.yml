@@ -128,3 +128,12 @@ jobs:
           name: a11y-reports-${{ inputs.environment }}-${{ matrix.group }}
           path: tests/DFE.FindInformationAcademiesTrusts.CypressTests/cypress/accessibility
           if-no-files-found: ${{ matrix.group == 'a11y-comprehensive' && 'error' || 'warn' }}
+
+      - name: Report results to Teams
+        if: always()
+        run: |
+          node scripts/send-teams-notification.js
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          ENVIRONMENT: ${{ inputs.environment }}
+          INFORMATION_LINK: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
