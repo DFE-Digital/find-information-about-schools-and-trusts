@@ -1,6 +1,6 @@
 services:     
    fastdb:
-    image: mcr.microsoft.com/azure-sql-edge:latest
+    image: mcr.microsoft.com/azure-sql-edge:latest@sha256:902628a8be89e35dfb7895ca31d602974c7bafde4d583a0d0873844feb1c42cf
     environment:
       ACCEPT_EULA: Y
       MSSQL_SA_PASSWORD: mySuperStrong_pa55word!!!
@@ -15,7 +15,7 @@ services:
     restart: always 
 
    fastdb.configurator:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/mssql/server:2022-latest@sha256:db9a8fe3098b7e8bbde41106bdc7caee942e97124e5fdb71b872ca208de3092d
     volumes:
       - ./init:/initdb.d
     networks:
