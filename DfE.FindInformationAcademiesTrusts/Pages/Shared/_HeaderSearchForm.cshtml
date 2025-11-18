@@ -1,31 +1,11 @@
-﻿@model BasePageModel
-@{
-  var inputId = "header-search";
-  var placeholderText = "Search for a school or trust";
-}
-<div class="dfe-header__search-wrap" id="wrap-search">
-  <form class="dfe-header__search-form" id="search" asp-page="/Search" role="search" aria-label="sitewide" method="post">
-    <label class="govuk-visually-hidden" for="@inputId">@placeholderText</label>
-    <div id="@inputId-no-js-search-container" class="govuk-!-width-full">
-      <input class="dfe-search__input" id="@inputId" type="search" asp-for="KeyWords" name="keywords" placeholder="@placeholderText">
-    </div>
-    <button class="dfe-search__submit" type="submit">
-      <svg class="dfe-icon dfe-icon__search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="27" height="27">
-        <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
-      </svg>
-      <span class="govuk-visually-hidden">Search</span>
+﻿<!-- Search -->
+<div class="gem-c-layout-super-navigation-header__search-item">
+    <button id="super-search-menu-toggle" class="gem-c-layout-super-navigation-header__search-toggle-button" aria-controls="super-search-menu" aria-expanded="false" aria-label="Show search menu" type="button">
+        <span class="govuk-visually-hidden">Search for a trust or school</span>
+        <svg class="gem-c-layout-super-navigation-header__search-toggle-button-link-icon" width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <circle cx="12.0161" cy="11.0161" r="8.51613" stroke="currentColor" stroke-width="3"></circle>
+            <line x1="17.8668" y1="17.3587" x2="26.4475" y2="25.9393" stroke="currentColor" stroke-width="3"></line>
+        </svg>
+        <span aria-hidden="true" class="gem-c-layout-super-navigation-header__navigation-top-toggle-close-icon">×</span>
     </button>
-    <template id="@inputId-js-autocomplete-template">
-      <div id="@inputId-autocomplete-container" class="govuk-!-width-full"></div>
-      <input type="hidden" id="@inputId-selected-id" name="id"/>
-      <input type="hidden" id="@inputId-selected-searchResultType" name="searchResultType" />
-    </template>
-  </form>
 </div>
-
-<script asp-add-nonce type="application/javascript">
-  const loadHeaderAutocomplete = async () => {
-    await Autocomplete.loadTrustSearch("@inputId", "@Model.KeyWords", "@placeholderText")
-  }
-  window.addEventListener("load", loadHeaderAutocomplete);
-</script>

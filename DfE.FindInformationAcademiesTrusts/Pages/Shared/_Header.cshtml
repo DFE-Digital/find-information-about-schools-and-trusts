@@ -1,19 +1,34 @@
 @model BasePageModel
-<header class="govuk-header">
-    <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
-    <div class="govuk-header__container govuk-width-container">
-        <div class="govuk-header__logo">
-            <a class="govuk-header__link govuk-header__link--homepage" href="/">
-                <img src="~/dist/images/department-for-education_white.png" class="govuk-header__logotype" alt="Department for Education">
-            </a>
-        </div>
-        <div class="govuk-header__search">
-            <partial name="_HeaderActionLinks" model="Model"/>
-            @if (Model.ShowHeaderSearch)
-            {
-                <partial name="_HeaderSearchForm" model="Model"/>
-            }
+<header class="gem-c-layout-super-navigation-header">
+    <div class="gem-c-layout-super-navigation-header__container govuk-clearfix">
+        <div class="govuk-width-container transparent-bottom-border header-top">
+            <!-- Logo -->
+            <div class="gem-c-layout-super-navigation-header__header-logo">
+                <a class="govuk-header__link govuk-header__link--homepage" id="logo" href="/">
+                    <img src="~/dist/images/department-for-education_white.png" alt="Department for Education" class="govuk-header__logotype">
+                </a>
+            </div>
+            <div class="header-right">  
+
+                @if (Model.ShowHeaderSearch)
+                {
+                    <div class="gem-c-layout-super-navigation-header__search-item">
+                        <button id="super-search-menu-toggle" class="gem-c-layout-super-navigation-header__search-toggle-button" aria-controls="super-search-menu" aria-expanded="false" aria-label="Show search menu" type="button">
+                            <span class="govuk-visually-hidden">Search for a trust or school</span>
+                            <svg class="gem-c-layout-super-navigation-header__search-toggle-button-link-icon" width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                                <circle cx="12.0161" cy="11.0161" r="8.51613" stroke="currentColor" stroke-width="3"></circle>
+                                <line x1="17.8668" y1="17.3587" x2="26.4475" y2="25.9393" stroke="currentColor" stroke-width="3"></line>
+                            </svg>
+                            <span aria-hidden="true" class="gem-c-layout-super-navigation-header__navigation-top-toggle-close-icon">×</span>
+                        </button>
+                    </div>
+                }
+
+                <!-- action links  -->
+                <partial name="_HeaderActionLinks" model="Model"/>
+            </div>
         </div>
     </div>
 </header>
 
+<partial name="_HeaderSearchPanel" model="Model"/>
