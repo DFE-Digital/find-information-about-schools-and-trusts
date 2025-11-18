@@ -9,7 +9,16 @@ function readReportData() {
     let reportStats = { tests: 0, passes: 0, failures: 0 };
     let failedTests = [];
 
-    const reportPath = path.join(process.cwd(), "mochareports", "report.json");
+    const reportDir = path.join(process.cwd(), "cypress", "reports", "mocha");
+
+    const files = fs.readdirSync(reportDir);
+    const jsonFile = files.find(f => f.endsWith(".json"));
+
+    if (!jsonFile) {
+    throw new Error(`No mochawesome JSON report found in ${reportDir}`);
+    }
+
+    const reportPath = path.join(reportDir, jsonFile);
 
     if (fs.existsSync(reportPath)) {
         const reportData = JSON.parse(fs.readFileSync(reportPath, "utf8"));
