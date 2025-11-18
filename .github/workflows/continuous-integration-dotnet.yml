@@ -21,7 +21,6 @@ jobs:
   build:
     name: Build & Test
     runs-on: ubuntu-24.04
-    container: mcr.microsoft.com/dotnet/sdk:${{ env.DOTNET_VERSION }}
     steps:
     - name: Check out code
       uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4
@@ -47,6 +46,8 @@ jobs:
 
     - name: Run mutation tests
       run: dotnet stryker --reporter "markdown" --reporter "html" --output "${{ github.workspace }}"
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Print stryker report
       if: ${{ !cancelled() }}
