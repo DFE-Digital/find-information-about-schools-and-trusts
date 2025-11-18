@@ -1,4 +1,4 @@
-﻿.govuk-header__logotype {
+.govuk-header__logotype {
   height: 30px;
 }
 
@@ -146,7 +146,7 @@
 
 .gem-c-layout-super-navigation-header__navigation-item-link,
 .gem-c-layout-super-navigation-header__search-item-link {
-    color: #fff;
+    color: #ffffff;
     display: inline-block;
     font-size: 19px;
     font-size: 1.1875rem;
@@ -159,7 +159,6 @@
 }
 
 @media print {
-
     .gem-c-layout-super-navigation-header__navigation-item-link,
     .gem-c-layout-super-navigation-header__search-item-link {
         font-family: sans-serif;
@@ -173,19 +172,20 @@
     text-decoration-skip-ink: none;
     -webkit-text-decoration-skip: none;
     text-decoration-skip: none;
+    background: #ffffff;
+    color: #003078;
 }
 
 .gem-c-layout-super-navigation-header__navigation-item-link:focus,
 .gem-c-layout-super-navigation-header__search-item-link:focus {
     outline: 3px solid rgba(0, 0, 0, 0);
-    color: #0b0c0c;
-    background-color: #fd0;
-    box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+    background-color: #ffdd00;
+    box-shadow: 0 -2px #ffdd00, 0 4px #0b0c0c;
     text-decoration: none;
+    color: #0b0c0c;
 }
 
 @supports not (text-wrap: balance) {
-
     .gem-c-layout-super-navigation-header__navigation-item-link:focus,
     .gem-c-layout-super-navigation-header__search-item-link:focus {
         -webkit-box-decoration-break: clone;
@@ -203,23 +203,12 @@
     color: #1d70b8;
 }
 
-.gem-c-layout-super-navigation-header__navigation-item-link:hover,
-.gem-c-layout-super-navigation-header__search-item-link:hover {
-    color: #003078;
-}
-
 .gem-c-layout-super-navigation-header__navigation-item-link:active,
 .gem-c-layout-super-navigation-header__search-item-link:active {
     color: #0b0c0c;
 }
 
-.gem-c-layout-super-navigation-header__navigation-item-link:focus,
-.gem-c-layout-super-navigation-header__search-item-link:focus {
-    color: #0b0c0c;
-}
-
 @media (min-width: 48.0625em) {
-
     .gem-c-layout-super-navigation-header__navigation-item-link,
     .gem-c-layout-super-navigation-header__search-item-link {
         display: block;
@@ -239,27 +228,13 @@
     top: auto;
 }
 
-.gem-c-layout-super-navigation-header__navigation-item-link:hover,
-.gem-c-layout-super-navigation-header__search-item-link:hover {
-    text-decoration-thickness: max(3px, 0.1875rem, 0.12em);
-    -webkit-text-decoration-skip-ink: none;
-    text-decoration-skip-ink: none;
-    -webkit-text-decoration-skip: none;
-    text-decoration-skip: none;
-}
-
-.gem-c-layout-super-navigation-header__navigation-item-link:hover::after,
-.gem-c-layout-super-navigation-header__search-item-link:hover::after {
-    background: #fff;
-}
-
 .gem-c-layout-super-navigation-header__navigation-item-link,
 .gem-c-layout-super-navigation-header__navigation-item-link:link,
 .gem-c-layout-super-navigation-header__navigation-item-link:visited,
 .gem-c-layout-super-navigation-header__search-item-link,
 .gem-c-layout-super-navigation-header__search-item-link:link,
 .gem-c-layout-super-navigation-header__search-item-link:visited {
-    color: #fff;
+    color: #ffffff;
     float: left;
     font-size: 16px;
     font-size: 1rem;
@@ -298,7 +273,7 @@
 }
 
 .gem-c-layout-super-navigation-header__navigation-item-link:focus .gem-c-layout-super-navigation-header__navigation-item-link-inner {
-    border-right-color: #fd0;
+    border-right-color: #ffdd00;
 }
 
 .gem-c-layout-super-navigation-header__search-item-link {
@@ -307,7 +282,7 @@
 
 @media (min-width: 22.5em) {
     .gem-c-layout-super-navigation-header__search-item-link {
-        padding: 20px 20px;
+        padding: 20px;
     }
 }
 
@@ -326,19 +301,20 @@
     font-size: 16px;
     font-size: 1rem;
     font-weight: 700;
-    background: none;
     border: 0;
     box-sizing: border-box;
-    color: #fff;
+    color: #ffffff;
     cursor: pointer;
     height: 61px;
     padding: 0;
     position: relative;
     margin: 0;
     vertical-align: top;
-    font-family: "Inter", arial, sans-serif;
+    font-family: Inter, arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background: none;
+    box-shadow: none;
 }
 
 @media print {
@@ -378,8 +354,8 @@
         -webkit-transform: translateY(-35%) rotate(45deg) scale(1);
         -ms-transform: translateY(-35%) rotate(45deg) scale(1);
         transform: translateY(-35%) rotate(45deg) scale(1);
-        border-bottom: 2px solid #fff;
-        border-right: 2px solid #fff;
+        border-bottom: 2px solid #ffffff;
+        border-right: 2px solid #ffffff;
         content: "";
         display: inline-block;
         height: 8px;
@@ -391,20 +367,19 @@
 
 @media (hover: hover) and (pointer: fine) {
     .gem-c-layout-super-navigation-header__navigation-top-toggle-button:hover::after {
-        background: #fff;
+        background: #ffffff;
     }
 
     .gem-c-layout-super-navigation-header__navigation-top-toggle-button:hover .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner::before {
-        border-bottom-color: #fff;
-        border-right-color: #fff;
+        border-bottom-color: #ffffff;
+        border-right-color: #ffffff;
     }
 }
 
 .gem-c-layout-super-navigation-header__navigation-top-toggle-button:focus {
     outline: 3px solid rgba(0, 0, 0, 0);
     color: #0b0c0c;
-    background-color: #fd0;
-    box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+    background-color: #ffdd00;
     text-decoration: none;
     box-shadow: none;
 }
@@ -421,12 +396,12 @@
 }
 
 .gem-c-layout-super-navigation-header__navigation-top-toggle-button:focus .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner {
-    border-right-color: #fd0;
+    border-right-color: #ffdd00;
 }
 
 .gem-c-layout-super-navigation-header__navigation-top-toggle-button:focus .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner::before {
-    border-bottom-color: #fff;
-    border-right-color: #fff;
+    border-bottom-color: #ffffff;
+    border-right-color: #ffffff;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -447,8 +422,7 @@
 .gem-c-layout-super-navigation-header__navigation-top-toggle-button:focus-visible {
     outline: 3px solid rgba(0, 0, 0, 0);
     color: #0b0c0c;
-    background-color: #fd0;
-    box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+    background-color: #ffdd00;
     text-decoration: none;
     box-shadow: none;
 }
@@ -465,7 +439,7 @@
 }
 
 .gem-c-layout-super-navigation-header__navigation-top-toggle-button:focus-visible .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner {
-    border-right-color: #fd0;
+    border-right-color: #ffdd00;
 }
 
 .gem-c-layout-super-navigation-header__navigation-top-toggle-button:focus-visible .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner::before {
@@ -488,46 +462,32 @@
     }
 }
 
-.gem-c-layout-super-navigation-header__navigation-top-toggle-button {
-    background: none;
-    box-shadow: none;
-    color: #fff;
-}
-
-.gem-c-layout-super-navigation-header__navigation-top-toggle-button::after {
-    background: none;
-}
-
-.gem-c-layout-super-navigation-header__navigation-top-toggle-button .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner {
-    border-right-color: #f4f8fb;
-}
-
 @media (min-width: 22.5em) {
     .gem-c-layout-super-navigation-header__navigation-top-toggle-button .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner::before {
-        border-bottom-color: #fff;
-        border-right-color: #fff;
+        border-bottom-color: #ffffff;
+        border-right-color: #ffffff;
     }
 }
 
 @media (hover: hover) and (pointer: fine) {
     .gem-c-layout-super-navigation-header__navigation-top-toggle-button:hover::after {
-        background: #fff;
+        background: #ffffff;
     }
 
     .gem-c-layout-super-navigation-header__navigation-top-toggle-button:hover .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner {
-        color: #fff;
+        color: #ffffff;
     }
 
     .gem-c-layout-super-navigation-header__navigation-top-toggle-button:hover .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner::before {
-        border-bottom-color: #fff;
-        border-right-color: #fff;
+        border-bottom-color: #ffffff;
+        border-right-color: #ffffff;
     }
 }
 
 .gem-c-layout-super-navigation-header__navigation-top-toggle-button:focus:not( :focus-visible) {
     background: none;
     box-shadow: none;
-    color: #fff;
+    color: #ffffff;
 }
 
 .gem-c-layout-super-navigation-header__navigation-top-toggle-button:focus:not( :focus-visible)::after {
@@ -540,23 +500,23 @@
 
 @media (min-width: 22.5em) {
     .gem-c-layout-super-navigation-header__navigation-top-toggle-button:focus:not(:focus-visible) .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner::before {
-        border-bottom-color: #fff;
-        border-right-color: #fff;
+        border-bottom-color: #ffffff;
+        border-right-color: #ffffff;
     }
 }
 
 @media (hover: hover) and (pointer: fine) {
     .gem-c-layout-super-navigation-header__navigation-top-toggle-button:focus:not(:focus-visible):hover::after {
-        background: #fff;
+        background: #ffffff;
     }
 
     .gem-c-layout-super-navigation-header__navigation-top-toggle-button:focus:not(:focus-visible):hover .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner {
-        color: #fff;
+        color: #ffffff;
     }
 
     .gem-c-layout-super-navigation-header__navigation-top-toggle-button:focus:not(:focus-visible):hover .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner::before {
-        border-bottom-color: #fff;
-        border-right-color: #fff;
+        border-bottom-color: #ffffff;
+        border-right-color: #ffffff;
     }
 }
 
@@ -571,8 +531,7 @@
 .gem-c-layout-super-navigation-header__navigation-top-toggle-button.gem-c-layout-super-navigation-header__open-button:focus {
     outline: 3px solid rgba(0, 0, 0, 0);
     color: #0b0c0c;
-    background-color: #fd0;
-    box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+    background-color: #ffdd00;
     text-decoration: none;
     box-shadow: none;
 }
@@ -590,7 +549,7 @@
 
 .gem-c-layout-super-navigation-header__navigation-top-toggle-button.gem-c-layout-super-navigation-header__open-button:focus .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner {
     color: #0b0c0c;
-    border-right-color: #fd0;
+    border-right-color: #ffdd00;
 }
 
 .gem-c-layout-super-navigation-header__navigation-top-toggle-button.gem-c-layout-super-navigation-header__open-button:focus .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner::before {
@@ -604,8 +563,7 @@
 .gem-c-layout-super-navigation-header__navigation-top-toggle-button.gem-c-layout-super-navigation-header__open-button:focus-visible {
     outline: 3px solid rgba(0, 0, 0, 0);
     color: #0b0c0c;
-    background-color: #fd0;
-    box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+    background-color: #ffdd00;
     text-decoration: none;
     box-shadow: none;
 }
@@ -623,7 +581,7 @@
 
 .gem-c-layout-super-navigation-header__navigation-top-toggle-button.gem-c-layout-super-navigation-header__open-button:focus-visible .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner {
     color: #0b0c0c;
-    border-right-color: #fd0;
+    border-right-color: #ffdd00;
 }
 
 .gem-c-layout-super-navigation-header__navigation-top-toggle-button.gem-c-layout-super-navigation-header__open-button:focus-visible .gem-c-layout-super-navigation-header__navigation-top-toggle-button-inner::before {
@@ -681,9 +639,8 @@
 }
 
 .gem-c-layout-super-navigation-header__search-toggle-button {
-    background: none;
     border: 0;
-    color: #fff;
+    color: #ffffff;
     cursor: pointer;
     height: 61px;
     padding: 20px 15px;
@@ -694,7 +651,8 @@
     -moz-osx-font-smoothing: grayscale;
     font-weight: 700;
     font-size: 1.1875rem;
-    line-height: 1.0526315789;
+    line-height: 1.0526;
+    background: none;
 }
 
 @media print {
@@ -712,7 +670,7 @@
 
 @media (min-width: 22.5em) {
     .gem-c-layout-super-navigation-header__search-toggle-button {
-        padding: 20px 20px;
+        padding: 20px;
         width: 61px;
     }
 }
@@ -730,17 +688,16 @@
 
 @media (hover: hover) and (pointer: fine) {
     .gem-c-layout-super-navigation-header__search-toggle-button:hover::after {
-        background: #fff;
+        background: #ffffff;
     }
 }
 
 .gem-c-layout-super-navigation-header__search-toggle-button:focus {
     outline: 3px solid rgba(0, 0, 0, 0);
     color: #0b0c0c;
-    background-color: #fd0;
-    box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+    background-color: #ffdd00;
     text-decoration: none;
-    border-color: #fd0;
+    border-color: #ffdd00;
     box-shadow: none;
     z-index: 11;
 }
@@ -769,10 +726,9 @@
 .gem-c-layout-super-navigation-header__search-toggle-button:focus-visible {
     outline: 3px solid rgba(0, 0, 0, 0);
     color: #0b0c0c;
-    background-color: #fd0;
-    box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+    background-color: #ffdd00;
     text-decoration: none;
-    border-color: #fd0;
+    border-color: #ffdd00;
     box-shadow: none;
     z-index: 11;
 }
@@ -798,30 +754,20 @@
     }
 }
 
-.gem-c-layout-super-navigation-header__search-toggle-button {
-    background: none;
-    box-shadow: none;
-    color: #fff;
-}
-
-.gem-c-layout-super-navigation-header__search-toggle-button::after {
-    background: none;
-}
-
 @media (hover: hover) and (pointer: fine) {
     .gem-c-layout-super-navigation-header__search-toggle-button:hover {
-        color: #fff;
+        color: #ffffff;
     }
 
     .gem-c-layout-super-navigation-header__search-toggle-button:hover::after {
-        background: #fff;
+        background: #ffffff;
     }
 }
 
 .gem-c-layout-super-navigation-header__search-toggle-button:focus:not( :focus-visible) {
     background: none;
     box-shadow: none;
-    color: #fff;
+    color: #ffffff;
 }
 
 .gem-c-layout-super-navigation-header__search-toggle-button:focus:not( :focus-visible)::after {
@@ -830,25 +776,26 @@
 
 @media (hover: hover) and (pointer: fine) {
     .gem-c-layout-super-navigation-header__search-toggle-button:focus:not(:focus-visible):hover {
-        color: #fff;
+        color: #ffffff;
     }
 
     .gem-c-layout-super-navigation-header__search-toggle-button:focus:not( :focus-visible):hover::after {
-        background: #fff;
+        background: #ffffff;
     }
 }
 
 .gem-c-layout-super-navigation-header__search-toggle-button.gem-c-layout-super-navigation-header__open-button {
+    background: #f4f8fb;
+    outline: 1px solid #f4f8fb;
     color: #1d70b8;
 }
 
 .gem-c-layout-super-navigation-header__search-toggle-button.gem-c-layout-super-navigation-header__open-button:focus {
     outline: 3px solid rgba(0, 0, 0, 0);
     color: #0b0c0c;
-    background-color: #fd0;
-    box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+    background-color: #ffdd00;
     text-decoration: none;
-    border-color: #fd0;
+    border-color: #ffdd00;
     box-shadow: none;
 }
 
@@ -872,10 +819,9 @@
 .gem-c-layout-super-navigation-header__search-toggle-button.gem-c-layout-super-navigation-header__open-button:focus-visible {
     outline: 3px solid rgba(0, 0, 0, 0);
     color: #0b0c0c;
-    background-color: #fd0;
-    box-shadow: 0 -2px #fd0, 0 4px #0b0c0c;
+    background-color: #ffdd00;
     text-decoration: none;
-    border-color: #fd0;
+    border-color: #ffdd00;
     box-shadow: none;
 }
 
@@ -894,12 +840,6 @@
     .gem-c-layout-super-navigation-header__search-toggle-button.gem-c-layout-super-navigation-header__open-button:focus-visible:hover::after {
         background: #0b0c0c;
     }
-}
-
-.gem-c-layout-super-navigation-header__search-toggle-button.gem-c-layout-super-navigation-header__open-button {
-    background: #f4f8fb;
-    outline: 1px solid #f4f8fb;
-    color: #1d70b8;
 }
 
 .gem-c-layout-super-navigation-header__search-toggle-button.gem-c-layout-super-navigation-header__open-button::after {
@@ -968,15 +908,15 @@
 
 .gem-c-layout-super-navigation-header__dropdown-list-item {
     box-sizing: border-box;
-    padding: 0 0 15px 0;
+    padding: 0 0 15px;
     position: relative;
-    margin: 0 0 10px 0;
+    margin: 0 0 10px;
 }
 
 @media (min-width: 48.0625em) {
     .gem-c-layout-super-navigation-header__dropdown-list-item {
-        padding: 0 0 15px 0;
-        margin: 0 15px 0px 15px;
+        padding: 0 0 15px;
+        margin: 0 15px;
     }
 }
 
@@ -989,7 +929,7 @@
 @media (min-width: 48.0625em) {
     .gem-c-layout-super-navigation-header__navigation-second-items {
         margin: 0 -15px 60px;
-        padding: 10px 0 0 0;
+        padding: 10px 0 0;
     }
 }
 
@@ -1154,7 +1094,7 @@
     font-size: 16px;
     font-size: 1rem;
     font-weight: normal;
-    margin: 5px 0 0 0;
+    margin: 5px 0 0;
     font-family: "GDS Transport", arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -1196,7 +1136,7 @@
 @media print {
     .gem-c-layout-super-navigation-header {
         border-top: 0;
-        border-bottom: 2pt solid #000;
+        border-bottom: 2pt solid #000000;
         margin: 0 0 5mm;
         background: none;
     }
@@ -1207,7 +1147,7 @@
     }
 
     .gem-c-layout-super-navigation-header * {
-        color: #000;
+        color: #000000;
     }
 
     .gem-c-layout-super-navigation-header .govuk-width-container {
@@ -1215,7 +1155,7 @@
     }
 
     .gem-c-layout-super-navigation-header__header-logo {
-        padding: 10px 0 !important;
+        padding: 10px 0;
     }
 }
 
