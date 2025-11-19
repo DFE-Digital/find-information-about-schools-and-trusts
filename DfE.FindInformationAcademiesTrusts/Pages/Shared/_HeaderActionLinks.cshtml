@@ -5,11 +5,11 @@
     var mpcVisible = User.IsInRole("User.Role.MPCViewer");
 }
 
-@if (mpcVisible)
-{
-    <ul class="dfe-header__action-links">
-        <li>
-            <a data-testid="mpcHeaderLink" href=@mpcLink class="govuk-link govuk-link--inverse">Manage projects and cases</a>
-        </li>
-    </ul>
-}
+
+<!-- Links -->
+<div class="header-links">
+    @if (mpcVisible)
+    {
+        <a data-testid="mpcHeaderLink" href=@mpcLink class="govuk-link">Manage projects and cases</a>
+    }
+</div>

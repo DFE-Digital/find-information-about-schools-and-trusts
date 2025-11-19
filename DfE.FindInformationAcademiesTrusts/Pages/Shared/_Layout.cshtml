@@ -1,70 +1,73 @@
 ﻿@using DfE.FindInformationAcademiesTrusts.Configuration
 <!DOCTYPE html>
-<html lang="en" class="govuk-template ">
+<html lang="en" class="govuk-template govuk-template--rebranded">
 
 @{
-  var hasConsented = CookiesHelper.OptionalCookiesAreAccepted(Context, TempData);
+    var hasConsented = CookiesHelper.OptionalCookiesAreAccepted(Context, TempData);
 }
 
 <head>
-  <meta charset="utf-8">
-  <title>@ViewData["Title"] - @ViewConstants.ServiceName</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b0c0c">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="icon" href="~/dist/images/favicon.ico">
-  <link rel="icon" sizes="16x16" href="~/dist/images/favicon-16x16.png">
-  <link rel="icon" sizes="32x32" href="~/dist/images/favicon-32x32.png">
-  <link rel="mask-icon" href="~/dist/images/govuk-icon-mask.svg" color="#0b0c0c">
-  <link rel="apple-touch-icon" href="~/dist/images/govuk-icon-180.png">
-  <link rel="stylesheet" href="~/dist/main.css" asp-append-version="true"/>
-  <partial name="_AppInsights"/>
+    <meta charset="utf-8">
+    <title>@ViewData["Title"] - @ViewConstants.ServiceName</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1d70b8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-  @if (hasConsented)
-  {
-    <!-- Google Tag Manager -->
-    <script asp-add-nonce>
+    <link rel="icon" sizes="48x48" href="~/dist/images/favicon.ico">
+    <link rel="icon" sizes="any" href="~/dist/images/favicon.svg" type="image/svg+xml">
+    <link rel="mask-icon" href="~/dist/images/govuk-icon-mask.svg" color="#1d70b8">
+    <link rel="apple-touch-icon" href="~/dist/images/govuk-icon-180.png">
+    <link rel="manifest" href="~/dist/images/manifest.json">
+
+    <link rel="stylesheet" href="~/dist/main.css" asp-append-version="true"/>
+    <partial name="_AppInsights"/>
+
+    @if (hasConsented)
+    {
+        <!-- Google Tag Manager -->
+        <script asp-add-nonce>
             (function (w, d, s, l, i) {
                 w[l] = w[l] || []; w[l].push({
                     'gtm.start':
                         new Date().getTime(), event: 'gtm.js'
                 }); var f = d.getElementsByTagName(s)[0],
                     j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
             })(window, document, 'script', 'dataLayer', 'GTM-579KCM8T');</script>
-    <!-- End Google Tag Manager -->
-  }
+        <!-- End Google Tag Manager -->
+    }
 
 </head>
 
 <body class="govuk-template__body">
 
-  @if (hasConsented)
-  {
-    <!-- Google Tag Manager (noscript) -->
-    <noscript>
-      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-579KCM8T"
-              height="0" width="0" style="display:none;visibility:hidden">
-      </iframe>
-    </noscript>
-    <!-- End Google Tag Manager (noscript) -->
-  }
+    @if (hasConsented)
+    {
+        <!-- Google Tag Manager (noscript) -->
+        <noscript>
+            <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-579KCM8T"
+                    height="0" width="0" style="display:none;visibility:hidden">
+            </iframe>
+        </noscript>
+        <!-- End Google Tag Manager (noscript) -->
+    }
 
-  <script asp-add-nonce>
-    document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '')
-  </script>
-  <partial name="_CookieBanner"/>
-  <partial name="_NotificationBanner"/>
-  <partial name="_Header"/>
-  <feature name="@FeatureFlags.TestFlag">
-    TEST FLAG IS ENABLED
-  </feature>
+    <script asp-add-nonce>
+        document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');
+    </script>
+    <partial name="_CookieBanner"/>
+    <partial name="_NotificationBanner"/>
+    <partial name="_Header"/>
+    <partial name="_ServiceInformation" />
+    <feature name="@FeatureFlags.TestFlag">
+        TEST FLAG IS ENABLED
+    </feature>
 
-  @RenderBody()
+    @RenderBody()
 
-  <partial name="_Footer"/>
-  <script src="~/dist/main.js" asp-append-version="true"></script>
-  @await RenderSectionAsync("Scripts", false)
+    <partial name="_Footer"/>
+    <script src="~/dist/main.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", false)
 </body>
 
 </html>

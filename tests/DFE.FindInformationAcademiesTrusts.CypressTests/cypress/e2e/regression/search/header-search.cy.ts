@@ -14,7 +14,7 @@ describe('Header Search Tests', () => {
                     subpages.forEach(({ subpageName, url }) => {
                         it(`Should have header search present - ${pageName} > ${subpageName}`, () => {
                             cy.visit(url);
-                            headerPage.checkHeaderSearchButtonPresent();
+                            headerPage.checkHeaderSearchTogglePresent();
                         });
                     });
                 });
@@ -29,7 +29,7 @@ describe('Header Search Tests', () => {
                     subpages.forEach(({ subpageName, url }) => {
                         it(`Should have header search present - ${pageName} > ${subpageName}`, () => {
                             cy.visit(url);
-                            headerPage.checkHeaderSearchButtonPresent();
+                            headerPage.checkHeaderSearchTogglePresent();
                         });
                     });
                 });
@@ -60,7 +60,9 @@ describe('Header Search Tests', () => {
 
                 it(`Should check that the header search bar and autocomplete is present and functional - ${type}`, () => {
                     headerPage
+                        .clickHeaderSearchToggle()
                         .enterHeaderSearchText('West')
+                        .checkHeaderSearchTogglePresent()
                         .checkHeaderAutocompleteIsPresent()
                         .checkHeaderSearchButtonPresent()
                         .checkAutocompleteContainsTypedText('West');
@@ -68,6 +70,7 @@ describe('Header Search Tests', () => {
 
                 it(`Should check that the autocomplete does not return results when entry does not exist - ${type}`, () => {
                     headerPage
+                        .clickHeaderSearchToggle()
                         .enterHeaderSearchText('KnowWhere')
                         .checkHeaderAutocompleteIsPresent()
                         .checkAutocompleteContainsTypedText('No results found');
@@ -75,6 +78,7 @@ describe('Header Search Tests', () => {
 
                 it(`Checks that when a URN is entered the autocomplete lists the correct school - ${type}`, () => {
                     headerPage
+                        .clickHeaderSearchToggle()
                         .enterHeaderSearchText(urnTest.urn.toString())
                         .checkHeaderAutocompleteIsPresent()
                         .checkAutocompleteContainsTypedText(urnTest.name);
@@ -85,6 +89,7 @@ describe('Header Search Tests', () => {
                     const expectedResult = type === 'trust' ? 'UNITED LEARNING TRUST' : 'west';
 
                     headerPage
+                        .clickHeaderSearchToggle()
                         .enterHeaderSearchText(searchTerm)
                         .clickHeaderSearchButton();
 
