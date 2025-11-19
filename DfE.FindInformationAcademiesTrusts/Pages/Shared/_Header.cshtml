@@ -31,4 +31,7 @@
     </div>
 </header>
 
-<partial name="_HeaderSearchPanel" model="Model"/>
+@if (Model.ShowHeaderSearch)
+{
+    <partial name="_HeaderSearchPanel" model="Model"/>
+}
