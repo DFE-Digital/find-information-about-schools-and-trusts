@@ -27,7 +27,8 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.15.0",
-    "cypress": "^13.17.0",
+    "cypress": "^15.6.0",
+    "cypress-axe": "^1.7.0",
     "cypress-multi-reporters": "^2.0.4",
     "eslint": "^9.15.0",
     "eslint-plugin-cypress": "^4.1.0",
@@ -39,6 +40,7 @@
     "wick-a11y": "^2.0.1"
   },
   "dependencies": {
+    "axios": "^1.13.2",
     "puppeteer": "^24.28.0"
   }
 }
