@@ -174,3 +174,4 @@ jobs:
      secrets:
        TEST_OVERRIDE_CYPRESS_TEST_SECRET: ${{ secrets.TEST_OVERRIDE_CYPRESS_TEST_SECRET }}
        BASE_URL: ${{ secrets.BASE_URL }}
+       TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
