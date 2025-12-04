@@ -36,7 +36,7 @@ describe("Testing the components of the Trust contacts page", () => {
                 trustContactsPage
                     .editTrustRelationshipManager(name, email)
                     .checkTrustRelationshipManagerIsSuccessfullyUpdated(name, email)
-                    .checkTrustRelationshipManagerDatasourceLastUpdatedByUser('Automation User - email');
+                    .checkTrustRelationshipManagerDatasourceLastUpdatedByUser('FastTestUser@education.gov.uk');
 
                 commonPage
                     .checkSuccessPopup('Changes made to the Trust relationship manager name and email were updated')
@@ -49,7 +49,7 @@ describe("Testing the components of the Trust contacts page", () => {
                 trustContactsPage
                     .editSfsoLead(name, email)
                     .checkSfsoLeadIsSuccessfullyUpdated(name, email)
-                    .checkSfsoLeadDatasourceLastUpdatedByUser('Automation User - email');
+                    .checkSfsoLeadDatasourceLastUpdatedByUser('FastTestUser@education.gov.uk');
 
                 commonPage
                     .checkSuccessPopup('Changes made to the SFSO (Schools financial support and oversight) lead name and email were updated')

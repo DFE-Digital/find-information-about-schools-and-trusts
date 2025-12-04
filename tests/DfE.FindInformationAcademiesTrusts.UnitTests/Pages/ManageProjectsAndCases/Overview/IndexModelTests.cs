@@ -4,7 +4,6 @@ using Dfe.CaseAggregationService.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overview;
 using DfE.FindInformationAcademiesTrusts.Services.ManageProjectsAndCases;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -16,17 +15,17 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
     {
         private readonly IndexModel _indexModel;
         private readonly IGetCasesService _getCasesService;
-        private readonly IWebHostEnvironment _environment;
+        private readonly IUserDetailsProvider _userDetailsProvider;
 
         private readonly IPaginatedList<UserCaseInfo> _emptyList = PaginatedList<UserCaseInfo>.Empty();
 
         public IndexModelTests()
         {
             _getCasesService = Substitute.For<IGetCasesService>();
-            _environment = Substitute.For<IWebHostEnvironment>();
-            
-            _indexModel = new IndexModel(_getCasesService, _environment);
-      
+            _userDetailsProvider = Substitute.For<IUserDetailsProvider>();
+
+            _indexModel = new IndexModel(_getCasesService, _userDetailsProvider);
+
             SetupContext();
 
             _getCasesService.GetCasesAsync(Arg.Any<GetCasesParameters>()).Returns(_emptyList);
@@ -220,37 +219,24 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
                 .GetCasesAsync(Arg.Is<GetCasesParameters>(x => x.RecordCount == 25));
         }
 
-
         [Fact]
-        public async Task OnGetAsync_ShouldSendFakeEmailWhenInDevelopment()
+        public async Task OnGetAsync_ShouldSetNameAndEmail()
         {
-          _environment.EnvironmentName.Returns("LocalDevelopment");
-          _indexModel.FakeEmail = "faked";
-          // Act
-          await _indexModel.OnGetAsync();
-          // Assert
-          await _getCasesService.Received(1)
-            .GetCasesAsync(Arg.Is<GetCasesParameters>(x => x.UserEmail == "faked"));
+            _indexModel.PageNumber = 2;
+            _userDetailsProvider.GetUserDetails().Returns(("UserName", "UserEmail"));
+            // Act
+            await _indexModel.OnGetAsync();
+            // Assert
+            await _getCasesService.Received(1)
+                .GetCasesAsync(Arg.Is<GetCasesParameters>(x => x.UserEmail == "UserEmail" && x.UserName == "UserName"));
         }
 
-        [Fact]
-        public async Task OnGetAsync_ShouldSendRealEmailWhenInProduction()
-        {
-          _environment.EnvironmentName.Returns("Production");
-          _indexModel.FakeEmail = "faked";
-          // Act
-          await _indexModel.OnGetAsync();
-          // Assert
-          await _getCasesService.Received(1)
-            .GetCasesAsync(Arg.Is<GetCasesParameters>(x => x.UserEmail != "faked"));
-        }
-
-    private void SetupContext(StringValues? selectedSystems = null, StringValues? selectedProjectTypes = null, string? userRole = null)
+        private void SetupContext(StringValues? selectedSystems = null, StringValues? selectedProjectTypes = null, string? userRole = null)
         {
             var httpContext = new DefaultHttpContext();
             var query = new Dictionary<string, StringValues>();
-            
-            if(selectedSystems is { Count: > 0 })
+
+            if  (selectedSystems is { Count: > 0 })
             {
                 query.Add("SelectedSystems", selectedSystems.Value);
             }
@@ -287,8 +273,6 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
 
     public class IncludeSystemData : IEnumerable<object[]>
     {
-
-
         public IEnumerator<object[]> GetEnumerator()
         {
             

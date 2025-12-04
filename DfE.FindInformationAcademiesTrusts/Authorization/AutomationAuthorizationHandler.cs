@@ -38,7 +38,7 @@ public class AutomationAuthorizationHandler(
         var identity = new ClaimsIdentity(new List<Claim>
         {
             new("name", "Automation User - name"),
-            new("preferred_username", "Automation User - email"),
+            new("preferred_username", "FastTestUser@education.gov.uk"),
         });
 
         var testRole = httpContextAccessor.HttpContext?.Request.Headers["X-test-role"];
