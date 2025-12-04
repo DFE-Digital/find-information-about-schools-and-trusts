@@ -7,6 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased][unreleased]
 ### Changed
 
+## [Release-57][release-57] (production-2025-12-04.6776)
+
+### Changed
+
+- Bug Fix- age range causing exception when data not available
+
 ## [Release-56][release-56] (production-2025-11-24.6735)
 
 ### Changed
@@ -512,7 +518,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Updated text on "404 - Not Found" page to adhere to DfE design pattern and added the not found url to the support email template.
 
 [unreleased]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-11-24.6735...HEAD
+  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-12-04.6776...HEAD
 [release-1]:
   https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-07-18.2517
 [release-2]:
@@ -625,3 +631,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-11-07.6683
 [release-56]:
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-11-24.6735
+[release-57]:
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-12-04.6776
