@@ -3,10 +3,16 @@ import { AutocompleteHelper } from '../support/autocompleteHelper';
 class HeaderPage {
 
     elements = {
-        headerSearchButton: () => cy.get('.dfe-search__submit'),
+        headerSearchToggle: () => cy.get('#super-search-menu-toggle'),
+        headerSearchButton: () => cy.get('.gem-c-search__submit'),
         mainSearchBox: () => cy.get('#header-search'),
         headerAutocomplete: () => cy.get('#header-search__listbox')
     };
+
+    public clickHeaderSearchToggle(): this {
+        this.elements.headerSearchToggle().click();
+        return this;
+    }
 
     public clickHeaderSearchButton(): this {
         this.elements.headerSearchButton().click();
@@ -15,6 +21,11 @@ class HeaderPage {
 
     public checkHeaderSearchButtonPresent(): this {
         this.elements.headerSearchButton().should('be.visible').should('be.enabled');
+        return this;
+    }
+
+    public checkHeaderSearchTogglePresent(): this {
+        this.elements.headerSearchToggle().should('be.visible').should('be.enabled');
         return this;
     }
 

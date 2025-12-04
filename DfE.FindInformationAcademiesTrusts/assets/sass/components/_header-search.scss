@@ -2,106 +2,13 @@
   position: relative;
 }
 
-.dfe-header__content {
-  float: none;
-  @include govuk-font($size: 19);
+.gem-c-layout-super-navigation-header__search-form {
+  .autocomplete__wrapper {
+    height: 100%;
 
-  @include mq($from: tablet) {
-    position: absolute;
-    right: 0;
-    border-bottom: 0;
-  }
-
-  .dfe-header__search-form {
-    display: flex;
-
-    .autocomplete__input,
-    .dfe-search__input {
-      @include govuk-font($size: 19);
+    .autocomplete__input {
+      height: 100%;
       background-color: govuk-colour("white");
-      -webkit-appearance: listbox;
-      padding: 0 dfe-spacing(3);
-
-      &:focus {
-        border: 4px solid $dfe-focus-text-color;
-        box-shadow: 0 0 0 $dfe-focus-width $dfe-focus-color;
-        outline: $dfe-focus-width solid transparent;
-        outline-offset: $dfe-focus-width;
-        padding: 0 9px;
-      }
-
-      // Rule disabled as media query not considered nesting (false positive)
-      // stylelint-disable-next-line max-nesting-depth
-      @include mq($until: tablet) {
-        border-bottom: 1px solid $color_dfe-grey-3;
-        border-left: 1px solid $color_dfe-grey-3;
-        border-right: 0;
-        border-top: 1px solid $color_dfe-grey-3;
-        flex-grow: 2;
-        -ms-flex-positive: 2;
-        font-size: inherit;
-        height: 52px;
-        margin: 0;
-        outline: none;
-        width: 100%;
-        z-index: 1;
-      }
-
-      // Rule disabled as media query not considered nesting (false positive)
-      // stylelint-disable-next-line max-nesting-depth
-      @include mq($from: tablet) {
-        @include govuk-font-size(16);
-        border: 1px solid $color_dfe-white;
-        height: dfe-spacing(6);
-        width: 210px;
-      }
-
-      // Rule disabled as media query not considered nesting (false positive)
-      // stylelint-disable-next-line max-nesting-depth
-      @include mq($from: large-desktop) {
-        width: 335px;
-      }
-    }
-
-    .autocomplete__menu {
-      text-align: left;
-    }
-
-    .autocomplete__option {
-      @include govuk-font($size: 19);
-    }
-
-    .autocomplete__option-hint {
-      display: block;
-      @include govuk-font(16);
-      color: $govuk-secondary-text-colour;
-    }
-
-    .autocomplete__option--focused .autocomplete__option-hint,
-    .autocomplete__option:hover .autocomplete__option-hint {
-      color: govuk-colour("white");
     }
   }
-
-  .dfe-header__search-wrap {
-    @include mq($until: tablet) {
-      clear: both;
-      display: flex;
-      margin-bottom: -20px;
-      margin-left: -16px;
-      margin-right: -16px;
-      padding-top: 16px;
-      text-align: left;
-    }
-  }
-}
-
-.dfe-header__logo {
-  @include mq($until: tablet) {
-    max-width: 100%;
-  }
-}
-
-.dfe-header__link--service {
-  @include govuk-font-size($size: 24);
 }

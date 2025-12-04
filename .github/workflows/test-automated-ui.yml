@@ -15,6 +15,8 @@ on:
         required: true
       TEST_OVERRIDE_CYPRESS_TEST_SECRET:
         required: true
+      TEAMS_WEBHOOK_URL:
+        required: true
   workflow_dispatch:
     inputs:
       environment:
@@ -128,3 +130,12 @@ jobs:
           name: a11y-reports-${{ inputs.environment }}-${{ matrix.group }}
           path: tests/DFE.FindInformationAcademiesTrusts.CypressTests/cypress/accessibility
           if-no-files-found: ${{ matrix.group == 'a11y-comprehensive' && 'error' || 'warn' }}
+
+      - name: Report results to Teams
+        if: always()
+        run: |
+          node scripts/send-teams-notification.js
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          ENVIRONMENT: ${{ inputs.environment }}
+          INFORMATION_LINK: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"

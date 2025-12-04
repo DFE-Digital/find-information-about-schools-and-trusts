@@ -26,7 +26,7 @@ describe("Testing the components of the search results page", () => {
         searchPage
             .checkSearchResultsReturned("West");
 
-        searchPage
+       searchPage
             .enterSearchResultsSearchText("East")
             .clickSearchPageSearchButton();
 
