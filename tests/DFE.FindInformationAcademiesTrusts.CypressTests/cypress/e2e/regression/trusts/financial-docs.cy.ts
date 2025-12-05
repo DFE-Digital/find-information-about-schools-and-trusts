@@ -143,6 +143,10 @@ testFinanceData.forEach(({ uid }) => {
                         .checkForCorrectPermissionMessage();
                 });
 
+                it('Should have the do not contact trust message', () => {
+                    financialDocumentsPage
+                        .checkForDoNotContactTrustMessage();
+                });
             });
         });
     });

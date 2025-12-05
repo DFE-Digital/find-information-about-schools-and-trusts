@@ -7,6 +7,7 @@ class FinancialDocuments {
         aboutTheseDocuments: () => cy.get('[data-testid="about-these-documents"]'),
         internalUseOnlyMessage: () => cy.get('[data-testid="internal-use-only-warning"]'),
         permissionMessage: () => cy.get('[data-testid="you-must-have-permission-message"]'),
+        doNotContactTrustMessage: () => cy.get('[data-testid="do-not-contact-trust-about-documents-that-are-missing"]')
     };
 
     private readonly checkElementMatches = (element: JQuery<HTMLElement>, expected: RegExp) => {
@@ -83,9 +84,6 @@ class FinancialDocuments {
         const expectedTexts = [
             "Requesting access or reporting a problem",
             "Financial documents are maintained by the Data Science team.",
-            "Do not contact a trust about documents that are missing or in the wrong format.",
-            "To report a problem with a document, or if you have a business need to be granted access, email:",
-            "academiesfinancialmonitoring@education.gov.uk.",
             "Why a document might not be expected",
             "If a trust could not have submitted a document, for example because it had not formed yet, we say that it was ‘not expected’."
         ];
@@ -120,6 +118,21 @@ class FinancialDocuments {
         return this;
     }
 
+    public checkForDoNotContactTrustMessage(): this {
+
+        // Check for the presence of each line of text
+        const expectedTexts = [
+            "Do not contact a trust about documents that are missing or in the wrong format.",
+            "To report a problem with a document, or if you have a business need to be granted access, email:",
+            "academiesfinancialmonitoring@education.gov.uk.",
+        ];
+
+        expectedTexts.forEach(text => {
+            this.elements.doNotContactTrustMessage().contains(text).should('exist');
+        });
+
+        return this;
+    }
 }
 
 const financialDocumentsPage = new FinancialDocuments();
