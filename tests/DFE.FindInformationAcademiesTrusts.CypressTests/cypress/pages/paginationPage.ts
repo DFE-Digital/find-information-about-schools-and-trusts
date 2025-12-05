@@ -1,7 +1,7 @@
 class PaginationPage {
 
     elements = {
-        homeButton: () => cy.get('.dfe-header__link'),
+        homeButton: () => cy.get('.govuk-header__link--homepage'),
         paginationButton: (index: number) => cy.get(`[data-testid="page-${index}"]`),
         totalPaginationButtons: () => cy.get('[data-testid^="page-"]'),
         pagination: () => cy.get('.govuk-pagination'),

@@ -1,0 +1,49 @@
+﻿@model BasePageModel
+@{
+    var inputId = "header-search";
+    var placeholderText = "Search for a school or trust";
+}
+
+
+<div id="super-search-menu" class="gem-c-layout-super-navigation-header__navigation-dropdown-menu" hidden>
+    <div class="govuk-width-container gem-c-layout-super-navigation-header__search-container gem-c-layout-super-navigation-header__search-items">
+        <h3 class="govuk-visually-hidden">Search for a trust or school</h3>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full">
+                <form class="gem-c-layout-super-navigation-header__search-form" id="search" asp-page="/Search" role="search" aria-label="sitewide" method="post">
+                    <label class="govuk-visually-hidden" for="@inputId">@placeholderText</label>
+
+                    <div class="gem-c-search govuk-!-display-none-print gem-c-search--large gem-c-search--on-white govuk-!-margin-bottom-0">
+                        <label for="search-main" class="govuk-label govuk-label--m gem-c-layout-super-navigation-header__search-label--large-navbar">Search for a trust or school</label>
+                        <div class="gem-c-search__item-wrapper">
+                            <div id="@inputId-no-js-search-container">
+                                <input class="gem-c-search__input govuk-input" id="@inputId" type="search" asp-for="KeyWords" name="keywords" placeholder="@placeholderText">
+                            </div>
+                            <div class="gem-c-search__item gem-c-search__submit-wrapper">
+                                <button class="gem-c-search__submit gem-c-search__submit--icon-only" type="submit" aria-label="Search">
+                                    <span class="govuk-visually-hidden">Search</span>
+                                    <svg class="gem-c-search__icon" width="20" height="20" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                                        <circle cx="12.0161" cy="11.0161" r="8.51613" stroke="#ffffff" stroke-width="3"></circle>
+                                        <line x1="17.8668" y1="17.3587" x2="26.4475" y2="25.9393" stroke="#ffffff" stroke-width="3"></line>
+                                    </svg>
+                                </button>
+                            </div>
+                            <template id="@inputId-js-autocomplete-template">
+                                <div id="@inputId-autocomplete-container" class="govuk-!-width-full"></div>
+                                <input type="hidden" id="@inputId-selected-id" name="id" />
+                                <input type="hidden" id="@inputId-selected-searchResultType" name="searchResultType" />
+                            </template>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script asp-add-nonce type="application/javascript">
+    const loadHeaderAutocomplete = async () => {
+      await Autocomplete.loadTrustSearch("@inputId", "@Model.KeyWords", "@placeholderText")
+    }
+    window.addEventListener("load", loadHeaderAutocomplete);
+</script>
