@@ -41,7 +41,7 @@ public class SchoolRepository(
                 establishment.GorName!,
                 establishment.LaName!,
                 establishment.PhaseOfEducationName!,
-                new AgeRange(establishment.StatutoryLowAge!, establishment.StatutoryHighAge!),
+                new AgeRange(establishment.StatutoryLowAge, establishment.StatutoryHighAge),
                 establishment.NurseryProvisionName))
             .SingleAsync();
     }

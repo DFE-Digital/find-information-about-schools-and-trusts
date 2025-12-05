@@ -35,7 +35,7 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext)
                     new AcademyPupilNumbers(e.Urn.ToString(),
                         e.EstablishmentName,
                         e.PhaseOfEducationName,
-                        new AgeRange(e.StatutoryLowAge!, e.StatutoryHighAge!),
+                        new AgeRange(e.StatutoryLowAge, e.StatutoryHighAge),
                         e.NumberOfPupils.ParseAsNullableInt(),
                         e.SchoolCapacity.ParseAsNullableInt()))
             .ToArrayAsync();

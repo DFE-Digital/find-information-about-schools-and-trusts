@@ -6,11 +6,21 @@ public static class AgeRangeExtensions
 {
     public static string ToFullDisplayString(this AgeRange ageRange)
     {
+        if(ageRange.Minimum is null || ageRange.Maximum is null)
+        {
+            return "Not Available";
+        }
+
         return $"{ageRange.Minimum} to {ageRange.Maximum}";
     }
 
     public static string ToTabularDisplayString(this AgeRange ageRange)
     {
+        if (ageRange.Minimum is null || ageRange.Maximum is null)
+        {
+            return "Not Available";
+        }
+
         return $"{ageRange.Minimum}-{ageRange.Maximum}";
     }
 
