@@ -12,18 +12,20 @@
     <p class="govuk-body" data-testid="you-must-have-permission-message">You must have permission to view these
       documents.</p>
 
-    <p class="govuk-body">
-        <strong>Do not</strong> contact a trust about documents that are missing or in the wrong
-        format.
-    </p>
-    <p class="govuk-body">
-        To report a problem with a document, or if you have a <strong>business need</strong> to be
-        granted access, email:
-    </p>
-    <p class="govuk-body">
-        <a href="mailto:academiesfinancialmonitoring@education.gov.uk" class="govuk-link"
-            rel="noreferrer noopener">academiesfinancialmonitoring@education.gov.uk</a>.
-    </p>
+    <div data-testid="do-not-contact-trust-about-documents-that-are-missing">
+        <p class="govuk-body">
+            <strong>Do not</strong> contact a trust about documents that are missing or in the wrong
+            format.
+        </p>
+        <p class="govuk-body">
+            To report a problem with a document, or if you have a <strong>business need</strong> to be
+            granted access, email:
+        </p>
+        <p class="govuk-body">
+            <a href="mailto:academiesfinancialmonitoring@education.gov.uk" class="govuk-link"
+                rel="noreferrer noopener">academiesfinancialmonitoring@education.gov.uk</a>.
+        </p>
+    </div>
     @if (Model.InternalUseOnly)
     {
       <partial name="Shared/_InternalUseOnlyWarning" model="@Model.PageMetadata.SubPageName" />
