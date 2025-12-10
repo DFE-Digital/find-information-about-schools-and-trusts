@@ -21,6 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Create docker containers 
 
 ### Changed
+- draw users attention to not contacting trusts
 
 ## [Release-55][release-55] (production-2025-11-07.6683)
 

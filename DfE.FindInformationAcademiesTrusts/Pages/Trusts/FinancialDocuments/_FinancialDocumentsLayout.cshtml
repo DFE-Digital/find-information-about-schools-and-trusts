@@ -11,6 +11,21 @@
     </h2>
     <p class="govuk-body" data-testid="you-must-have-permission-message">You must have permission to view these
       documents.</p>
+
+    <div data-testid="do-not-contact-trust-about-documents-that-are-missing">
+        <p class="govuk-body">
+            <strong>Do not</strong> contact a trust about documents that are missing or in the wrong
+            format.
+        </p>
+        <p class="govuk-body">
+            To report a problem with a document, or if you have a <strong>business need</strong> to be
+            granted access, email:
+        </p>
+        <p class="govuk-body">
+            <a href="mailto:academiesfinancialmonitoring@education.gov.uk" class="govuk-link"
+                rel="noreferrer noopener">academiesfinancialmonitoring@education.gov.uk</a>.
+        </p>
+    </div>
     @if (Model.InternalUseOnly)
     {
       <partial name="Shared/_InternalUseOnlyWarning" model="@Model.PageMetadata.SubPageName" />
@@ -59,14 +74,6 @@
       <div class="govuk-details__text">
         <p class="govuk-heading-s">Requesting access or reporting a problem</p>
         <p class="govuk-body">Financial documents are maintained by the Data Science team.</p>
-        <p class="govuk-body"><strong>Do not</strong> contact a trust about documents that are missing or in the wrong
-          format.</p>
-        <p class="govuk-body">To report a problem with a document, or if you have a <strong>business need</strong> to be
-          granted access, email:</p>
-        <p class="govuk-body">
-          <a href="mailto:academiesfinancialmonitoring@education.gov.uk" class="govuk-link"
-            rel="noreferrer noopener">academiesfinancialmonitoring@education.gov.uk</a>.
-        </p>
         <p class="govuk-heading-s">Why a document might not be expected</p>
         <p class="govuk-body">If a trust could not have submitted a document, for example because it had not formed yet,
           we say that it was ‘not expected’.</p>
