@@ -1,6 +1,5 @@
 using Dfe.CaseAggregationService.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data;
-using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.ManageProjectsAndCases;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +9,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.ManageProjectsAndCases.Overvi
 public class IndexModel : BasePageModel, IPaginationModel
 {
     private readonly IGetCasesService _getCasesService;
-    private readonly IWebHostEnvironment _environment;
+    private readonly IUserDetailsProvider _userDetailsProvider;
 
     [BindProperty] public ProjectListFilters Filters { get; init; } = new();
 
@@ -26,15 +25,13 @@ public class IndexModel : BasePageModel, IPaginationModel
 
     [BindProperty(SupportsGet = true)] public int PageNumber { get; set; } = 1;
 
-    [BindProperty(SupportsGet = true)] public string? FakeEmail { get; set; } = null;
-
     public IPaginatedList<UserCaseInfo> Cases { get; set; } = PaginatedList<UserCaseInfo>.Empty();
 
     public IndexModel(IGetCasesService getCasesService,
-        IWebHostEnvironment environment)
+        IUserDetailsProvider userDetailsProvider)
     {
         _getCasesService = getCasesService;
-        _environment = environment;
+        _userDetailsProvider = userDetailsProvider;
     }
 
 
@@ -68,17 +65,12 @@ public class IndexModel : BasePageModel, IPaginationModel
             "Record concerns and support for trusts"
         ];
 
-        var userEmail = User.Identity?.Name;
-
-        if (!_environment.IsLiveEnvironment() && FakeEmail != null)
-        {
-            userEmail = FakeEmail;
-        }
+        var (userName, userEmail) = _userDetailsProvider.GetUserDetails();
 
         Cases = await _getCasesService.GetCasesAsync(
             new GetCasesParameters
             (
-                userEmail,
+                userName,
                 userEmail,
                 IncludePrepare(),
                 IncludeComplete(),
