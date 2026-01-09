@@ -1,5 +1,5 @@
-const fs = require('fs')
-const path = require('path')
+const fs = require('node:fs')
+const path = require('node:path')
 
 const filePath = path.resolve('node_modules/@ministryofjustice/frontend/moj/vendor/govuk-frontend/_base.scss')
 
