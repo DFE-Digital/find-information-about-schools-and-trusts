@@ -49,12 +49,14 @@ class SchoolOfstedPage {
     };
 
     private readonly checkElementMatches = (element: JQuery<HTMLElement>, expected: RegExp) => {
-        const text = element.text().trim();
+        const text = element.text().replace(/\s+/g, ' ').trim();
         expect(text).to.match(expected);
     };
 
-    private readonly checkValueIsValidOfstedGrade = (element: JQuery<HTMLElement>) =>
-        this.checkElementMatches(element, /^(School remains Good|Outstanding|Good|Requires improvement|Inadequate|Not yet inspected|Not inspected|Not available)$/);
+    private readonly checkValueIsValidOfstedGrade = (element: JQuery<HTMLElement>) => {
+        const text = element.text().replace(/\s+/g, ' ').trim();
+        expect(text).to.match(/^(School remains Good|Outstanding|Good|Requires improvement|Inadequate|Not yet inspected|Not inspected|Not available)( - Inspected (before|after) joining the trust)?$/i);
+    };
 
     // Page header checks
     public checkOfstedSingleHeadlineGradesPageHeaderPresent(): this {
@@ -316,8 +318,8 @@ class SchoolOfstedPage {
     public checkBeforeOrAfterJoiningValueValid(): this {
         this.elements.safeguardingAndConcerns.beforeOrAfterJoiningValue()
             .each(($el) => {
-                const text = $el.text().trim();
-                expect(text).to.match(/^(Before joining|After joining|Not available|Not yet inspected)$/);
+                const text = $el.text().replace(/\s+/g, ' ').trim();
+                expect(text).to.match(/^(Before joining - inspected before joining the trust|After joining - inspected after joining the trust|Not available|Not yet inspected - inspection has not yet taken place)$/i);
             });
         return this;
     }

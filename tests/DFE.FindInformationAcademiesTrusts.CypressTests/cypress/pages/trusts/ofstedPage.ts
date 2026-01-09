@@ -106,8 +106,8 @@ class OfstedPage {
     };
 
     private readonly checkValueIsValidBeforeOrAfterJoiningTag = (element: JQuery<HTMLElement>) => {
-        const text = element.text().trim();
-        expect(text).to.match(/^(Before|After|Not yet inspected)$/);
+        const text = element.text().replace(/\s+/g, ' ').trim();
+        expect(text).to.match(/^(Before - inspected before joining the trust|After - inspected after joining the trust|Not yet inspected)$/);
     };
 
     // #endregion
@@ -197,14 +197,16 @@ class OfstedPage {
 
     public checkSHGCurrentSHGBeforeOrAfterPresent(): this {
         this.elements.singleHeadlineGrades.currentSHGBeforeOrAfter().each((element: JQuery<HTMLElement>) => {
-            this.checkElementMatches(element, /^(Not yet inspected|After joining|Before joining)$/);
+            const text = element.text().replace(/\s+/g, ' ').trim();
+            expect(text).to.match(/^(Not yet inspected|After joining - Inspected after joining the trust|Before joining - Inspected before joining the trust)$/i);
         });
         return this;
     }
 
     public checkSHGPreviousSHGBeforeOrAfterPresent(): this {
         this.elements.singleHeadlineGrades.previousSHGBeforeOrAfter().each((element: JQuery<HTMLElement>) => {
-            this.checkElementMatches(element, /^(Not inspected|After joining|Before joining)$/);
+            const text = element.text().replace(/\s+/g, ' ').trim();
+            expect(text).to.match(/^(Not inspected|After joining - Inspected after joining the trust|Before joining - Inspected before joining the trust)$/i);
         });
         return this;
     }
