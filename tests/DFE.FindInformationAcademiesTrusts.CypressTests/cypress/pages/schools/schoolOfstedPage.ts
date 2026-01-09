@@ -1,3 +1,4 @@
+
 import commonPage from "../commonPage";
 
 class SchoolOfstedPage {

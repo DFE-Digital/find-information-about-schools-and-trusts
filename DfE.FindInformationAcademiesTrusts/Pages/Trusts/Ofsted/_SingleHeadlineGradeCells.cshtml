@@ -9,10 +9,11 @@
   </span>
   @if (Model.HasInspection)
   { 
-      <strong class="govuk-tag @(Model.IsBeforeJoining ? "govuk-tag--orange" : "") govuk-!-margin-top-1"
+    <strong class="govuk-tag @(Model.IsBeforeJoining ? "govuk-tag--orange" : "") govuk-!-margin-top-1"
       data-testid="@Model.DataTestIdPrefix-before-after-joining">
       @Model.TagLabel
     </strong>
+    <span class="govuk-visually-hidden">- @Model.ScreenReaderTagText</span>
   }
 </td>
 
