@@ -15,6 +15,7 @@ COPY ./DfE.FindInformationAcademiesTrusts/package-lock.json /app
 # - Only copy over frontend assets so this can be cached independently to other app changes
 COPY ./DfE.FindInformationAcademiesTrusts/webpack.config.js /app
 COPY ./DfE.FindInformationAcademiesTrusts/assets/           /app/assets/
+COPY ./DfE.FindInformationAcademiesTrusts/fix-import-path-moj.js /app
 RUN npm ci --ignore-scripts && \
     npm run build
 
