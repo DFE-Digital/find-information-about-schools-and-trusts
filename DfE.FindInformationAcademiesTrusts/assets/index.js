@@ -5,8 +5,8 @@ import { initAll as MOJFrontendInitAll } from '@ministryofjustice/frontend'
 
 window.$ = $
 
-govukFrontendInitAll();
-MOJFrontendInitAll();
+govukFrontendInitAll()
+MOJFrontendInitAll()
 
 // DfE rebranding JS
 document.addEventListener('DOMContentLoaded', function () {

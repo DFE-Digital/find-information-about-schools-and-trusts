@@ -1,5 +1,10 @@
-@use "govuk-frontend/dist/govuk/all" as * with ( $govuk-assets-path: "/node_modules/govuk-frontend/dist/govuk/assets/", $govuk-page-width: 1200px);
-@use "@ministryofjustice/frontend/moj/all" with ( $moj-assets-path: "/node_modules/@ministryofjustice/frontend/moj/assets/");
+@use "govuk-frontend/dist/govuk/all" as * with (
+  $govuk-assets-path: "/node_modules/govuk-frontend/dist/govuk/assets/",
+  $govuk-page-width: 1200px
+);
+@use "@ministryofjustice/frontend/moj/all" with (
+  $moj-assets-path: "/node_modules/@ministryofjustice/frontend/moj/assets/"
+);
 @forward "dfe-frontend/packages/dfefrontend";
 @forward "accessible-autocomplete";
 
