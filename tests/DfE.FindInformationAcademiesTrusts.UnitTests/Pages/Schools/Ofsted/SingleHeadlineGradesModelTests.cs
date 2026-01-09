@@ -1,4 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data;
+using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 
@@ -41,5 +42,102 @@ public class SingleHeadlineGradesModelTests : BaseOfstedAreaModelTests<SingleHea
         await Sut.OnGetAsync();
 
         Sut.HeadlineGrades.Should().Be(expectedGrades);
+    }
+
+    [Fact]
+    public void GetBeforeOrAfterJoining_returns_NotApplicable_when_DateJoinedTrust_is_null()
+    {
+        Sut.DateJoinedTrust = null;
+        var inspectionDate = DateTime.Parse("2020-01-01");
+
+        var result = Sut.GetBeforeOrAfterJoining(inspectionDate);
+
+        result.Should().Be(BeforeOrAfterJoining.NotApplicable);
+    }
+
+    [Fact]
+    public void GetBeforeOrAfterJoining_returns_NotApplicable_when_inspectionDate_is_null()
+    {
+        Sut.DateJoinedTrust = DateTime.Parse("2015-01-01");
+
+        var result = Sut.GetBeforeOrAfterJoining(null);
+
+        result.Should().Be(BeforeOrAfterJoining.NotApplicable);
+    }
+
+    [Fact]
+    public void GetBeforeOrAfterJoining_returns_Before_when_inspection_is_before_joining()
+    {
+        Sut.DateJoinedTrust = DateTime.Parse("2015-01-01");
+        var inspectionDate = DateTime.Parse("2014-06-15");
+
+        var result = Sut.GetBeforeOrAfterJoining(inspectionDate);
+
+        result.Should().Be(BeforeOrAfterJoining.Before);
+    }
+
+    [Fact]
+    public void GetBeforeOrAfterJoining_returns_After_when_inspection_is_after_joining()
+    {
+        Sut.DateJoinedTrust = DateTime.Parse("2015-01-01");
+        var inspectionDate = DateTime.Parse("2016-06-15");
+
+        var result = Sut.GetBeforeOrAfterJoining(inspectionDate);
+
+        result.Should().Be(BeforeOrAfterJoining.After);
+    }
+
+    [Fact]
+    public void GetBeforeOrAfterJoining_returns_After_when_inspection_is_on_same_day_as_joining()
+    {
+        Sut.DateJoinedTrust = DateTime.Parse("2015-01-01");
+        var inspectionDate = DateTime.Parse("2015-01-01");
+
+        var result = Sut.GetBeforeOrAfterJoining(inspectionDate);
+
+        result.Should().Be(BeforeOrAfterJoining.After);
+    }
+
+    [Fact]
+    public void GetScreenReaderText_returns_empty_string_when_DateJoinedTrust_is_null()
+    {
+        Sut.DateJoinedTrust = null;
+        var inspectionDate = DateTime.Parse("2020-01-01");
+
+        var result = Sut.GetScreenReaderText(inspectionDate);
+
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void GetScreenReaderText_returns_empty_string_when_inspectionDate_is_null()
+    {
+        Sut.DateJoinedTrust = DateTime.Parse("2015-01-01");
+
+        var result = Sut.GetScreenReaderText(null);
+
+        result.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void GetScreenReaderText_returns_before_text_when_inspection_is_before_joining()
+    {
+        Sut.DateJoinedTrust = DateTime.Parse("2015-01-01");
+        var inspectionDate = DateTime.Parse("2014-06-15");
+
+        var result = Sut.GetScreenReaderText(inspectionDate);
+
+        result.Should().Be("Inspected before joining the trust");
+    }
+
+    [Fact]
+    public void GetScreenReaderText_returns_after_text_when_inspection_is_after_joining()
+    {
+        Sut.DateJoinedTrust = DateTime.Parse("2015-01-01");
+        var inspectionDate = DateTime.Parse("2016-06-15");
+
+        var result = Sut.GetScreenReaderText(inspectionDate);
+
+        result.Should().Be("Inspected after joining the trust");
     }
 }
