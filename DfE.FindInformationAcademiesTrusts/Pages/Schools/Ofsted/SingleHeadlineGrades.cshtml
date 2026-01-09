@@ -74,7 +74,7 @@
                         @Model.HeadlineGrades.ShortInspection.ToOutcomeDisplayString()
                         @if (!string.IsNullOrEmpty(Model.GetScreenReaderText(Model.HeadlineGrades.ShortInspection.InspectionDate)))
                         {
-                            <span class="govuk-visually-hidden"> - @Model.GetScreenReaderText(Model.HeadlineGrades.ShortInspection.InspectionDate)</span>
+                            <span class="govuk-visually-hidden"> @Model.GetScreenReaderText(Model.HeadlineGrades.ShortInspection.InspectionDate)</span>
                         }
                     </td>
                 </tr>
@@ -87,7 +87,7 @@
                     @Model.HeadlineGrades.CurrentInspection.InspectionOutcome.ToDisplayString(true)
                     @if (!string.IsNullOrEmpty(Model.GetScreenReaderText(Model.HeadlineGrades.CurrentInspection.InspectionDate)))
                     {
-                        <span class="govuk-visually-hidden"> - @Model.GetScreenReaderText(Model.HeadlineGrades.CurrentInspection.InspectionDate)</span>
+                        <span class="govuk-visually-hidden"> @Model.GetScreenReaderText(Model.HeadlineGrades.CurrentInspection.InspectionDate)</span>
                     }
                 </td>
             </tr>
@@ -99,7 +99,7 @@
                     @Model.HeadlineGrades.PreviousInspection.InspectionOutcome.ToDisplayString(false)
                     @if (!string.IsNullOrEmpty(Model.GetScreenReaderText(Model.HeadlineGrades.PreviousInspection.InspectionDate)))
                     {
-                        <span class="govuk-visually-hidden"> - @Model.GetScreenReaderText(Model.HeadlineGrades.PreviousInspection.InspectionDate)</span>
+                        <span class="govuk-visually-hidden"> @Model.GetScreenReaderText(Model.HeadlineGrades.PreviousInspection.InspectionDate)</span>
                     }
                 </td>
             </tr>
