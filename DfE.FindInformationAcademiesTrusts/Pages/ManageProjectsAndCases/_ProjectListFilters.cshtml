@@ -21,7 +21,7 @@
                 <div class="moj-filter__selected-heading">
 
                     <div class="moj-filter__heading-title">
-                        <h2 class="govuk-heading-m">Selected filters</h2>
+                        <h3 class="govuk-heading-m">Selected filters</h3>
                         @if (!Model.IsVisible)
                         {
                             <p class="govuk-body">No filters selected.</p>
@@ -76,14 +76,14 @@
                     <div class="govuk-accordion" data-module="govuk-accordion" id="accordion-default">
                         <div id="system-filter-section" class="govuk-accordion__section govuk-accordion__section--expanded">
                             <div class="govuk-accordion__section-header">
-                                <h2 class="govuk-accordion__section-heading">
+                                <h3 class="govuk-accordion__section-heading">
                                     <label class="govuk-accordion__section-button"
                                            id="accordion-systems-heading"
                                            data-testid="select-projectlist-filter-system"
                                            for="filter-authority-searches">
                                         System
                                     </label>
-                                </h2>
+                                </h3>
                             </div>
                             <div class="govuk-accordion__section-content" id="accordion-default-content-1">
                                 <input type="text" class="govuk-input govuk-!-display-none govuk-!-margin-bottom-2"
@@ -110,13 +110,13 @@
                         </div>
                         <div id="projecttype-filter-section" class="govuk-accordion__section" data-testid="filter-section-project-type">
                             <div class="govuk-accordion__section-header">
-                                <h2 class="govuk-accordion__section-heading">
+                                <h3 class="govuk-accordion__section-heading">
 
                                     <label class="govuk-accordion__section-button" id="accordion-project-type-heading"
                                            data-testid="select-projectlist-filter-project-type" for="filter-searches">
                                         Project type
                                     </label>
-                                </h2>
+                                </h3>
                             </div>
                             <div class="govuk-accordion__section-content" id="accordion-default-content-2">
                                 <input type="text" class="govuk-input govuk-!-display-none govuk-!-margin-bottom-2"
