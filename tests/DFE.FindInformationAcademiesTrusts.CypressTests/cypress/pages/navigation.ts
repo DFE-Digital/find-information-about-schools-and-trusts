@@ -130,6 +130,13 @@ class Navigation {
 
     public checkAccessibilityStatementLinkPresent(): this {
         this.elements.accessibilityFooterButton().scrollIntoView().should('be.visible');
+
+        this.elements.accessibilityFooterButton()
+            .should("have.attr", "href", "https://accessibility-statements.education.gov.uk/s/31");
+
+        this.elements.accessibilityFooterButton()
+            .should("have.attr", "target", "_blank");
+
         return this;
     }
 
