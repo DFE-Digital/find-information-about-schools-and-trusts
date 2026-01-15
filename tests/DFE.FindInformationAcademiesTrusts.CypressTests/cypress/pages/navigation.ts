@@ -94,7 +94,7 @@ class Navigation {
     }
 
     public checkCurrentURLIsCorrect(urlPageName: string): this {
-        cy.url().should('include', urlPageName);
+        cy.url().should('contain', " https://accessibility-statements.education.gov.uk/s/31");
         return this;
     }
 
