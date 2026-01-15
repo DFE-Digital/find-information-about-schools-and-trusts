@@ -319,7 +319,7 @@ class SchoolOfstedPage {
         this.elements.safeguardingAndConcerns.beforeOrAfterJoiningValue()
             .each(($el) => {
                 const text = $el.text().replace(/\s+/g, ' ').trim();
-                expect(text).to.match(/^(Before joining inspected before joining the trust|After joining inspected after joining the trust|Not available|Not yet inspected inspection has not yet taken place)$/i);
+                expect(text).to.match(/^(Before joining|After joining|Not available|Not yet inspected inspection has not yet taken place)$/i);
             });
         return this;
     }

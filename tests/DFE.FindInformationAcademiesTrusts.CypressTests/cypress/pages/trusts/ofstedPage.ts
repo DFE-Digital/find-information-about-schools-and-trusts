@@ -107,7 +107,7 @@ class OfstedPage {
 
     private readonly checkValueIsValidBeforeOrAfterJoiningTag = (element: JQuery<HTMLElement>) => {
         const text = element.text().replace(/\s+/g, ' ').trim();
-        expect(text).to.match(/^(Before inspected before joining the trust|After inspected after joining the trust|Not yet inspected)$/);
+        expect(text).to.match(/^(Before|After|Not yet inspected)$/);
     };
 
     // #endregion
@@ -444,7 +444,7 @@ class OfstedPage {
     public checkPreviousRatingsBeforeOrAfterJoiningJudgementsPresent(): this {
         this.elements.previousRatings.beforeOrAfterJoining().each((element: JQuery<HTMLElement>) => {
             const text = element.text().replace(/\s+/g, ' ').trim();
-            expect(text).to.match(/^(Before inspected before joining the trust|After inspected after joining the trust|Not inspected)$/);
+            expect(text).to.match(/^(Before|After|Not inspected)$/);
         });
         return this;
     }
