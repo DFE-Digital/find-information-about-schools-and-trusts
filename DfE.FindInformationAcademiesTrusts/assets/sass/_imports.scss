@@ -1,12 +1,5 @@
 @import "inter-ui/inter.css";
-$govuk-assets-path: "/node_modules/govuk-frontend/dist/govuk/assets/";
 
-$moj-images-path: "/node_modules/@ministryofjustice/frontend/moj/assets/images/";
-
-$govuk-page-width: 1200px;
-
-@import "govuk-frontend";
-@import "accessible-autocomplete";
 @import "./imports/dfe-frontend";
 @import "./imports/ministry-of-justice";
 $govuk-new-typography-scale: true;

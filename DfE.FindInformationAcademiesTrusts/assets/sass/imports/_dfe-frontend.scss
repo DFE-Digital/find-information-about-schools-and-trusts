@@ -1,5 +1,3 @@
-@import "dfe-frontend/packages/dfefrontend";
-
 // Fix govuk-link:link overriding dfe-header__link--service color
 // This would be better fixed by the dfe-frontend using the `:link` pseudo-class
 .dfe-header__link--service {

@@ -4,16 +4,18 @@
   [aria-sort] button {
     // increase padding slightly to add space between the column header and the sort icon
     // as we have removed the negative position below
-    padding-right: 1rem;
+    padding-right: 2rem;
     // Fix sort icons provided by MOJ design system overlapping slightly on Chrome and Edge
     &::before {
       top: 11px;
     }
-    // Fix sort icons causing content to always overflow container
-    // this causes horizontal scroll to always visible when using overflow:auto
-    &::before,
-    &::after {
+
+    svg {
+      overflow: visible;
+      display: flex;
+      position: absolute;
       right: 0;
+      top: 0;
     }
   }
 
