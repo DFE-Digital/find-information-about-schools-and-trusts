@@ -43,7 +43,7 @@ describe('Testing Navigation', () => {
                 .clickAccessibilityStatementLink();
 
             navigation
-                .checkCurrentURLIsCorrect('accessibility');
+                .checkCurrentURLIsCorrect('https://accessibility-statements.education.gov.uk/s/31');
         });
 
     });
