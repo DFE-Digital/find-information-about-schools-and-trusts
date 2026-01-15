@@ -106,7 +106,7 @@ class OfstedPage {
     };
 
     private readonly checkValueIsValidBeforeOrAfterJoiningTag = (element: JQuery<HTMLElement>) => {
-        const text = element.text().trim();
+        const text = element.text().replace(/\s+/g, ' ').trim();
         expect(text).to.match(/^(Before|After|Not yet inspected)$/);
     };
 
@@ -197,14 +197,16 @@ class OfstedPage {
 
     public checkSHGCurrentSHGBeforeOrAfterPresent(): this {
         this.elements.singleHeadlineGrades.currentSHGBeforeOrAfter().each((element: JQuery<HTMLElement>) => {
-            this.checkElementMatches(element, /^(Not yet inspected|After joining|Before joining)$/);
+            const text = element.text().replace(/\s+/g, ' ').trim();
+            expect(text).to.match(/^(Not yet inspected|After joining|Before joining)$/i);
         });
         return this;
     }
 
     public checkSHGPreviousSHGBeforeOrAfterPresent(): this {
         this.elements.singleHeadlineGrades.previousSHGBeforeOrAfter().each((element: JQuery<HTMLElement>) => {
-            this.checkElementMatches(element, /^(Not inspected|After joining|Before joining)$/);
+            const text = element.text().replace(/\s+/g, ' ').trim();
+            expect(text).to.match(/^(Not inspected|After joining|Before joining)$/i);
         });
         return this;
     }
@@ -440,7 +442,10 @@ class OfstedPage {
     }
 
     public checkPreviousRatingsBeforeOrAfterJoiningJudgementsPresent(): this {
-        this.elements.previousRatings.beforeOrAfterJoining().each((element) => this.checkElementMatches(element, /^(Before|After|Not inspected)$/));
+        this.elements.previousRatings.beforeOrAfterJoining().each((element: JQuery<HTMLElement>) => {
+            const text = element.text().replace(/\s+/g, ' ').trim();
+            expect(text).to.match(/^(Before|After|Not inspected)$/);
+        });
         return this;
     }
 

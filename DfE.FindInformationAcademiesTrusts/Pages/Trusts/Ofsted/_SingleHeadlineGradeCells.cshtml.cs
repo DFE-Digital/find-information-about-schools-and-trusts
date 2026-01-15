@@ -36,4 +36,11 @@ public record SingleHeadlineGradeCellsModel(
 
     public string SingleHeadlineGradeText => SingleHeadlineGradeRating.OverallEffectiveness.ToDisplayString(IsCurrent);
     public int SingleHeadlineGradeSort => SingleHeadlineGradeRating.OverallEffectiveness.ToDataSortValue();
+
+    public string ScreenReaderTagText => BeforeOrAfterJoining switch
+    {
+        BeforeOrAfterJoining.Before => "Inspected before joining the trust",
+        BeforeOrAfterJoining.After => "Inspected after joining the trust",
+        _ => "Inspection timing information is not available"
+    };
 }
