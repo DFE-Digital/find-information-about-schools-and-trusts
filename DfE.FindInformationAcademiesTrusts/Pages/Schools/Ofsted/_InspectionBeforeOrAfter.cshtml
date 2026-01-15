@@ -8,19 +8,16 @@
         <strong class="govuk-tag govuk-tag--orange">
             Before joining
         </strong>
-        <span class="govuk-visually-hidden"> inspected before joining the trust</span>
         break;
     case BeforeOrAfterJoining.After:
         <strong class="govuk-tag">
             After joining
         </strong>
-        <span class="govuk-visually-hidden"> inspected after joining the trust</span>
         break;
     case BeforeOrAfterJoining.NotYetInspected:
         <strong class="govuk-tag govuk-tag--grey">
             Not yet inspected
         </strong>
-        <span class="govuk-visually-hidden"> inspection has not yet taken place</span>
         break;
     default:
         throw new InvalidEnumArgumentException($"Unknown value of BeforeOrAfterJoining: {Model}");
