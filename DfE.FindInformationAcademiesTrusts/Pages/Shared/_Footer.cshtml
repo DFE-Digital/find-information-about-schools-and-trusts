@@ -64,7 +64,7 @@
                 <h2 class="govuk-visually-hidden">Support links</h2>
                 <ul class="govuk-footer__inline-list">
                     <li class="govuk-footer__inline-list-item">
-                        <a asp-page="/Accessibility" class="govuk-footer__link">Accessibility statement</a>
+                        <a class="govuk-footer__link" href="@ViewConstants.AccessibilityStatementLink" target="_blank" rel="noopener noreferrer">Accessibility statement</a>
                     </li>
                     <li class="govuk-footer__inline-list-item">
                         <a asp-page="/Cookies" class="govuk-footer__link" asp-route-returnPath="@CookiesHelper.ReturnPath(Context)" data-testid="cookies-footer-link">Cookies</a>
