@@ -69,21 +69,39 @@
             {
                 <tr class="govuk-table__row" data-testid="recent-short-inspection-row">
                     <th scope="row" class="govuk-table__cell">Recent short inspection</th>
-                        <td class="govuk-table__cell" data-testid="recent-short-inspection-date">@Model.HeadlineGrades.ShortInspection.InspectionDate.ShowFullDateStringOrReplaceWithText("Not available")</td>
-                    <td class="govuk-table__cell" data-testid="recent-short-inspection-grade">@Model.HeadlineGrades.ShortInspection.ToOutcomeDisplayString()</td>
+                    <td class="govuk-table__cell" data-testid="recent-short-inspection-date">@Model.HeadlineGrades.ShortInspection.InspectionDate.ShowFullDateStringOrReplaceWithText("Not available")</td>
+                    <td class="govuk-table__cell" data-testid="recent-short-inspection-grade">
+                        @Model.HeadlineGrades.ShortInspection.ToOutcomeDisplayString()
+                        @if (!string.IsNullOrEmpty(Model.GetScreenReaderText(Model.HeadlineGrades.ShortInspection.InspectionDate)))
+                        {
+                            <span class="govuk-visually-hidden"> @Model.GetScreenReaderText(Model.HeadlineGrades.ShortInspection.InspectionDate)</span>
+                        }
+                    </td>
                 </tr>
             }
 
             <tr class="govuk-table__row" data-testid="current-full-inspection-row">
                 <th scope="row" class="govuk-table__cell">Current full inspection</th>
-                    <td class="govuk-table__cell" data-testid="current-full-inspection-date">@Model.HeadlineGrades.CurrentInspection.InspectionDate.ShowFullDateStringOrReplaceWithText("Not available")</td>
-                <td class="govuk-table__cell" data-testid="current-full-inspection-grade">@Model.HeadlineGrades.CurrentInspection.InspectionOutcome.ToDisplayString(true)</td>
+                <td class="govuk-table__cell" data-testid="current-full-inspection-date">@Model.HeadlineGrades.CurrentInspection.InspectionDate.ShowFullDateStringOrReplaceWithText("Not available")</td>
+                <td class="govuk-table__cell" data-testid="current-full-inspection-grade">
+                    @Model.HeadlineGrades.CurrentInspection.InspectionOutcome.ToDisplayString(true)
+                    @if (!string.IsNullOrEmpty(Model.GetScreenReaderText(Model.HeadlineGrades.CurrentInspection.InspectionDate)))
+                    {
+                        <span class="govuk-visually-hidden"> @Model.GetScreenReaderText(Model.HeadlineGrades.CurrentInspection.InspectionDate)</span>
+                    }
+                </td>
             </tr>
 
             <tr class="govuk-table__row" data-testid="previous-full-inspection-row">
                 <th scope="row" class="govuk-table__cell">Previous full inspection</th>
-                    <td class="govuk-table__cell" data-testid="previous-full-inspection-date">@Model.HeadlineGrades.PreviousInspection.InspectionDate.ShowFullDateStringOrReplaceWithText("Not available")</td>
-                <td class="govuk-table__cell" data-testid="previous-full-inspection-grade">@Model.HeadlineGrades.PreviousInspection.InspectionOutcome.ToDisplayString(false)</td>
+                <td class="govuk-table__cell" data-testid="previous-full-inspection-date">@Model.HeadlineGrades.PreviousInspection.InspectionDate.ShowFullDateStringOrReplaceWithText("Not available")</td>
+                <td class="govuk-table__cell" data-testid="previous-full-inspection-grade">
+                    @Model.HeadlineGrades.PreviousInspection.InspectionOutcome.ToDisplayString(false)
+                    @if (!string.IsNullOrEmpty(Model.GetScreenReaderText(Model.HeadlineGrades.PreviousInspection.InspectionDate)))
+                    {
+                        <span class="govuk-visually-hidden"> @Model.GetScreenReaderText(Model.HeadlineGrades.PreviousInspection.InspectionDate)</span>
+                    }
+                </td>
             </tr>
             </tbody>
         </table>
