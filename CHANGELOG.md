@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/dfe-complete-conversions-transfers-and-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased][unreleased]
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-01-19.6967...HEAD)
 
 --- 
  
@@ -649,96 +649,94 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Migrated the application to LTS .NET 8. (FIAT was on .NET 7 which Microsoft ended support for in May).
 - Updated text on "404 - Not Found" page to adhere to DfE design pattern and added the not found url to the support email template.
 
-[unreleased]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/compare/production-2025-12-04.6776...HEAD
 [release-1]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-07-18.2517
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-07-18.2517
 [release-2]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-07-29.2601
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-07-29.2601
 [release-3]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-08-09.2694
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-08-09.2694
 [release-4]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-08-22.2794
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-08-22.2794
 [release-5]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-09-05.2971
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-09-05.2971
 [release-6]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-09-17.3129
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-09-17.3129
 [release-7]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-09-23.3213
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-09-23.3213
 [release-8]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-09-27.3319
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-09-27.3319
 [release-9]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-10-02.3440
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-10-02.3440
 [release-10]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-10-17.3629
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-10-17.3629
 [release-11]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-10-17.3654
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-10-17.3654
 [release-12]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-11-13.3974
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-11-13.3974
 [release-13]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-11-14.4036
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-11-14.4036
 [release-14]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-11-21.4136
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-11-21.4136
 [release-15]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-12-02.4279
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-12-02.4279
 [release-16]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-12-13.4477
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-12-13.4477
 [release-17]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-12-18.4551
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-12-18.4551
 [release-18]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2024-12-19.4567
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2024-12-19.4567
 [release-19]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-01-20.4730
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-01-20.4730
 [release-20]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-02-04.4852
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-02-04.4852
 [release-21]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-02-20.5021
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-02-20.5021
 [release-22]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-02-27.5055  
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-02-27.5055  
 [release-23]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-02-28.5074
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-02-28.5074
 [release-24]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-03-11.5152
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-03-11.5152
 [release-25]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-03-19.5191
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-03-19.5191
 [release-26]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-03-26.5267
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-03-26.5267
 [release-27]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-04-02.5314
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-04-02.5314
 [release-28]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-04-04.5337
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-04-04.5337
 [release-29]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-04-10.5387
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-04-10.5387
 [release-30]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-05-06.5593
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-05-06.5593
 [release-31]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-05-19.5713
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-05-19.5713
 [release-32]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-05-21.5738
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-05-21.5738
 [release-33]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-05-29.5786
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-05-29.5786
 [release-34]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-06-02.5812
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-06-02.5812
 [release-35]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-06-04.5832
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-06-04.5832
 [release-36]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-06-10.5886
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-06-10.5886
 [release-37]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-06-20.5960
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-06-20.5960
 [release-38]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-06-20.5972
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-06-20.5972
 [release-39]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-07-02.6062
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-07-02.6062
 [release-40]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-07-04.6098
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-07-04.6098
 [release-41]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-07-09.6117
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-07-09.6117
 [release-42]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-07-17.6155
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-07-17.6155
 [release-43]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-07-31.6191
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-07-31.6191
 [release-44]:
-  https://github.com/DFE-Digital/find-information-about-academies-and-trusts/releases/tag/production-2025-08-06.6211
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-08-06.6211
 [release-45]:
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-08-11.6231
 [release-46]:
