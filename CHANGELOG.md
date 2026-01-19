@@ -5,8 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/dfe-complete-conversions-transfers-and-changes/blob/main/CHANGELOG.md).
 
 ## [Unreleased][unreleased]
+
+## [Release-59][release-59] (production-2026-01-19.6967)
+
 ### Changed
 - Add more detail to screen reader text for Ofsted Single headline grades
+- update accessibility link
+- Change heading in MPC filters(accessibility)
+
+## [Release-58][release-58] (production-2026-01-14.69166)
+
+### Changed
+
+- Changing academies tab labels to make more sense on voiceover (accessibility)
+
 
 ## [Release-57][release-57] (production-2025-12-04.6776)
 
@@ -635,3 +647,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-11-24.6735
 [release-57]:
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-12-04.6776
+[release-58]:
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-01-14.6916
+[release-59]:
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-01-19.6967
