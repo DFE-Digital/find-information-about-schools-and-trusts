@@ -6,6 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased][unreleased]
 ### Changed
+- Add more detail to screen reader text for Ofsted Single headline grades
 
 ## [Release-57][release-57] (production-2025-12-04.6776)
 

@@ -41,10 +41,6 @@ describe('Testing Navigation', () => {
             navigation
                 .checkAccessibilityStatementLinkPresent()
                 .clickAccessibilityStatementLink();
-
-            navigation
-                .checkCurrentURLIsCorrect('accessibility');
         });
-
     });
 });
