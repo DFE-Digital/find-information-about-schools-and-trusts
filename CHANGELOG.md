@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-59][release-59] (production-2026-01-19.6967)
+## [Release-59][release-59] - 2026-01-19
 
 ### Changed
 - Add more detail to screen reader text for Ofsted Single headline grades
@@ -17,7 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-58][release-58] (production-2026-01-14.69166)
+## [Release-58][release-58] - 2026-01-14
 
 ### Changed
 
@@ -26,7 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-57][release-57] (production-2025-12-04.6776)
+## [Release-57][release-57] - 2025-12-04
 
 ### Changed
 
@@ -34,7 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-56][release-56] (production-2025-11-24.6735)
+## [Release-56][release-56] - 2025-11-24
 
 ### Changed
 
@@ -46,7 +46,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-55][release-55] (production-2025-11-07.6683)
+## [Release-55][release-55] - 2025-11-07
 
 ### Changed
 
@@ -54,7 +54,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-54][release-54] (production-2025-10-07.6605)
+## [Release-54][release-54] - 2025-10-07
 
 ### Changed
 
@@ -62,7 +62,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-53][release-53] (production-2025-09-26.6575)
+## [Release-53][release-53] - 2025-09-26
 
 ### Changed
 
@@ -70,7 +70,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-52][release-52] (production-2025-09-26.6564)
+## [Release-52][release-52] - 2025-09-26
 
 ### Changed
 
@@ -82,7 +82,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   
 --- 
  
-## [Release-51][release-51] (production-2025-09-18.6482)
+## [Release-51][release-51] - 2025-09-18
 
 ### Changed
 
@@ -92,7 +92,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-50][release-50] (production-2025-09-10.6449)
+## [Release-50][release-50] - 2025-09-10
 
 ### Changed
 
@@ -101,7 +101,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-49][release-49] (production-2025-09-04.6416)
+## [Release-49][release-49] - 2025-09-04
 
 ### Changed
 
@@ -109,7 +109,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-48][release-48] (production-2025-08-28.6382)
+## [Release-48][release-48] - 2025-08-28
 
 ### Changed
 
@@ -119,7 +119,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-47][release-47] (production-2025-08-21.6341)
+## [Release-47][release-47] - 2025-08-21
 
 ### Changed
 
@@ -127,7 +127,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-46][release-46] (production-2025-08-19.6326)
+## [Release-46][release-46] - 2025-08-19
 
 ### Changed
 
@@ -140,7 +140,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-45][release-45] (production-2025-08-11.6231)
+## [Release-45][release-45] - 2025-08-11
 
 ### Changed
 
@@ -148,7 +148,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-44][release-44] (production-2025-08-06.6211)
+## [Release-44][release-44] - 2025-08-06
 
 ### Changed
 
@@ -156,7 +156,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-43][release-43] (production-2025-07-31.6191)
+## [Release-43][release-43] - 2025-07-31
 
 ### Changed
 
@@ -164,7 +164,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-42][release-42] (production-2025-07-17.6155)
+## [Release-42][release-42] - 2025-07-17
 
 ### Changed
 
@@ -174,7 +174,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-41][release-41] (production-2025-07-09.6117)
+## [Release-41][release-41] - 2025-07-09
 
 ### Changed
 
@@ -182,7 +182,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   
 --- 
  
-## [Release-40][release-40] (production-2025-07-04.6098)
+## [Release-40][release-40] - 2025-07-04
 
 ### Changed
 
@@ -191,7 +191,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-39][release-39] (production-2025-07-02.6062)
+## [Release-39][release-39] - 2025-07-02
 
 ### Changed
 
@@ -201,7 +201,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-38][release-38] (production-2025-06-20.5972)
+## [Release-38][release-38] - 2025-06-20
 
 ### Changed
 
@@ -209,7 +209,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-37][release-37] (production-2025-06-20.5960)
+## [Release-37][release-37] - 2025-06-20
 
 ### Changed
 
@@ -217,7 +217,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-36][release-36] (production-2025-06-10.5886)
+## [Release-36][release-36] - 2025-06-10
 
 ### Changed
 
@@ -226,7 +226,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-35][release-35] (production-2025-06-04.5832)
+## [Release-35][release-35] - 2025-06-04
 
 ### Changed
 
@@ -234,7 +234,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-34][release-34] (production-2025-06-02.5812)
+## [Release-34][release-34] - 2025-06-02
 
 ### Changed
 
@@ -243,7 +243,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-33][release-33] (production-2025-05-29.5786)
+## [Release-33][release-33] - 2025-05-29
 
 ### Changed
 
@@ -253,7 +253,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-32][release-32] (production-2025-05-21.5738)
+## [Release-32][release-32] - 2025-05-21
 
 ### Changed
 
@@ -265,7 +265,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-31][release-31] (production-2025-05-19.5713)
+## [Release-31][release-31] - 2025-05-19
 
 ### Changed
 
@@ -276,7 +276,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-30][release-30] (production-2025-05-06.5593)
+## [Release-30][release-30] - 2025-05-06
 
 ### Changed
 
@@ -285,7 +285,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-29][release-29] (production-2025-04-10.5387)
+## [Release-29][release-29] - 2025-04-10
 
 ### Changed
 
@@ -293,7 +293,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-28][release-28] (production-2025-04-04.5337)
+## [Release-28][release-28] - 2025-04-04
 
 ### Changed
 
@@ -302,7 +302,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-27][release-27] (production-2025-04-02.5314)
+## [Release-27][release-27] - 2025-04-02
 
 ### Changed
 
@@ -310,7 +310,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-26][release-26] (production-2025-03-26.5267)
+## [Release-26][release-26] - 2025-03-26
 
 ### Changed
 
@@ -318,7 +318,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-25][release-25] (production-2025-03-19.5191)
+## [Release-25][release-25] - 2025-03-19
 
 ### Changed
 
@@ -327,7 +327,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-24][release-24] (production-2025-03-11.5152)
+## [Release-24][release-24] - 2025-03-11
 
 ### Changed
 
@@ -335,7 +335,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-23][release-23] (production-2025-02-28.5074)
+## [Release-23][release-23] - 2025-02-28
 
 ### Changed
 
@@ -343,7 +343,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-22][release-22] (production-2025-02-27.5055)
+## [Release-22][release-22] - 2025-02-27
 
 ### Added
 
@@ -358,7 +358,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-21][release-21] (production-2025-02-20.5021)
+## [Release-21][release-21] - 2025-02-20
 
 ### Changed
 
@@ -367,7 +367,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-20][release-20] (production-2025-02-04.4852)
+## [Release-20][release-20] - 2025-02-04
 
 ### Added
 
@@ -387,7 +387,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-19][release-19] (production-2025-01-20.4730)
+## [Release-19][release-19] - 2025-01-20
 
 ### Changed
 
@@ -398,7 +398,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-18][release-18] (production-2024-12-19.4567)
+## [Release-18][release-18] - 2024-12-19
 
 ### Added
 
@@ -410,7 +410,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-17][release-17] (production-2024-12-18.4551)
+## [Release-17][release-17] - 2024-12-18
 
 ### Added
 
@@ -422,7 +422,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-16][release-16] (production-2024-12-13.4477)
+## [Release-16][release-16] - 2024-12-13
 
 ### Changed
 
@@ -440,7 +440,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-15][release-15] (production-2024-12-02.4279)
+## [Release-15][release-15] - 2024-12-02
 
 ### Added
 
@@ -457,7 +457,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-14][release-14] (production-2024-11-21.4136)
+## [Release-14][release-14] - 2024-11-21
 
 ### Changed
 
@@ -468,7 +468,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-13][release-13] (production-2024-11-14.4036)
+## [Release-13][release-13] - 2024-11-14
 
 ### Added
 
@@ -480,7 +480,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-12][release-12] (production-2024-11-13.3974)
+## [Release-12][release-12] - 2024-11-13
 
 ### Changed
 
@@ -501,7 +501,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-11][release-11] (production-2024-10-17.3654)
+## [Release-11][release-11] - 2024-10-17
 
 ### Changed
 
@@ -509,7 +509,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-10][release-10] (production-2024-10-17.3629)
+## [Release-10][release-10] - 2024-10-17
 
 ### Changed
 
@@ -521,7 +521,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-9][release-9] (production-2024-10-02.3440)
+## [Release-9][release-9] - 2024-10-02
 
 ### Added
 
@@ -534,7 +534,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-8][release-8] (production-2024-09-27.3319)
+## [Release-8][release-8] - 2024-09-27
 
 ### Added
 
@@ -552,7 +552,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-7][release-7] (production-2024-09-23.3213)
+## [Release-7][release-7] - 2024-09-23
 
 ### Added
 
@@ -565,7 +565,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-6][release-6] (production-2024-09-17.3129)
+## [Release-6][release-6] - 2024-09-17
 
 ### Added
 
@@ -580,7 +580,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-5][release-5] (production-2024-09-05.2971)
+## [Release-5][release-5] - 2024-09-05
 
 ### Added
 
@@ -597,7 +597,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-4][release-4] (production-2024-08-22.2794)
+## [Release-4][release-4] - 2024-08-22
 
 ### Added
 
@@ -620,7 +620,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-3][release-3] (production-2024-08-09.2694)
+## [Release-3][release-3] - 2024-08-09
 
 ### Changed
 
@@ -633,7 +633,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-2][release-2] (production-2024-07-29.2601)
+## [Release-2][release-2] - 2024-07-29
 
 ### Changed
 
@@ -642,7 +642,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
  
-## [Release-1][release-1] (production-2024-07-18.2517)
+## [Release-1][release-1] - 2024-07-18
 
 ### Changed
 
