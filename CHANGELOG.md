@@ -6,7 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased][unreleased]
 ### Changed
-- Add more detail to screen reader text for Ofsted Single headline grades
+## [Release-58][release-58] (production-2026-01-14.69166)
+
+### Changed
+
+- Change heading in MPC filters(accessibility)
+- Changing academeis tab labels to make more sense on voiceover (accessibility)
+
 
 ## [Release-57][release-57] (production-2025-12-04.6776)
 
@@ -635,3 +641,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-11-24.6735
 [release-57]:
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2025-12-04.6776
+  [release-58]:
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-01-14.6916
