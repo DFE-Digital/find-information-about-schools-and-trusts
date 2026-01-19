@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased][unreleased]
 
+--- 
+ 
 ## [Release-59][release-59] (production-2026-01-19.6967)
 
 ### Changed
@@ -13,6 +15,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - update accessibility link
 - Change heading in MPC filters(accessibility)
 
+--- 
+ 
 ## [Release-58][release-58] (production-2026-01-14.69166)
 
 ### Changed
@@ -20,12 +24,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Changing academies tab labels to make more sense on voiceover (accessibility)
 
 
+--- 
+ 
 ## [Release-57][release-57] (production-2025-12-04.6776)
 
 ### Changed
 
 - Bug Fix- age range causing exception when data not available
 
+--- 
+ 
 ## [Release-56][release-56] (production-2025-11-24.6735)
 
 ### Changed
@@ -36,24 +44,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Changed
 - draw users attention to not contacting trusts
 
+--- 
+ 
 ## [Release-55][release-55] (production-2025-11-07.6683)
 
 ### Changed
 
 - Text change 'Roll' not 'Role'
 
+--- 
+ 
 ## [Release-54][release-54] (production-2025-10-07.6605)
 
 ### Changed
 
 - Download population and attendance data for schools
 
+--- 
+ 
 ## [Release-53][release-53] (production-2025-09-26.6575)
 
 ### Changed
 
 - Bug fix for a divide by 0 error when calculating free school meal percentages.
 
+--- 
+ 
 ## [Release-52][release-52] (production-2025-09-26.6564)
 
 ### Changed
@@ -64,6 +80,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Get pupil numbers for trusts from Compare census data.
 - Show not available for further education single headline grades
   
+--- 
+ 
 ## [Release-51][release-51] (production-2025-09-18.6482)
 
 ### Changed
@@ -72,6 +90,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Alternate row colours on tables and added table header colours.
 - For Ofsted pages changed "Joined before" tag from grey to orange.
 
+--- 
+ 
 ## [Release-50][release-50] (production-2025-09-10.6449)
 
 ### Changed
@@ -79,12 +99,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added governance turnover to trust pages.
 - Added additional information to the individual schools' ofsted downloads.
 
+--- 
+ 
 ## [Release-49][release-49] (production-2025-09-04.6416)
 
 ### Changed
 
 - Changed the design of the Trust details, Trust summary and Reference numbers pages to use the gov uk summary list design
 
+--- 
+ 
 ## [Release-48][release-48] (production-2025-08-28.6382)
 
 ### Changed
@@ -93,12 +117,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added new page for religious characteristics for a school/academy
 - New 'about the data we use page' this can be found in the 'Where this information came from' section
 
+--- 
+ 
 ## [Release-47][release-47] (production-2025-08-21.6341)
 
 ### Changed
 
 - Added Manage projects and cases
 
+--- 
+ 
 ## [Release-46][release-46] (production-2025-08-19.6326)
 
 ### Changed
@@ -110,24 +138,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added links from single headline grades pages in a trust that go to the individual schools Ofsted pages within FAST.
 
 
+--- 
+ 
 ## [Release-45][release-45] (production-2025-08-11.6231)
 
 ### Changed
 
 - Added a column to display whether an academy has had a recent short inspection in the single headline grades page for a trust
 
+--- 
+ 
 ## [Release-44][release-44] (production-2025-08-06.6211)
 
 ### Changed
 
 - Added Ofsted single headline grades page for a school or academy
 
+--- 
+ 
 ## [Release-43][release-43] (production-2025-07-31.6191)
 
 ### Changed
 
 - Added current and historic governors for schools and academies
 
+--- 
+ 
 ## [Release-42][release-42] (production-2025-07-17.6155)
 
 ### Changed
@@ -136,12 +172,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Improved validation for DfE email addresses when changing contact information for schools and trusts
 - Fixed an accessibility issue with the 'reference numbers' page for a school
 
+--- 
+ 
 ## [Release-41][release-41] (production-2025-07-09.6117)
 
 ### Changed
 
 - Added ability to view school and academy reference numbers
   
+--- 
+ 
 ## [Release-40][release-40] (production-2025-07-04.6098)
 
 ### Changed
@@ -149,6 +189,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Introduced a notification banner for scheduled downtime.
 - Added the ability to edit DfE contacts for a school.
 
+--- 
+ 
 ## [Release-39][release-39] (production-2025-07-02.6062)
 
 ### Changed
@@ -157,18 +199,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Automation tests for a11y.
 - Added contacts 'in dfe' for school and academy.
 
+--- 
+ 
 ## [Release-38][release-38] (production-2025-06-20.5972)
 
 ### Changed
 
 - Fix HTTP 500 response when an academy is missing trust information 
 
+--- 
+ 
 ## [Release-37][release-37] (production-2025-06-20.5960)
 
 ### Changed
 
 - Added federations to school pages
 
+--- 
+ 
 ## [Release-36][release-36] (production-2025-06-10.5886)
 
 ### Changed
@@ -176,12 +224,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added ability to view contacts in 'this school' and academy.
 - Added new SQL table for upcoming changes to edit school contacts within DfE.
 
+--- 
+ 
 ## [Release-35][release-35] (production-2025-06-04.5832)
 
 ### Changed
 
 - Added school and academy SEN details.
 
+--- 
+ 
 ## [Release-34][release-34] (production-2025-06-02.5812)
 
 ### Changed
@@ -189,6 +241,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fixed typo on information on what you can search for (of/or)
 - Changed H3 to be a label and cleaup for better accessibility 
 
+--- 
+ 
 ## [Release-33][release-33] (production-2025-05-29.5786)
 
 ### Changed
@@ -197,6 +251,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added search results page for schools/academies.
 - Increased number of results per page to 20
 
+--- 
+ 
 ## [Release-32][release-32] (production-2025-05-21.5738)
 
 ### Changed
@@ -207,6 +263,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Date columns all sort correctly by date value
 - Fixed missing pipeline academy sort by URN
 
+--- 
+ 
 ## [Release-31][release-31] (production-2025-05-19.5713)
 
 ### Changed
@@ -216,6 +274,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added filter to only show schools that are not closed
 - Overview pages for academy and schools
 
+--- 
+ 
 ## [Release-30][release-30] (production-2025-05-06.5593)
 
 ### Changed
@@ -223,12 +283,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added date joined trust within the 'Details' page of the Academies 'In this trust' page
 - Removed England/Wales from the Rural or URban column within the 'Details' page of the Academies 'In this trust' page.
 
+--- 
+ 
 ## [Release-29][release-29] (production-2025-04-10.5387)
 
 ### Changed
 
 - Re-enable single headline grades for further education establishments
 
+--- 
+ 
 ## [Release-28][release-28] (production-2025-04-04.5337)
 
 ### Changed
@@ -236,18 +300,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Reordered academy download columns to match order in ofsted download
 - Added local authority and national free school meals percentages to academy download
 
+--- 
+ 
 ## [Release-27][release-27] (production-2025-04-02.5314)
 
 ### Changed
 
 - Add financial document pages
 
+--- 
+ 
 ## [Release-26][release-26] (production-2025-03-26.5267)
 
 ### Changed
 
 - Bug fix to make ofsted grades available for new schools
 
+--- 
+ 
 ## [Release-25][release-25] (production-2025-03-19.5191)
 
 ### Changed
@@ -255,18 +325,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Bug fix for when there are multiple contacts for the same role
 - Added feature flag to hide governance turnover calculation
 
+--- 
+ 
 ## [Release-24][release-24] (production-2025-03-11.5152)
 
 ### Changed
 
 - Move "internal use only" out of contact cards to single box at the top of the "Contacts in this trust" page
 
+--- 
+ 
 ## [Release-23][release-23] (production-2025-02-28.5074)
 
 ### Changed
 
 - Pipeline academies pages no longer show conversion projects which are "dAO revoked"
 
+--- 
+ 
 ## [Release-22][release-22] (production-2025-02-27.5055)
 
 ### Added
@@ -280,6 +356,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Renamed "Contacts in the trust" to "Contacts in this trust"
 - Datasource component text changed from "All information taken from" to "All information was taken from"
 
+--- 
+ 
 ## [Release-21][release-21] (production-2025-02-20.5021)
 
 ### Changed
@@ -287,6 +365,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Changed Ofsted data download to include single headline grades
 - Use buttons instead of links to accept/decline cookies in cookie banner
 
+--- 
+ 
 ## [Release-20][release-20] (production-2025-02-04.4852)
 
 ### Added
@@ -305,6 +385,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Removed 'Date joined trust' from Ofsted data source list
 - Removed Important dates Ofsted subpage
 
+--- 
+ 
 ## [Release-19][release-19] (production-2025-01-20.4730)
 
 ### Changed
@@ -314,6 +396,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Switched to using the MIS tables to the MIS_MSTR tables
 - Updated the design of the source and updates panel
 
+--- 
+ 
 ## [Release-18][release-18] (production-2024-12-19.4567)
 
 ### Added
@@ -324,6 +408,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Updated the autocomplete so that searching clears the selected trust
 
+--- 
+ 
 ## [Release-17][release-17] (production-2024-12-18.4551)
 
 ### Added
@@ -334,6 +420,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Fixed browser titles so they include the name of the sub page and are all formatted in a consistent way
 
+--- 
+ 
 ## [Release-16][release-16] (production-2024-12-13.4477)
 
 ### Changed
@@ -350,6 +438,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Removed the "Report a problem" link from most pages
 
+--- 
+ 
 ## [Release-15][release-15] (production-2024-12-02.4279)
 
 ### Added
@@ -365,6 +455,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Split up all trust pages into sub pages
 
+--- 
+ 
 ## [Release-14][release-14] (production-2024-11-21.4136)
 
 ### Changed
@@ -374,6 +466,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Minor performance improvement to all academies db database calls
 - Refactored and split up the program file into separate config files
 
+--- 
+ 
 ## [Release-13][release-13] (production-2024-11-14.4036)
 
 ### Added
@@ -384,6 +478,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Updated the node version in the github runners and docker image
 
+--- 
+ 
 ## [Release-12][release-12] (production-2024-11-13.3974)
 
 ### Changed
@@ -403,12 +499,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Redirect successful search to Overview page
 - Removed Ofsted summary card from Trust Overview
 
+--- 
+ 
 ## [Release-11][release-11] (production-2024-10-17.3654)
 
 ### Changed
 
 - The links on the error page now open in a new tab
 
+--- 
+ 
 ## [Release-10][release-10] (production-2024-10-17.3629)
 
 ### Changed
@@ -419,6 +519,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Added data test ids to the source list
 - Updated the footer link to the PASS form and added a feature flag to control the release
 
+--- 
+ 
 ## [Release-9][release-9] (production-2024-10-02.3440)
 
 ### Added
@@ -430,6 +532,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Move Successful update message to top of the trust layout for conatcts update
 - Manually edit the Updated By text for TRAMs Migration to TRAMS Migration in the UI
 
+--- 
+ 
 ## [Release-8][release-8] (production-2024-09-27.3319)
 
 ### Added
@@ -446,6 +550,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - DfE contacts now get their data from Fiat Db instead of academies Db
 - Edited contacts are now saved to the database
 
+--- 
+ 
 ## [Release-7][release-7] (production-2024-09-23.3213)
 
 ### Added
@@ -457,6 +563,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Ofsted logic can now handle null dates
 - Updated contacts page UI to split each contact into it own section
 
+--- 
+ 
 ## [Release-6][release-6] (production-2024-09-17.3129)
 
 ### Added
@@ -470,6 +578,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Reduced the load time of the Academies in trust free school meals page
 - Reduced the load time of the Trust contacts page
 
+--- 
+ 
 ## [Release-5][release-5] (production-2024-09-05.2971)
 
 ### Added
@@ -485,6 +595,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - Removed Scottish design library as we no longer have a sidenav
 
+--- 
+ 
 ## [Release-4][release-4] (production-2024-08-22.2794)
 
 ### Added
@@ -506,6 +618,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Reduced the load time of the Academies in trust details page
 - Updated the footer design to match the updated RSD design.
 
+--- 
+ 
 ## [Release-3][release-3] (production-2024-08-09.2694)
 
 ### Changed
@@ -517,6 +631,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Trust summary information (UID, name, type and number of academies) cached to improve performance of all Trust pages.
 - Updated hardcoded free schools meals data to be updated to 23/24, resolving a bug relating to new Local Authorities within that data
 
+--- 
+ 
 ## [Release-2][release-2] (production-2024-07-29.2601)
 
 ### Changed
@@ -524,6 +640,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Filter so only the open Gias Groups (Trusts) are shown across the application
 - Updated Feedback link to reflect new feedback form for the product
 
+--- 
+ 
 ## [Release-1][release-1] (production-2024-07-18.2517)
 
 ### Changed
