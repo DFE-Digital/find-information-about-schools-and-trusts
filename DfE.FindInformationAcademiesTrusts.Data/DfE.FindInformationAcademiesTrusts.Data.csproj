@@ -7,4 +7,12 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Dfe.AcademiesApi.Client" Version="1.0.13" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Services\" />
+    </ItemGroup>
+
 </Project>

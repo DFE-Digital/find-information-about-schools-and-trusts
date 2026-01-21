@@ -1,0 +1,99 @@
+@using DfE.FindInformationAcademiesTrusts.Data.Enums
+@model BaseReportCardsRatings
+
+ <p class="govuk-body">This inspection took place <strong>@Model.EstablishmentReportCard.InspectionDate.ToString("dd MMMM yyyy")</strong>.</p>
+
+
+@if (Model.WhenDidInspectionHappen is BeforeOrAfterJoining.After or BeforeOrAfterJoining.Before)
+{
+    <p class="govuk-body">
+        This was
+        @if (Model.WhenDidInspectionHappen == BeforeOrAfterJoining.Before)
+        {
+            <strong>before</strong>
+        }
+        else
+        {
+            <strong>after</strong>
+        }
+
+        joining the trust.
+    </p>
+}
+
+<dl class="govuk-summary-list">
+    
+      
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                Quality of education
+            </dt>
+            <dd class="govuk-summary-list__value">
+                Inadequate
+            </dd>
+        
+        </div>
+      
+    
+      
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                Behaviour and attitudes
+            </dt>
+            <dd class="govuk-summary-list__value">
+                Requires improvement
+            </dd>
+        
+        </div>
+      
+    
+      
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                Personal development
+            </dt>
+            <dd class="govuk-summary-list__value">
+                Inadequate
+            </dd>
+        
+        </div>
+      
+    
+      
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                Leadership and management
+            </dt>
+            <dd class="govuk-summary-list__value">
+                Requires improvement
+            </dd>
+        
+        </div>
+      
+    
+      
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                Effective safeguarding
+            </dt>
+            <dd class="govuk-summary-list__value">
+                Requires improvement
+            </dd>
+        
+        </div>
+      
+    
+      
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                Category of concern
+            </dt>
+            <dd class="govuk-summary-list__value">
+                Requires improvement
+            </dd>
+        
+        </div>
+      
+    
+    </dl>
+

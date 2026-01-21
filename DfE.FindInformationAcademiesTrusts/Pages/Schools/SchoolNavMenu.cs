@@ -4,10 +4,13 @@ using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.Older;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.ReportCards;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Pupils;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.NavMenu;
 using Microsoft.FeatureManagement;
+using CurrentModel = DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance.CurrentModel;
 using GovernanceAreaModel = DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance.GovernanceAreaModel;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Schools;
@@ -166,15 +169,17 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
     {
         return
         [
-            GetSubNavLinkTo<SingleHeadlineGradesModel>(OfstedAreaModel.PageName, SingleHeadlineGradesModel.SubPageName,
-                "/Schools/Ofsted/SingleHeadlineGrades", activePage, "ofsted-single-headline-grades-subnav"),
-            GetSubNavLinkTo<CurrentRatingsModel>(OfstedAreaModel.PageName, CurrentRatingsModel.SubPageName,
-                "/Schools/Ofsted/CurrentRatings", activePage, "ofsted-current-ratings-subnav"),
-            GetSubNavLinkTo<PreviousRatingsModel>(OfstedAreaModel.PageName, PreviousRatingsModel.SubPageName,
-                "/Schools/Ofsted/PreviousRatings", activePage, "ofsted-previous-ratings-subnav"),
-            GetSubNavLinkTo<SafeguardingAndConcernsModel>(OfstedAreaModel.PageName,
-                SafeguardingAndConcernsModel.SubPageName,
-                "/Schools/Ofsted/SafeguardingAndConcerns", activePage, "ofsted-safeguarding-and-concerns-subnav")
+            GetSubNavLinkTo<ReportCardsAreaModel>(ReportCardsAreaModel.PageName, ReportCardsAreaModel.SubPageName,
+                "/Schools/Ofsted/ReportCards/Current", activePage, "ofsted-report-cards-current-subnav"),
+            //GetSubNavLinkTo<CurrentModel>(OfstedAreaModel.PageName, SingleHeadlineGradesModel.SubPageName,
+            //    "/Schools/Ofsted/Older/SingleHeadlineGrades", activePage, "ofsted-single-headline-grades-subnav"),
+            GetSubNavLinkTo<OlderBaseRatingsModel>(OfstedAreaModel.PageName, "Older inspections (before November 2025)",
+                "/Schools/Ofsted/Older/CurrentRatings", activePage, "ofsted-current-ratings-subnav"),
+            //GetSubNavLinkTo<PreviousRatingsModel>(OfstedAreaModel.PageName, PreviousRatingsModel.SubPageName,
+            //    "/Schools/Ofsted/Older/PreviousRatings", activePage, "ofsted-previous-ratings-subnav"),
+            //GetSubNavLinkTo<SafeguardingAndConcernsModel>(OfstedAreaModel.PageName,
+            //    SafeguardingAndConcernsModel.SubPageName,
+            //    "/Schools/Ofsted/SafeguardingAndConcerns", activePage, "ofsted-safeguarding-and-concerns-subnav")
         ];
     }
 

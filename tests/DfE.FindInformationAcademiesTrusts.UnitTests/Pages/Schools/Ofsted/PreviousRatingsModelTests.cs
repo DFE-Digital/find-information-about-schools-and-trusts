@@ -1,6 +1,6 @@
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
-using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.Older;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 

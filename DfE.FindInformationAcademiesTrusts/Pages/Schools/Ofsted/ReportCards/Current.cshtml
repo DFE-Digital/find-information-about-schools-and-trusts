@@ -1,0 +1,14 @@
+﻿@page
+@model DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.ReportCards.CurrentModel
+@{
+    Layout = "Ofsted/_OfstedLayout";
+}
+
+@if (Model.ReportCard is null)
+{
+    <p class="govuk-body"><strong>This school does not have a current Ofsted inspection using the report card system to show.</strong></p>
+}
+else
+{
+    <partial name="_BaseReportCardsRatings" model="new BaseReportCardsRatings(@Model.PageMetadata.TabName!, @Model.ReportCard, @Model.WhenDidCurrentInspectionHappen)"/>
+}
