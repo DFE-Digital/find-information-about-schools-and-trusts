@@ -1,0 +1,38 @@
+﻿@model OfstedAreaModel
+@{
+    Layout = "_SchoolLayout";
+}
+
+<h3 class="govuk-heading-m">@Model.PageMetadata.SubPageName</h3>
+
+<details class="govuk-details">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">
+            Why a report card might not be available
+        </span>
+    </summary>
+    <div class="govuk-details__text">
+    
+        <p class="govuk-body">From <strong>10 November 2025</strong>, Ofsted inspections used the report card system for state-funded school inspections.</p>
+        <p class="govuk-body">Inspections that took place <strong>before</strong> this date use single headline grades.</p>
+
+    </div>
+</details>
+
+
+<div class="govuk-tabs">
+    <ul class="govuk-tabs__list">
+        @foreach (var tab in Model.TabList)
+        {
+            <li class="govuk-tabs__list-item @(tab.LinkIsActive ? "govuk-tabs__list-item--selected" : "")">
+                <a class="govuk-tabs__tab" asp-page="@tab.AspPage" asp-all-route-data="@tab.AspAllRouteData"
+                   data-testid="@tab.TestId">
+                    <span class="govuk-visually-hidden">@tab.VisuallyHiddenLinkText </span>@tab.LinkDisplayText
+                </a>
+            </li>
+        }
+    </ul>
+    <div class="govuk-tabs__panel">
+        @RenderBody()
+    </div>
+</div>

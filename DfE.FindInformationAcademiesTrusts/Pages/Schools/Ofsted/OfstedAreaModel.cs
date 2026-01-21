@@ -1,7 +1,10 @@
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Extensions;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.Older;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
+using DfE.FindInformationAcademiesTrusts.Pages.Shared.NavMenu;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.School;
@@ -28,6 +31,8 @@ public class OfstedAreaModel(
 
     public DateTime? DateJoinedTrust { get; set; }
     public string OfstedReportUrl { get; set; } = null!;
+
+    public NavLink[] TabList { get; set; } = [];
 
     public override async Task<IActionResult> OnGetAsync()
     {
@@ -93,5 +98,12 @@ public class OfstedAreaModel(
         var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
         return File(fileContents, contentType, fileName);
+    }
+
+    public NavLink GetTabFor<T>(string subPageName, string linkDisplayText, string aspPage)
+    {
+        return new NavLink(this is T, "Ofsted", linkDisplayText, aspPage,
+            $"{subPageName}-{linkDisplayText}-tab".Kebabify(),
+            new Dictionary<string, string> { { "urn", Urn.ToString() } });
     }
 }

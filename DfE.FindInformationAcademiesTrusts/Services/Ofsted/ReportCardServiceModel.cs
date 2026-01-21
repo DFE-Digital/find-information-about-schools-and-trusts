@@ -1,0 +1,20 @@
+﻿namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
+{
+    public class ReportCardServiceModel
+    {
+        public ReportCardDetails? LatestReportCard { get; set; }
+        public ReportCardDetails? PreviousReportCard { get; set; }
+    }
+
+    public record ReportCardDetails(
+        DateOnly InspectionDate,
+        string? WebLink,
+        string? CurriculumAndTeaching,
+        string? AttendanceAndBehaviour,
+        string? PersonalDevelopmentAndWellBeing,
+        string? LeadershipAndGovernance,
+        string? Inclusion,
+        string? Achievement,
+        string? EarlyYearsProvision,
+        string? Safeguarding);
+}
