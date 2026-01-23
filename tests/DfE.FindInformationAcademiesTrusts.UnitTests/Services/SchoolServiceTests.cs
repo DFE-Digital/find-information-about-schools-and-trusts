@@ -323,4 +323,42 @@ public class SchoolServiceTests
 
         result.ReligiousEthos.Should().BeEquivalentTo(expectedResult);
     }
+
+    [Theory]
+    [InlineData("2024-09-01", "2024-08-31", true, true, "2024-09-01", "2024-08-31")]
+    [InlineData("2024-09-01", "2024-10-01", true, false, "2024-10-01", "2000-01-01")]
+    [InlineData("2024-08-31", "2024-08-01", false, true, "2000-01-01", "2024-08-31")]
+    [InlineData("2024-08-01", "2024-08-30", false, true, "2000-01-01", "2024-08-30")]
+    public async Task GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync_Should_ReturnCorrectData(DateTime currentInspectionDate, DateTime previousInspectionDate, bool shouldReturnCurrent, bool shouldReturnPrevious, DateTime expectedCurrentInspectionDate, DateTime expectedPreviousInspectionDate)
+    {
+        const int urn = 123456;
+
+        _mockOfstedRepository.GetSchoolOfstedRatingsAsync(urn)
+            .Returns(new SchoolOfsted(urn.ToString(), "Academy 1", null,
+                new OfstedShortInspection(new DateTime(2025, 7, 1), "School remains Good"),
+                new OfstedRating((int)OfstedRatingScore.Good, currentInspectionDate),
+                new OfstedRating((int)OfstedRatingScore.RequiresImprovement, previousInspectionDate), false));
+
+        var result = await _sut.GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(urn);
+
+        if (shouldReturnCurrent)
+        {
+            result.CurrentOfstedRating.Should().NotBeNull();
+            result.CurrentOfstedRating!.InspectionDate.Should().Be(expectedCurrentInspectionDate);
+        }
+        else
+        {
+            result.CurrentOfstedRating.Should().BeNull();
+        }
+
+        if (shouldReturnPrevious)
+        {
+            result.PreviousOfstedRating.Should().NotBeNull();
+            result.PreviousOfstedRating!.InspectionDate.Should().Be(expectedPreviousInspectionDate);
+        }
+        else
+        {
+            result.PreviousOfstedRating.Should().BeNull();
+        }
+    }
 }

@@ -44,7 +44,7 @@
                     <td class="govuk-table__cell" data-sort-value="@academy.EstablishmentName" data-testid="ofsted-previous-ratings-school-name">
                         @academy.EstablishmentName<br />
                     </td>
-                    <td class="govuk-table__cell" data-sort-value="@academy.PreviousOfstedRating.QualityOfEducation.ToDataSortValue()" data-testid="ofsted-previous-ratings-quality-of-education">
+                    <td class="govuk-table__cell" data-sort-value="@academy.PreviousOfstedRating!.QualityOfEducation.ToDataSortValue()" data-testid="ofsted-previous-ratings-quality-of-education">
                         @academy.PreviousOfstedRating.QualityOfEducation.ToDisplayString(false)
                     </td>
                     <td class="govuk-table__cell" data-sort-value="@academy.PreviousOfstedRating.BehaviourAndAttitudes.ToDataSortValue()" data-testid="ofsted-previous-ratings-behaviour-and-attitudes">

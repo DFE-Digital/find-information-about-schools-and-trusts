@@ -5,4 +5,13 @@
     Layout = "Ofsted/_OlderOfstedLayout";
 }
 
-<partial name="_OlderBaseRatings" model="@Model"/>
+@if (Model.OfstedRating is not null)
+{
+    <partial name="_OlderBaseRatings" model="@Model" />
+}
+else
+{
+    <p class="govuk-body">
+        <strong>This school does not have an Ofsted inspection before September 2024 to show.</strong>
+    </p>
+}

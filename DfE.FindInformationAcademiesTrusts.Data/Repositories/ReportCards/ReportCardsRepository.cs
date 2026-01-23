@@ -9,15 +9,15 @@ namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.ReportCards
             GetReportCardAsync(int urn)
         {
             var result =
-                await establishmentsClient.SearchEstablishmentsWithMockReportCardsAsync(null, null, urn.ToString(),
+                await establishmentsClient.SearchEstablishmentsWithOfstedReportCardsAsync(null, null, urn.ToString(),
                     null, null);
 
             var establishmentData = result.FirstOrDefault(x => x.Urn == urn.ToString());
 
             if (establishmentData is not null)
             {
-                var latestReportCard = MapLatestReportCard(establishmentData.ReportCard!);
-                var previousReportCard = MapPreviousReportCard(establishmentData.ReportCard!);
+                var latestReportCard = MapLatestReportCard(establishmentData.ReportCardFullInspection);
+                var previousReportCard = MapPreviousReportCard(establishmentData.ReportCardFullInspection);
 
                 return (latestReportCard, previousReportCard);
             }
@@ -25,9 +25,9 @@ namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.ReportCards
             return (null, null);
         }
 
-        private EstablishmentReportCard? MapLatestReportCard(ReportCardDto reportCardDto)
+        private EstablishmentReportCard? MapLatestReportCard(ReportCardFullInspectionDto? reportCardDto)
         {
-            if(reportCardDto.LatestInspectionDate is null)
+            if(reportCardDto?.LatestInspectionDate is null)
             {
                 return null;
             }
@@ -45,9 +45,9 @@ namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.ReportCards
                 reportCardDto.LatestSafeguarding);
         }
 
-        private EstablishmentReportCard? MapPreviousReportCard(ReportCardDto reportCardDto)
+        private EstablishmentReportCard? MapPreviousReportCard(ReportCardFullInspectionDto? reportCardDto)
         {
-            if (reportCardDto.PreviousInspectionDate is null)
+            if (reportCardDto?.PreviousInspectionDate is null)
             {
                 return null;
             }

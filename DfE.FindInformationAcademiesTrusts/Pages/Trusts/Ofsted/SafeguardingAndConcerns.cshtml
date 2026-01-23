@@ -48,7 +48,7 @@
           <td class="govuk-table__cell govuk-body" data-sort-value="@academy.EstablishmentName" data-testid="ofsted-safeguarding-and-concerns-school-name">
             @academy.EstablishmentName<br/>
           </td>
-          <td class="govuk-table__cell govuk-body" data-sort-value="@academy.CurrentOfstedRating.SafeguardingIsEffective.ToDataSortValue()" data-testid="ofsted-safeguarding-and-concerns-effective-safeguarding">
+          <td class="govuk-table__cell govuk-body" data-sort-value="@academy.CurrentOfstedRating!.SafeguardingIsEffective.ToDataSortValue()" data-testid="ofsted-safeguarding-and-concerns-effective-safeguarding">
             @academy.CurrentOfstedRating.SafeguardingIsEffective.ToDisplayString()
           </td>
           <td class="govuk-table__cell govuk-body" data-sort-value="@academy.CurrentOfstedRating.CategoryOfConcern.ToDataSortValue()" data-testid="ofsted-safeguarding-and-concerns-category-of-concern">
