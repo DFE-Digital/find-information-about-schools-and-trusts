@@ -4,6 +4,7 @@ using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.Older;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.ReportCards;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Pupils;
 using DfE.FindInformationAcademiesTrusts.Services.School;
@@ -38,10 +39,11 @@ public abstract class SchoolNavMenuTestsBase
         typeof(CurrentModel),
         typeof(HistoricModel),
         //Ofsted
-        typeof(SingleHeadlineGradesModel),
+        typeof(OfstedOverviewModel),
         typeof(CurrentRatingsModel),
         typeof(PreviousRatingsModel),
-        typeof(SafeguardingAndConcernsModel)
+        typeof(CurrentReportCardsModel),
+        typeof(PreviousReportCardsModel)
     ];
 
     public static TheoryData<Type> ContactsInDfeForSchoolsEnabledSubPageTypes =>
@@ -60,9 +62,11 @@ public abstract class SchoolNavMenuTestsBase
         typeof(CurrentModel),
         typeof(HistoricModel),
         //Ofsted
-        typeof(SingleHeadlineGradesModel),
+        typeof(OfstedOverviewModel),
         typeof(CurrentRatingsModel),
-        typeof(PreviousRatingsModel)
+        typeof(PreviousRatingsModel),
+        typeof(CurrentReportCardsModel),
+        typeof(PreviousReportCardsModel)
     ];
 
     protected static SchoolAreaModel GetMockSchoolPage(Type pageType, int urn = 123456,

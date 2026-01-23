@@ -37,7 +37,7 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
             GetServiceNavLinkTo<ContactsAreaModel>(ContactsAreaModel.PageName, contactLink, activePage),
             GetServiceNavLinkTo<GovernanceAreaModel>(GovernanceAreaModel.PageName, "/Schools/Governance/Current",
                 activePage),
-            GetServiceNavLinkTo<OfstedAreaModel>(OfstedAreaModel.PageName, "/Schools/Ofsted/SingleHeadlineGrades",
+            GetServiceNavLinkTo<OfstedAreaModel>(OfstedAreaModel.PageName, "/Schools/Ofsted/OfstedOverview",
                 activePage)
         ];
     }
@@ -169,17 +169,12 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
     {
         return
         [
-            GetSubNavLinkTo<ReportCardsAreaModel>(ReportCardsAreaModel.PageName, ReportCardsAreaModel.SubPageName,
-                "/Schools/Ofsted/ReportCards/Current", activePage, "ofsted-report-cards-current-subnav"),
-            //GetSubNavLinkTo<CurrentModel>(OfstedAreaModel.PageName, SingleHeadlineGradesModel.SubPageName,
-            //    "/Schools/Ofsted/Older/SingleHeadlineGrades", activePage, "ofsted-single-headline-grades-subnav"),
+            GetSubNavLinkTo<OfstedOverviewModel>(OfstedAreaModel.PageName, "Overview",
+                "/Schools/Ofsted/OfstedOverview", activePage, "ofsted-overview-subnav"),
+            GetSubNavLinkTo<BaseReportCardsRatingsModel>(OfstedAreaModel.PageName, "Report cards",
+                "/Schools/Ofsted/ReportCards/CurrentReportCards", activePage, "ofsted-report-cards-current-subnav"),
             GetSubNavLinkTo<OlderBaseRatingsModel>(OfstedAreaModel.PageName, "Older inspections (before November 2025)",
-                "/Schools/Ofsted/Older/CurrentRatings", activePage, "ofsted-current-ratings-subnav"),
-            //GetSubNavLinkTo<PreviousRatingsModel>(OfstedAreaModel.PageName, PreviousRatingsModel.SubPageName,
-            //    "/Schools/Ofsted/Older/PreviousRatings", activePage, "ofsted-previous-ratings-subnav"),
-            //GetSubNavLinkTo<SafeguardingAndConcernsModel>(OfstedAreaModel.PageName,
-            //    SafeguardingAndConcernsModel.SubPageName,
-            //    "/Schools/Ofsted/SafeguardingAndConcerns", activePage, "ofsted-safeguarding-and-concerns-subnav")
+                "/Schools/Ofsted/Older/CurrentRatings", activePage, "ofsted-older-ratings-subnav"),
         ];
     }
 

@@ -1,3 +1,4 @@
+using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
@@ -18,6 +19,8 @@ public interface ISchoolService
     Task<OfstedHeadlineGradesServiceModel> GetOfstedHeadlineGrades(int urn);
 
     Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsync(int urn);
+
+    Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn);
 
     Task<SchoolReligiousCharacteristicsServiceModel> GetReligiousCharacteristicsAsync(int urn);
 }
@@ -99,6 +102,34 @@ public class SchoolService(
             schoolOfstedRatings.ShortInspection,
             schoolOfstedRatings.PreviousOfstedRating,
             schoolOfstedRatings.CurrentOfstedRating,
+            schoolOfstedRatings.IsFurtherEducationalEstablishment
+        );
+    }
+
+    public async Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn)
+    {
+        // Get the number of days in the given month/year
+        int lastDay = DateTime.DaysInMonth(2024, 08);
+
+        DateTime cutOffDate = new(2024, 08, lastDay, 23, 59, 59);
+
+        var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
+
+        List<OfstedRating> ofstedRatings =
+            [schoolOfstedRatings.CurrentOfstedRating, schoolOfstedRatings.PreviousOfstedRating];
+
+        ofstedRatings = ofstedRatings.OrderByDescending(x => x.InspectionDate).ToList();
+
+         var after = ofstedRatings.FirstOrDefault(x => x.InspectionDate > cutOffDate);
+         var before = ofstedRatings.FirstOrDefault(x => x.InspectionDate <= cutOffDate);
+
+        return new SchoolOfstedServiceModel(
+            schoolOfstedRatings.Urn,
+            schoolOfstedRatings.EstablishmentName,
+            schoolOfstedRatings.DateAcademyJoinedTrust,
+            schoolOfstedRatings.ShortInspection,
+            before,
+            after,
             schoolOfstedRatings.IsFurtherEducationalEstablishment
         );
     }

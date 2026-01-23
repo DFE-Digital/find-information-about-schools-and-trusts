@@ -1,6 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
-using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.Older;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
@@ -39,7 +38,7 @@ public class CurrentRatingsModelTests : BaseOfstedAreaModelTests<CurrentRatingsM
                 MockSchoolNavMenu)
             { Urn = SchoolUrn };
 
-        MockSchoolService.GetSchoolOfstedRatingsAsync(Arg.Any<int>()).Returns(_dummySchoolOfstedServiceModel);
+        MockSchoolService.GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(Arg.Any<int>()).Returns(_dummySchoolOfstedServiceModel);
         MockTrustService.GetTrustSummaryAsync(AcademyUrn).Returns(_dummyTrustSummaryServiceModel);
     }
 
@@ -48,7 +47,8 @@ public class CurrentRatingsModelTests : BaseOfstedAreaModelTests<CurrentRatingsM
     {
         await Sut.OnGetAsync();
 
-        Sut.PageMetadata.SubPageName.Should().Be("Current ratings");
+        Sut.PageMetadata.SubPageName.Should().Be("Older inspections (before November 2025)");
+        Sut.PageMetadata.TabName.Should().Be("After September 2024");
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class CurrentRatingsModelTests : BaseOfstedAreaModelTests<CurrentRatingsM
         );
 
         MockSchoolService
-            .GetSchoolOfstedRatingsAsync(SchoolUrn)
+            .GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(SchoolUrn)
             .Returns(_dummySchoolOfstedServiceModel with { CurrentOfstedRating = expectedRating });
 
         await Sut.OnGetAsync();
@@ -93,7 +93,7 @@ public class CurrentRatingsModelTests : BaseOfstedAreaModelTests<CurrentRatingsM
         );
 
         MockSchoolService
-            .GetSchoolOfstedRatingsAsync(SchoolUrn)
+            .GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(SchoolUrn)
             .Returns(_dummySchoolOfstedServiceModel with { CurrentOfstedRating = expectedRating });
 
         await Sut.OnGetAsync();
@@ -121,7 +121,7 @@ public class CurrentRatingsModelTests : BaseOfstedAreaModelTests<CurrentRatingsM
         );
 
         MockSchoolService
-            .GetSchoolOfstedRatingsAsync(AcademyUrn)
+            .GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(AcademyUrn)
             .Returns(_dummySchoolOfstedServiceModel with
             {
                 DateAcademyJoinedTrust = new DateTime(2024, 1, 1),
@@ -153,7 +153,7 @@ public class CurrentRatingsModelTests : BaseOfstedAreaModelTests<CurrentRatingsM
         );
 
         MockSchoolService
-            .GetSchoolOfstedRatingsAsync(AcademyUrn)
+            .GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(AcademyUrn)
             .Returns(_dummySchoolOfstedServiceModel with
             {
                 DateAcademyJoinedTrust = new DateTime(2026, 1, 1),
@@ -164,4 +164,5 @@ public class CurrentRatingsModelTests : BaseOfstedAreaModelTests<CurrentRatingsM
 
         Sut.InspectionBeforeOrAfterJoiningTrust.Should().Be(BeforeOrAfterJoining.Before);
     }
+
 }

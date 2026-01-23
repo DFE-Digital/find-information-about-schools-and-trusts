@@ -1,0 +1,6 @@
+﻿@model DateTime?
+
+@if (Model != null)
+{
+    <p class="govuk-body">This inspection took place <strong>@Model.Value.ToString("dd MMMM yyyy")</strong>.</p>
+}

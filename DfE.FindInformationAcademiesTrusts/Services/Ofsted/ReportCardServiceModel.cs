@@ -4,6 +4,7 @@
     {
         public ReportCardDetails? LatestReportCard { get; set; }
         public ReportCardDetails? PreviousReportCard { get; set; }
+        public DateOnly? DateJoinedTrust { get; set; }
     }
 
     public record ReportCardDetails(

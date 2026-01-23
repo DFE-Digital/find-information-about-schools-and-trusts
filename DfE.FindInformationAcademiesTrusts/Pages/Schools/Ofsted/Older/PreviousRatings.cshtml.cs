@@ -1,5 +1,6 @@
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
@@ -14,6 +15,6 @@ public class PreviousRatingsModel(ISchoolService schoolService, ISchoolOverviewD
     public const string SubPageName = "Older inspections (before November 2025)";
     public override PageMetadata PageMetadata => base.PageMetadata with { SubPageName = SubPageName, TabName = "Before September 2024" };
 
-    protected override OfstedRating GetOfstedRating(SchoolOfstedServiceModel ofstedRatings) => ofstedRatings.PreviousOfstedRating;
+    protected override OfstedRating? GetOfstedRating(SchoolOfstedServiceModel ofstedRatings) => ofstedRatings.PreviousOfstedRating;
     protected override BeforeOrAfterJoining GetWhenInspectionHappened(SchoolOfstedServiceModel ofstedRatings) => ofstedRatings.WhenDidPreviousInspectionHappen;
 }

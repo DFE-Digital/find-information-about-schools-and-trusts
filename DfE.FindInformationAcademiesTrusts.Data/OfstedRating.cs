@@ -12,6 +12,7 @@ public record OfstedRating(
     SafeguardingScore SafeguardingIsEffective,
     DateTime? InspectionDate)
 {
+
     public static readonly OfstedRating NotInspected = new(OfstedRatingScore.NotInspected,
         OfstedRatingScore.NotInspected, OfstedRatingScore.NotInspected, OfstedRatingScore.NotInspected,
         OfstedRatingScore.NotInspected, OfstedRatingScore.NotInspected, OfstedRatingScore.NotInspected,

@@ -38,7 +38,7 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
                 MockSchoolNavMenu)
             { Urn = SchoolUrn };
 
-        MockSchoolService.GetSchoolOfstedRatingsAsync(Arg.Any<int>()).Returns(_dummySchoolOfstedServiceModel);
+        MockSchoolService.GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(Arg.Any<int>()).Returns(_dummySchoolOfstedServiceModel);
         MockTrustService.GetTrustSummaryAsync(AcademyUrn).Returns(_dummyTrustSummaryServiceModel);
     }
 
@@ -47,7 +47,8 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
     {
         await Sut.OnGetAsync();
 
-        Sut.PageMetadata.SubPageName.Should().Be("Previous ratings");
+        Sut.PageMetadata.SubPageName.Should().Be("Older inspections (before November 2025)");
+        Sut.PageMetadata.TabName.Should().Be("Before September 2024");
     }
 
     [Fact]
@@ -67,7 +68,7 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
         );
 
         MockSchoolService
-            .GetSchoolOfstedRatingsAsync(SchoolUrn)
+            .GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(SchoolUrn)
             .Returns(_dummySchoolOfstedServiceModel with { PreviousOfstedRating = expectedRating });
 
         await Sut.OnGetAsync();
@@ -92,7 +93,7 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
         );
 
         MockSchoolService
-            .GetSchoolOfstedRatingsAsync(SchoolUrn)
+            .GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(SchoolUrn)
             .Returns(_dummySchoolOfstedServiceModel with { PreviousOfstedRating = expectedRating });
 
         await Sut.OnGetAsync();
@@ -120,7 +121,7 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
         );
 
         MockSchoolService
-            .GetSchoolOfstedRatingsAsync(AcademyUrn)
+            .GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(AcademyUrn)
             .Returns(_dummySchoolOfstedServiceModel with
             {
                 DateAcademyJoinedTrust = new DateTime(2024, 1, 1),
@@ -152,7 +153,7 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
         );
 
         MockSchoolService
-            .GetSchoolOfstedRatingsAsync(AcademyUrn)
+            .GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(AcademyUrn)
             .Returns(_dummySchoolOfstedServiceModel with
             {
                 DateAcademyJoinedTrust = new DateTime(2026, 1, 1),

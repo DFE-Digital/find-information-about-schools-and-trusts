@@ -17,14 +17,14 @@ namespace DfE.FindInformationAcademiesTrusts.Data.UnitTests
 
             _sut = new ReportCardsRepository(mockEstablishmentsV5Client);
 
-            mockEstablishmentsV5Client.SearchEstablishmentsWithMockReportCardsAsync(null, null, Urn.ToString(), null, null).Returns([]);
+            mockEstablishmentsV5Client.SearchEstablishmentsWithOfstedReportCardsAsync(null, null, Urn.ToString(), null, null).Returns([]);
         }
 
         [Fact]
         public async Task WhenCalling_GetReportCardAsync_ShouldCallCorrectEndpoint()
         {
             await _sut.GetReportCardAsync(Urn);
-            await mockEstablishmentsV5Client.Received(1).SearchEstablishmentsWithMockReportCardsAsync(null, null, Urn.ToString(), null, null);
+            await mockEstablishmentsV5Client.Received(1).SearchEstablishmentsWithOfstedReportCardsAsync(null, null, Urn.ToString(), null, null);
         }
 
         [Fact]
@@ -38,9 +38,9 @@ namespace DfE.FindInformationAcademiesTrusts.Data.UnitTests
         [Fact]
         public async Task WhenCalling_GetReportCardAsync_IfLatestInspectionDateIsNull_ShouldReturnNull()
         {
-            mockEstablishmentsV5Client.SearchEstablishmentsWithMockReportCardsAsync(null, null, Urn.ToString(), null, null).Returns([new EstablishmentDto2()
+            mockEstablishmentsV5Client.SearchEstablishmentsWithOfstedReportCardsAsync(null, null, Urn.ToString(), null, null).Returns([new EstablishmentDto2()
             {
-                ReportCard = new ReportCardDto
+                ReportCardFullInspection = new ReportCardFullInspectionDto
                 {
                     LatestInspectionDate = null,
                     PreviousInspectionDate = "25/12/2020",
@@ -56,9 +56,9 @@ namespace DfE.FindInformationAcademiesTrusts.Data.UnitTests
         [Fact]
         public async Task WhenCalling_GetReportCardAsync_IfPreviousInspectionDateIsNull_ShouldReturnNull()
         {
-            mockEstablishmentsV5Client.SearchEstablishmentsWithMockReportCardsAsync(null, null, Urn.ToString(), null, null).Returns([new EstablishmentDto2()
+            mockEstablishmentsV5Client.SearchEstablishmentsWithOfstedReportCardsAsync(null, null, Urn.ToString(), null, null).Returns([new EstablishmentDto2()
             {
-                ReportCard = new ReportCardDto
+                ReportCardFullInspection = new ReportCardFullInspectionDto
                 {
                     LatestInspectionDate = "25/12/2020",
                     PreviousInspectionDate = null,
@@ -76,10 +76,10 @@ namespace DfE.FindInformationAcademiesTrusts.Data.UnitTests
         {
 
             mockEstablishmentsV5Client
-                .SearchEstablishmentsWithMockReportCardsAsync(null, null, Urn.ToString(), null, null).Returns([
+                .SearchEstablishmentsWithOfstedReportCardsAsync(null, null, Urn.ToString(), null, null).Returns([
                     new EstablishmentDto2
                     {
-                        ReportCard = CreateMockReportCardDto(),
+                        ReportCardFullInspection = CreateMockReportCardDto(),
                         Urn = Urn.ToString()
                     }
                 ]);
@@ -116,9 +116,9 @@ namespace DfE.FindInformationAcademiesTrusts.Data.UnitTests
             previous.WebLink.Should().Be("https://ofsted.gov.uk/report/1234");
         }
 
-        private static ReportCardDto CreateMockReportCardDto()
+        private static ReportCardFullInspectionDto CreateMockReportCardDto()
         {
-            return new ReportCardDto
+            return new ReportCardFullInspectionDto
             {
                 WebLink = "https://ofsted.gov.uk/report/1234",
                 LatestInspectionDate = "01/01/2023",

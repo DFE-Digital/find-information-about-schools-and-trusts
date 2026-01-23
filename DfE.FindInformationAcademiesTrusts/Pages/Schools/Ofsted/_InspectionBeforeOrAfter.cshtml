@@ -2,22 +2,17 @@
 @using DfE.FindInformationAcademiesTrusts.Data.Enums
 @model BeforeOrAfterJoining
 
+
 @switch (Model)
 {
     case BeforeOrAfterJoining.Before:
-        <strong class="govuk-tag govuk-tag--orange">
-            Before joining
-        </strong>
+        <p class="govuk-body">This was <strong>before</strong> joining the trust.</p>
         break;
     case BeforeOrAfterJoining.After:
-        <strong class="govuk-tag">
-            After joining
-        </strong>
+        <p class="govuk-body">This was <strong>after</strong> joining the trust.</p>
         break;
     case BeforeOrAfterJoining.NotYetInspected:
-        <strong class="govuk-tag govuk-tag--grey">
-            Not yet inspected
-        </strong>
+    case BeforeOrAfterJoining.NotApplicable:
         break;
     default:
         throw new InvalidEnumArgumentException($"Unknown value of BeforeOrAfterJoining: {Model}");

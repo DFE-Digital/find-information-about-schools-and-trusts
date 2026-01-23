@@ -9,14 +9,14 @@ public record SchoolOfstedServiceModel(
     string? EstablishmentName,
     DateTime? DateAcademyJoinedTrust,
     OfstedShortInspection ShortInspection,
-    OfstedRating PreviousOfstedRating,
-    OfstedRating CurrentOfstedRating,
+    OfstedRating? PreviousOfstedRating,
+    OfstedRating? CurrentOfstedRating,
     bool IsFurtherEducationalEstablishment
 )
 {
-    public bool HasRecentShortInspection => ShortInspection.InspectionDate > CurrentOfstedRating.InspectionDate;
+    public bool HasRecentShortInspection => ShortInspection.InspectionDate > CurrentOfstedRating?.InspectionDate;
 
-    public BeforeOrAfterJoining WhenDidCurrentInspectionHappen => DateAcademyJoinedTrust.GetBeforeOrAfterJoiningTrust(CurrentOfstedRating.InspectionDate);
+    public BeforeOrAfterJoining WhenDidCurrentInspectionHappen => DateAcademyJoinedTrust.GetBeforeOrAfterJoiningTrust(CurrentOfstedRating?.InspectionDate);
 
-    public BeforeOrAfterJoining WhenDidPreviousInspectionHappen => DateAcademyJoinedTrust.GetBeforeOrAfterJoiningTrust(PreviousOfstedRating.InspectionDate);
+    public BeforeOrAfterJoining WhenDidPreviousInspectionHappen => DateAcademyJoinedTrust.GetBeforeOrAfterJoiningTrust(PreviousOfstedRating?.InspectionDate);
 }
