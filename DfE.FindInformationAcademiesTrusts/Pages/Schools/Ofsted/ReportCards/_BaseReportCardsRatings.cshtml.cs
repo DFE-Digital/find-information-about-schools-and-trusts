@@ -27,7 +27,7 @@ public abstract class BaseReportCardsRatingsModel(
 
     public ReportCardDetails? ReportCard { get; set; }
 
-    public BeforeOrAfterJoining WhenDidCurrentInspectionHappen;
+    public BeforeOrAfterJoining WhenDidCurrentInspectionHappen { get; private set; }
 
     public override async Task<IActionResult> OnGetAsync()
     {
