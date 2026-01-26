@@ -30,7 +30,7 @@ export class TestDataStore {
                 pageName: "Ofsted",
                 subpages: [
                     { subpageName: "Single headline grades", url: `/trusts/ofsted/single-headline-grades?uid=${uid}` },
-                    { subpageName: "Current ratings", url: `/trusts/ofsted/current-ratings?uid=${uid}` },
+                    { subpageName: "Report card", url: `/trusts/ofsted/reportcards/currentreportcards?uid=${uid}` },
                     { subpageName: "Previous ratings", url: `/trusts/ofsted/previous-ratings?uid=${uid}` },
                     { subpageName: "Safeguarding and concerns", url: `/trusts/ofsted/safeguarding-and-concerns?uid=${uid}` }
                 ]
@@ -68,8 +68,8 @@ export class TestDataStore {
             {
                 pageName: "Ofsted",
                 subpages: [
-                    { subpageName: "Single headline grades", url: `/schools/ofsted/singleheadlinegrades?urn=${urn}` },
-                    { subpageName: "Current ratings", url: `/schools/ofsted/currentratings?urn=${urn}` },
+                    { subpageName: "Overview", url: `/schools/ofsted/overview?urn=${urn}` },
+                    { subpageName: "Report card", url: `/schools/ofsted/reportcards/currentreportcards?urn=${urn}` },
                     { subpageName: "Previous ratings", url: `/schools/ofsted/previousratings?urn=${urn}` },
                     { subpageName: "Safeguarding and concerns", url: `/schools/ofsted/safeguardingandconcerns?urn=${urn}` }
                 ]
@@ -112,7 +112,7 @@ export class TestDataStore {
                 pageName: "Ofsted",
                 subpages: [
                     { subpageName: "Single headline grades", url: `/schools/ofsted/singleheadlinegrades?urn=${urn}` },
-                    { subpageName: "Current ratings", url: `/schools/ofsted/currentratings?urn=${urn}` },
+                    { subpageName: "Report card", url: `/schools/ofsted/reportcards/currentreportcards?urn=${urn}` },
                     { subpageName: "Previous ratings", url: `/schools/ofsted/previousratings?urn=${urn}` },
                     { subpageName: "Safeguarding and concerns", url: `/schools/ofsted/safeguardingandconcerns?urn=${urn}` }
                 ]

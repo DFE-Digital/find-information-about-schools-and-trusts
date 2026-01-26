@@ -7,7 +7,7 @@ describe("Testing the School Ofsted Previous ratings page", () => {
     describe("Basic page functionality and navigation", () => {
         testSchoolData.forEach(({ typeOfSchool, urn }) => {
             beforeEach(() => {
-                cy.visit(`/schools/ofsted/overview?urn=${urn}`);
+                cy.visit(`/schools/ofsted/reportcards/currentreportcards?urn=${urn}`);
             });
 
             it(`Checks the correct Ofsted current ratings subpage header is present for ${typeOfSchool}`, () => {
@@ -26,7 +26,7 @@ describe("Testing the School Ofsted Previous ratings page", () => {
         describe("Ratings data components and validation", () => {
         testSchoolData.forEach(({ typeOfSchool, urn }) => {
             beforeEach(() => {
-                cy.visit(`/schools/ofsted/overview?urn=${urn}`);
+                cy.visit(`/schools/ofsted/reportcards/currentreportcards?urn=${urn}`);
             });
 
             it(`Checks that the quality of education section is present for ${typeOfSchool}`, () => {
@@ -66,7 +66,7 @@ describe("Testing the School Ofsted Previous ratings page", () => {
 
         if (academyData) {
             it(`Checks that the before or after joining row is present for ${academyData.typeOfSchool}`, () => {
-                cy.visit(`/schools/ofsted/currentratings?urn=${academyData.urn}`);
+                cy.visit(`/schools/ofsted/reportcards/currentreportcards?urn=${academyData.urn}`);
 
                 schoolOfstedRatingsPage
                     .checkBeforeOrAfterJoiningRowPresent();

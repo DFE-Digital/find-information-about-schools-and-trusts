@@ -1,7 +1,7 @@
 class SchoolOfstedRatingsPage {
 
     elements = {
-        subpageHeader: () => cy.get('[data-testid="subpage-header"]'),
+        subpageHeader: () => cy.get('[data-testid="govuk-heading-m"]'),
         downloadButton: () => cy.get('[data-testid="download-all-ofsted-data-button"]'),
         oftsedRatings: {
             table: () => cy.get('[data-testid="ofsted-inspection-table"]'),
@@ -16,7 +16,7 @@ class SchoolOfstedRatingsPage {
     };
 
     public checkOfstedCurrentRatingsPageHeaderPresent(): this {
-        this.elements.subpageHeader().should('contain', 'Report cards');
+        this.elements.subpageHeader().should('contain', 'Report card');
         return this;
     }
 

@@ -259,7 +259,7 @@ class OfstedPage {
     // #region Current ratings
 
     public checkOfstedCurrentRatingsPageHeaderPresent(): this {
-        this.elements.subpageHeader().should('contain', 'Current ratings');
+        this.elements.subpageHeader().should('contain', 'Report card');
         return this;
     }
 
