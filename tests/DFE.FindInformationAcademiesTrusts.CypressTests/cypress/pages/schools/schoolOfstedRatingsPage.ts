@@ -16,7 +16,7 @@ class SchoolOfstedRatingsPage {
     };
 
     public checkOfstedCurrentRatingsPageHeaderPresent(): this {
-        this.elements.subpageHeader().should('contain', 'Current ratings');
+        this.elements.subpageHeader().should('contain', 'Report cards');
         return this;
     }
 

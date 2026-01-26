@@ -63,7 +63,7 @@ class Navigation {
             historicGovernorsSubnavButton: () => cy.get('[data-testid="historic-governors-subnav"]'),
         },
         schoolsOfstedSubNav: {
-            currentOfstedSubnavButton: () => cy.get('[data-testid="ofsted-current-ratings-subnav"]'),
+            currentOfstedSubnavButton: () => cy.get('[data-testid="ofsted-report-cards-current-subnav"]'),
             previousOfstedSubnavButton: () => cy.get('[data-testid="ofsted-previous-ratings-subnav"]'),
             singleHeadlineGradeSubnavButton: () => cy.get('[data-testid="ofsted-single-headline-grades-subnav"]'),
             safeguardingAndConcernsSubnavButton: () => cy.get('[data-testid="ofsted-safeguarding-and-concerns-subnav"]'),
