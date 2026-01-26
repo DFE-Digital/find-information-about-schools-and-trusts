@@ -92,8 +92,8 @@
              @(academy.HasRecentShortInspection ? "Yes" : "No")
          }
         </td>
-       @*  <partial name="_SingleHeadlineGradeCells" model="new SingleHeadlineGradeCellsModel(academy.CurrentOfstedRating, academy.WhenDidCurrentInspectionHappen, true)"/>
-        <partial name="_SingleHeadlineGradeCells" model="new SingleHeadlineGradeCellsModel(academy.PreviousOfstedRating, academy.WhenDidPreviousInspectionHappen, false)"/> *@
+       <partial name="_SingleHeadlineGradeCells" model="new SingleHeadlineGradeCellsModel(academy.CurrentOfstedRating!, academy.WhenDidCurrentInspectionHappen, true)"/>
+        <partial name="_SingleHeadlineGradeCells" model="new SingleHeadlineGradeCellsModel(academy.PreviousOfstedRating!, academy.WhenDidPreviousInspectionHappen, false)"/>
       </tr>
     }
     </tbody>

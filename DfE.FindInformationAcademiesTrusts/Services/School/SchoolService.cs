@@ -108,10 +108,13 @@ public class SchoolService(
 
     public async Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn)
     {
-        // Get the number of days in the given month/year
-        int lastDay = DateTime.DaysInMonth(2024, 08);
+        int cutoffMonth = 8;
+        int cutoffYear = 2024;
 
-        DateTime cutOffDate = new(2024, 08, lastDay, 23, 59, 59);
+        // Get the number of days in the given month/year
+        int lastDay = DateTime.DaysInMonth(cutoffYear, cutoffMonth);
+
+        DateTime cutOffDate = new(cutoffYear, cutoffMonth, lastDay, 23, 59, 59, DateTimeKind.Unspecified);
 
         var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
 

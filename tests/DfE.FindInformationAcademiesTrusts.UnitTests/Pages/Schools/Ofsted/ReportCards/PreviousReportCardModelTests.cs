@@ -38,7 +38,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted.Repo
         {
             var expectedReportCard = new ReportCardDetails(new DateOnly(2025, 01, 20),
                 "https://ofsted.gov.uk/1", "Good", "Good", "Excellent", "Good", "Good", "Outstanding", null,
-                "Met");
+                "Met", "Good", "None");
 
             MockReportCardsService.GetReportCardsAsync(SchoolUrn)
                 .Returns(new ReportCardServiceModel

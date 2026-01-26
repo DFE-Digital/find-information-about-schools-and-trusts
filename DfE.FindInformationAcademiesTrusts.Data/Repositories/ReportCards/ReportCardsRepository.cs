@@ -42,7 +42,10 @@ namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.ReportCards
                 reportCardDto.LatestInclusion,
                 reportCardDto.LatestAchievement,
                 reportCardDto.LatestEarlyYearsProvision,
-                reportCardDto.LatestSafeguarding);
+                reportCardDto.LatestSafeguarding,
+                reportCardDto.LatestPost16Provision,
+                reportCardDto.LatestCategoryOfConcern
+                );
         }
 
         private EstablishmentReportCard? MapPreviousReportCard(ReportCardFullInspectionDto? reportCardDto)
@@ -62,7 +65,9 @@ namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.ReportCards
                 reportCardDto.PreviousInclusion,
                 reportCardDto.PreviousAchievement,
                 reportCardDto.PreviousEarlyYearsProvision,
-                reportCardDto.PreviousSafeguarding);
+                reportCardDto.PreviousSafeguarding,
+                reportCardDto.PreviousPost16Provision,
+                reportCardDto.PreviousCategoryOfConcern);
         }
 
         private DateOnly ParseDate(string dateString)

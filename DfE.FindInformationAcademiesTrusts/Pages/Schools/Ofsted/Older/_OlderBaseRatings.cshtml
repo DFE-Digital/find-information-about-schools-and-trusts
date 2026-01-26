@@ -11,7 +11,12 @@
             </h1>
 
             @await Html.PartialAsync("Schools/Ofsted/_InspectionDate", Model.OfstedRating.InspectionDate)
-            @await Html.PartialAsync("Schools/Ofsted/_SingleHeadlineGrade", Model.SingleHeadlineRating)
+            
+            @if (Model.GetType() == typeof(PreviousRatingsModel))
+            {
+                @await Html.PartialAsync("Schools/Ofsted/_SingleHeadlineGrade", Model.SingleHeadlineRating)
+            }
+            
             @await Html.PartialAsync("Schools/Ofsted/_InspectionBeforeOrAfter", Model.InspectionBeforeOrAfterJoiningTrust)
 
             <dl class="govuk-summary-list govuk-!-margin-bottom-0" data-testid="ratings-table">
