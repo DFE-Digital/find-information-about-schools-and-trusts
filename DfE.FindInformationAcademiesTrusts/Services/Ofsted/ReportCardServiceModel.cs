@@ -17,5 +17,7 @@
         string? Inclusion,
         string? Achievement,
         string? EarlyYearsProvision,
-        string? Safeguarding);
+        string? Safeguarding,
+        string? Post16Provision, 
+        string? CategoryOfConcern);
 }

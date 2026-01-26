@@ -28,9 +28,9 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             _mockReportCardsRepository.GetReportCardAsync(Urn)
                 .Returns((
                     new EstablishmentReportCard(new DateOnly(2025, 01, 20), "https://ofsted.gov.uk/1", "Good", "Good",
-                        "Excellent", "Good", "Good", "Outstanding", null, "Met"),
+                        "Excellent", "Good", "Good", "Outstanding", null, "Met", "Good", "None"),
                     new EstablishmentReportCard(new DateOnly(2023, 09, 18), "https://ofsted.gov.uk/2", "Good", "Good",
-                        "Excellent", "Good", "Good", "Outstanding", null, "Not Met")));
+                        "Excellent", "Good", "Good", "Outstanding", null, "Not Met", "Good", "None")));
 
             _mockSchoolRepository.GetDateJoinedTrustAsync(Urn)
                 .Returns(new DateOnly(2020, 01, 01));
@@ -59,7 +59,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
         {
             _mockReportCardsRepository.GetReportCardAsync(Urn).Returns((null,
                 new EstablishmentReportCard(new DateOnly(2025, 01, 20), "https://ofsted.gov.uk/1", "Good", "Good",
-                    "Excellent", "Good", "Good", "Outstanding", null, "Met")));
+                    "Excellent", "Good", "Good", "Outstanding", null, "Met", "Good", "None")));
 
             var result = await _sut.GetReportCardsAsync(Urn);
             result.LatestReportCard.Should().BeNull();
@@ -71,7 +71,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
         {
             _mockReportCardsRepository.GetReportCardAsync(Urn).Returns((
                 new EstablishmentReportCard(new DateOnly(2025, 01, 20), "https://ofsted.gov.uk/1", "Good", "Good",
-                    "Excellent", "Good", "Good", "Outstanding", null, "Met"), null));
+                    "Excellent", "Good", "Good", "Outstanding", null, "Met", "Good", "None"), null));
 
             var result = await _sut.GetReportCardsAsync(Urn);
             result.LatestReportCard.Should().NotBeNull();
@@ -86,7 +86,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 
             _mockReportCardsRepository.GetReportCardAsync(Urn).Returns((
                 new EstablishmentReportCard(new DateOnly(2025, 01, 20), "https://ofsted.gov.uk/1", "Good", "Good",
-                    "Excellent", "Good", "Good", "Outstanding", null, "Met"), null));
+                    "Excellent", "Good", "Good", "Outstanding", null, "Met", "Good", "None"), null));
 
             var result = await _sut.GetReportCardsAsync(Urn);
             result.LatestReportCard.Should().NotBeNull();
@@ -113,6 +113,8 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             reportCards.LatestReportCard.Achievement.Should().Be("Outstanding");
             reportCards.LatestReportCard.EarlyYearsProvision.Should().BeNull();
             reportCards.LatestReportCard.Safeguarding.Should().Be("Met");
+            reportCards.LatestReportCard.Post16Provision.Should().Be("Good");
+            reportCards.LatestReportCard.CategoryOfConcern.Should().Be("None");
 
             reportCards.PreviousReportCard!.InspectionDate.Should().Be(new DateOnly(2023, 09, 18));
             reportCards.PreviousReportCard.WebLink.Should().Be("https://ofsted.gov.uk/2");
@@ -124,7 +126,8 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             reportCards.PreviousReportCard.Achievement.Should().Be("Outstanding");
             reportCards.PreviousReportCard.EarlyYearsProvision.Should().BeNull();
             reportCards.PreviousReportCard.Safeguarding.Should().Be("Not Met");
-
+            reportCards.PreviousReportCard.Post16Provision.Should().Be("Good");
+            reportCards.PreviousReportCard.CategoryOfConcern.Should().Be("None");
         }
 
         [Fact]

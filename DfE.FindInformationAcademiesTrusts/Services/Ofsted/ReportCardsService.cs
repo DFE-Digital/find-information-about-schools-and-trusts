@@ -26,7 +26,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
             };
         }
 
-        private ReportCardDetails? MapToReportCardDetails(EstablishmentReportCard? reportCard)
+        private static ReportCardDetails? MapToReportCardDetails(EstablishmentReportCard? reportCard)
         {
             if (reportCard == null)
             {
@@ -43,7 +43,9 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
                 reportCard.Inclusion,
                 reportCard.Achievement,
                 reportCard.EarlyYearsProvision,
-                reportCard.Safeguarding
+                reportCard.Safeguarding,
+                reportCard.Post16Provision,
+                reportCard.CategoryOfConcern
             );
         }
     }

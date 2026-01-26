@@ -1,8 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
-using DfE.FindInformationAcademiesTrusts.Extensions;
-using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.Older;
-using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
@@ -27,7 +24,7 @@ public abstract class BaseReportCardsRatingsModel(
 
     public ReportCardDetails? ReportCard { get; set; }
 
-    public BeforeOrAfterJoining WhenDidCurrentInspectionHappen;
+    public BeforeOrAfterJoining WhenDidCurrentInspectionHappen { get; private set; }
 
     public override async Task<IActionResult> OnGetAsync()
     {

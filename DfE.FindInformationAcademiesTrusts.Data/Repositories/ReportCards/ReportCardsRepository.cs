@@ -25,7 +25,7 @@ namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.ReportCards
             return (null, null);
         }
 
-        private EstablishmentReportCard? MapLatestReportCard(ReportCardFullInspectionDto? reportCardDto)
+        private static EstablishmentReportCard? MapLatestReportCard(ReportCardFullInspectionDto? reportCardDto)
         {
             if(reportCardDto?.LatestInspectionDate is null)
             {
@@ -42,10 +42,13 @@ namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.ReportCards
                 reportCardDto.LatestInclusion,
                 reportCardDto.LatestAchievement,
                 reportCardDto.LatestEarlyYearsProvision,
-                reportCardDto.LatestSafeguarding);
+                reportCardDto.LatestSafeguarding,
+                reportCardDto.LatestPost16Provision,
+                reportCardDto.LatestCategoryOfConcern
+                );
         }
 
-        private EstablishmentReportCard? MapPreviousReportCard(ReportCardFullInspectionDto? reportCardDto)
+        private static EstablishmentReportCard? MapPreviousReportCard(ReportCardFullInspectionDto? reportCardDto)
         {
             if (reportCardDto?.PreviousInspectionDate is null)
             {
@@ -62,10 +65,12 @@ namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.ReportCards
                 reportCardDto.PreviousInclusion,
                 reportCardDto.PreviousAchievement,
                 reportCardDto.PreviousEarlyYearsProvision,
-                reportCardDto.PreviousSafeguarding);
+                reportCardDto.PreviousSafeguarding,
+                reportCardDto.PreviousPost16Provision,
+                reportCardDto.PreviousCategoryOfConcern);
         }
 
-        private DateOnly ParseDate(string dateString)
+        private static DateOnly ParseDate(string dateString)
         {
             return DateOnly.ParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture);
         }
