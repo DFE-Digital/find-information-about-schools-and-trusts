@@ -328,7 +328,7 @@ public class SchoolServiceTests
     [InlineData("2024-09-01", "2024-08-31", true, true, "2024-09-01", "2024-08-31")]
     [InlineData("2024-09-01", "2024-10-01", true, false, "2024-10-01", "2000-01-01")]
     [InlineData("2024-08-31", "2024-08-01", false, true, "2000-01-01", "2024-08-31")]
-    [InlineData("2024-08-01", "2024-08-30", false, true, "2000-01-01", "2024-08-30")]
+    [InlineData("2024-08-01", "2024-08-31", false, true, "2000-01-01", "2024-08-31")]
     public async Task GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync_Should_ReturnCorrectData(DateTime currentInspectionDate, DateTime previousInspectionDate, bool shouldReturnCurrent, bool shouldReturnPrevious, DateTime expectedCurrentInspectionDate, DateTime expectedPreviousInspectionDate)
     {
         const int urn = 123456;

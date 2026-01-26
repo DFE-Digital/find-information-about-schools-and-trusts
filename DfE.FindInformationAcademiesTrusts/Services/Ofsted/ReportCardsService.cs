@@ -43,7 +43,9 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
                 reportCard.Inclusion,
                 reportCard.Achievement,
                 reportCard.EarlyYearsProvision,
-                reportCard.Safeguarding
+                reportCard.Safeguarding,
+                reportCard.Post16Provision,
+                reportCard.CategoryOfConcern
             );
         }
     }
