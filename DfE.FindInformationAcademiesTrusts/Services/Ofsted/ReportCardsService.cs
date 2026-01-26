@@ -26,7 +26,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
             };
         }
 
-        private ReportCardDetails? MapToReportCardDetails(EstablishmentReportCard? reportCard)
+        private static ReportCardDetails? MapToReportCardDetails(EstablishmentReportCard? reportCard)
         {
             if (reportCard == null)
             {
