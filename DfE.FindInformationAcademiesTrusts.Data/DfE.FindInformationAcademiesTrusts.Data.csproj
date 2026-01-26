@@ -11,8 +11,4 @@
       <PackageReference Include="Dfe.AcademiesApi.Client" Version="1.0.14" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Services\" />
-    </ItemGroup>
-
 </Project>
