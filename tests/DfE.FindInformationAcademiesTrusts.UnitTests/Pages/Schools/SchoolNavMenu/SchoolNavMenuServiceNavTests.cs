@@ -3,6 +3,8 @@ using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.Older;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.ReportCards;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Pupils;
 
@@ -92,7 +94,7 @@ public class SchoolNavMenuServiceNavTests : SchoolNavMenuTestsBase
             l =>
             {
                 l.LinkDisplayText.Should().Be("Ofsted");
-                l.AspPage.Should().Be("/Schools/Ofsted/SingleHeadlineGrades");
+                l.AspPage.Should().Be("/Schools/Ofsted/OfstedOverview");
                 l.TestId.Should().Be("ofsted-nav");
             }
         );
@@ -135,7 +137,7 @@ public class SchoolNavMenuServiceNavTests : SchoolNavMenuTestsBase
             l =>
             {
                 l.LinkDisplayText.Should().Be("Ofsted");
-                l.AspPage.Should().Be("/Schools/Ofsted/SingleHeadlineGrades");
+                l.AspPage.Should().Be("/Schools/Ofsted/OfstedOverview");
                 l.TestId.Should().Be("ofsted-nav");
             }
         );
@@ -189,10 +191,11 @@ public class SchoolNavMenuServiceNavTests : SchoolNavMenuTestsBase
             nameof(AttendanceModel) => "/Schools/Pupils/Population",
             nameof(CurrentModel) => "/Schools/Governance/Current",
             nameof(HistoricModel) => "/Schools/Governance/Current",
-            nameof(SingleHeadlineGradesModel) => "/Schools/Ofsted/SingleHeadlineGrades",
-            nameof(CurrentRatingsModel) => "/Schools/Ofsted/SingleHeadlineGrades",
-            nameof(PreviousRatingsModel) => "/Schools/Ofsted/SingleHeadlineGrades",
-            nameof(SafeguardingAndConcernsModel) => "/Schools/Ofsted/SafeguardingAndConcerns",
+            nameof(OfstedOverviewModel) => "/Schools/Ofsted/OfstedOverview",
+            nameof(CurrentRatingsModel) => "/Schools/Ofsted/OfstedOverview",
+            nameof(PreviousRatingsModel) => "/Schools/Ofsted/OfstedOverview",
+            nameof(CurrentReportCardsModel) => "/Schools/Ofsted/OfstedOverview",
+            nameof(PreviousReportCardsModel) => "/Schools/Ofsted/OfstedOverview",
             _ => throw new ArgumentException("Couldn't get expected service nav asp link for given page type",
                 nameof(pageType))
         };

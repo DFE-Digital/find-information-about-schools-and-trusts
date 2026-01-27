@@ -3,7 +3,6 @@ using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
-using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using Microsoft.AspNetCore.Mvc;
@@ -128,37 +127,49 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
             .Be("Ofsted-School name with invalid characters-2025-07-01.xlsx");
     }
 
+    [Fact]
+    public async Task OnGetAsync_should_populate_TabList_to_tabs()
+    {
+        _ = await Sut.OnGetAsync();
+
+        Sut.TabList.Should()
+            .SatisfyRespectively(
+                l =>
+                {
+                    l.LinkDisplayText.Should().Be("After September 2024");
+                    l.AspPage.Should().Be("./CurrentRatings");
+                    l.TestId.Should().Be("older-after-september-2024-tab");
+                },
+                l =>
+                {
+                    l.LinkDisplayText.Should().Be("Before September 2024");
+                    l.AspPage.Should().Be("./PreviousRatings");
+                    l.TestId.Should().Be("older-before-september-2024-tab");
+                });
+    }
+
     private async Task VerifyCorrectDataSources(int urn)
     {
         Sut.Urn = urn;
 
         _ = await Sut.OnGetAsync();
+        await MockDataSourceService.Received(1).GetAsync(Source.Gias);
         await MockDataSourceService.Received(1).GetAsync(Source.Mis);
-        await MockDataSourceService.Received(1).GetAsync(Source.MisFurtherEducation);
 
-        List<DataSourceServiceModel> expectedDataSources =
-        [
-            Mocks.MockDataSourceService.Mis,
-            Mocks.MockDataSourceService.MisFurtherEducation
-        ];
 
         Sut.DataSourcesPerPage.Should().BeEquivalentTo([
-            new DataSourcePageListEntry("Single headline grades", [
-                new DataSourceListEntry(expectedDataSources, "Single headline grades were"),
-                new DataSourceListEntry(expectedDataSources, "All inspection dates were")
+            new DataSourcePageListEntry("Overview", [
+                new DataSourceListEntry(Mocks.MockDataSourceService.Gias, "Date joined trust"),
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "All inspection types"),
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "All inspection dates")
             ]),
-            new DataSourcePageListEntry("Current ratings", [
-                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Current Ofsted rating"),
-                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Date of current inspection"),
+            new DataSourcePageListEntry("Report cards", [
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Current report card ratings"),
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Previous report card ratings")
             ]),
-            new DataSourcePageListEntry("Previous ratings", [
-                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Previous Ofsted rating"),
-                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Date of previous inspection")
-            ]),
-            new DataSourcePageListEntry("Safeguarding and concerns", [
-                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Effective safeguarding"),
-                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Category of concern"),
-                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Date of current inspection")
+            new DataSourcePageListEntry("Older inspections (before November 2025)", [
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Inspection ratings after September 24"),
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Inspection ratings before September 24")
             ])
         ]);
     }

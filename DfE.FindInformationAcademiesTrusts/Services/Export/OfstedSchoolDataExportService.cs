@@ -63,8 +63,16 @@ public class OfstedSchoolDataExportService(ISchoolService schoolService, ISchool
             };
             WriteRecentShortInspectionRow(ofstedRatings.ShortInspection, whenDidShortInspectionHappen);
         }
-        WriteFullInspectionRow(ofstedRatings.CurrentOfstedRating, true, ofstedRatings.WhenDidCurrentInspectionHappen);
-        WriteFullInspectionRow(ofstedRatings.PreviousOfstedRating, false, ofstedRatings.WhenDidPreviousInspectionHappen);
+
+        if (ofstedRatings.CurrentOfstedRating is not null)
+        {
+            WriteFullInspectionRow(ofstedRatings.CurrentOfstedRating, true, ofstedRatings.WhenDidCurrentInspectionHappen);
+        }
+
+        if (ofstedRatings.PreviousOfstedRating is not null)
+        {
+            WriteFullInspectionRow(ofstedRatings.PreviousOfstedRating, false, ofstedRatings.WhenDidPreviousInspectionHappen);
+        }
     }
 
     private void WriteRecentShortInspectionRow(OfstedShortInspection shortInspection, BeforeOrAfterJoining beforeOrAfterJoiningTrust)

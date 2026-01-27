@@ -5,6 +5,8 @@ using DfE.FindInformationAcademiesTrusts.Pages.Schools;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.Older;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.ReportCards;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Pupils;
 using DfE.FindInformationAcademiesTrusts.Services.School;
@@ -57,10 +59,11 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             nameof(AttendanceModel) => "Pupils",
             nameof(CurrentModel) => "Governance",
             nameof(HistoricModel) => "Governance",
-            nameof(SingleHeadlineGradesModel) => "Ofsted",
+            nameof(OfstedOverviewModel) => "Ofsted",
             nameof(CurrentRatingsModel) => "Ofsted",
             nameof(PreviousRatingsModel) => "Ofsted",
-            nameof(SafeguardingAndConcernsModel) => "Ofsted",
+            nameof(CurrentReportCardsModel) => "Ofsted",
+            nameof(PreviousReportCardsModel) => "Ofsted",
             _ => throw new ArgumentException("Couldn't get expected name for given page type", nameof(pageType))
         };
     }
@@ -109,11 +112,12 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             nameof(AttendanceModel) => "/Schools/Pupils/Attendance",
             nameof(CurrentModel) => "/Schools/Governance/Current",
             nameof(HistoricModel) => "/Schools/Governance/Historic",
-            nameof(SingleHeadlineGradesModel) => "/Schools/Ofsted/SingleHeadlineGrades",
-            nameof(CurrentRatingsModel) => "/Schools/Ofsted/CurrentRatings",
-            nameof(PreviousRatingsModel) => "/Schools/Ofsted/PreviousRatings",
+            nameof(OfstedOverviewModel) => "/Schools/Ofsted/OfstedOverview",
+            nameof(CurrentReportCardsModel)=> "/Schools/Ofsted/ReportCards/CurrentReportCards",
+            nameof(PreviousReportCardsModel) => "/Schools/Ofsted/ReportCards/CurrentReportCards",
             nameof(ReligiousCharacteristicsModel) => "/Schools/Overview/ReligiousCharacteristics",
-            nameof(SafeguardingAndConcernsModel) => "/Schools/Ofsted/SafeguardingAndConcerns",
+            nameof(CurrentRatingsModel) => "/Schools/Ofsted/Older/CurrentRatings",
+            nameof(PreviousRatingsModel) => "/Schools/Ofsted/Older/CurrentRatings",
             _ => throw new ArgumentException("Couldn't get expected sub page nav asp link for given page type",
                 nameof(pageType))
         };
