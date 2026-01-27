@@ -18,80 +18,32 @@
             }
             
             @await Html.PartialAsync("Schools/Ofsted/_InspectionBeforeOrAfter", Model.InspectionBeforeOrAfterJoiningTrust)
+            @{
+                var ratings = new List<(string TestId, string Label, string Value)>
+                {
+                    ("quality-of-education-row", "Quality of education", Model.OfstedRating.QualityOfEducation.ToDisplayString(false)),
+                    ("behaviour-and-attitudes-row", "Behaviour and attitudes", Model.OfstedRating.BehaviourAndAttitudes.ToDisplayString(false)),
+                    ("personal-development-row", "Personal development", Model.OfstedRating.PersonalDevelopment.ToDisplayString(false)),
+                    ("leadership-and-management-row", "Leadership and management", Model.OfstedRating.EffectivenessOfLeadershipAndManagement.ToDisplayString(false)),
+                    ("early-years-provision-row", "Early years provision", Model.OfstedRating.EarlyYearsProvision.ToDisplayString(false)),
+                    ("sixth-form-provision-row", "Sixth form provision", Model.OfstedRating.SixthFormProvision.ToDisplayString(false)),
+                    ("effective-safeguarding-row", "Effective safeguarding", Model.OfstedRating.SafeguardingIsEffective.ToDisplayString()),
+                    ("category-of-concern-row", "Category of concern", Model.OfstedRating.CategoryOfConcern.ToDisplayString())
+                };
+            }
 
             <dl class="govuk-summary-list govuk-!-margin-bottom-0" data-testid="ratings-table">
-                <div class="govuk-summary-list__row" data-testid="quality-of-education-row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Quality of education
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.OfstedRating.QualityOfEducation.ToDisplayString(false)
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row" data-testid="behaviour-and-attitudes-row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Behaviour and attitudes
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.OfstedRating.BehaviourAndAttitudes.ToDisplayString(false)
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row" data-testid="personal-development-row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Personal development
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.OfstedRating.PersonalDevelopment.ToDisplayString(false)
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row" data-testid="leadership-and-management-row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Leadership and management
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.OfstedRating.EffectivenessOfLeadershipAndManagement.ToDisplayString(false)
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row" data-testid="early-years-provision-row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Early years provision
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.OfstedRating.EarlyYearsProvision.ToDisplayString(false)
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row" data-testid="sixth-form-provision-row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Sixth form provision
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.OfstedRating.SixthFormProvision.ToDisplayString(false)
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row" data-testid="effective-safeguarding-row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half" data-testid="effective-safeguarding-label">
-                        Effective safeguarding
-                    </dt>
-                    <dd class="govuk-summary-list__value" data-testid="effective-safeguarding-value">
-                        @Model.OfstedRating.SafeguardingIsEffective.ToDisplayString()
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row" data-testid="category-of-concern-row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half" data-testid="category-of-concern-label">
-                        Category of concern
-                    </dt>
-                    <dd class="govuk-summary-list__value" data-testid="category-of-concern-value">
-                        @Model.OfstedRating.CategoryOfConcern.ToDisplayString()
-                    </dd>
-                </div>
-
+                @foreach (var rating in ratings)
+                {
+                    <div class="govuk-summary-list__row" data-testid="@rating.TestId">
+                        <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                            @rating.Label
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @rating.Value
+                        </dd>
+                    </div>
+                }
             </dl>
         </div>
     </div>
