@@ -1,3 +1,4 @@
+@using DfE.FindInformationAcademiesTrusts.Extensions
 @model BaseReportCardsRatingsModel
 
 
@@ -13,99 +14,20 @@
             @await Html.PartialAsync("Schools/Ofsted/_InspectionBeforeOrAfter", Model.WhenDidCurrentInspectionHappen)
 
             <dl class="govuk-summary-list">
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Leadership and Governance
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.ReportCard.LeadershipAndGovernance
-                    </dd>
-                </div>
 
+                @foreach (var reportCardItem in Model.ReportCard.ToDictionary())
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                            @reportCardItem.Key
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @reportCardItem.Value
+                        </dd>
+                    </div>
+                }
 
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Personal Development and Wellbeing
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.ReportCard.PersonalDevelopmentAndWellBeing
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Curriculum and Teaching
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.ReportCard.CurriculumAndTeaching
-                    </dd>
-                </div>
-
-
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Inclusion
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.ReportCard.Inclusion
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Achievement
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.ReportCard.Achievement
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Attendance and Behaviour
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.ReportCard.AttendanceAndBehaviour
-                    </dd>
-                </div>
-
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Early Years Provision
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.ReportCard.EarlyYearsProvision
-                    </dd>
-                </div>
-                
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Safeguarding
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.ReportCard.Safeguarding
-                    </dd>
-                </div>
-                
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Post 16 Provision
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.ReportCard.Post16Provision
-                    </dd>
-                </div>
-                
-                <div class="govuk-summary-list__row">
-                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                        Category of Concern
-                    </dt>
-                    <dd class="govuk-summary-list__value">
-                        @Model.ReportCard.CategoryOfConcern
-                    </dd>
-                </div>
             </dl>
-
         </div>
     </div>
 }

@@ -83,25 +83,25 @@ public abstract class BaseReportCardsOfstedAreaModelTests<T> : BaseSchoolPageTes
         Sut.DateJoinedTrust.Should().BeNull();
     }
 
-    //[Fact]
-    //public async Task OnGetASync_sets_correct_OfstedReportUrl_for_school()
-    //{
-    //    Sut.Urn = SchoolUrn;
+    [Fact]
+    public async Task OnGetASync_sets_correct_OfstedReportUrl_for_school()
+    {
+        Sut.Urn = SchoolUrn;
 
-    //    _ = await Sut.OnGetAsync();
+        _ = await Sut.OnGetAsync();
 
-    //    Sut.OfstedReportUrl.Should().Be($"https://reports.ofsted.gov.uk/test/{SchoolUrn}");
-    //}
+        Sut.OfstedReportUrl.Should().Be($"https://reports.ofsted.gov.uk/test/{SchoolUrn}");
+    }
 
-    //[Fact]
-    //public async Task OnGetASync_sets_correct_OfstedReportUrl_for_academy()
-    //{
-    //    Sut.Urn = AcademyUrn;
+    [Fact]
+    public async Task OnGetASync_sets_correct_OfstedReportUrl_for_academy()
+    {
+        Sut.Urn = AcademyUrn;
 
-    //    _ = await Sut.OnGetAsync();
+        _ = await Sut.OnGetAsync();
 
-    //    Sut.OfstedReportUrl.Should().Be($"https://reports.ofsted.gov.uk/test/{AcademyUrn}");
-    //}
+        Sut.OfstedReportUrl.Should().Be($"https://reports.ofsted.gov.uk/test/{AcademyUrn}");
+    }
 
     [Fact]
     public async Task OnGetExportAsync_returns_NotFoundResult_for_unknown_urn()
@@ -111,27 +111,27 @@ public abstract class BaseReportCardsOfstedAreaModelTests<T> : BaseSchoolPageTes
         result.Should().BeOfType<NotFoundResult>();
     }
 
-    //[Fact]
-    //public async Task OnGetExportAsync_returns_expected_file()
-    //{
-    //    var result = await Sut.OnGetExportAsync(SchoolUrn);
+    [Fact]
+    public async Task OnGetExportAsync_returns_expected_file()
+    {
+        var result = await Sut.OnGetExportAsync(SchoolUrn);
 
-    //    result.Should().BeOfType<FileContentResult>();
-    //    result.As<FileContentResult>().FileDownloadName.Should().Be("Ofsted-Cool school-2025-07-01.xlsx");
-    //}
+        result.Should().BeOfType<FileContentResult>();
+        result.As<FileContentResult>().FileDownloadName.Should().Be("Ofsted-Cool school-2025-07-01.xlsx");
+    }
 
-    //[Fact]
-    //public async Task OnGetExportAsync_sanitises_school_name_for_file()
-    //{
-    //    MockSchoolService.GetSchoolSummaryAsync(SchoolUrn)
-    //        .Returns(DummySchoolSummary with { Name = "  School name with invalid characters\0/ " });
+    [Fact]
+    public async Task OnGetExportAsync_sanitises_school_name_for_file()
+    {
+        MockSchoolService.GetSchoolSummaryAsync(SchoolUrn)
+            .Returns(DummySchoolSummary with { Name = "  School name with invalid characters\0/ " });
 
-    //    var result = await Sut.OnGetExportAsync(SchoolUrn);
+        var result = await Sut.OnGetExportAsync(SchoolUrn);
 
-    //    result.Should().BeOfType<FileContentResult>();
-    //    result.As<FileContentResult>().FileDownloadName.Should()
-    //        .Be("Ofsted-School name with invalid characters-2025-07-01.xlsx");
-    //}
+        result.Should().BeOfType<FileContentResult>();
+        result.As<FileContentResult>().FileDownloadName.Should()
+            .Be("Ofsted-School name with invalid characters-2025-07-01.xlsx");
+    }
 
     [Fact]
     public async Task OnGetAsync_should_populate_TabList_to_tabs()
