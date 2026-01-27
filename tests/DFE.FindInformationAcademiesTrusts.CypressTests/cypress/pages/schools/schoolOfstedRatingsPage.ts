@@ -1,7 +1,7 @@
 class SchoolOfstedRatingsPage {
 
     elements = {
-        subpageHeader: () => cy.get('[data-testid="govuk-heading-m"]'),
+        subpageHeader: () => cy.get('[data-testid="govuk-heading-m"]'),// ask for test data id (there 3)
         downloadButton: () => cy.get('[data-testid="download-all-ofsted-data-button"]'),
         oftsedRatings: {
             table: () => cy.get('[data-testid="ofsted-inspection-table"]'),
