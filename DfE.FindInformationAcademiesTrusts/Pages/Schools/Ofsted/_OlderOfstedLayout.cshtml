@@ -3,7 +3,9 @@
     Layout = "_SchoolLayout";
 }
 
-<h3 class="govuk-heading-m">@Model.PageMetadata.SubPageName</h3>
+<h3 class="govuk-heading-m" data-testid="subpage-header">
+    @Model.PageMetadata.SubPageName
+</h3>
 
 <details class="govuk-details">
     <summary class="govuk-details__summary">

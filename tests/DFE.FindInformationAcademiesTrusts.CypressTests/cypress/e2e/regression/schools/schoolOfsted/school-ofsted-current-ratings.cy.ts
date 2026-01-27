@@ -7,10 +7,10 @@ describe("Testing the School Ofsted Previous ratings page", () => {
     describe("Basic page functionality and navigation", () => {
         testSchoolData.forEach(({ typeOfSchool, urn }) => {
             beforeEach(() => {
-                cy.visit(`/schools/ofsted/currentratings?urn=${urn}`);
+                cy.visit(`/schools/ofsted/reportcards/currentreportcards?urn=${urn}`);
             });
 
-            it(`Checks the correct Ofsted current ratings subpage header is present for ${typeOfSchool}`, () => {
+            it(`Checks the correct report card subpage header is present for ${typeOfSchool}`, () => {
                 schoolOfstedRatingsPage
                     .checkOfstedCurrentRatingsPageHeaderPresent();
             });
@@ -26,7 +26,7 @@ describe("Testing the School Ofsted Previous ratings page", () => {
         describe("Ratings data components and validation", () => {
         testSchoolData.forEach(({ typeOfSchool, urn }) => {
             beforeEach(() => {
-                cy.visit(`/schools/ofsted/currentratings?urn=${urn}`);
+                cy.visit(`/schools/ofsted/reportcards/currentreportcards?urn=${urn}`);
             });
 
             it(`Checks that the quality of education section is present for ${typeOfSchool}`, () => {
