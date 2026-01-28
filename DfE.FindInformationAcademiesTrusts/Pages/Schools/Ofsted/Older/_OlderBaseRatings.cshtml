@@ -21,13 +21,14 @@
             @{
                 var ratings = new List<(string TestId, string Label, string Value)>
                 {
+            //test id need adding. effective-safeguarding-label isn't working. 
                     ("quality-of-education-row", "Quality of education", Model.OfstedRating.QualityOfEducation.ToDisplayString(false)),
                     ("behaviour-and-attitudes-row", "Behaviour and attitudes", Model.OfstedRating.BehaviourAndAttitudes.ToDisplayString(false)),
                     ("personal-development-row", "Personal development", Model.OfstedRating.PersonalDevelopment.ToDisplayString(false)),
                     ("leadership-and-management-row", "Leadership and management", Model.OfstedRating.EffectivenessOfLeadershipAndManagement.ToDisplayString(false)),
                     ("early-years-provision-row", "Early years provision", Model.OfstedRating.EarlyYearsProvision.ToDisplayString(false)),
                     ("sixth-form-provision-row", "Sixth form provision", Model.OfstedRating.SixthFormProvision.ToDisplayString(false)),
-                    ("effective-safeguarding-row", "Effective safeguarding", Model.OfstedRating.SafeguardingIsEffective.ToDisplayString()),
+                    ("effective-safeguarding-label", "Effective safeguarding", Model.OfstedRating.SafeguardingIsEffective.ToDisplayString()),
                     ("category-of-concern-row", "Category of concern", Model.OfstedRating.CategoryOfConcern.ToDisplayString())
                 };
             }

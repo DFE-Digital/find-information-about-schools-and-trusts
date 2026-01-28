@@ -225,10 +225,6 @@ class SchoolOfstedPage {
     /**
      * Checks that the safeguarding and concerns page header is present
      */
-    public checkOfstedSafeguardingAndConcernsPageHeaderPresent(): this {
-        this.elements.subpageHeader().should('contain', 'Safeguarding and concerns');
-        return this;
-    }
 
     /**
      * Checks that the safeguarding and concerns summary list is visible

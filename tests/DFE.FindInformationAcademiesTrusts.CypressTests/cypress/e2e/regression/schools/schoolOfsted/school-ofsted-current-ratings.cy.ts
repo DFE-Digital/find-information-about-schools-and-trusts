@@ -1,6 +1,7 @@
 import navigation from "../../../../pages/navigation";
 import schoolOfstedRatingsPage from "../../../../pages/schools/schoolOfstedRatingsPage";
 import { testSchoolData } from "../../../../support/test-data-store";
+// Pointed url currently to older inspections but when reports work done. point to that url
 
 describe("Testing the School Ofsted Previous ratings page", () => {
 
@@ -12,7 +13,7 @@ describe("Testing the School Ofsted Previous ratings page", () => {
 
             it(`Checks the correct report card subpage header is present for ${typeOfSchool}`, () => {
                 schoolOfstedRatingsPage
-                    .checkOfstedCurrentRatingsPageHeaderPresent();
+                    .checkReportCardHeaderPresent();
             });
 
             it(`Checks the breadcrumb shows the correct page name for ${typeOfSchool}`, () => {
