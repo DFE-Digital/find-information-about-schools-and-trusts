@@ -51,10 +51,17 @@
                     Pupil capacity (% full)
                 </dt>
                 <dd class="govuk-summary-list__value" data-testid="pupil-capacity">
-                    @($"{Model.TrustOverview.TotalCapacity:n0}")
-                    @if (Model.TrustOverview.PercentageFull is not null)
+                    @if (Model.TrustOverview.HasIncompleteCapacityData)
                     {
-                        @($"({Model.TrustOverview.PercentageFull}%)")
+                        <span>Not available</span>
+                    }
+                    else
+                    {
+                        @($"{Model.TrustOverview.TotalCapacity:n0}")
+                        @if (Model.TrustOverview.PercentageFull is not null)
+                        {
+                            @($"({Model.TrustOverview.PercentageFull}%)")
+                        }
                     }
                 </dd>
             </div>

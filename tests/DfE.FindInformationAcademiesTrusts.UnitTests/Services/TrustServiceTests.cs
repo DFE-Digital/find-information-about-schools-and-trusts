@@ -336,6 +336,7 @@ public class TrustServiceTests
 
         _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(uid).Returns(academiesOverview);
         _mockTrustRepository.GetTrustOverviewAsync(uid).Returns(BaseTrustOverview with { Uid = uid });
+        _mockTrustPupilService.GetTotalPupilCountForTrustAsync(uid).Returns(0);
 
         // Act
         var result = await _sut.GetTrustOverviewAsync(uid);
@@ -346,6 +347,29 @@ public class TrustServiceTests
         result.AcademiesByLocalAuthority.Should().BeEmpty();
         result.TotalPupilNumbers.Should().Be(0);
         result.TotalCapacity.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task GetTrustOverviewAsync_sets_HasIncompleteCapacityData_true_when_any_academy_missing_capacity()
+    {
+        // Arrange
+        var uid = "1234";
+        var academiesOverview = new AcademyOverview[]
+        {
+            new("1001", "LocalAuthorityA", null, 600),
+            new("1002", "LocalAuthorityB", null, null), // Missing capacity
+            new("1003", "LocalAuthorityA", null, 400)
+        };
+
+        _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(uid).Returns(Task.FromResult(academiesOverview));
+        _mockTrustRepository.GetTrustOverviewAsync(uid).Returns(Task.FromResult(BaseTrustOverview with { Uid = uid }));
+        _mockTrustPupilService.GetTotalPupilCountForTrustAsync(uid).Returns(1000);
+
+        // Act
+        var result = await _sut.GetTrustOverviewAsync(uid);
+
+        // Assert
+        result.HasIncompleteCapacityData.Should().BeTrue();
     }
 
     [Theory]

@@ -15,10 +15,11 @@ public record TrustOverviewServiceModel(
     int TotalAcademies,
     IReadOnlyDictionary<string, int> AcademiesByLocalAuthority,
     int TotalPupilNumbers,
-    int TotalCapacity)
+    int TotalCapacity,
+    bool HasIncompleteCapacityData)
 {
     public int? PercentageFull =>
-        TotalCapacity > 0
+        !HasIncompleteCapacityData && TotalCapacity > 0
             ? (int)Math.Round((double)TotalPupilNumbers / TotalCapacity * 100)
             : null;
 }
