@@ -7,7 +7,7 @@ describe("Testing the School Ofsted Single Headline Grades page", () => {
     describe("Basic page functionality and navigation", () => {
         testSchoolData.forEach(({ typeOfSchool, urn }) => {
             beforeEach(() => {
-                cy.visit(`/schools/ofsted/singleheadlinegrades?urn=${urn}`);
+                cy.visit(`/schools/ofsted/overview?urn=${urn}`);
             });
 
             it(`Checks the correct Ofsted single headline grades subpage header is present for ${typeOfSchool}`, () => {
@@ -30,7 +30,7 @@ describe("Testing the School Ofsted Single Headline Grades page", () => {
     describe("Inspection data components and validation", () => {
         testSchoolData.forEach(({ typeOfSchool, urn }) => {
             beforeEach(() => {
-                cy.visit(`/schools/ofsted/singleheadlinegrades?urn=${urn}`);
+                cy.visit(`/schools/ofsted/overview?urn=${urn}`);
             });
 
             it(`Checks that the current full inspection section is present for ${typeOfSchool}`, () => {
@@ -64,7 +64,7 @@ describe("Testing the School Ofsted Single Headline Grades page", () => {
     describe("Details sections and interactive elements", () => {
         testSchoolData.forEach(({ typeOfSchool, urn }) => {
             beforeEach(() => {
-                cy.visit(`/schools/ofsted/singleheadlinegrades?urn=${urn}`);
+                cy.visit(`/schools/ofsted/overview?urn=${urn}`);
             });
 
             it(`Checks that the 'Why single headline grade might not be available' details section is present for ${typeOfSchool}`, () => {
@@ -106,7 +106,7 @@ describe("Testing the School Ofsted Single Headline Grades page", () => {
 
         if (academyData) {
             it(`Checks that the academy joined trust text is present for ${academyData.typeOfSchool}`, () => {
-                cy.visit(`/schools/ofsted/singleheadlinegrades?urn=${academyData.urn}`);
+                cy.visit(`/schools/ofsted/overview?urn=${academyData.urn}`);
 
                 schoolOfstedPage
                     .checkJoinedTrustTextPresent();
@@ -118,7 +118,7 @@ describe("Testing the School Ofsted Single Headline Grades page", () => {
     testSchoolData.forEach(({ typeOfSchool, urn, schoolOrAcademy }) => {
         describe(`Testing data validation for ${typeOfSchool} (${schoolOrAcademy})`, () => {
             beforeEach(() => {
-                cy.visit(`/schools/ofsted/singleheadlinegrades?urn=${urn}`);
+                cy.visit(`/schools/ofsted/overview?urn=${urn}`);
             });
 
             it(`Should handle 'Not available' data states appropriately for ${typeOfSchool}`, () => {
