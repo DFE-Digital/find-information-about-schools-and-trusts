@@ -42,7 +42,7 @@ class SchoolOfstedPage {
             categoryOfConcernLabel: () => cy.get('[data-testid="category-of-concern-label"]'),
             categoryOfConcernValue: () => cy.get('[data-testid="category-of-concern-value"]'),
             // Before or after joining (academy-specific)
-            beforeOrAfterJoiningRow: () => cy.get('[data-testid="before-or-after-joining-row"]'),
+            beforeOrAfterJoiningRow: () => cy.get('[data-testid="before-or-after-joining"]'),
             beforeOrAfterJoiningLabel: () => cy.get('[data-testid="before-or-after-joining-label"]'),
             beforeOrAfterJoiningValue: () => cy.get('[data-testid="before-or-after-joining-value"]'),
         }

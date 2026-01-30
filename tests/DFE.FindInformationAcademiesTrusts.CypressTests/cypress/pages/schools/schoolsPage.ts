@@ -809,12 +809,12 @@ class SchoolsPage {
         return this;
     }
 
-    public checkSchoolOfstedCurrentRatingsSubHeaderPresent(): this {
-        this.elements.ofsted.ratings.subPageHeader().should('contain', 'Current ratings');
+    public checkSchoolReportCardSubHeaderPresent(): this {
+        this.elements.ofsted.ratings.subPageHeader().should('contain', 'Report Card');
         return this;
     }
 
-    public checkSchoolOfstedPreviousRatingsSubHeaderPresent(): this {
+    public checkrep(): this {
         this.elements.ofsted.ratings.subPageHeader().should('contain', 'Previous ratings');
         return this;
     }
