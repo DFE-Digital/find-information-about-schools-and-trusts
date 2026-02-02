@@ -1,0 +1,22 @@
+﻿@model DfE.FindInformationAcademiesTrusts.Services.School.ShortInspectionOverviewServiceModel?
+
+<tr class="govuk-table__row">
+    <td class="govuk-table__cell">
+        <strong>Short inspection</strong>
+    </td>
+
+    @if (Model is null)
+    {
+        <td class="govuk-table__cell">No</td>
+        <td class="govuk-table__cell">Not applicable</td>
+    }
+    else
+    {
+        <td class="govuk-table__cell">Yes<br>@Model.InspectionOutcome</td>
+
+        <td class="govuk-table__cell">
+            @Model.InspectionDate.ToString("dd MMMM yyyy")<br>
+            @await Html.PartialAsync("_OverviewBeforeOrAfterTag", Model.BeforeOrAfterJoining)
+        </td>
+    }
+</tr>

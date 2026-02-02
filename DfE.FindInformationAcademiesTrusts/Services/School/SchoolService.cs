@@ -1,7 +1,9 @@
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
+using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.School;
@@ -18,6 +20,8 @@ public interface ISchoolService
 
     Task<OfstedHeadlineGradesServiceModel> GetOfstedHeadlineGrades(int urn);
 
+    Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspection(int urn);
+
     Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsync(int urn);
 
     Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn);
@@ -28,7 +32,8 @@ public interface ISchoolService
 public class SchoolService(
     IMemoryCache memoryCache,
     ISchoolRepository schoolRepository,
-    IOfstedRepository ofstedRepository) : ISchoolService
+    IOfstedRepository ofstedRepository,
+    IReportCardsService reportCardsService) : ISchoolService
 {
     public async Task<bool> IsPartOfFederationAsync(int urn)
     {
@@ -91,6 +96,7 @@ public class SchoolService(
             inspectionHistorySummary.PreviousInspection);
     }
 
+
     public async Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsync(int urn)
     {
         var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
@@ -106,25 +112,94 @@ public class SchoolService(
         );
     }
 
-    public async Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn)
+    public async Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspection(int urn)
     {
-        int cutoffMonth = 8;
-        int cutoffYear = 2024;
-
-        // Get the number of days in the given month/year
-        int lastDay = DateTime.DaysInMonth(cutoffYear, cutoffMonth);
-
-        DateTime cutOffDate = new(cutoffYear, cutoffMonth, lastDay, 23, 59, 59, DateTimeKind.Unspecified);
-
         var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
+        var reportCards = await reportCardsService.GetReportCardsAsync(urn);
+
+        var (before, after) = GetClassicBeforeAndAfter(schoolOfstedRatings);
+
+        List<OverviewServiceModel> overviewModels = [];
+        
+        AddReportCard(reportCards.LatestReportCard);
+        AddReportCard(reportCards.PreviousReportCard);
+        AddOfstedRating(after);
+        AddOfstedRating(before);
+
+
+        void AddOfstedRating(OfstedRating? rating)
+        {
+            if (rating is { InspectionDate: not null })
+            {
+                overviewModels.Add(new OverviewServiceModel
+                {
+                    IsReportCard = false,
+                    InspectionDate = DateOnly.FromDateTime(rating.InspectionDate.Value),
+                    BeforeOrAfterJoining = schoolOfstedRatings.DateAcademyJoinedTrust
+                        .GetBeforeOrAfterJoiningTrust(rating.InspectionDate)
+                });
+            }
+        }
+
+        void AddReportCard(ReportCardDetails? reportCard)
+        {
+            if (reportCard != null)
+            {
+                overviewModels.Add(new OverviewServiceModel
+                {
+                    IsReportCard = true,
+                    InspectionDate = reportCard.InspectionDate,
+                    BeforeOrAfterJoining = schoolOfstedRatings.DateAcademyJoinedTrust
+                        .GetBeforeOrAfterJoiningTrust(reportCard.InspectionDate)
+                });
+            }
+        }
+
+        overviewModels = overviewModels.OrderByDescending(x => x.InspectionDate).ToList();
+
+        ShortInspectionOverviewServiceModel? shortInspectionModel = GetShortInspectionModel(schoolOfstedRatings.ShortInspection, schoolOfstedRatings.DateAcademyJoinedTrust);
+
+        return new OfstedOverviewInspectionServiceModel(overviewModels.FirstOrDefault(), overviewModels.Skip(1).FirstOrDefault(), shortInspectionModel);
+    }
+
+    private static ShortInspectionOverviewServiceModel? GetShortInspectionModel(OfstedShortInspection ofstedShortInspection, DateTime? dateAcademyJoinedTrust)
+    {
+        if (ofstedShortInspection.InspectionDate is null)
+        {
+            return null;
+        }
+
+        return new ShortInspectionOverviewServiceModel
+        {
+            IsReportCard = false,
+            InspectionDate = DateOnly.FromDateTime(ofstedShortInspection.InspectionDate.Value),
+            BeforeOrAfterJoining =
+                dateAcademyJoinedTrust.GetBeforeOrAfterJoiningTrust(ofstedShortInspection.InspectionDate),
+            InspectionOutcome = ofstedShortInspection.ToOutcomeDisplayString()
+        };
+    }
+
+
+    private static (OfstedRating? before, OfstedRating? after) GetClassicBeforeAndAfter(SchoolOfsted schoolOfstedRatings)
+    {
+        DateTime cutOffDate = new(2024, 09, 01, 23, 59, 59, DateTimeKind.Unspecified);
 
         List<OfstedRating> ofstedRatings =
             [schoolOfstedRatings.CurrentOfstedRating, schoolOfstedRatings.PreviousOfstedRating];
 
         ofstedRatings = ofstedRatings.OrderByDescending(x => x.InspectionDate).ToList();
 
-         var after = ofstedRatings.FirstOrDefault(x => x.InspectionDate > cutOffDate);
-         var before = ofstedRatings.FirstOrDefault(x => x.InspectionDate <= cutOffDate);
+        var after = ofstedRatings.FirstOrDefault(x => x.InspectionDate > cutOffDate);
+        var before = ofstedRatings.FirstOrDefault(x => x.InspectionDate <= cutOffDate);
+
+        return (before, after);
+    }
+
+    public async Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn)
+    {
+        var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
+
+        var (before, after) = GetClassicBeforeAndAfter(schoolOfstedRatings);
 
         return new SchoolOfstedServiceModel(
             schoolOfstedRatings.Urn,

@@ -3,6 +3,7 @@ using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
 
@@ -13,11 +14,12 @@ public class SchoolServiceTests
     private readonly SchoolService _sut;
     private readonly ISchoolRepository _mockSchoolRepository = Substitute.For<ISchoolRepository>();
     private readonly IOfstedRepository _mockOfstedRepository = Substitute.For<IOfstedRepository>();
+    private readonly IReportCardsService _mockReportCardsService = Substitute.For<IReportCardsService>();
     private readonly MockMemoryCache _mockMemoryCache = new();
 
     public SchoolServiceTests()
     {
-        _sut = new SchoolService(_mockMemoryCache.Object, _mockSchoolRepository, _mockOfstedRepository);
+        _sut = new SchoolService(_mockMemoryCache.Object, _mockSchoolRepository, _mockOfstedRepository, _mockReportCardsService);
     }
 
     [Fact]
@@ -325,8 +327,8 @@ public class SchoolServiceTests
     }
 
     [Theory]
-    [InlineData("2024-09-01", "2024-08-31", true, true, "2024-09-01", "2024-08-31")]
-    [InlineData("2024-09-01", "2024-10-01", true, false, "2024-10-01", "2000-01-01")]
+    [InlineData("2024-09-02", "2024-09-01", true, true, "2024-09-02", "2024-09-01")]
+    [InlineData("2024-09-02", "2024-10-01", true, false, "2024-10-01", "2000-01-01")]
     [InlineData("2024-08-31", "2024-08-01", false, true, "2000-01-01", "2024-08-31")]
     [InlineData("2024-08-01", "2024-08-31", false, true, "2000-01-01", "2024-08-31")]
     public async Task GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync_Should_ReturnCorrectData(DateTime currentInspectionDate, DateTime previousInspectionDate, bool shouldReturnCurrent, bool shouldReturnPrevious, DateTime expectedCurrentInspectionDate, DateTime expectedPreviousInspectionDate)
