@@ -431,7 +431,7 @@ describe('Schools Navigation Tests', () => {
                     .checkSchoolsOverviewSubnavButtonIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent()
-                    .checkOfstedSingleHeadlineGradesSectionPresent();
+                    .checkOverviewPageNamePresent();
 
                 // Navigate to "Current ratings"
                 navigation
@@ -509,7 +509,7 @@ describe('Schools Navigation Tests', () => {
                 // Navigate back to single headline grades
                 navigation
                     .clickSchoolsOfstedOverviewSubnavButton()
-                    .checkCurrentURLIsCorrect(`/schools/overview/details?urn${navTestAcademies[0].academyURN}`)
+                    .checkCurrentURLIsCorrect(`/schools/overview/details?urn=${navTestAcademies[0].academyURN}`)
                     .checkSchoolsOverviewSubnavButtonIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent();

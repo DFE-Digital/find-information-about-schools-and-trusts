@@ -804,7 +804,7 @@ class SchoolsPage {
 
     // ofsted methods
 
-    public checkOfstedSingleHeadlineGradesSectionPresent(): this {
+    public checkOfstedOverviewSectionPresent(): this {
         this.elements.ofsted.singleHeadlineGrades.inspectionTable().should('be.visible');
         return this;
     }
