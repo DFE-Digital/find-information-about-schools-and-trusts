@@ -15,13 +15,8 @@ class SchoolOfstedRatingsPage {
         }
     };
 
-    public checkOfstedCurrentRatingsPageHeaderPresent(): this {
-        this.elements.subpageHeader().should('contain', 'Current ratings');
-        return this;
-    }
-
-    public checkOfstedPreviousRatingsPageHeaderPresent(): this {
-        this.elements.subpageHeader().should('contain', 'Previous ratings');
+    public checkReportCardHeaderPresent(): this {
+        this.elements.subpageHeader().should('contain', 'Report card');
         return this;
     }
 

@@ -14,8 +14,8 @@ describe('Schools Navigation Tests', () => {
 
         {
             academyURN: 140884,
-            trustAcademyName: "MARYLEBONE SCHOOL LTD", //school in SAT
-            trustUID: 3874
+            trustAcademyName: "UNITED LEARNING TRUST",
+            trustUID: 5143
         }];
 
     const navTestSchool = {
@@ -84,7 +84,7 @@ describe('Schools Navigation Tests', () => {
                 // Governance → Ofsted
                 navigation
                     .clickSchoolsOfstedButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/singleheadlinegrades?urn=${urn}`)
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/overview?urn=${urn}`)
                     .checkOfstedServiceNavButtonIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent();
@@ -425,96 +425,91 @@ describe('Schools Navigation Tests', () => {
         context('School Ofsted subnav navigation tests -- (School)', () => {
             it('Should navigate from Single headlinegrades → current ratings → previous ratings → safeguarding and back', () => {
                 // Start single headline grades
-                cy.visit(`/schools/ofsted/singleheadlinegrades?urn=${navTestSchool.schoolURN}`);
+                cy.visit(`/schools/ofsted/overview?urn=${navTestSchool.schoolURN}`);
                 navigation
                     .checkSchoolsOfstedSubNavItemsPresent()
-                    .checkSchoolsSingleHeadlineGradeDfeSubnavButtonIsHighlighted();
+                    .checkSchoolsOverviewSubnavButtonIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent()
-                    .checkOfstedSingleHeadlineGradesSectionPresent();
+                    .checkOverviewPageNamePresent();
 
                 // Navigate to "Current ratings"
                 navigation
-                    .clickSchoolsOfstedCurrentRatingsSubnavButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/currentratings?urn=${navTestSchool.schoolURN}`)
-                    .checkSchoolsOfstedCurrentRatingsSubnavButtonIsHighlighted();
+                    .clickSchoolsReportCardSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/reportcards/currentreportcards?urn=${navTestSchool.schoolURN}`)
+                    .checkSchoolsOfstedReportCardIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent()
-                    .checkSchoolOfstedCurrentRatingsSubHeaderPresent()
+                    .checkSchoolReportCardSubHeaderPresent()
                     .checkSchoolOfstedRatingsTablePresent();
 
                 // Navigate to "Previous ratings"
                 navigation
-                    .clickSchoolsOfstedPreviousRatingsSubnavButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/previousratings?urn=${navTestSchool.schoolURN}`)
-                    .checkSchoolsOfstedPreviousRatingsSubnavButtonIsHighlighted();
+                    .clickSchoolsReportCardPreviousButton()
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/reportcards/previousreportcards?urn=${navTestSchool.schoolURN}`)
+                    .checkSchoolsOfstedReportCardIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent()
-                    .checkSchoolOfstedPreviousRatingsSubHeaderPresent()
+                    .checkSchoolReportCardSubHeaderPresent()
                     .checkSchoolOfstedRatingsTablePresent();
 
                 // Navigate to "Safeguarding and concerns"
                 navigation
-                    .clickSchoolsOfstedSafeguardingAndConcernsSubnavButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/safeguardingandconcerns?urn=${navTestSchool.schoolURN}`)
+                    .clickSchoolsReportCardSubnavButton()
+                    .clickSchoolsReportCardPreviousButton()
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/older/previousratings?urn=${navTestSchool.schoolURN}`)
                     .checkSchoolsOfstedSafeguardingAndConcernsSubnavButtonIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent();
 
                 // Navigate back to single headline grades
                 navigation
-                    .clickSchoolsOfstedSingleHeadlineGradesSubnavButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/singleheadlinegrades?urn=${navTestSchool.schoolURN}`)
-                    .checkSchoolsSingleHeadlineGradeDfeSubnavButtonIsHighlighted();
+                    .clickSchoolsOfstedOverviewSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/overview/details?urn=${navTestSchool.schoolURN}`)
+                    .checkSchoolsOverviewSubnavButtonIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent();
             });
         });
 
         context('School Ofsted subnav navigation tests -- (Academy)', () => {
-            it('Should navigate from Single headlinegrades → current ratings → previous ratings → safeguarding and back', () => {
-                // Start single headline grades
-                cy.visit(`/schools/ofsted/singleheadlinegrades?urn=${navTestAcademies[0].academyURN}`);
+            it('Should navigate from Single headlinegrades → current ratings → previous ratings and back', () => {
+                // Start at academy overview (single headline grades / Ofsted overview)
+                cy.visit(`/trusts/ofsted/overview?uid=${navTestAcademies[0].academyURN}`);
                 navigation
                     .checkSchoolsOfstedSubNavItemsPresent()
-                    .checkSchoolsSingleHeadlineGradeDfeSubnavButtonIsHighlighted();
+                    .checkSchoolsOverviewSubnavButtonIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent()
-                    .checkOfstedSingleHeadlineGradesSectionPresent();
+                    .checkOfstedOverviewSectionPresent();
 
                 // Navigate to "Current ratings"
                 navigation
-                    .clickSchoolsOfstedCurrentRatingsSubnavButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/currentratings?urn=${navTestAcademies[0].academyURN}`)
-                    .checkSchoolsOfstedCurrentRatingsSubnavButtonIsHighlighted();
+                    .clickSchoolsReportCardSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/reportcards/currentreportcards?urn=${navTestAcademies[0].academyURN}`)
+                    .checkSchoolsOfstedReportCardIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent()
-                    .checkSchoolOfstedCurrentRatingsSubHeaderPresent()
+                    .checkSchoolReportCardSubHeaderPresent()
                     .checkSchoolOfstedRatingsTablePresent();
 
                 // Navigate to "Previous ratings"
                 navigation
-                    .clickSchoolsOfstedPreviousRatingsSubnavButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/previousratings?urn=${navTestAcademies[0].academyURN}`)
-                    .checkSchoolsOfstedPreviousRatingsSubnavButtonIsHighlighted();
+                    .clickSchoolsReportCardPreviousButton()
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/reportcards/previousreportcards?urn=${navTestAcademies[0].academyURN}`)
+                    .checkSchoolsOfstedReportCardIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent()
-                    .checkSchoolOfstedPreviousRatingsSubHeaderPresent()
+                    .checkSchoolReportCardSubHeaderPresent()
                     .checkSchoolOfstedRatingsTablePresent();
-
-                // Navigate to "Safeguarding and concerns"
-                navigation
-                    .clickSchoolsOfstedSafeguardingAndConcernsSubnavButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/safeguardingandconcerns?urn=${navTestAcademies[0].academyURN}`)
-                    .checkSchoolsOfstedSafeguardingAndConcernsSubnavButtonIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent();
 
                 // Navigate back to single headline grades
                 navigation
-                    .clickSchoolsOfstedSingleHeadlineGradesSubnavButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/singleheadlinegrades?urn=${navTestAcademies[0].academyURN}`)
-                    .checkSchoolsSingleHeadlineGradeDfeSubnavButtonIsHighlighted();
+                    .clickSchoolsOfstedOverviewSubnavButton()
+                    .checkCurrentURLIsCorrect(`/schools/overview/details?urn=${navTestAcademies[0].academyURN}`)
+                    .checkSchoolsOverviewSubnavButtonIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent();
             });

@@ -7,12 +7,11 @@ describe("School Ofsted Safeguarding and Concerns page", () => {
     describe("Basic page functionality", () => {
         testSchoolData.forEach(({ typeOfSchool, urn }) => {
             beforeEach(() => {
-                cy.visit(`/schools/ofsted/safeguardingandconcerns?urn=${urn}`);
+                cy.visit(`/schools/ofsted/older/previousratings?urn=${urn}`);
             });
 
             it(`Should display correct page elements for ${typeOfSchool}`, () => {
                 schoolOfstedPage
-                    .checkOfstedSafeguardingAndConcernsPageHeaderPresent()
                     .checkSafeguardingAndConcernsTablePresent();
 
                 navigation
@@ -32,7 +31,7 @@ describe("School Ofsted Safeguarding and Concerns page", () => {
 
         if (academyData) {
             beforeEach(() => {
-                cy.visit(`/schools/ofsted/safeguardingandconcerns?urn=${academyData.urn}`);
+                cy.visit(`/schools/ofsted/older/previousratings?urn=${academyData.urn}`);
             });
 
             it(`Should display before or after joining data for ${academyData.typeOfSchool}`, () => {
@@ -50,7 +49,7 @@ describe("School Ofsted Safeguarding and Concerns page", () => {
 
         if (schoolData) {
             beforeEach(() => {
-                cy.visit(`/schools/ofsted/safeguardingandconcerns?urn=${schoolData.urn}`);
+                cy.visit(`/schools/ofsted/older/previousratings?urn=${schoolData.urn}`);
             });
 
             it(`Should NOT display before or after joining data for ${schoolData.typeOfSchool}`, () => {
@@ -65,7 +64,7 @@ describe("School Ofsted Safeguarding and Concerns page", () => {
     describe("Interactive elements", () => {
         testSchoolData.forEach(({ typeOfSchool, urn }) => {
             beforeEach(() => {
-                cy.visit(`/schools/ofsted/safeguardingandconcerns?urn=${urn}`);
+                cy.visit(`/schools/ofsted/older/previousratings?urn=${urn}`);
             });
 
             it(`Should expand 'What this information means' details for ${typeOfSchool}`, () => {

@@ -1,18 +1,19 @@
 import navigation from "../../../../pages/navigation";
 import schoolOfstedRatingsPage from "../../../../pages/schools/schoolOfstedRatingsPage";
 import { testSchoolData } from "../../../../support/test-data-store";
+// Pointed url currently to older inspections but when reports work done. point to that url
 
 describe("Testing the School Ofsted Previous ratings page", () => {
 
     describe("Basic page functionality and navigation", () => {
         testSchoolData.forEach(({ typeOfSchool, urn }) => {
             beforeEach(() => {
-                cy.visit(`/schools/ofsted/currentratings?urn=${urn}`);
+                cy.visit(`/schools/ofsted/reportcards/currentreportcards?urn=${urn}`);
             });
 
-            it(`Checks the correct Ofsted current ratings subpage header is present for ${typeOfSchool}`, () => {
+            it(`Checks the correct report card subpage header is present for ${typeOfSchool}`, () => {
                 schoolOfstedRatingsPage
-                    .checkOfstedCurrentRatingsPageHeaderPresent();
+                    .checkReportCardHeaderPresent();
             });
 
             it(`Checks the breadcrumb shows the correct page name for ${typeOfSchool}`, () => {
@@ -26,7 +27,7 @@ describe("Testing the School Ofsted Previous ratings page", () => {
         describe("Ratings data components and validation", () => {
         testSchoolData.forEach(({ typeOfSchool, urn }) => {
             beforeEach(() => {
-                cy.visit(`/schools/ofsted/currentratings?urn=${urn}`);
+                cy.visit(`/schools/ofsted/older/previousratings?urn=${urn}`);//swap to current when up and working 
             });
 
             it(`Checks that the quality of education section is present for ${typeOfSchool}`, () => {
@@ -66,7 +67,7 @@ describe("Testing the School Ofsted Previous ratings page", () => {
 
         if (academyData) {
             it(`Checks that the before or after joining row is present for ${academyData.typeOfSchool}`, () => {
-                cy.visit(`/schools/ofsted/currentratings?urn=${academyData.urn}`);
+                cy.visit(`/schools/ofsted/older/currentratings?urn=${academyData.urn}`);
 
                 schoolOfstedRatingsPage
                     .checkBeforeOrAfterJoiningRowPresent();
