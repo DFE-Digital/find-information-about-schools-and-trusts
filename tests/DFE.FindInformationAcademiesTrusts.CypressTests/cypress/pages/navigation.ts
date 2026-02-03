@@ -63,10 +63,10 @@ class Navigation {
             historicGovernorsSubnavButton: () => cy.get('[data-testid="historic-governors-subnav"]'),
         },
         schoolsOfstedSubNav: {
-            currentOfstedSubnavButton: () => cy.get('[data-testid="ofsted-current-ratings-subnav"]'),
-            previousOfstedSubnavButton: () => cy.get('[data-testid="ofsted-previous-ratings-subnav"]'),
-            singleHeadlineGradeSubnavButton: () => cy.get('[data-testid="ofsted-single-headline-grades-subnav"]'),
+            reportCardSubnavButton: () => cy.get('[data-testid="ofsted-report-cards-current-subnav"]'),
+            overviewSubnavButton: () => cy.get('[data-testid="ofsted-overview-subnav"]'),
             safeguardingAndConcernsSubnavButton: () => cy.get('[data-testid="ofsted-safeguarding-and-concerns-subnav"]'),
+            previousReportCard :() => cy.get('[data-testid="report-cards-previous-report-card-tab"]'),
         }
     };
 
@@ -445,45 +445,35 @@ class Navigation {
         return this;
     }
 
-    public checkSchoolsSingleHeadlineGradeDfeSubnavButtonIsHighlighted(): this {
-        this.elements.schoolsOfstedSubNav.singleHeadlineGradeSubnavButton().should('have.attr', 'aria-current', 'page');
+    public checkSchoolsOverviewSubnavButtonIsHighlighted(): this {
+        this.elements.schoolsOfstedSubNav.overviewSubnavButton().should('have.attr', 'aria-current', 'page');
         return this;
     }
 
 
     public checkSchoolsOfstedSubNavItemsPresent(): this {
-        this.elements.schoolsOfstedSubNav.currentOfstedSubnavButton().should('be.visible');
-        this.elements.schoolsOfstedSubNav.previousOfstedSubnavButton().should('be.visible');
+        this.elements.schoolsOfstedSubNav.reportCardSubnavButton().should('be.visible');
+        this.elements.schoolsOfstedSubNav.overviewSubnavButton().should('be.visible');
         return this;
     }
 
-    public clickSchoolsOfstedCurrentRatingsSubnavButton(): this {
-        this.elements.schoolsOfstedSubNav.currentOfstedSubnavButton().click();
+    public clickSchoolsReportCardSubnavButton(): this {
+        this.elements.schoolsOfstedSubNav.reportCardSubnavButton().click();
         return this;
     }
 
-    public clickSchoolsOfstedPreviousRatingsSubnavButton(): this {
-        this.elements.schoolsOfstedSubNav.previousOfstedSubnavButton().click();
+    public clickSchoolsReportCardPreviousButton(): this {
+        this.elements.schoolsOfstedSubNav.previousReportCard().click();
         return this;
     }
 
-    public clickSchoolsOfstedSingleHeadlineGradesSubnavButton(): this {
-        this.elements.schoolsOfstedSubNav.singleHeadlineGradeSubnavButton().click();
+    public clickSchoolsOfstedOverviewSubnavButton(): this {
+        this.elements.schoolsOfstedSubNav.overviewSubnavButton().click();
         return this;
     }
 
-    public clickSchoolsOfstedSafeguardingAndConcernsSubnavButton(): this {
-        this.elements.schoolsOfstedSubNav.safeguardingAndConcernsSubnavButton().click();
-        return this;
-    }
-
-    public checkSchoolsOfstedCurrentRatingsSubnavButtonIsHighlighted(): this {
-        this.elements.schoolsOfstedSubNav.currentOfstedSubnavButton().should('have.attr', 'aria-current', 'page');
-        return this;
-    }
-
-    public checkSchoolsOfstedPreviousRatingsSubnavButtonIsHighlighted(): this {
-        this.elements.schoolsOfstedSubNav.previousOfstedSubnavButton().should('have.attr', 'aria-current', 'page');
+    public checkSchoolsOfstedReportCardIsHighlighted(): this {
+        this.elements.schoolsOfstedSubNav.reportCardSubnavButton().should('have.attr', 'aria-current', 'page');
         return this;
     }
 
