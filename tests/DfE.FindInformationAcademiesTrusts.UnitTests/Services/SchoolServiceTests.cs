@@ -6,6 +6,8 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
+using FluentAssertions.Common;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services;
 
@@ -331,8 +333,9 @@ public class SchoolServiceTests
     [Theory]
     [InlineData("2024-09-02", "2024-09-01", true, true, "2024-09-02", "2024-09-01")]
     [InlineData("2024-09-02", "2024-10-01", true, false, "2024-10-01", "2000-01-01")]
-    [InlineData("2024-08-31", "2024-08-01", false, true, "2000-01-01", "2024-08-31")]
-    [InlineData("2024-08-01", "2024-08-31", false, true, "2000-01-01", "2024-08-31")]
+    [InlineData("2024-09-01", "2024-08-31", false, true, "2000-01-01", "2024-09-01")]
+    [InlineData("2024-09-01", "2024-09-02", true, true, "2024-09-02", "2024-09-01")]
+    [InlineData("2024-09-01", "2024-08-02", false, true, "2000-01-01", "2024-09-01")]
     public async Task GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync_Should_ReturnCorrectData(DateTime currentInspectionDate, DateTime previousInspectionDate, bool shouldReturnCurrent, bool shouldReturnPrevious, DateTime expectedCurrentInspectionDate, DateTime expectedPreviousInspectionDate)
     {
         const int urn = 123456;
@@ -407,5 +410,104 @@ public class SchoolServiceTests
         result.ShortInspection.Should().BeNull();
         result.Current.Should().BeNull();
         result.Previous.Should().BeNull();
+    }
+
+    [Theory]
+    [InlineData("2023-01-01", "2022-01-01", "2024-01-01", "2023-06-01")]
+    [InlineData("2023-01-02", "2023-01-03", "2023-01-04", "2023-01-05")]
+    [InlineData("2023-01-05", "2023-01-04", "2023-01-03", "2023-01-02")]
+    public async Task GetOfstedOverviewInspectionAsync_ReturnsExpectedOverviewModel(DateTime classicPreviousDate, DateTime classicCurrentDate, DateTime reportCardPreviousDate, DateTime reportCardLatestDate)
+    {
+        int urn = 123;
+        var dateAcademyJoinedTrust = new DateTime(2020, 1, 1);
+        var shortInspectionDate = new DateTime(2022, 1, 1);
+
+        var schoolOfstedRatings = new SchoolOfsted(
+        
+            urn.ToString(),
+            "Test School",
+            dateAcademyJoinedTrust,
+            new OfstedShortInspection(shortInspectionDate, "Good"),
+            new OfstedRating ((int)OfstedRatingScore.Good, classicPreviousDate),
+            new OfstedRating ((int)OfstedRatingScore.Outstanding, classicCurrentDate),
+            false
+        );
+
+        var reportCards = new ReportCardServiceModel
+        {
+            LatestReportCard = new ReportCardDetails(DateOnly.FromDateTime(reportCardLatestDate), null, null, null, null, null, null, null,
+                null, null, null, null),
+            PreviousReportCard = new ReportCardDetails(DateOnly.FromDateTime(reportCardPreviousDate), null, null, null, null, null, null,
+                null, null, null, null, null)
+        };
+
+        _mockOfstedRepository.GetSchoolOfstedRatingsAsync(urn).Returns(schoolOfstedRatings);
+        _mockReportCardsService.GetReportCardsAsync(urn).Returns(reportCards);
+
+
+        var result = await _sut.GetOfstedOverviewInspectionAsync(urn);
+
+        // Assert
+        result.Should().NotBeNull();
+        result.Current.Should().NotBeNull();
+        result.Previous.Should().NotBeNull();
+        result.ShortInspection.Should().NotBeNull();
+
+        // Check ordering by InspectionDate descending
+        var expectedDates = new List<DateOnly>
+        {
+            reportCards.LatestReportCard.InspectionDate,
+            reportCards.PreviousReportCard.InspectionDate,
+            DateOnly.FromDateTime(schoolOfstedRatings.CurrentOfstedRating.InspectionDate!.Value),
+            DateOnly.FromDateTime(schoolOfstedRatings.PreviousOfstedRating.InspectionDate!.Value)
+        }.OrderByDescending(x => x).ToList();
+
+        result.Current!.InspectionDate.Should().Be(expectedDates[0]);
+        result.Previous!.InspectionDate.Should().Be(expectedDates[1]);
+
+        result.ShortInspection!.InspectionDate.Should().Be(DateOnly.FromDateTime(shortInspectionDate));
+    }
+
+    [Fact]
+    public async Task GetOfstedOverviewInspectionAsync_SetsIsReportCardCorrectly()
+    {
+        int urn = 123;
+        var shortInspectionDate = new DateTime(2022, 1, 1);
+
+        var dateForClassicReport = new DateTime(2022, 11, 1);
+        var dateForReportCard = new DateOnly(2025, 1, 20);
+
+        var schoolOfstedRatings = new SchoolOfsted(
+
+            urn.ToString(),
+            "Test School",
+            new DateTime(2020, 1, 1),
+            new OfstedShortInspection(shortInspectionDate, "Good"),
+            new OfstedRating(null, null),
+            new OfstedRating((int)OfstedRatingScore.Outstanding, dateForClassicReport),
+            false
+        );
+
+        var reportCards = new ReportCardServiceModel
+        {
+            LatestReportCard = new ReportCardDetails(dateForReportCard, null, null, null, null, null, null, null,
+                null, null, null, null),
+            PreviousReportCard = null
+        };
+
+        _mockOfstedRepository.GetSchoolOfstedRatingsAsync(urn).Returns(schoolOfstedRatings);
+        _mockReportCardsService.GetReportCardsAsync(urn).Returns(reportCards);
+
+        var result = await _sut.GetOfstedOverviewInspectionAsync(urn);
+
+        result.Current.Should().NotBeNull();
+        result.Previous.Should().NotBeNull();
+        result.ShortInspection.Should().NotBeNull();
+
+        result.Current!.InspectionDate.Should().Be(dateForReportCard);
+        result.Current.IsReportCard.Should().BeTrue();
+
+        result.Previous!.InspectionDate.Should().Be(DateOnly.FromDateTime(dateForClassicReport));
+        result.Previous.IsReportCard.Should().BeFalse();
     }
 }
