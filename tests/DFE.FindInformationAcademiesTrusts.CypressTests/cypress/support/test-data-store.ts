@@ -109,15 +109,6 @@ export class TestDataStore {
                 ]
             },
             {
-                pageName: "Ofsted",
-                subpages: [
-                    { subpageName: "Overview", url: `/schools/ofsted/overview?urn=${urn}` },
-                    { subpageName: "Current ratings", url: `/schools/ofsted/reportcards/currentreportcards?urn=${urn}` },
-                    { subpageName: "Previous ratings", url: `/schools/ofsted/reportcards/previousreportcards?urn=${urn}` },
-                    { subpageName: "Safeguarding and concerns", url: `/schools/ofsted/reportcards/currentreportcards?urn=${urn}` }
-                ]
-            },
-            {
                 pageName: "Pupils",
                 subpages: [
                     { subpageName: "Population", url: `/schools/pupils/population?urn=${urn}` },

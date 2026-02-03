@@ -123,7 +123,7 @@ class OfstedPage {
 
     // #region Single headline grades
     public checkOfstedSHGPageHeaderPresent(): this {
-        this.elements.subpageHeader().should('contain', 'Single headline grades');
+        this.elements.subpageHeader().should('contain', 'Overview');
         return this;
     }
 

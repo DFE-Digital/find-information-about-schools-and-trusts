@@ -146,9 +146,9 @@ class CommonPage {
     public readonly checkValueIsValidFullDate = (element: JQuery<HTMLElement>) => {
         const text = element.text().trim();
 
-        // Resolves to a date ({2 digits} {month} {4 digits}) or "No data" string
+        // Resolves to a date ({2 digits} {month} {4 digits}) or "Not applicable" string
         // Tech debt - We are allowing Sep and Sept due to different cultures set on remote vs local builds
-        expect(text).to.match(/^\d{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) \d{4}$|^No data$/);
+        expect(text).to.match(/^\d{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) \d{4}$|^Not applicable$/);
     };
 }
 

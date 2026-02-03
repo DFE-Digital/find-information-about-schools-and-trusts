@@ -10,9 +10,9 @@ describe("Testing the School Ofsted Single Headline Grades page", () => {
                 cy.visit(`/schools/ofsted/overview?urn=${urn}`);
             });
 
-            it(`Checks the correct Ofsted single headline grades subpage header is present for ${typeOfSchool}`, () => {
+            it(`Checks the correct Ofsted Overview grades subpage header is present for ${typeOfSchool}`, () => {
                 schoolOfstedPage
-                    .checkOfstedSingleHeadlineGradesPageHeaderPresent();
+                    .checkOfstedOverviewPageHeaderPresent();
             });
 
             it(`Checks the breadcrumb shows the correct page name for ${typeOfSchool}`, () => {
@@ -20,9 +20,9 @@ describe("Testing the School Ofsted Single Headline Grades page", () => {
                     .checkPageNameBreadcrumbPresent("Ofsted");
             });
 
-            it(`Checks the correct Ofsted single headline grades table headers are present for ${typeOfSchool}`, () => {
+            it(`Checks the correct Ofsted Overview table headers are present for ${typeOfSchool}`, () => {
                 schoolOfstedPage
-                    .checkSingleHeadlineGradesTableHeadersPresent();
+                    .checkOfstedOverviewTableHeadersPresent();
             });
         });
     });
@@ -35,28 +35,28 @@ describe("Testing the School Ofsted Single Headline Grades page", () => {
 
             it(`Checks that the current full inspection section is present for ${typeOfSchool}`, () => {
                 schoolOfstedPage
-                    .checkCurrentFullInspectionPresent()
-                    .checkCurrentFullInspectionData();
+                    .checkCurrentInspectionPresent()
+                    .checkCurrentInspectionData();
             });
 
             it(`Checks that the previous full inspection section is present for ${typeOfSchool}`, () => {
                 schoolOfstedPage
-                    .checkPreviousFullInspectionPresent()
-                    .checkPreviousFullInspectionData();
+                    .checkPreviousInspectionPresent()
+                    .checkPreviousInspectionData();
             });
 
             it(`Checks that the Ofsted grades are valid for ${typeOfSchool}`, () => {
                 schoolOfstedPage
-                    .checkCurrentFullInspectionGradeValid()
-                    .checkPreviousFullInspectionGradeValid()
-                    .checkRecentShortInspectionGradeIfExists();
+                    .checkCurrentInspectionGradeValid()
+                    .checkPreviousInspectionGradeValid()
+                    .checkRecentShortInspectionDateValid();
             });
 
             it(`Checks that the inspection dates are valid for ${typeOfSchool}`, () => {
                 schoolOfstedPage
-                    .checkCurrentFullInspectionDateValid()
-                    .checkPreviousFullInspectionDateValid()
-                    .checkRecentShortInspectionDateIfExists();
+                    .checkCurrentInspectionDateValid()
+                    .checkPreviousInspectionDateValid()
+                    .checkRecentShortInspectionDateValid();
             });
         });
     });
@@ -67,20 +67,9 @@ describe("Testing the School Ofsted Single Headline Grades page", () => {
                 cy.visit(`/schools/ofsted/overview?urn=${urn}`);
             });
 
-            it(`Checks that the 'Why single headline grade might not be available' details section is present for ${typeOfSchool}`, () => {
-                schoolOfstedPage
-                    .checkWhySingleHeadlineNotAvailableDetailsPresent();
-            });
-
             it(`Checks that the 'Why short inspection data might not be available' details section is present for ${typeOfSchool}`, () => {
                 schoolOfstedPage
                     .checkWhyShortInspectionNotAvailableDetailsPresent();
-            });
-
-            it(`Checks that clicking 'Why single headline grade might not be available' details expands the content for ${typeOfSchool}`, () => {
-                schoolOfstedPage
-                    .clickWhySingleHeadlineNotAvailableDetails()
-                    .checkWhySingleHeadlineDetailsIsOpen();
             });
 
             it(`Checks that clicking 'Why short inspection data might not be available' details expands the content for ${typeOfSchool}`, () => {
@@ -124,15 +113,15 @@ describe("Testing the School Ofsted Single Headline Grades page", () => {
             it(`Should handle 'Not available' data states appropriately for ${typeOfSchool}`, () => {
                 // Check that current and previous inspections are always present (even if data shows "Not available")
                 schoolOfstedPage
-                    .checkCurrentFullInspectionPresent()
-                    .checkPreviousFullInspectionPresent();
+                    .checkCurrentInspectionPresent()
+                    .checkPreviousInspectionPresent();
 
                 // Validate that any visible data has proper formatting
                 schoolOfstedPage
-                    .checkCurrentFullInspectionGradeValid()
-                    .checkPreviousFullInspectionGradeValid()
-                    .checkCurrentFullInspectionDateValid()
-                    .checkPreviousFullInspectionDateValid();
+                    .checkCurrentInspectionGradeValid()
+                    .checkPreviousInspectionGradeValid()
+                    .checkCurrentInspectionDateValid()
+                    .checkPreviousInspectionDateValid();
             });
         });
     });
