@@ -4,6 +4,7 @@ using DfE.FindInformationAcademiesTrusts.Pages;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
+using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using Microsoft.AspNetCore.Mvc;
 
@@ -37,6 +38,7 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
         MockOfstedSchoolDataExportService.BuildAsync(Arg.Any<int>()).Returns("Some Excel data"u8.ToArray());
 
         MockDateTimeProvider.Now.Returns(new DateTime(2025, 7, 1));
+
     }
 
     [Fact]
@@ -128,25 +130,7 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
     }
 
     [Fact]
-    public async Task OnGetAsync_should_populate_TabList_to_tabs()
-    {
-        _ = await Sut.OnGetAsync();
-
-        Sut.TabList.Should()
-            .SatisfyRespectively(
-                l =>
-                {
-                    l.LinkDisplayText.Should().Be("After September 2024");
-                    l.AspPage.Should().Be("./CurrentRatings");
-                    l.TestId.Should().Be("older-after-september-2024-tab");
-                },
-                l =>
-                {
-                    l.LinkDisplayText.Should().Be("Before September 2024");
-                    l.AspPage.Should().Be("./PreviousRatings");
-                    l.TestId.Should().Be("older-before-september-2024-tab");
-                });
-    }
+    public abstract Task OnGetAsync_should_populate_TabList_to_tabs();
 
     private async Task VerifyCorrectDataSources(int urn)
     {

@@ -20,7 +20,7 @@ public interface ISchoolService
 
     Task<OfstedHeadlineGradesServiceModel> GetOfstedHeadlineGrades(int urn);
 
-    Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspection(int urn);
+    Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspectionAsync(int urn);
 
     Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsync(int urn);
 
@@ -112,31 +112,23 @@ public class SchoolService(
         );
     }
 
-    public async Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspection(int urn)
+    public async Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspectionAsync(int urn)
     {
         var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
         var reportCards = await reportCardsService.GetReportCardsAsync(urn);
-
-        var (before, after) = GetClassicBeforeAndAfter(schoolOfstedRatings);
-
-        List<OverviewServiceModel> overviewModels = [];
         
-        AddReportCard(reportCards.LatestReportCard);
-        AddReportCard(reportCards.PreviousReportCard);
-        AddOfstedRating(after);
-        AddOfstedRating(before);
-
+        var overviewModels = new List<OverviewServiceModel>();
 
         void AddOfstedRating(OfstedRating? rating)
         {
-            if (rating is { InspectionDate: not null })
+            if (rating?.InspectionDate is { } inspectionDate)
             {
                 overviewModels.Add(new OverviewServiceModel
                 {
                     IsReportCard = false,
-                    InspectionDate = DateOnly.FromDateTime(rating.InspectionDate.Value),
+                    InspectionDate = DateOnly.FromDateTime(inspectionDate),
                     BeforeOrAfterJoining = schoolOfstedRatings.DateAcademyJoinedTrust
-                        .GetBeforeOrAfterJoiningTrust(rating.InspectionDate)
+                        .GetBeforeOrAfterJoiningTrust(inspectionDate)
                 });
             }
         }
@@ -155,11 +147,25 @@ public class SchoolService(
             }
         }
 
-        overviewModels = overviewModels.OrderByDescending(x => x.InspectionDate).ToList();
+        AddReportCard(reportCards.LatestReportCard);
+        AddReportCard(reportCards.PreviousReportCard);
+        AddOfstedRating(schoolOfstedRatings.CurrentOfstedRating);
+        AddOfstedRating(schoolOfstedRatings.PreviousOfstedRating);
 
-        ShortInspectionOverviewServiceModel? shortInspectionModel = GetShortInspectionModel(schoolOfstedRatings.ShortInspection, schoolOfstedRatings.DateAcademyJoinedTrust);
+        var orderedOverviewModels = overviewModels
+            .OrderByDescending(x => x.InspectionDate)
+            .ToList();
 
-        return new OfstedOverviewInspectionServiceModel(overviewModels.FirstOrDefault(), overviewModels.Skip(1).FirstOrDefault(), shortInspectionModel);
+        var shortInspectionModel = GetShortInspectionModel(
+            schoolOfstedRatings.ShortInspection,
+            schoolOfstedRatings.DateAcademyJoinedTrust
+        );
+
+        return new OfstedOverviewInspectionServiceModel(
+            orderedOverviewModels.FirstOrDefault(),
+            orderedOverviewModels.Skip(1).FirstOrDefault(),
+            shortInspectionModel
+        );
     }
 
     private static ShortInspectionOverviewServiceModel? GetShortInspectionModel(OfstedShortInspection ofstedShortInspection, DateTime? dateAcademyJoinedTrust)

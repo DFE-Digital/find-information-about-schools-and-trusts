@@ -4,10 +4,16 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted.Repo
 {
     using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.ReportCards;
 
-    public class CurrentReportCardModelTests : BaseReportCardsOfstedAreaModelTests<CurrentReportCardsModel>
+    public class CurrentReportCardModelTests : BaseOfstedAreaModelTests<CurrentReportCardsModel>
     {
+        protected readonly IReportCardsService MockReportCardsService =
+            Substitute.For<IReportCardsService>();
+
+
         public CurrentReportCardModelTests()
         {
+            MockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(new ReportCardServiceModel());
+
             Sut = new CurrentReportCardsModel(
                     MockSchoolService,
                     MockSchoolOverviewDetailsService,
@@ -48,6 +54,27 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted.Repo
             await Sut.OnGetAsync();
 
             Sut.ReportCard.Should().Be(expectedReportCard);
+        }
+
+        [Fact]
+        public override async Task OnGetAsync_should_populate_TabList_to_tabs()
+        {
+            _ = await Sut.OnGetAsync();
+
+            Sut.TabList.Should()
+                .SatisfyRespectively(
+                    l =>
+                    {
+                        l.LinkDisplayText.Should().Be("Current report card");
+                        l.AspPage.Should().Be("./CurrentReportCards");
+                        l.TestId.Should().Be("report-cards-current-report-card-tab");
+                    },
+                    l =>
+                    {
+                        l.LinkDisplayText.Should().Be("Previous report card");
+                        l.AspPage.Should().Be("./PreviousReportCards");
+                        l.TestId.Should().Be("report-cards-previous-report-card-tab");
+                    });
         }
     }
 }

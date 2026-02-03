@@ -20,6 +20,8 @@ public class SchoolServiceTests
     public SchoolServiceTests()
     {
         _sut = new SchoolService(_mockMemoryCache.Object, _mockSchoolRepository, _mockOfstedRepository, _mockReportCardsService);
+
+        _mockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(new ReportCardServiceModel());
     }
 
     [Fact]
@@ -362,5 +364,48 @@ public class SchoolServiceTests
         {
             result.PreviousOfstedRating.Should().BeNull();
         }
+    }
+
+    [Theory]
+    [InlineData("2024-07-01", "2024-08-01", BeforeOrAfterJoining.Before)]
+    [InlineData("2024-08-02", "2024-08-01", BeforeOrAfterJoining.After)]
+    public async Task GetOfstedOverviewInspectionAsync_ForShortInspection_ShouldSetCorrectDetails(DateTime inspectionDate, DateTime dateJoined, BeforeOrAfterJoining expectedBeforeOrAfterJoining)
+    {
+        const int urn = 123456;
+
+        _mockOfstedRepository.GetSchoolOfstedRatingsAsync(urn)
+            .Returns(new SchoolOfsted(urn.ToString(), "Academy 1", dateJoined,
+                new OfstedShortInspection(inspectionDate, "School remains Good"),
+                new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2025, 7, 1)),
+                new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2024, 6, 1)), false));
+
+        
+        var shortInspection = (await _sut.GetOfstedOverviewInspectionAsync(urn)).ShortInspection;
+
+        shortInspection.Should().NotBeNull();
+        shortInspection!.InspectionDate.Should().Be(DateOnly.FromDateTime(inspectionDate));
+        shortInspection!.InspectionOutcome.Should().Be("School remains Good");
+        shortInspection.IsReportCard.Should().BeFalse();
+        shortInspection.BeforeOrAfterJoining.Should().Be(expectedBeforeOrAfterJoining);
+    }
+
+    [Fact]
+    public async Task GetOfstedOverviewInspectionAsync_IfNoDataReturnedFromServices_ShouldReturnEmptyModel()
+    {
+        const int urn = 123456;
+        _mockOfstedRepository.GetSchoolOfstedRatingsAsync(urn)
+            .Returns(new SchoolOfsted(urn.ToString(), null, null,
+                new OfstedShortInspection(null, null),
+                new OfstedRating(null, null),
+                new OfstedRating(null, null), false));
+
+        _mockReportCardsService.GetReportCardsAsync(urn).Returns(new ReportCardServiceModel());
+
+        var result = await _sut.GetOfstedOverviewInspectionAsync(urn);
+
+        result.Should().NotBeNull();
+        result.ShortInspection.Should().BeNull();
+        result.Current.Should().BeNull();
+        result.Previous.Should().BeNull();
     }
 }

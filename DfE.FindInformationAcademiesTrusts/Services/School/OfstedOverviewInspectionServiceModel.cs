@@ -18,6 +18,6 @@ namespace DfE.FindInformationAcademiesTrusts.Services.School
 
     public class ShortInspectionOverviewServiceModel : OverviewServiceModel
     {
-        public string? InspectionOutcome { get; set; } = string.Empty;
+        public string? InspectionOutcome { get; set; }
     }
 }

@@ -165,4 +165,25 @@ public class CurrentRatingsModelTests : BaseOfstedAreaModelTests<CurrentRatingsM
         Sut.InspectionBeforeOrAfterJoiningTrust.Should().Be(BeforeOrAfterJoining.Before);
     }
 
+    [Fact]
+    public override async Task OnGetAsync_should_populate_TabList_to_tabs()
+    {
+        _ = await Sut.OnGetAsync();
+
+        Sut.TabList.Should()
+            .SatisfyRespectively(
+                l =>
+                {
+                    l.LinkDisplayText.Should().Be("After September 2024");
+                    l.AspPage.Should().Be("./CurrentRatings");
+                    l.TestId.Should().Be("older-after-september-2024-tab");
+                },
+                l =>
+                {
+                    l.LinkDisplayText.Should().Be("Before September 2024");
+                    l.AspPage.Should().Be("./PreviousRatings");
+                    l.TestId.Should().Be("older-before-september-2024-tab");
+                });
+    }
+
 }

@@ -32,7 +32,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted
 
             if (pageResult is NotFoundResult) return pageResult;
 
-            OverviewInspectionModel = await SchoolService.GetOfstedOverviewInspection(Urn);
+            OverviewInspectionModel = await SchoolService.GetOfstedOverviewInspectionAsync(Urn);
 
 
             return pageResult;
