@@ -14,8 +14,8 @@ describe('Schools Navigation Tests', () => {
 
         {
             academyURN: 140884,
-            trustAcademyName: "MARYLEBONE SCHOOL LTD", //school in SAT
-            trustUID: 3874
+            trustAcademyName: "UNITED LEARNING TRUST",
+            trustUID: 5143
         }];
 
     const navTestSchool = {
@@ -425,7 +425,7 @@ describe('Schools Navigation Tests', () => {
         context('School Ofsted subnav navigation tests -- (School)', () => {
             it('Should navigate from Single headlinegrades → current ratings → previous ratings → safeguarding and back', () => {
                 // Start single headline grades
-                cy.visit(`/schools/overview/details?urn=${navTestSchool.schoolURN}`);
+                cy.visit(`/schools/ofsted/overview?urn=${navTestSchool.schoolURN}`);
                 navigation
                     .checkSchoolsOfstedSubNavItemsPresent()
                     .checkSchoolsOverviewSubnavButtonIsHighlighted();
@@ -445,7 +445,7 @@ describe('Schools Navigation Tests', () => {
 
                 // Navigate to "Previous ratings"
                 navigation
-                    .clickSchoolsReportCardSubnavButton()
+                    .clickSchoolsReportCardPreviousButton()
                     .checkCurrentURLIsCorrect(`/schools/ofsted/reportcards/previousreportcards?urn=${navTestSchool.schoolURN}`)
                     .checkSchoolsOfstedReportCardIsHighlighted();
                 schoolsPage
@@ -475,7 +475,7 @@ describe('Schools Navigation Tests', () => {
         context('School Ofsted subnav navigation tests -- (Academy)', () => {
             it('Should navigate from Single headlinegrades → current ratings → previous ratings and back', () => {
                 // Start single headline grades
-                cy.visit(`/schools/overview/details?urn=${navTestAcademies[0].academyURN}`);
+                cy.visit(`/trusts/ofsted/single-headline-grades?uid=${navTestAcademies[0].academyURN}`);
                 navigation
                     .checkSchoolsOfstedSubNavItemsPresent()
                     .checkSchoolsOverviewSubnavButtonIsHighlighted();
@@ -495,7 +495,6 @@ describe('Schools Navigation Tests', () => {
 
                 // Navigate to "Previous ratings"
                 navigation
-                    .clickSchoolsReportCardSubnavButton()
                     .clickSchoolsReportCardPreviousButton()
                     .checkCurrentURLIsCorrect(`/schools/ofsted/reportcards/previousreportcards?urn=${navTestAcademies[0].academyURN}`)
                     .checkSchoolsOfstedReportCardIsHighlighted();
