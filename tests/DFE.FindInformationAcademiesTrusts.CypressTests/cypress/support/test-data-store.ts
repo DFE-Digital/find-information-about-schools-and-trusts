@@ -69,9 +69,8 @@ export class TestDataStore {
                 pageName: "Ofsted",
                 subpages: [
                     { subpageName: "Overview", url: `/schools/ofsted/overview?urn=${urn}` },
-                    { subpageName: "Current ratings", url: `/schools/ofsted/reportcards/currentreportcards?urn=${urn}` },
-                    { subpageName: "Previous ratings", url: `/schools/ofsted/reportcards/previousreportcards?urn=${urn}` },
-                    { subpageName: "Safeguarding and concerns", url: `/schools/ofsted/reportcards/currentreportcards?urn=${urn}` }
+                    { subpageName: "Report cards", url: `/schools/ofsted/reportcards/currentreportcards?urn=${urn}` },
+                    { subpageName: "Older inspections (before November 2025)", url: `/schools/ofsted/older/currentratings?urn=${urn}` }
                 ]
             },
             {
@@ -106,6 +105,14 @@ export class TestDataStore {
                 subpages: [
                     { subpageName: "In DfE", url: `/schools/contacts/in-dfe?urn=${urn}` },
                     { subpageName: "In this academy", url: `/schools/contacts/in-the-school?urn=${urn}` },
+                ]
+            },
+            {
+                pageName: "Ofsted",
+                subpages: [
+                    { subpageName: "Overview", url: `/schools/ofsted/overview?urn=${urn}` },
+                    { subpageName: "Report cards", url: `/schools/ofsted/reportcards/currentreportcards?urn=${urn}` },
+                    { subpageName: "Older inspections (before November 2025)", url: `/schools/ofsted/older/currentratings?urn=${urn}` }
                 ]
             },
             {

@@ -474,8 +474,8 @@ describe('Schools Navigation Tests', () => {
 
         context('School Ofsted subnav navigation tests -- (Academy)', () => {
             it('Should navigate from Single headlinegrades → current ratings → previous ratings and back', () => {
-                // Start single headline grades
-                cy.visit(`/trusts/ofsted/single-headline-grades?uid=${navTestAcademies[0].academyURN}`);
+                // Start at academy overview (single headline grades / Ofsted overview)
+                cy.visit(`/trusts/ofsted/overview?uid=${navTestAcademies[0].academyURN}`);
                 navigation
                     .checkSchoolsOfstedSubNavItemsPresent()
                     .checkSchoolsOverviewSubnavButtonIsHighlighted();
