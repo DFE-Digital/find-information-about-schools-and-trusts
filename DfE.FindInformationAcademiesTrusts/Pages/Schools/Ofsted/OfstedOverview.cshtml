@@ -1,4 +1,4 @@
-﻿@page "/schools/ofsted/overview"
+@page "/schools/ofsted/overview"
 
 @model DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.OfstedOverviewModel
 @{
@@ -6,10 +6,10 @@
 }
 
 @if (Model.DateJoinedTrust != null){
-    <p class="govuk-body">This school joined the trust on <strong>@Model.DateJoinedTrust.Value.ToString("dd MMMM yyyy")</strong>.</p>
+    <p class="govuk-body" data-testid="academy-joined-trust-text">This school joined the trust on <strong>  @Model.DateJoinedTrust.Value.ToString("dd MMMM yyyy")</strong>.</p>
 }
 
-<details class="govuk-details">
+<details class="govuk-details" data-testid="why-short-inspection-not-available-details">
     <summary class="govuk-details__summary">
         <span class="govuk-details__summary-text">
             Why short inspection data might not be available
@@ -24,15 +24,15 @@
 
 <hr class="govuk-section-break govuk-section-break--m">
 
-<h3 class="govuk-heading-m">@Model.PageMetadata.SubPageName</h3>
+<h3 class="govuk-heading-m" data-testid="subpage-header">@Model.PageMetadata.SubPageName</h3>
 
-<table class="govuk-table">
+<table class="govuk-table" data-testid="ofsted-inspection-table">
     
     <thead class="govuk-table__head">
-        <tr class="govuk-table__row">
+        <tr class="govuk-table__row" data-testid="current-inspection-row">
             <th scope="col" class="govuk-table__header"></th>
-            <th scope="col" class="govuk-table__header" aria-sort="none">Inspection type</th>
-            <th scope="col" class="govuk-table__header" aria-sort="none">Date of inspection</th>
+            <th scope="col" class="govuk-table__header" aria-sort="none" data-testid="inspection-type-header">Inspection type</th>
+            <th scope="col" class="govuk-table__header" aria-sort="none" data-testid="date-of-inspection-header">Date of inspection</th>
         </tr>
     </thead>
 

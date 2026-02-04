@@ -1,12 +1,18 @@
-﻿@using DfE.FindInformationAcademiesTrusts.Extensions
+@using DfE.FindInformationAcademiesTrusts.Extensions
 @model InspectionOverviewRowViewModel?
 
-<tr class="govuk-table__row">
+@{
+    var rowTestId = Model?.RowTitle == "Current inspection" ? "current-inspection-row" : Model?.RowTitle == "Previous inspection" ? "previous-inspection-row" : null;
+    var dateTestId = Model?.RowTitle == "Current inspection" ? "current-inspection-date" : Model?.RowTitle == "Previous inspection" ? "previous-inspection-date" : null;
+    var gradeTestId = Model?.RowTitle == "Current inspection" ? "current-inspection-grade" : Model?.RowTitle == "Previous inspection" ? "previous-inspection-grade" : null;
+}
+
+<tr class="govuk-table__row" @(rowTestId != null ? Html.Raw($" data-testid=\"{rowTestId}\"") : null)>
     <td class="govuk-table__cell">
         <strong>@Model?.RowTitle</strong>
     </td>
 
-    <td class="govuk-table__cell">
+    <td class="govuk-table__cell" @(gradeTestId != null ? Html.Raw($" data-testid=\"{gradeTestId}\"") : null)>
         @Model?.OverviewServiceModel.AsInspectionTypeString()
     </td>
     
@@ -16,7 +22,7 @@
     }
     else
     {
-        <td class="govuk-table__cell">
+        <td class="govuk-table__cell" @(dateTestId != null ? Html.Raw($" data-testid=\"{dateTestId}\"") : null)>
             @Model.OverviewServiceModel.InspectionDate.ToString("dd MMMM yyyy")<br>
             @await Html.PartialAsync("_OverviewBeforeOrAfterTag", Model.OverviewServiceModel.BeforeOrAfterJoining)
         </td>

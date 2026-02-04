@@ -54,7 +54,8 @@ class SchoolOfstedPage {
 
     private readonly checkValueIsValidOfstedGrade = (element: JQuery<HTMLElement>) => {
         const text = element.text().replace(/\s+/g, ' ').trim();
-        expect(text).to.match(/^(School remains Good|Outstanding|Good|Requires improvement|Inadequate|Not yet inspected|Not inspected|Not available)( Inspected (before|after) joining the trust)?$/i);
+        // Inspection type column can show headline grades, or "Report card" / "Older inspection" for newer/older formats
+        expect(text).to.match(/^(School remains Good|Outstanding|Good|Requires improvement|Inadequate|Not yet inspected|Not inspected|Not available|Report card|Older inspection)( Inspected (before|after) joining the trust)?$/i);
     };
 
     // Page header checks
@@ -155,10 +156,10 @@ class SchoolOfstedPage {
 
     public checkInspectionReportsLinkValid(): this {
         this.elements.singleHeadlineGrades.inspectionReportsLink()
-        .should(($a) => {
-            expect($a).to.have.attr('href').match(/^https:\/\/reports\.ofsted\.gov\.uk/);
-            expect($a).to.have.attr('target', '_blank');
-        });
+            .should(($a) => {
+                expect($a).to.have.attr('href').match(/^https:\/\/reports\.ofsted\.gov\.uk/);
+                expect($a).to.have.attr('target', '_blank');
+            });
         return this;
     }
 
