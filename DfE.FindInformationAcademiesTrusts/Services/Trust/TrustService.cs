@@ -135,6 +135,8 @@ public class TrustService(
         var totalPupilNumbers = await trustPupilService.GetTotalPupilCountForTrustAsync(uid);
         var totalCapacity = academiesOverview.Sum(a => a.SchoolCapacity ?? 0);
 
+        var hasIncompleteCapacityData = academiesOverview.Any(a => a.SchoolCapacity is null);
+
         var overviewModel = new TrustOverviewServiceModel(
             trustOverview.Uid,
             trustOverview.GroupId,
@@ -148,7 +150,8 @@ public class TrustService(
             totalAcademies,
             academiesByLocalAuthority,
             totalPupilNumbers,
-            totalCapacity
+            totalCapacity,
+            hasIncompleteCapacityData
         );
 
         return overviewModel;
