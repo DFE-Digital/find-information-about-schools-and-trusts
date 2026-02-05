@@ -130,7 +130,7 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
     }
 
     [Fact]
-    public abstract Task OnGetAsync_should_populate_TabList_to_tabs();
+    public abstract Task OnGetAsync_should_call_populate_tablist();
 
     private async Task VerifyCorrectDataSources(int urn)
     {

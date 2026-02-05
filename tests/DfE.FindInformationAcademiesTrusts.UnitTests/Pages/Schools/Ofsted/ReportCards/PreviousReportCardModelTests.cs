@@ -58,24 +58,11 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted.Repo
         }
 
         [Fact]
-        public override async Task OnGetAsync_should_populate_TabList_to_tabs()
+        public override async Task OnGetAsync_should_call_populate_tablist()
         {
             _ = await Sut.OnGetAsync();
 
-            Sut.TabList.Should()
-                .SatisfyRespectively(
-                    l =>
-                    {
-                        l.LinkDisplayText.Should().Be("Current report card");
-                        l.AspPage.Should().Be("./CurrentReportCards");
-                        l.TestId.Should().Be("report-cards-current-report-card-tab");
-                    },
-                    l =>
-                    {
-                        l.LinkDisplayText.Should().Be("Previous report card");
-                        l.AspPage.Should().Be("./PreviousReportCards");
-                        l.TestId.Should().Be("report-cards-previous-report-card-tab");
-                    });
+            _ = MockSchoolNavMenu.Received(1).GetTabLinksForReportCardsOfstedPages(Arg.Any<PreviousReportCardsModel>());
         }
     }
 }

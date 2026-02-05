@@ -1,4 +1,5 @@
 ﻿using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.ReportCards;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute.ReturnsExtensions;
 
@@ -52,8 +53,9 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted
             await MockSchoolService.Received(1).GetOfstedOverviewInspectionAsync(SchoolUrn);
         }
 
+
         [Fact]
-        public override async Task OnGetAsync_should_populate_TabList_to_tabs()
+        public override async Task OnGetAsync_should_call_populate_tablist()
         {
             await Sut.OnGetAsync();
             Sut.TabList.Should().BeEmpty();

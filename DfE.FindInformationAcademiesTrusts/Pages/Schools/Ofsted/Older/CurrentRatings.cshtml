@@ -5,7 +5,7 @@
     Layout = "Ofsted/_OlderOfstedLayout";
 }
 
-@if (Model.OfstedRating is not null)
+@if (Model.OfstedRatings.Any())
 {
     <partial name="_OlderBaseRatings" model="@Model"/>
 }

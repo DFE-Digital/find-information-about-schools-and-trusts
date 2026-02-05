@@ -1,6 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
-using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.Older;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.ReportCards;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
@@ -88,12 +87,5 @@ public class OfstedAreaModel(
         var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
         return File(fileContents, contentType, fileName);
-    }
-
-    public NavLink GetTabFor<T>(string subPageName, string linkDisplayText, string aspPage)
-    {
-        return new NavLink(this is T, "Ofsted", linkDisplayText, aspPage,
-            $"{subPageName}-{linkDisplayText}-tab".Kebabify(),
-            new Dictionary<string, string> { { "urn", Urn.ToString() } });
     }
 }

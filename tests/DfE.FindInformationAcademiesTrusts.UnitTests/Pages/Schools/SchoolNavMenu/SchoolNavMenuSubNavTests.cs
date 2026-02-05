@@ -44,6 +44,60 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
         results.Should().AllSatisfy(link => { link.VisuallyHiddenLinkText.Should().Be(expectedPageName); });
     }
 
+    [Theory]
+    [InlineData(typeof(CurrentReportCardsModel), true, false)]
+    [InlineData(typeof(PreviousReportCardsModel), false, true)]
+    public void GetTabLinksForReportCardsOfstedPages_should_set_expected_links(Type activePageType, bool currentIsActive, bool previousIsActive)
+    {
+        var activePage = GetMockSchoolPage(activePageType);
+
+        var results = Sut.GetTabLinksForReportCardsOfstedPages(activePage);
+
+        results.Should()
+            .SatisfyRespectively(
+                l =>
+                {
+                    l.LinkDisplayText.Should().Be("Current report card");
+                    l.AspPage.Should().Be("./CurrentReportCards");
+                    l.TestId.Should().Be("report-cards-current-report-card-tab");
+                    l.LinkIsActive.Should().Be(currentIsActive);
+                },
+                l =>
+                {
+                    l.LinkDisplayText.Should().Be("Previous report card");
+                    l.AspPage.Should().Be("./PreviousReportCards");
+                    l.TestId.Should().Be("report-cards-previous-report-card-tab");
+                    l.LinkIsActive.Should().Be(previousIsActive);
+                });
+    }
+
+    [Theory]
+    [InlineData(typeof(CurrentRatingsModel), true, false)]
+    [InlineData(typeof(PreviousRatingsModel), false, true)]
+    public void GetTabLinksForOlderOfstedPages_should_set_expected_links(Type activePageType, bool currentIsActive, bool previousIsActive)
+    {
+        var activePage = GetMockSchoolPage(activePageType);
+
+        var results = Sut.GetTabLinksForOlderOfstedPages(activePage);
+
+        results.Should()
+            .SatisfyRespectively(
+                l =>
+                {
+                    l.LinkDisplayText.Should().Be("After September 2024");
+                    l.AspPage.Should().Be("./CurrentRatings");
+                    l.TestId.Should().Be("older-after-september-2024-tab");
+                    l.LinkIsActive.Should().Be(currentIsActive);
+                },
+                l =>
+                {
+                    l.LinkDisplayText.Should().Be("Before September 2024");
+                    l.AspPage.Should().Be("./PreviousRatings");
+                    l.TestId.Should().Be("older-before-september-2024-tab");
+                    l.LinkIsActive.Should().Be(previousIsActive);
+                });
+    }
+
     private static string GetExpectedPageName(Type pageType)
     {
         return pageType.Name switch
@@ -314,6 +368,34 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
                 l.LinkDisplayText.Should().Be(expectedHistoric);
                 l.AspPage.Should().Be("/Schools/Governance/Historic");
                 l.TestId.Should().Be("historic-governors-subnav");
+            }
+        );
+    }
+
+    [Fact]
+    public async Task GetSubNavLinksAsync_should_return_expected_links_for_ofsted_pages()
+    {
+        var activePage = GetMockSchoolPage(typeof(OfstedAreaModel));
+
+        var results = await Sut.GetSubNavLinksAsync(activePage);
+
+        results.Should().SatisfyRespectively(l =>
+            {
+                l.LinkDisplayText.Should().Be("Overview");
+                l.AspPage.Should().Be("/Schools/Ofsted/OfstedOverview");
+                l.TestId.Should().Be("ofsted-overview-subnav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Report cards");
+                l.AspPage.Should().Be("/Schools/Ofsted/ReportCards/CurrentReportCards");
+                l.TestId.Should().Be("ofsted-report-cards-current-subnav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Older inspections (before November 2025)");
+                l.AspPage.Should().Be("/Schools/Ofsted/Older/CurrentRatings");
+                l.TestId.Should().Be("ofsted-older-ratings-subnav");
             }
         );
     }

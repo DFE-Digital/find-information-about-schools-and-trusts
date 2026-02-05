@@ -21,6 +21,7 @@ public abstract class BaseReportCardsRatingsModel(
     IReportCardsService reportCardsService) : OfstedAreaModel(schoolService, schoolOverviewDetailsService, trustService,
     dataSourceService, ofstedSchoolDataExportService, dateTimeProvider, otherServicesLinkBuilder, schoolNavMenu)
 {
+    private readonly ISchoolNavMenu _schoolNavMenu = schoolNavMenu;
 
     public ReportCardDetails? ReportCard { get; set; }
 
@@ -37,11 +38,7 @@ public abstract class BaseReportCardsRatingsModel(
 
         WhenDidCurrentInspectionHappen = GetWhenInspectionHappened(ReportCard, reportCards.DateJoinedTrust?.ToDateTime(TimeOnly.MinValue));
 
-        TabList =
-        [
-            GetTabFor<CurrentReportCardsModel>("Report cards", "Current report card", "./CurrentReportCards"),
-            GetTabFor<PreviousReportCardsModel>("Report cards", "Previous report card", "./PreviousReportCards")
-        ];
+        TabList = _schoolNavMenu.GetTabLinksForReportCardsOfstedPages(this);
 
         return pageResult;
     }

@@ -24,8 +24,9 @@ public class AcademyService(
     IOfstedRepository ofstedRepository,
     IPipelineEstablishmentRepository pipelineEstablishmentRepository,
     ITrustPupilService trustPupilService,
-    IFreeSchoolMealsAverageProvider freeSchoolMealsAverageProvider) : IAcademyService
+    IFreeSchoolMealsAverageProvider freeSchoolMealsAverageProvider): IAcademyService
 {
+
     public async Task<AcademyDetailsServiceModel[]> GetAcademiesInTrustDetailsAsync(string uid)
     {
         var academies = await academyRepository.GetAcademiesInTrustDetailsAsync(uid);

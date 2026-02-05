@@ -15,7 +15,6 @@ public class CurrentRatingsModel(ISchoolService schoolService, ISchoolOverviewDe
     public const string SubPageName = "Older inspections (before November 2025)";
     public override PageMetadata PageMetadata => base.PageMetadata with { SubPageName = SubPageName, TabName = "After September 2024" };
 
-    protected override OfstedRating? GetOfstedRating(SchoolOfstedServiceModel ofstedRatings) => ofstedRatings.CurrentOfstedRating;
-    protected override BeforeOrAfterJoining GetWhenInspectionHappened(SchoolOfstedServiceModel ofstedRatings) => ofstedRatings.WhenDidCurrentInspectionHappen;
+    protected override List<OfstedRating> GetOfstedRating(OlderSchoolOfstedServiceModel ofstedRatings) => ofstedRatings.RatingsWithoutSingleHeadlineGrade;
 
 }
