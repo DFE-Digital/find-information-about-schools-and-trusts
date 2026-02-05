@@ -2,9 +2,16 @@
 @model InspectionOverviewRowViewModel?
 
 @{
-    var rowTestId = Model?.RowTitle == "Current inspection" ? "current-inspection-row" : Model?.RowTitle == "Previous inspection" ? "previous-inspection-row" : null;
-    var dateTestId = Model?.RowTitle == "Current inspection" ? "current-inspection-date" : Model?.RowTitle == "Previous inspection" ? "previous-inspection-date" : null;
-    var gradeTestId = Model?.RowTitle == "Current inspection" ? "current-inspection-grade" : Model?.RowTitle == "Previous inspection" ? "previous-inspection-grade" : null;
+    var inspectionType = Model?.RowTitle switch
+    {
+        "Current inspection" => "current-inspection",
+        "Previous inspection" => "previous-inspection",
+        _ => null
+    };
+    
+    var rowTestId = inspectionType != null ? $"{inspectionType}-row" : null;
+    var dateTestId = inspectionType != null ? $"{inspectionType}-date" : null;
+    var gradeTestId = inspectionType != null ? $"{inspectionType}-grade" : null;
 }
 
 <tr class="govuk-table__row" @(rowTestId != null ? Html.Raw($" data-testid=\"{rowTestId}\"") : null)>
