@@ -19,6 +19,10 @@ public interface ISchoolNavMenu
 {
     Task<NavLink[]> GetServiceNavLinksAsync(ISchoolAreaModel activePage);
     Task<NavLink[]> GetSubNavLinksAsync(ISchoolAreaModel activePage);
+
+    NavLink[] GetTabLinksForOlderOfstedPages(ISchoolAreaModel activePage);
+
+    NavLink[] GetTabLinksForReportCardsOfstedPages(ISchoolAreaModel activePage);
 }
 
 public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMenu
@@ -64,6 +68,25 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
             _ => throw new ArgumentOutOfRangeException(nameof(activePage), activePage, "Page type is not supported.")
         };
     }
+
+    public NavLink[] GetTabLinksForOlderOfstedPages(ISchoolAreaModel activePage)
+    {
+        return
+        [
+            GetSubNavLinkTo<CurrentRatingsModel>("older", "After September 2024", "./CurrentRatings", activePage, "older-after-september-2024-tab"),
+            GetSubNavLinkTo<PreviousRatingsModel>("older", "Before September 2024", "./PreviousRatings", activePage, "older-before-september-2024-tab")
+        ];
+    }
+
+    public NavLink[] GetTabLinksForReportCardsOfstedPages(ISchoolAreaModel activePage)
+    {
+        return
+        [
+            GetSubNavLinkTo<CurrentReportCardsModel>("Report cards", "Current report card", "./CurrentReportCards", activePage, "report-cards-current-report-card-tab"),
+            GetSubNavLinkTo<PreviousReportCardsModel>("Report cards", "Previous report card", "./PreviousReportCards", activePage, "report-cards-previous-report-card-tab")
+        ];
+    }
+
 
     private static NavLink[] BuildLinksForOverviewPage(ISchoolAreaModel activePage)
     {

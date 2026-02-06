@@ -8,17 +8,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted
 {
-    public class OfstedOverviewModel(ISchoolService schoolService,
+    public class OfstedOverviewModel(
+        ISchoolService schoolService,
         ISchoolOverviewDetailsService schoolOverviewDetailsService,
         ITrustService trustService,
         IDataSourceService dataSourceService,
         IOfstedSchoolDataExportService ofstedSchoolDataExportService,
         IDateTimeProvider dateTimeProvider,
         IOtherServicesLinkBuilder otherServicesLinkBuilder,
-        ISchoolNavMenu schoolNavMenu) : OfstedAreaModel(schoolService, schoolOverviewDetailsService, trustService,
+        ISchoolNavMenu schoolNavMenu) : OfstedAreaModel(schoolService, schoolOverviewDetailsService,
+        trustService,
         dataSourceService, ofstedSchoolDataExportService, dateTimeProvider, otherServicesLinkBuilder, schoolNavMenu)
     {
         public const string SubPageName = "Overview";
+
+        public OfstedOverviewInspectionServiceModel OverviewInspectionModel { get; set; } = new(null, null, null);
 
         public override PageMetadata PageMetadata => base.PageMetadata with { SubPageName = SubPageName };
 
@@ -28,7 +32,9 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted
 
             if (pageResult is NotFoundResult) return pageResult;
 
-            
+            OverviewInspectionModel = await SchoolService.GetOfstedOverviewInspectionAsync(Urn);
+
+
             return pageResult;
         }
     }

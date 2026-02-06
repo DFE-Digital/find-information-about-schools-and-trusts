@@ -375,21 +375,7 @@ AcademyPupilNumbersServiceModel[] expected =
         result.Should().BeEmpty();
     }
 
-    [Fact]
-    public async Task
-        GetAcademiesPipelineFreeSchoolsAsync_should_return_empty_array_when_repository_returns_empty_array()
-    {
-        // Arrange
-        const string trustReferenceNumber = "TRN123";
-        _mockPipelineEstablishmentRepository.GetPipelineFreeSchoolProjectsAsync(trustReferenceNumber)
-            .Returns([]);
 
-        // Act
-        var result = await _sut.GetAcademiesPipelineFreeSchoolsAsync(trustReferenceNumber);
-
-        // Assert
-        result.Should().BeEmpty();
-    }
 
     [Fact]
     public async Task GetAcademiesPipelineFreeSchoolsAsync_should_return_mapped_establishments_when_data_found()

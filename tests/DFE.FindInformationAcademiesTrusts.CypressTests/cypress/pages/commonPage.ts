@@ -144,11 +144,10 @@ class CommonPage {
     };
 
     public readonly checkValueIsValidFullDate = (element: JQuery<HTMLElement>) => {
-        const text = element.text().trim();
+        const text = element.text().replace(/\s+/g, ' ').trim();
 
-        // Resolves to a date ({2 digits} {month} {4 digits}) or "Not applicable" string
-        // Tech debt - We are allowing Sep and Sept due to different cultures set on remote vs local builds
-        expect(text).to.match(/^\d{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) \d{4}$|^Not applicable$/);
+        // Date (DD Month YYYY), optionally followed by "After joining" / "Before joining" (the trust), or "Not applicable"
+        expect(text).to.match(/^\d{1,2} (January|February|March|April|May|June|July|August|September|October|November|December) \d{4}( (After|Before) joining( the trust)?)?$|^Not applicable$/);
     };
 }
 

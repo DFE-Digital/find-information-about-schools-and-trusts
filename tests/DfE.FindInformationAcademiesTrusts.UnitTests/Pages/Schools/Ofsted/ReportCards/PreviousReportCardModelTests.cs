@@ -5,10 +5,15 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted.Repo
     using DfE.FindInformationAcademiesTrusts.Data;
     using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.ReportCards;
 
-    public class PreviousReportCardModelTests : BaseReportCardsOfstedAreaModelTests<PreviousReportCardsModel>
+    public class PreviousReportCardModelTests : BaseOfstedAreaModelTests<PreviousReportCardsModel>
     {
+        protected readonly IReportCardsService MockReportCardsService =
+            Substitute.For<IReportCardsService>();
+
         public PreviousReportCardModelTests()
         {
+            MockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(new ReportCardServiceModel());
+
             Sut = new PreviousReportCardsModel(
                     MockSchoolService,
                     MockSchoolOverviewDetailsService,
@@ -50,6 +55,14 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted.Repo
             await Sut.OnGetAsync();
 
             Sut.ReportCard.Should().Be(expectedReportCard);
+        }
+
+        [Fact]
+        public override async Task OnGetAsync_should_call_populate_tablist()
+        {
+            _ = await Sut.OnGetAsync();
+
+            _ = MockSchoolNavMenu.Received(1).GetTabLinksForReportCardsOfstedPages(Arg.Any<PreviousReportCardsModel>());
         }
     }
 }

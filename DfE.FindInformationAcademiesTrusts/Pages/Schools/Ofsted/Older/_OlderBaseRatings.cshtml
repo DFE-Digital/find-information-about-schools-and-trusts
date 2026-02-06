@@ -1,50 +1,57 @@
 @using DfE.FindInformationAcademiesTrusts.Extensions
 @model OlderBaseRatingsModel
 
-@if (Model.OfstedRating != null)
+@if (Model.OfstedRatings.Any())
 {
-
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-m" data-testid="subpage-header">
                 @Model.PageMetadata.TabName
             </h1>
 
-            @await Html.PartialAsync("Schools/Ofsted/_InspectionDate", Model.OfstedRating.InspectionDate)
-            
-            @if (Model.GetType() == typeof(PreviousRatingsModel))
+            @foreach (var inspection in Model.OfstedRatings)
             {
-                @await Html.PartialAsync("Schools/Ofsted/_SingleHeadlineGrade", Model.SingleHeadlineRating)
-            }
-            
-            @await Html.PartialAsync("Schools/Ofsted/_InspectionBeforeOrAfter", Model.InspectionBeforeOrAfterJoiningTrust)
-            @{
-                var ratings = new List<(string TestId, string Label, string Value)>
+                if (inspection.InspectionDate is not null)
                 {
-                    ("quality-of-education-row", "Quality of education", Model.OfstedRating.QualityOfEducation.ToDisplayString(false)),
-                    ("behaviour-and-attitudes-row", "Behaviour and attitudes", Model.OfstedRating.BehaviourAndAttitudes.ToDisplayString(false)),
-                    ("personal-development-row", "Personal development", Model.OfstedRating.PersonalDevelopment.ToDisplayString(false)),
-                    ("leadership-and-management-row", "Leadership and management", Model.OfstedRating.EffectivenessOfLeadershipAndManagement.ToDisplayString(false)),
-                    ("early-years-provision-row", "Early years provision", Model.OfstedRating.EarlyYearsProvision.ToDisplayString(false)),
-                    ("sixth-form-provision-row", "Sixth form provision", Model.OfstedRating.SixthFormProvision.ToDisplayString(false)),
-                    ("effective-safeguarding-row", "Effective safeguarding", Model.OfstedRating.SafeguardingIsEffective.ToDisplayString()),
-                    ("category-of-concern-row", "Category of concern", Model.OfstedRating.CategoryOfConcern.ToDisplayString())
-                };
-            }
-
-            <dl class="govuk-summary-list govuk-!-margin-bottom-0" data-testid="ratings-table">
-                @foreach (var rating in ratings)
-                {
-                    <div class="govuk-summary-list__row" data-testid="@rating.TestId">
-                        <dt class="govuk-summary-list__key govuk-!-width-one-half">
-                            @rating.Label
-                        </dt>
-                        <dd class="govuk-summary-list__value">
-                            @rating.Value
-                        </dd>
-                    </div>
+                    <h3 class="govuk-heading-s">Inspection date: @inspection.InspectionDate.Value.ToString("dd MMMM yyyy")</h3>
                 }
-            </dl>
+
+                @if (Model.GetType() == typeof(PreviousRatingsModel))
+                {
+                    @await Html.PartialAsync("Schools/Ofsted/_SingleHeadlineGrade", inspection.OverallEffectiveness.ToDisplayString(true))
+                }
+
+                @await Html.PartialAsync("Schools/Ofsted/_InspectionBeforeOrAfter", Model.DateJoinedTrust.GetBeforeOrAfterJoiningTrust(inspection.InspectionDate))
+                
+                    var ratings = new List<(string TestId, string Label, string Value)>
+                    {
+                        ("quality-of-education-row", "Quality of education", inspection.QualityOfEducation.ToDisplayString(false)),
+                        ("behaviour-and-attitudes-row", "Behaviour and attitudes", inspection.BehaviourAndAttitudes.ToDisplayString(false)),
+                        ("personal-development-row", "Personal development", inspection.PersonalDevelopment.ToDisplayString(false)),
+                        ("leadership-and-management-row", "Leadership and management", inspection.EffectivenessOfLeadershipAndManagement.ToDisplayString(false)),
+                        ("early-years-provision-row", "Early years provision", inspection.EarlyYearsProvision.ToDisplayString(false)),
+                        ("sixth-form-provision-row", "Sixth form provision", inspection.SixthFormProvision.ToDisplayString(false)),
+                        ("effective-safeguarding-row", "Effective safeguarding", inspection.SafeguardingIsEffective.ToDisplayString()),
+                        ("category-of-concern-row", "Category of concern", inspection.CategoryOfConcern.ToDisplayString())
+                    };
+
+
+                    <dl class="govuk-summary-list govuk-!-margin-bottom-9" data-testid="ratings-table">
+
+                        @foreach (var rating in ratings)
+                        {
+                            <div class="govuk-summary-list__row" data-testid="@rating.TestId">
+                                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                                    @rating.Label
+                                </dt>
+                                <dd class="govuk-summary-list__value">
+                                    @rating.Value
+                                </dd>
+                            </div>
+                        }
+                    </dl>
+                
+            }
         </div>
     </div>
 }

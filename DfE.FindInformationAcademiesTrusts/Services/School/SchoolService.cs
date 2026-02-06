@@ -1,7 +1,7 @@
-using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
+using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.School;
@@ -18,9 +18,11 @@ public interface ISchoolService
 
     Task<OfstedHeadlineGradesServiceModel> GetOfstedHeadlineGrades(int urn);
 
+    Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspectionAsync(int urn);
+
     Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsync(int urn);
 
-    Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn);
+    Task<OlderSchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn);
 
     Task<SchoolReligiousCharacteristicsServiceModel> GetReligiousCharacteristicsAsync(int urn);
 }
@@ -28,7 +30,9 @@ public interface ISchoolService
 public class SchoolService(
     IMemoryCache memoryCache,
     ISchoolRepository schoolRepository,
-    IOfstedRepository ofstedRepository) : ISchoolService
+    IOfstedRepository ofstedRepository,
+    IReportCardsService reportCardsService,
+    IOfstedServiceModelBuilder ofstedServiceModelBuilder) : ISchoolService
 {
     public async Task<bool> IsPartOfFederationAsync(int urn)
     {
@@ -91,6 +95,7 @@ public class SchoolService(
             inspectionHistorySummary.PreviousInspection);
     }
 
+
     public async Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsync(int urn)
     {
         var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
@@ -106,35 +111,20 @@ public class SchoolService(
         );
     }
 
-    public async Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn)
+    public async Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspectionAsync(int urn)
     {
-        int cutoffMonth = 8;
-        int cutoffYear = 2024;
+        var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
+        var reportCards = await reportCardsService.GetReportCardsAsync(urn);
 
-        // Get the number of days in the given month/year
-        int lastDay = DateTime.DaysInMonth(cutoffYear, cutoffMonth);
+        return ofstedServiceModelBuilder.BuildOfstedOverviewInspection(schoolOfstedRatings, reportCards);
+    }
 
-        DateTime cutOffDate = new(cutoffYear, cutoffMonth, lastDay, 23, 59, 59, DateTimeKind.Unspecified);
 
+    public async Task<OlderSchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn)
+    {
         var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
 
-        List<OfstedRating> ofstedRatings =
-            [schoolOfstedRatings.CurrentOfstedRating, schoolOfstedRatings.PreviousOfstedRating];
-
-        ofstedRatings = ofstedRatings.OrderByDescending(x => x.InspectionDate).ToList();
-
-         var after = ofstedRatings.FirstOrDefault(x => x.InspectionDate > cutOffDate);
-         var before = ofstedRatings.FirstOrDefault(x => x.InspectionDate <= cutOffDate);
-
-        return new SchoolOfstedServiceModel(
-            schoolOfstedRatings.Urn,
-            schoolOfstedRatings.EstablishmentName,
-            schoolOfstedRatings.DateAcademyJoinedTrust,
-            schoolOfstedRatings.ShortInspection,
-            before,
-            after,
-            schoolOfstedRatings.IsFurtherEducationalEstablishment
-        );
+        return ofstedServiceModelBuilder.BuildSchoolOfstedRatingsAsBeforeAndAfterSeptemberGrade(schoolOfstedRatings);
     }
 
     public async Task<SchoolReligiousCharacteristicsServiceModel> GetReligiousCharacteristicsAsync(int urn)
