@@ -7,6 +7,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-01-19.6967...HEAD)
 
 --- 
+
+### Changed
+- 258984 - Show Not available when any school in the Trust is missing capacity data
+
+ ## [Release-60][release-60] - 2026-02-06
+
+### Changed
+
+- 258984 - Show Not available when any school in the Trust is missing capacity data
+
+--- 
  
 ## [Release-59][release-59] - 2026-01-19
 
@@ -768,3 +779,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-01-14.6916
 [release-59]:
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-01-19.6967
+ [release-60]:
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-02-06.7041
