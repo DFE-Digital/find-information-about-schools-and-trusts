@@ -2,17 +2,17 @@ using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.Ofsted;
 
-public class SafeguardingAndConcernsModelTests : BaseOfstedAreaModelTests<SafeguardingAndConcernsModel>
+public class OlderInspectionsModelTests : BaseOfstedAreaModelTests<OlderInspectionsModel>
 {
-    public SafeguardingAndConcernsModelTests()
+    public OlderInspectionsModelTests()
     {
-        Sut = new SafeguardingAndConcernsModel(MockDataSourceService,
+        Sut = new OlderInspectionsModel(MockDataSourceService,
                 MockTrustService,
                 MockAcademyService,
                 MockOfstedTrustDataExportService,
                 MockDateTimeProvider
             )
-            { Uid = TrustUid };
+        { Uid = TrustUid };
     }
 
     [Fact]
@@ -20,6 +20,6 @@ public class SafeguardingAndConcernsModelTests : BaseOfstedAreaModelTests<Safegu
     {
         _ = await Sut.OnGetAsync();
 
-        Sut.PageMetadata.SubPageName.Should().Be("Safeguarding and concerns");
+        Sut.PageMetadata.SubPageName.Should().Be("Older inspections (before November 2025)");
     }
 }

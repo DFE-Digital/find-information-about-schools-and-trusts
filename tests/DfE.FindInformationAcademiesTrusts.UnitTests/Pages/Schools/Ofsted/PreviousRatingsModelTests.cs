@@ -37,10 +37,11 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
                 MockOfstedSchoolDataExportService,
                 MockDateTimeProvider,
                 MockOtherServicesLinkBuilder,
-                MockSchoolNavMenu)
+                MockSchoolNavMenu,
+                MockOfstedService)
             { Urn = SchoolUrn };
 
-        MockSchoolService.GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(Arg.Any<int>()).Returns(_dummySchoolOfstedServiceModel);
+        MockOfstedService.GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(Arg.Any<int>()).Returns(_dummySchoolOfstedServiceModel);
         MockTrustService.GetTrustSummaryAsync(AcademyUrn).Returns(_dummyTrustSummaryServiceModel);
     }
 
@@ -71,7 +72,7 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
 
         _dummySchoolOfstedServiceModel.RatingsWithSingleHeadlineGrade.Add(expectedRating);
 
-        MockSchoolService
+        MockOfstedService
             .GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(SchoolUrn)
             .Returns(_dummySchoolOfstedServiceModel);
 

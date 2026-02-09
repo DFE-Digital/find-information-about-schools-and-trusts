@@ -1,7 +1,6 @@
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
-using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.School;
@@ -18,11 +17,7 @@ public interface ISchoolService
 
     Task<OfstedHeadlineGradesServiceModel> GetOfstedHeadlineGrades(int urn);
 
-    Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspectionAsync(int urn);
-
     Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsync(int urn);
-
-    Task<OlderSchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn);
 
     Task<SchoolReligiousCharacteristicsServiceModel> GetReligiousCharacteristicsAsync(int urn);
 }
@@ -30,9 +25,7 @@ public interface ISchoolService
 public class SchoolService(
     IMemoryCache memoryCache,
     ISchoolRepository schoolRepository,
-    IOfstedRepository ofstedRepository,
-    IReportCardsService reportCardsService,
-    IOfstedServiceModelBuilder ofstedServiceModelBuilder) : ISchoolService
+    IOfstedRepository ofstedRepository) : ISchoolService
 {
     public async Task<bool> IsPartOfFederationAsync(int urn)
     {
@@ -109,22 +102,6 @@ public class SchoolService(
             schoolOfstedRatings.CurrentOfstedRating,
             schoolOfstedRatings.IsFurtherEducationalEstablishment
         );
-    }
-
-    public async Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspectionAsync(int urn)
-    {
-        var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
-        var reportCards = await reportCardsService.GetReportCardsAsync(urn);
-
-        return ofstedServiceModelBuilder.BuildOfstedOverviewInspection(schoolOfstedRatings, reportCards);
-    }
-
-
-    public async Task<OlderSchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn)
-    {
-        var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
-
-        return ofstedServiceModelBuilder.BuildSchoolOfstedRatingsAsBeforeAndAfterSeptemberGrade(schoolOfstedRatings);
     }
 
     public async Task<SchoolReligiousCharacteristicsServiceModel> GetReligiousCharacteristicsAsync(int urn)
