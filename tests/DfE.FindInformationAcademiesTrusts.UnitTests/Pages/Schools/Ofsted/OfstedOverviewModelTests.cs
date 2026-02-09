@@ -18,7 +18,8 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted
                     MockOfstedSchoolDataExportService,
                     MockDateTimeProvider,
                     MockOtherServicesLinkBuilder,
-                    MockSchoolNavMenu)
+                    MockSchoolNavMenu,
+                    MockOfstedService)
                 { Urn = SchoolUrn };
         }
 
@@ -50,7 +51,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted
             
             await Sut.OnGetAsync();
 
-            await MockSchoolService.Received(1).GetOfstedOverviewInspectionAsync(SchoolUrn);
+            await MockOfstedService.Received(1).GetOfstedOverviewInspectionAsync(SchoolUrn);
         }
 
 

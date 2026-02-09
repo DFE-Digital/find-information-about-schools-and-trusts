@@ -5,7 +5,12 @@ namespace DfE.FindInformationAcademiesTrusts.Services.School
     public record OfstedOverviewInspectionServiceModel(
         OverviewServiceModel? Current,
         OverviewServiceModel? Previous,
-        ShortInspectionOverviewServiceModel? ShortInspection);
+        ShortInspectionOverviewServiceModel? ShortInspection)
+    {
+        public string SchoolName { get; set; } = string.Empty;
+        public int Urn { get; set; }
+        public DateTime DateJoinedTrust { get; set; }
+    }
 
     public class OverviewServiceModel
     {

@@ -1,6 +1,7 @@
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
+using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,8 @@ public abstract class OlderBaseRatingsModel(
     IOfstedSchoolDataExportService ofstedSchoolDataExportService,
     IDateTimeProvider dateTimeProvider,
     IOtherServicesLinkBuilder otherServicesLinkBuilder,
-    ISchoolNavMenu schoolNavMenu) : OfstedAreaModel(schoolService, schoolOverviewDetailsService, trustService,
+    ISchoolNavMenu schoolNavMenu,
+    IOfstedService ofstedService) : OfstedAreaModel(schoolService, schoolOverviewDetailsService, trustService,
     dataSourceService, ofstedSchoolDataExportService, dateTimeProvider, otherServicesLinkBuilder, schoolNavMenu)
 {
     private readonly ISchoolNavMenu _schoolNavMenu = schoolNavMenu;
@@ -27,7 +29,7 @@ public abstract class OlderBaseRatingsModel(
 
         if (pageResult is NotFoundResult) return pageResult;
 
-        var ofstedRatings = await SchoolService.GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(Urn);
+        var ofstedRatings = await ofstedService.GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(Urn);
 
         OfstedRatings = GetOfstedRating(ofstedRatings);
 

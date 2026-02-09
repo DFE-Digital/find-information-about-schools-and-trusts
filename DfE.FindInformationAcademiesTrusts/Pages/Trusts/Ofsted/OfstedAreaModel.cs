@@ -2,6 +2,8 @@ using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
+using DfE.FindInformationAcademiesTrusts.Pages.Shared.NavMenu;
+using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted.ReportCards;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
@@ -22,9 +24,11 @@ public class OfstedAreaModel(
 
     public override PageMetadata PageMetadata => base.PageMetadata with { PageName = PageName };
 
-    public SchoolOfstedServiceModel[] Academies { get; set; } = default!;
+    public SchoolOfstedServiceModel[] Academies { get; set; } = [];
     private IAcademyService AcademyService { get; } = academyService;
     public IDateTimeProvider DateTimeProvider { get; } = dateTimeProvider;
+
+    public NavLink[] TabList { get; set; } = [];
 
     public override async Task<IActionResult> OnGetAsync()
     {
@@ -39,26 +43,20 @@ public class OfstedAreaModel(
         var misDataSource = await DataSourceService.GetAsync(Source.Mis);
 
         DataSourcesPerPage.AddRange([
-            new DataSourcePageListEntry(SingleHeadlineGradesModel.SubPageName, [
+            new DataSourcePageListEntry(OverviewModel.SubPageName, [
                     new DataSourceListEntry(giasDataSource, "Date joined trust"),
-                    new DataSourceListEntry(misDataSource, "All single headline grades"),
+                    new DataSourceListEntry(misDataSource, "All inspection types"),
                     new DataSourceListEntry(misDataSource, "All inspection dates")
                 ]
             ),
-            new DataSourcePageListEntry(CurrentRatingsModel.SubPageName, [
-                    new DataSourceListEntry(misDataSource, "Current Ofsted rating"),
-                    new DataSourceListEntry(misDataSource, "Date of current inspection")
+            new DataSourcePageListEntry(CurrentReportCardsModel.SubPageName, [
+                    new DataSourceListEntry(misDataSource, "Current report card ratings"),
+                    new DataSourceListEntry(misDataSource, "Previous report card ratings")
                 ]
             ),
-            new DataSourcePageListEntry(PreviousRatingsModel.SubPageName, [
-                    new DataSourceListEntry(misDataSource, "Previous Ofsted rating"),
-                    new DataSourceListEntry(misDataSource, "Date of previous inspection")
-                ]
-            ),
-            new DataSourcePageListEntry(SafeguardingAndConcernsModel.SubPageName, [
-                    new DataSourceListEntry(misDataSource, "Effective safeguarding"),
-                    new DataSourceListEntry(misDataSource, "Category of concern"),
-                    new DataSourceListEntry(misDataSource, "Date of current inspection")
+            new DataSourcePageListEntry(OlderInspectionsModel.SubPageName, [
+                    new DataSourceListEntry(misDataSource, "Inspection ratings after September 24"),
+                    new DataSourceListEntry(misDataSource, "Inspection ratings before September 24")
                 ]
             )
         ]);

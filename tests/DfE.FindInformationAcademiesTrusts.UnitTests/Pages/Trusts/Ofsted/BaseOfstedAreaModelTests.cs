@@ -4,6 +4,7 @@ using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
+using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute.ReturnsExtensions;
 
@@ -19,6 +20,8 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseTrustPageTests<T>, ITest
 
     protected readonly IDateTimeProvider MockDateTimeProvider = Substitute.For<IDateTimeProvider>();
 
+    protected readonly IOfstedService MockOfstedService = Substitute.For<IOfstedService>();
+
     [Fact]
     public override async Task OnGetAsync_sets_correct_data_source_list()
     {
@@ -28,26 +31,20 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseTrustPageTests<T>, ITest
         await MockDataSourceService.Received(1).GetAsync(Source.Mis);
 
         Sut.DataSourcesPerPage.Should().BeEquivalentTo([
-            new DataSourcePageListEntry("Single headline grades", [
+            new DataSourcePageListEntry("Overview", [
                     new DataSourceListEntry(GiasDataSource, "Date joined trust"),
-                    new DataSourceListEntry(MisDataSource, "All single headline grades"),
+                    new DataSourceListEntry(MisDataSource, "All inspection types"),
                     new DataSourceListEntry(MisDataSource, "All inspection dates")
                 ]
             ),
-            new DataSourcePageListEntry("Current ratings", [
-                    new DataSourceListEntry(MisDataSource, "Current Ofsted rating"),
-                    new DataSourceListEntry(MisDataSource, "Date of current inspection")
+            new DataSourcePageListEntry("Report cards", [
+                    new DataSourceListEntry(MisDataSource, "Current report card ratings"),
+                    new DataSourceListEntry(MisDataSource, "Previous report card ratings")
                 ]
             ),
-            new DataSourcePageListEntry("Previous ratings", [
-                    new DataSourceListEntry(MisDataSource, "Previous Ofsted rating"),
-                    new DataSourceListEntry(MisDataSource, "Date of previous inspection")
-                ]
-            ),
-            new DataSourcePageListEntry("Safeguarding and concerns", [
-                    new DataSourceListEntry(MisDataSource, "Effective safeguarding"),
-                    new DataSourceListEntry(MisDataSource, "Category of concern"),
-                    new DataSourceListEntry(MisDataSource, "Date of current inspection")
+            new DataSourcePageListEntry("Older inspections (before November 2025)", [
+                    new DataSourceListEntry(MisDataSource, "Inspection ratings after September 24"),
+                    new DataSourceListEntry(MisDataSource, "Inspection ratings before September 24")
                 ]
             )
         ]);
