@@ -70,7 +70,7 @@ describe('Pagination Accessibility', () => {
 
         it('should have accessible pagination on ofsted tables', () => {
             // Test pagination accessibility on Ofsted ratings data table
-            cy.visit(`/trusts/ofsted/current-ratings?uid=${testPaginationData.ofstedRatingsUid}`);
+            cy.visit(`/trusts/ofsted/reportcards/currentreportcards?uid=${testPaginationData.ofstedRatingsUid}`);
 
             // Wait for page to load
             cy.get('#main-content').should('be.visible');

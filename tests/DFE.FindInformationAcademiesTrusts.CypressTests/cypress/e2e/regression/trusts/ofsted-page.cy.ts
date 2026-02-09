@@ -13,7 +13,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
                     cy.task('clearDownloads', 'cypress/downloads');
                 }
             });
-            cy.visit(`/trusts/ofsted/single-headline-grades?uid=5527`);
+            cy.visit(`/trusts/ofsted/overview?uid=5527`);
         });
 
         it("Checks the correct Ofsted single headline grades subpage header is present", () => {
@@ -97,7 +97,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
     describe("Testing the Ofsted current ratings page ", () => {
         beforeEach(() => {
-            cy.visit(`/trusts/ofsted/current-ratings?uid=${testOfstedWithDataUid}`);
+            cy.visit(`/trusts/ofsted/reportcards/currentreportcards?uid=${testOfstedWithDataUid}`);
 
             cy.task('checkForFiles', 'cypress/downloads').then((files) => {
                 if (files) {
@@ -143,7 +143,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
         });
 
         it("Checks that a different trusts current ratings correct judgement types are present", () => {
-            cy.visit('/trusts/ofsted/current-ratings?uid=5712');
+            cy.visit('/trusts/ofsted/reportcards/currentreportcards?uid=5712');
             ofstedPage
                 .checkCurrentRatingsQualityOfEducationJudgementsPresent()
                 .checkCurrentRatingsBehaviourAndAttitudesJudgementsPresent()
@@ -166,7 +166,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
     describe("Testing the Ofsted previous ratings page ", () => {
         beforeEach(() => {
-            cy.visit('/trusts/ofsted/previous-ratings?uid=5143');
+            cy.visit('/trusts/ofsted/reportcards/previousreportcards?uid=5143');
 
             cy.task('checkForFiles', 'cypress/downloads').then((files) => {
                 if (files) {
@@ -235,7 +235,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
     describe("Testing the Ofsted Safeguarding and concerns page", () => {
         beforeEach(() => {
-            cy.visit('/trusts/ofsted/safeguarding-and-concerns?uid=5143');
+            cy.visit('/trusts/ofsted/reportcards/currentreportcards?uid=5143');
 
             cy.task('checkForFiles', 'cypress/downloads').then((files) => {
                 if (files) {
@@ -277,7 +277,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
         });
 
         it("Checks that a different trusts safeguarding and concerns correct judgement types are present", () => {
-            cy.visit('/trusts/ofsted/safeguarding-and-concerns?uid=5712');
+            cy.visit('/trusts/ofsted/reportcards/currentreportcards?uid=5712');
             ofstedPage
                 .checkSafeguardingConcernsEffectiveSafeguardingJudgementsPresent()
                 .checkSafeguardingConcernsCategoryOfConcernJudgementsPresent()
@@ -310,8 +310,8 @@ describe("Testing the Ofsted page and its subpages ", () => {
     describe("Testing that no unknown entries are found for ofsteds various tables/pages", () => {
         testTrustOfstedData.forEach(({ typeOfTrust, uid }) => {
 
-            [`trusts/ofsted/single-headline-grades?uid=${uid}`, `trusts/ofsted/current-ratings?uid=${uid}`, `trusts/ofsted/previous-ratings?uid=${uid}`, `/trusts/ofsted/safeguarding-and-concerns?uid=${uid}`].forEach((url) => {
-                it(`Should have no unknown entries on ${url} for a ${typeOfTrust}`, () => {
+            [`trusts/ofsted/single-headline-grades?uid=${uid}`, `trusts/ofsted/current-ratings?uid=${uid}`, `trusts/ofsted/previous-ratings?uid=${uid}`, `${uid}`].forEach((url) => {
+                it(`Should have no unknown entrie/trusts/ofsted/safeguarding-and-concerns?uid=s on ${url} for a ${typeOfTrust}`, () => {
                     cy.visit(url);
                     commonPage
                         .checkNoUnknownEntries();
@@ -321,13 +321,13 @@ describe("Testing the Ofsted page and its subpages ", () => {
     });
 
     describe("Testing the Ofsted page for a trust with a further education provider", () => {
-         beforeEach(() => {
-            cy.visit(`/trusts/ofsted/single-headline-grades?uid=${testTrustWithFurtherEducationEstablishments}`);
-       });
+        beforeEach(() => {
+            cy.visit(`/trusts/ofsted/overview?uid=${testTrustWithFurtherEducationEstablishments}`);
+        });
 
         it("Checks the has recent short inspections data is correct", () => {
             ofstedPage
                 .checkSHGHasRecentShortInspectionPresent();
-         });
+        });
     });
 });
