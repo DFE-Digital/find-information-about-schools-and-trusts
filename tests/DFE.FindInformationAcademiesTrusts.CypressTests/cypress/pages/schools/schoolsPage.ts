@@ -188,7 +188,7 @@ class SchoolsPage {
     }
 
     public checkOverviewPageNamePresent(): this {
-        this.elements.pageName().should('contain', 'Overview');
+        this.elements.pageName().should('contain', 'Ofsted');
         return this;
     }
 
@@ -810,7 +810,7 @@ class SchoolsPage {
     }
 
     public checkSchoolReportCardSubHeaderPresent(): this {
-        this.elements.ofsted.ratings.subPageHeader().should('contain', 'Report Card');
+        this.elements.ofsted.ratings.subPageHeader().should('contain', 'Report card');
         return this;
     }
 

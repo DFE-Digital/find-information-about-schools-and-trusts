@@ -13,7 +13,7 @@
             @await Html.PartialAsync("Schools/Ofsted/_InspectionDate", Model.ReportCard.InspectionDate.ToDateTime(TimeOnly.MinValue))
             @await Html.PartialAsync("Schools/Ofsted/_InspectionBeforeOrAfter", Model.WhenDidCurrentInspectionHappen)
 
-            <dl class="govuk-summary-list">
+            <dl class="govuk-summary-list" data-testid="ratings-table">
 
                 @foreach (var reportCardItem in Model.ReportCard.ToDictionary())
                 {
