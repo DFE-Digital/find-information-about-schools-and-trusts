@@ -32,10 +32,7 @@ public abstract class TrustNavMenuTestsBase
         typeof(PostAdvisoryBoardModel),
         typeof(FreeSchoolsModel),
         //Ofsted
-        typeof(SingleHeadlineGradesModel),
-        typeof(CurrentRatingsModel),
-        typeof(PreviousRatingsModel),
-        typeof(SafeguardingAndConcernsModel),
+        typeof(OverviewModel),
         //Financial documents
         typeof(FinancialStatementsModel),
         typeof(ManagementLettersModel),

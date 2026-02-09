@@ -23,6 +23,8 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
     protected readonly IOtherServicesLinkBuilder MockOtherServicesLinkBuilder =
         Substitute.For<IOtherServicesLinkBuilder>();
 
+    protected readonly IOfstedService MockOfstedService = Substitute.For<IOfstedService>();
+
     protected readonly SchoolOverviewServiceModel DummySchoolDetails =
         new("Cool school", "some street, in a town", "Yorkshire", "Leeds", "Secondary", new AgeRange(11, 18),
             NurseryProvision.NotRecorded);

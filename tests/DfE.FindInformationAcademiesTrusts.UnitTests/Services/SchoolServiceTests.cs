@@ -6,8 +6,6 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
-using FluentAssertions.Common;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services;
 
@@ -17,13 +15,12 @@ public class SchoolServiceTests
     private readonly ISchoolRepository _mockSchoolRepository = Substitute.For<ISchoolRepository>();
     private readonly IOfstedRepository _mockOfstedRepository = Substitute.For<IOfstedRepository>();
     private readonly IReportCardsService _mockReportCardsService = Substitute.For<IReportCardsService>();
-    private readonly IOfstedServiceModelBuilder _mockOfstedServiceModelBuilder = Substitute.For<IOfstedServiceModelBuilder>();
 
     private readonly MockMemoryCache _mockMemoryCache = new();
 
     public SchoolServiceTests()
     {
-        _sut = new SchoolService(_mockMemoryCache.Object, _mockSchoolRepository, _mockOfstedRepository, _mockReportCardsService, _mockOfstedServiceModelBuilder);
+        _sut = new SchoolService(_mockMemoryCache.Object, _mockSchoolRepository, _mockOfstedRepository);
 
         _mockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(new ReportCardServiceModel());
     }
@@ -332,52 +329,4 @@ public class SchoolServiceTests
         result.ReligiousEthos.Should().BeEquivalentTo(expectedResult);
     }
 
-    [Fact]
-    public async Task GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync_Should_CallBuilderWithCorrectParameters()
-    {
-        const int urn = 123456;
-
-        var expectedSchoolOfsted = new SchoolOfsted(urn.ToString(), "Academy 1", new DateTime(2024, 8, 1),
-            new OfstedShortInspection(new DateTime(2024, 7, 1), "School remains Good"),
-            new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2025, 7, 1)),
-            new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2024, 6, 1)), false);
-
-        _mockOfstedRepository.GetSchoolOfstedRatingsAsync(urn)
-            .Returns(expectedSchoolOfsted);
-
-
-        await _sut.GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(urn);
-
-        _mockOfstedServiceModelBuilder.Received(1)
-            .BuildSchoolOfstedRatingsAsBeforeAndAfterSeptemberGrade(expectedSchoolOfsted);
-    }
-
-    [Fact]
-    public async Task GetOfstedOverviewInspectionAsync_ShouldGetDataAndCallBuilder()
-    {
-        const int urn = 123456;
-
-        var expectedSchoolOfsted = new SchoolOfsted(urn.ToString(), "Academy 1", new DateTime(2024, 8, 1),
-            new OfstedShortInspection(new DateTime(2024, 7, 1), "School remains Good"),
-            new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2025, 7, 1)),
-            new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2024, 6, 1)), false);
-
-        var expectedReportCards = new ReportCardServiceModel
-        {
-            DateJoinedTrust = new DateOnly(2024, 8, 1),
-            LatestReportCard = null,
-            PreviousReportCard = null
-        };
-        
-        _mockOfstedRepository.GetSchoolOfstedRatingsAsync(urn)
-            .Returns(expectedSchoolOfsted);
-        _mockReportCardsService.GetReportCardsAsync(urn)
-            .Returns(expectedReportCards);
-
-        await _sut.GetOfstedOverviewInspectionAsync(urn);
-
-        _mockOfstedServiceModelBuilder.Received(1)
-            .BuildOfstedOverviewInspection(expectedSchoolOfsted, expectedReportCards);
-
-    }
 }

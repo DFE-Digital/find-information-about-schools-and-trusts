@@ -2,6 +2,7 @@ using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
+using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,8 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted
         IOfstedSchoolDataExportService ofstedSchoolDataExportService,
         IDateTimeProvider dateTimeProvider,
         IOtherServicesLinkBuilder otherServicesLinkBuilder,
-        ISchoolNavMenu schoolNavMenu) : OfstedAreaModel(schoolService, schoolOverviewDetailsService,
+        ISchoolNavMenu schoolNavMenu,
+        IOfstedService ofstedService) : OfstedAreaModel(schoolService, schoolOverviewDetailsService,
         trustService,
         dataSourceService, ofstedSchoolDataExportService, dateTimeProvider, otherServicesLinkBuilder, schoolNavMenu)
     {
@@ -32,7 +34,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted
 
             if (pageResult is NotFoundResult) return pageResult;
 
-            OverviewInspectionModel = await SchoolService.GetOfstedOverviewInspectionAsync(Urn);
+            OverviewInspectionModel = await ofstedService.GetOfstedOverviewInspectionAsync(Urn);
 
 
             return pageResult;
