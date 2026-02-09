@@ -9,7 +9,7 @@ public abstract class BaseOverviewAreaModelTests<T> : BaseTrustPageTests<T>, ITe
 {
     protected readonly TrustOverviewServiceModel BaseTrustOverviewServiceModel =
         new(TrustUid, "", "", "", TrustType.MultiAcademyTrust, "", "", null, null, 0, new Dictionary<string, int>(), 0,
-            0);
+            0, true);
 
     protected BaseOverviewAreaModelTests()
     {
