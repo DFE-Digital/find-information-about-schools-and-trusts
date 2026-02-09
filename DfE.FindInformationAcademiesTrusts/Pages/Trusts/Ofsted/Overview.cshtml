@@ -1,0 +1,69 @@
+﻿@page
+@using DfE.FindInformationAcademiesTrusts.Extensions
+@model DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted.OverviewModel
+
+@{
+    Layout = "Ofsted/_OfstedLayout";
+}
+
+<section class="app-table-container" data-testid="ofsted-overview-table">
+
+    <details class="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+                Where to find short inspection data
+            </span>
+        </summary>
+        <div class="govuk-details__text">
+        
+            <p class="govuk-body">If a school has a short Ofsted inspection followed by a full one, data about the short inspection may not appear on this page.</p>
+            <p class="govuk-body">Short inspection data for Further Education providers may not appear on this page.</p>
+            <p class="govuk-body">Ofsted's inspection report will contain this data.</p>
+
+        </div>
+    </details>
+    
+    <table class="govuk-table si-row-colours-table" data-module="moj-sortable-table" aria-describedby="ofsted-overview">
+
+        <caption class="govuk-table__caption govuk-table__caption--m" id="ofsted-overview">Overview<span class="govuk-visually-hidden"> (column headers with buttons are sortable).</span></caption>
+
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header" aria-sort="ascending">School name</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none">Date joined</th>
+                <th scope="col" class="govuk-table__header column-header-date" aria-sort="none">Has recent short inspection</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none">Current inspection type</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none">Date of current inspection</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none">Previous inspection type</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none">Date of previous inspection</th>
+            </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+            @foreach (var overviewModel in Model.OverviewInspectionModels)
+            {
+                <tr class="govuk-table__row" data-testid="academy-row">
+                    <td class="govuk-body govuk-table__cell" data-sort-value="@overviewModel.SchoolName" data-testid="school-name">
+                        <partial name="Trusts/_AcademyLink" model="@(new AcademyLinkModel(overviewModel.SchoolName, "/schools/ofsted/ofstedoverview", overviewModel.Urn.ToString()))" />
+                    </td>
+                    <td class="govuk-body govuk-table__cell" data-sort-value="@overviewModel.DateJoinedTrust.ToString(StringFormatConstants.SortableDateFormat)" data-testid="academy-date-joined">
+                        @overviewModel.DateJoinedTrust.ToString(StringFormatConstants.DisplayDateFormat)
+                    </td>
+                    <td class="govuk-body govuk-table__cell" data-testid="has-recent-short-inspection">@(overviewModel.ShortInspection is null ? "No" : "Yes")</td>
+                    <td class="govuk-body govuk-table__cell" data-testid="current-inspection-type">
+                        @Html.Raw(overviewModel.Current is null ? "None" : overviewModel.Current.AsInspectionTypeString())
+                    </td>
+                    <td class="govuk-body govuk-table__cell" data-sort-value="@overviewModel.Current?.InspectionDate.ToString(StringFormatConstants.SortableDateFormat)" data-testid="date-of-current-inspection">
+                        @overviewModel.Current?.InspectionDate.ToString(StringFormatConstants.DisplayDateFormat)
+                    </td>
+                    <td class="govuk-body govuk-table__cell" data-testid="previous-inspection-type">
+                        @Html.Raw(overviewModel.Previous is null ? "None" : overviewModel.Previous.AsInspectionTypeString())
+                    </td>
+                    <td class="govuk-body govuk-table__cell" data-sort-value="@overviewModel.Previous?.InspectionDate.ToString(StringFormatConstants.SortableDateFormat)" data-testid="date-of-previous-inspection">
+                        @overviewModel.Previous?.InspectionDate.ToString(StringFormatConstants.DisplayDateFormat)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
