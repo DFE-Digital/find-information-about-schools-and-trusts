@@ -6,7 +6,7 @@ import { TestDataStore, testTrustOfstedData, testOfstedWithDataUid, testTrustWit
 
 describe("Testing the Ofsted page and its subpages ", () => {
 
-    describe(`Testing the single headline grades page `, () => {
+    describe(`Testing the overview grades page `, () => {
         beforeEach(() => {
             cy.task('checkForFiles', 'cypress/downloads').then((files) => {
                 if (files) {
@@ -16,7 +16,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
             cy.visit(`/trusts/ofsted/overview?uid=5527`);
         });
 
-        it("Checks the correct Ofsted single headline grades subpage header is present", () => {
+        it("Checks the correct Ofsted overview grades subpage header is present", () => {
 
             ofstedPage
                 .checkOfstedSHGPageHeaderPresent();
@@ -24,7 +24,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
         it("Checks the browser title is correct", () => {
             commonPage
-                .checkThatBrowserTitleForTrustPageMatches('Single headline grades - Ofsted - {trustName} - Find information about schools and trusts');
+                .checkThatBrowserTitleForTrustPageMatches('Overview - Ofsted - {trustName} - Find information about schools and trusts');
         });
 
         it("Checks the breadcrumb shows the correct page name", () => {

@@ -61,7 +61,7 @@ describe('Trust Navigation Core Tests', () => {
                 navigation
                     .clickOfstedServiceNavButton()
                     .checkOfstedServiceNavButtonIsHighlighted()
-                    .checkCurrentURLIsCorrect('/trusts/overview/trust-details?uid=5527')
+                    .checkCurrentURLIsCorrect('/trusts/ofsted/overview?uid=5527')
                     .checkAllServiceNavItemsPresent();
                 ofstedPage
                     .checkOfstedSHGPageHeaderPresent();
@@ -69,7 +69,7 @@ describe('Trust Navigation Core Tests', () => {
 
             it('Should check that the Finance documents navigation button takes me to the Financial documents financial statements page', () => {
                 //  Ofsted -> Financial documents 
-                cy.visit('/trusts/overview/trust-details?uid=5527');
+                cy.visit('/trusts/ofsted/overview?uid=5527');
 
                 navigation
                     .clickFinancialDocumentsServiceNavButton()

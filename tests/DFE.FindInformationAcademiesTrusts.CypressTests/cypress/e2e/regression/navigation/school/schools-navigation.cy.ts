@@ -471,7 +471,7 @@ describe('Schools Navigation Tests', () => {
         context('School Ofsted subnav navigation tests -- (Academy)', () => {
             it('Should navigate from Single headlinegrades → current ratings → previous ratings and back', () => {
                 // Start at academy overview (single headline grades / Ofsted overview)
-                cy.visit(`/trusts/ofsted/overview?uid=${navTestAcademies[0].academyURN}`);
+                cy.visit(`/trusts/ofsted/overview?uid=${navTestAcademies[0].trustUID}`);
                 navigation
                     .checkSchoolsOfstedSubNavItemsPresent()
                     .checkSchoolsOverviewSubnavButtonIsHighlighted();
@@ -482,7 +482,7 @@ describe('Schools Navigation Tests', () => {
                 // Navigate to "Current ratings"
                 navigation
                     .clickSchoolsReportCardSubnavButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/reportcards/currentreportcards?urn=${navTestAcademies[0].academyURN}`)
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/reportcards/currentreportcards?urn=${navTestAcademies[0].trustUID}`)
                     .checkSchoolsOfstedReportCardIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent()
@@ -492,7 +492,7 @@ describe('Schools Navigation Tests', () => {
                 // Navigate to "Previous ratings"
                 navigation
                     .clickSchoolsReportCardPreviousButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/reportcards/previousreportcards?urn=${navTestAcademies[0].academyURN}`)
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/reportcards/previousreportcards?urn=${navTestAcademies[0].trustUID}`)
                     .checkSchoolsOfstedReportCardIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent()
@@ -504,7 +504,7 @@ describe('Schools Navigation Tests', () => {
                 // Navigate back to single headline grades
                 navigation
                     .clickSchoolsOfstedOverviewSubnavButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/overview?urn=${navTestAcademies[0].academyURN}`)
+                    .checkCurrentURLIsCorrect(`/schools/ofsted/overview?urn=${navTestAcademies[0].trustUID}`)
                     .checkSchoolsOverviewSubnavButtonIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent();

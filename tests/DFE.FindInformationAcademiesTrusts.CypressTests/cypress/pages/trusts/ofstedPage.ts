@@ -7,7 +7,7 @@ class OfstedPage {
         subpageHeader: () => cy.get('[data-testid="subpage-header"]'),
         downloadButton: () => cy.get('[data-testid="download-all-ofsted-data-button"]'),
         singleHeadlineGrades: {
-            section: () => cy.get('[data-testid="ofsted-single-headline-grades-school-name-table"]'),
+            section: () => cy.get('[data-testid="ofsted-overview-table"]'),
             table: () => this.elements.singleHeadlineGrades.section().find('[aria-describedby="ofsted-caption"]'),
             tableRows: () => this.elements.singleHeadlineGrades.table().find('tbody tr'),
             schoolName: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-school-name"]'),
@@ -123,7 +123,7 @@ class OfstedPage {
 
     // #region Single headline grades
     public checkOfstedSHGPageHeaderPresent(): this {
-        this.elements.subpageHeader().should('contain', 'Single headline grades');
+        this.elements.subpageHeader().should('contain', 'Overview');
         return this;
     }
 
