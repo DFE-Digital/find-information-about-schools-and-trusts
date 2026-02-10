@@ -1,9 +1,12 @@
-﻿namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
+﻿using DfE.FindInformationAcademiesTrusts.Services.Academy;
+
+namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 {
     using DfE.FindInformationAcademiesTrusts.Data;
     using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
     using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
     using DfE.FindInformationAcademiesTrusts.Services.School;
+    using NSubstitute;
 
     public class OfstedServiceTests
     {
@@ -11,10 +14,11 @@
         private readonly IOfstedRepository _mockOfstedRepository = Substitute.For<IOfstedRepository>();
         private readonly IReportCardsService _mockReportCardsService = Substitute.For<IReportCardsService>();
         private readonly IOfstedServiceModelBuilder _mockOfstedServiceModelBuilder = Substitute.For<IOfstedServiceModelBuilder>();
+        private readonly IAcademyService _mockAcademyService = Substitute.For<IAcademyService>();
 
         public OfstedServiceTests()
         {
-            _sut = new OfstedService(_mockReportCardsService, _mockOfstedRepository, _mockOfstedServiceModelBuilder);
+            _sut = new OfstedService(_mockReportCardsService, _mockOfstedRepository, _mockOfstedServiceModelBuilder, _mockAcademyService);
 
             _mockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(new ReportCardServiceModel());
         }
@@ -201,6 +205,175 @@
             await _mockOfstedRepository.Received(1).GetAcademiesInTrustOfstedAsync(trustUid);
             await _mockReportCardsService.Received(1).GetReportCardsAsync(schoolUrn);
             _mockOfstedServiceModelBuilder.Received(1).BuildOfstedOverviewInspection(schoolOfstedRating, reportCards);
+        }
+
+        [Fact]
+        public async Task GetEstablishmentsInTrustReportCardsAsync_should_return_empty_list_when_no_academies_found()
+        {
+            const string uid = "TEST123";
+            _mockAcademyService.GetAcademiesInTrustDetailsAsync(uid).Returns([]);
+
+            var result = await _sut.GetEstablishmentsInTrustReportCardsAsync(uid);
+
+            result.Should().BeEmpty();
+            await _mockReportCardsService.DidNotReceive().GetReportCardsAsync(Arg.Any<int>());
+        }
+
+        [Fact]
+        public async Task GetEstablishmentsInTrustReportCardsAsync_should_return_trust_report_cards_for_single_academy()
+        {
+            const string uid = "TEST123";
+            const string urn = "12345";
+            const string establishmentName = "Test Academy";
+            var joinDate = new DateOnly(2020, 9, 1);
+
+            var academies = new List<AcademyDetailsServiceModel>
+            {
+                new(urn, establishmentName, "Test LA", "Academy", "Urban", joinDate)
+            };
+
+            var reportCard = new ReportCardServiceModel
+            {
+                LatestReportCard = new ReportCardDetails(
+                    new DateOnly(2023, 1, 15),
+                    "https://reports.ofsted.gov.uk/provider/files/12345/urn/12345.pdf",
+                    "Good", "Good", "Good", "Good", "Good", "Good", null, "Met", "Good", "None")
+            };
+
+            _mockAcademyService.GetAcademiesInTrustDetailsAsync(uid).Returns(academies.ToArray());
+            _mockReportCardsService.GetReportCardsAsync(12345).Returns(reportCard);
+
+            var result = await _sut.GetEstablishmentsInTrustReportCardsAsync(uid);
+
+            result.Should().HaveCount(1);
+            var trustReportCard = result[0];
+            trustReportCard.Urn.Should().Be(12345);
+            trustReportCard.SchoolName.Should().Be(establishmentName);
+            trustReportCard.ReportCardDetails.Should().Be(reportCard);
+
+            await _mockAcademyService.Received(1).GetAcademiesInTrustDetailsAsync(uid);
+            await _mockReportCardsService.Received(1).GetReportCardsAsync(12345);
+        }
+
+        [Fact]
+        public async Task GetEstablishmentsInTrustReportCardsAsync_should_return_trust_report_cards_for_multiple_academies()
+        {
+            const string uid = "TEST123";
+            var joinDate = new DateOnly(2020, 9, 1);
+
+            var academies = new List<AcademyDetailsServiceModel>
+            {
+                new("11111", "First Academy", "Test LA", "Academy", "Urban", joinDate),
+                new("22222", "Second Academy", "Test LA", "Academy", "Rural", joinDate),
+                new("33333", "Third Academy", "Test LA", "Academy", "Urban", joinDate)
+            };
+
+            var reportCard1 = new ReportCardServiceModel { LatestReportCard = new ReportCardDetails(new DateOnly(2023, 1, 15), "https://example.com/1", "Good", "Good", "Good", "Good", "Good", "Good", null, "Met", "Good", "None") };
+            var reportCard2 = new ReportCardServiceModel { LatestReportCard = new ReportCardDetails(new DateOnly(2023, 2, 15), "https://example.com/2", "Outstanding", "Outstanding", "Good", "Outstanding", "Good", "Good", null, "Met", "Good", "None") };
+            var reportCard3 = new ReportCardServiceModel { LatestReportCard = new ReportCardDetails(new DateOnly(2023, 3, 15), "https://example.com/3", "Requires Improvement", "Good", "Good", "Requires Improvement", "Good", "Good", null, "Met", "Good", "None") };
+
+            _mockAcademyService.GetAcademiesInTrustDetailsAsync(uid).Returns(academies.ToArray());
+            _mockReportCardsService.GetReportCardsAsync(11111).Returns(reportCard1);
+            _mockReportCardsService.GetReportCardsAsync(22222).Returns(reportCard2);
+            _mockReportCardsService.GetReportCardsAsync(33333).Returns(reportCard3);
+
+            var result = await _sut.GetEstablishmentsInTrustReportCardsAsync(uid);
+
+            result.Should().HaveCount(3);
+
+            result[0].Urn.Should().Be(11111);
+            result[0].SchoolName.Should().Be("First Academy");
+            result[0].ReportCardDetails.Should().Be(reportCard1);
+
+            result[1].Urn.Should().Be(22222);
+            result[1].SchoolName.Should().Be("Second Academy");
+            result[1].ReportCardDetails.Should().Be(reportCard2);
+
+            result[2].Urn.Should().Be(33333);
+            result[2].SchoolName.Should().Be("Third Academy");
+            result[2].ReportCardDetails.Should().Be(reportCard3);
+
+            await _mockAcademyService.Received(1).GetAcademiesInTrustDetailsAsync(uid);
+            await _mockReportCardsService.Received(1).GetReportCardsAsync(11111);
+            await _mockReportCardsService.Received(1).GetReportCardsAsync(22222);
+            await _mockReportCardsService.Received(1).GetReportCardsAsync(33333);
+        }
+
+        [Fact]
+        public async Task GetEstablishmentsInTrustReportCardsAsync_should_handle_null_establishment_name()
+        {
+            const string uid = "TEST123";
+            const string urn = "12345";
+            var joinDate = new DateOnly(2020, 9, 1);
+
+            var academies = new List<AcademyDetailsServiceModel>
+            {
+                new(urn, null, "Test LA", "Academy", "Urban", joinDate)
+            };
+
+            var reportCard = new ReportCardServiceModel();
+
+            _mockAcademyService.GetAcademiesInTrustDetailsAsync(uid).Returns(academies.ToArray());
+            _mockReportCardsService.GetReportCardsAsync(12345).Returns(reportCard);
+
+            var result = await _sut.GetEstablishmentsInTrustReportCardsAsync(uid);
+
+            result.Should().HaveCount(1);
+            var trustReportCard = result[0];
+            trustReportCard.Urn.Should().Be(12345);
+            trustReportCard.SchoolName.Should().Be("");
+            trustReportCard.ReportCardDetails.Should().Be(reportCard);
+        }
+
+        [Fact]
+        public async Task GetEstablishmentsInTrustReportCardsAsync_should_handle_empty_establishment_name()
+        {
+            const string uid = "TEST123";
+            const string urn = "12345";
+            var joinDate = new DateOnly(2020, 9, 1);
+
+            var academies = new List<AcademyDetailsServiceModel>
+            {
+                new(urn, "", "Test LA", "Academy", "Urban", joinDate)
+            };
+
+            var reportCard = new ReportCardServiceModel();
+
+            _mockAcademyService.GetAcademiesInTrustDetailsAsync(uid).Returns(academies.ToArray());
+            _mockReportCardsService.GetReportCardsAsync(12345).Returns(reportCard);
+
+            var result = await _sut.GetEstablishmentsInTrustReportCardsAsync(uid);
+
+            result.Should().HaveCount(1);
+            var trustReportCard = result[0];
+            trustReportCard.Urn.Should().Be(12345);
+            trustReportCard.SchoolName.Should().Be("");
+            trustReportCard.ReportCardDetails.Should().Be(reportCard);
+        }
+
+
+        [Fact]
+        public async Task GetEstablishmentsInTrustReportCardsAsync_should_call_dependencies_with_correct_parameters()
+        {
+            const string uid = "TEST123";
+            const string urn = "12345";
+            const string establishmentName = "Test Academy";
+            var joinDate = new DateOnly(2020, 9, 1);
+
+            var academies = new List<AcademyDetailsServiceModel>
+            {
+                new(urn, establishmentName, "Test LA", "Academy", "Urban", joinDate)
+            };
+
+            var reportCard = new ReportCardServiceModel();
+
+            _mockAcademyService.GetAcademiesInTrustDetailsAsync(uid).Returns(academies.ToArray());
+            _mockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(reportCard);
+
+            await _sut.GetEstablishmentsInTrustReportCardsAsync(uid);
+
+            await _mockAcademyService.Received(1).GetAcademiesInTrustDetailsAsync(uid);
+            await _mockReportCardsService.Received(1).GetReportCardsAsync(12345);
         }
     }
 }
