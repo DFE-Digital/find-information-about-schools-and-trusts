@@ -195,7 +195,7 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
             GetSubNavLinkTo<OfstedOverviewModel>(OfstedAreaModel.PageName, "Overview",
                 "/Schools/Ofsted/OfstedOverview", activePage, "ofsted-overview-subnav"),
             GetSubNavLinkTo<BaseReportCardsRatingsModel>(OfstedAreaModel.PageName, "Report cards",
-                "/Schools/Ofsted/ReportCards/CurrentReportCards", activePage, "ofsted-report-cards-current-subnav"),
+                "/Schools/Ofsted/ReportCards/CurrentReportCards", activePage, "ofsted-report-cards-subnav"),
             GetSubNavLinkTo<OlderBaseRatingsModel>(OfstedAreaModel.PageName, "Older inspections (before November 2025)",
                 "/Schools/Ofsted/Older/CurrentRatings", activePage, "ofsted-older-ratings-subnav"),
         ];

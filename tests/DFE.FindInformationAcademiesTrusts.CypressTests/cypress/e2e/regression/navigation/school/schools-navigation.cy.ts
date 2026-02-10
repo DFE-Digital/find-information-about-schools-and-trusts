@@ -482,7 +482,7 @@ describe('Schools Navigation Tests', () => {
                 // Navigate to "Current ratings"
                 navigation
                     .clickSchoolsReportCardSubnavButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/reportcards/currentreportcards?urn=${navTestAcademies[0].trustUID}`)
+                    .checkCurrentURLIsCorrect(`/trusts/ofsted/reportcards/currentreportcards?uid=${navTestAcademies[0].trustUID}`)
                     .checkSchoolsOfstedReportCardIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent()
@@ -492,7 +492,7 @@ describe('Schools Navigation Tests', () => {
                 // Navigate to "Previous ratings"
                 navigation
                     .clickSchoolsReportCardPreviousButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/reportcards/previousreportcards?urn=${navTestAcademies[0].trustUID}`)
+                    .checkCurrentURLIsCorrect(`/trusts/ofsted/reportcards/previousreportcards?uid=${navTestAcademies[0].trustUID}`)
                     .checkSchoolsOfstedReportCardIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent()
@@ -504,7 +504,7 @@ describe('Schools Navigation Tests', () => {
                 // Navigate back to single headline grades
                 navigation
                     .clickSchoolsOfstedOverviewSubnavButton()
-                    .checkCurrentURLIsCorrect(`/schools/ofsted/overview?urn=${navTestAcademies[0].trustUID}`)
+                    .checkCurrentURLIsCorrect(`/trusts/ofsted/overview?uid=${navTestAcademies[0].trustUID}`)
                     .checkSchoolsOverviewSubnavButtonIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent();
