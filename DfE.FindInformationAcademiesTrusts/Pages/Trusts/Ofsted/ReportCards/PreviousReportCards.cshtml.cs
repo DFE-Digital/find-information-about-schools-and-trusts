@@ -3,6 +3,7 @@ using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
+using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted.ReportCards
@@ -12,11 +13,20 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted.ReportCards
         ITrustService trustService,
         IAcademyService academyService,
         IOfstedTrustDataExportService ofstedTrustDataExportService,
-        IDateTimeProvider dateTimeProvider) : BaseReportCardsRatingsModel(dataSourceService, trustService,
-        academyService, ofstedTrustDataExportService, dateTimeProvider)
+        IDateTimeProvider dateTimeProvider,
+        IOfstedService ofstedService) : BaseReportCardsRatingsModel(dataSourceService, trustService,
+        academyService, ofstedTrustDataExportService, dateTimeProvider, ofstedService)
     {
         public const string SubPageName = "Report cards";
         public override PageMetadata PageMetadata => base.PageMetadata with { SubPageName = SubPageName, TabName = "Previous report card" };
 
+        protected override List<ReportCardViewModel> GetReportCard(List<TrustReportCardServiceModel> reportCardServiceModel)
+        {
+            return reportCardServiceModel.Select(x => new ReportCardViewModel(
+                x.Urn,
+                x.SchoolName,
+                x.ReportCardDetails?.PreviousReportCard
+            )).ToList();
+        }
     }
 }
