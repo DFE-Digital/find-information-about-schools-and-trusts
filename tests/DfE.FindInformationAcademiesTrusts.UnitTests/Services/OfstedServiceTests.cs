@@ -1,4 +1,5 @@
 ﻿using DfE.FindInformationAcademiesTrusts.Services.Academy;
+using Microsoft.Extensions.Logging;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 {
@@ -6,6 +7,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
     using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
     using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
     using DfE.FindInformationAcademiesTrusts.Services.School;
+    using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
     using NSubstitute;
 
     public class OfstedServiceTests
@@ -15,10 +17,11 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
         private readonly IReportCardsService _mockReportCardsService = Substitute.For<IReportCardsService>();
         private readonly IOfstedServiceModelBuilder _mockOfstedServiceModelBuilder = Substitute.For<IOfstedServiceModelBuilder>();
         private readonly IAcademyService _mockAcademyService = Substitute.For<IAcademyService>();
+        private readonly ILogger<IOfstedService> _mockLogger = Substitute.For<ILogger<IOfstedService>>();
 
         public OfstedServiceTests()
         {
-            _sut = new OfstedService(_mockReportCardsService, _mockOfstedRepository, _mockOfstedServiceModelBuilder, _mockAcademyService);
+            _sut = new OfstedService(_mockReportCardsService, _mockOfstedRepository, _mockOfstedServiceModelBuilder, _mockAcademyService, _mockLogger);
 
             _mockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(new ReportCardServiceModel());
         }
@@ -374,6 +377,31 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 
             await _mockAcademyService.Received(1).GetAcademiesInTrustDetailsAsync(uid);
             await _mockReportCardsService.Received(1).GetReportCardsAsync(12345);
+        }
+
+        [Theory]
+        [InlineData("hello")]
+        [InlineData("")]
+        public async Task GetEstablishmentsInTrustReportCardsAsync_if_none_integer_urn_ShouldLog(string urn)
+        {
+            const string uid = "TEST123";
+            const string establishmentName = "Test Academy";
+            var joinDate = new DateOnly(2020, 9, 1);
+
+            var academies = new List<AcademyDetailsServiceModel>
+            {
+                new(urn, establishmentName, "Test LA", "Academy", "Urban", joinDate)
+            };
+
+            var reportCard = new ReportCardServiceModel();
+
+            _mockAcademyService.GetAcademiesInTrustDetailsAsync(uid).Returns(academies.ToArray());
+            _mockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(reportCard);
+
+            await _sut.GetEstablishmentsInTrustReportCardsAsync(uid);
+
+            _mockLogger.VerifyLogErrors($"Unable to parse academy urn {urn} for trust {uid}");
+
         }
     }
 }

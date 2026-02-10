@@ -12,7 +12,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
         Task<List<TrustReportCardServiceModel>> GetEstablishmentsInTrustReportCardsAsync(string uid);
     }
 
-    public class OfstedService(IReportCardsService reportCardsService, IOfstedRepository ofstedRepository, IOfstedServiceModelBuilder ofstedServiceModelBuilder, IAcademyService academyService) : IOfstedService
+    public class OfstedService(IReportCardsService reportCardsService, IOfstedRepository ofstedRepository, IOfstedServiceModelBuilder ofstedServiceModelBuilder, IAcademyService academyService, ILogger<IOfstedService> logger) : IOfstedService
     {
         public async Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspectionAsync(int urn)
         {
@@ -61,18 +61,24 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
 
            foreach (var academy in academiesInTrust)
            {
-               int urn = int.Parse(academy.Urn);
-
-               var reportCard = await reportCardsService.GetReportCardsAsync(urn);
-
-               TrustReportCardServiceModel trustReportCard = new TrustReportCardServiceModel
+               if (int.TryParse(academy.Urn, out int urn))
                {
-                   ReportCardDetails = reportCard,
-                   Urn = urn,
-                   SchoolName = academy.EstablishmentName ?? ""
-               };
+                   var reportCard = await reportCardsService.GetReportCardsAsync(urn);
 
-               trustReportCards.Add(trustReportCard);
+                   TrustReportCardServiceModel trustReportCard = new TrustReportCardServiceModel
+                   {
+                       ReportCardDetails = reportCard,
+                       Urn = urn,
+                       SchoolName = academy.EstablishmentName ?? ""
+                   };
+
+                   trustReportCards.Add(trustReportCard);
+               }
+               else
+               {
+                   logger.LogError("Unable to parse academy urn {urn} for trust {uid}", academy.Urn, uid);
+               }
+
            }
 
            return trustReportCards;
