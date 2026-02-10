@@ -1,4 +1,5 @@
 ﻿using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
+using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
@@ -8,9 +9,10 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
         Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspectionAsync(int urn);
         Task<List<OfstedOverviewInspectionServiceModel>> GetOfstedOverviewInspectionForTrustAsync(string uid);
         Task<OlderSchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn);
+        Task<List<TrustReportCardServiceModel>> GetEstablishmentsInTrustReportCardsAsync(string uid);
     }
 
-    public class OfstedService(IReportCardsService reportCardsService, IOfstedRepository ofstedRepository, IOfstedServiceModelBuilder ofstedServiceModelBuilder) : IOfstedService
+    public class OfstedService(IReportCardsService reportCardsService, IOfstedRepository ofstedRepository, IOfstedServiceModelBuilder ofstedServiceModelBuilder, IAcademyService academyService, ILogger<IOfstedService> logger) : IOfstedService
     {
         public async Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspectionAsync(int urn)
         {
@@ -49,6 +51,37 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
             var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
 
             return ofstedServiceModelBuilder.BuildSchoolOfstedRatingsAsBeforeAndAfterSeptemberGrade(schoolOfstedRatings);
+        }
+
+        public async Task<List<TrustReportCardServiceModel>> GetEstablishmentsInTrustReportCardsAsync(string uid)
+        {
+           var academiesInTrust = await academyService.GetAcademiesInTrustDetailsAsync(uid);
+
+           var trustReportCards = new List<TrustReportCardServiceModel>();
+
+           foreach (var academy in academiesInTrust)
+           {
+               if (int.TryParse(academy.Urn, out int urn))
+               {
+                   var reportCard = await reportCardsService.GetReportCardsAsync(urn);
+
+                   TrustReportCardServiceModel trustReportCard = new TrustReportCardServiceModel
+                   {
+                       ReportCardDetails = reportCard,
+                       Urn = urn,
+                       SchoolName = academy.EstablishmentName ?? ""
+                   };
+
+                   trustReportCards.Add(trustReportCard);
+               }
+               else
+               {
+                   logger.LogError("Unable to parse academy urn {Urn} for trust {Uid}", academy.Urn, uid);
+               }
+
+           }
+
+           return trustReportCards;
         }
     }
 }

@@ -1,10 +1,34 @@
+@using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted.ReportCards
 @model OfstedAreaModel
 @{
   Layout = "_TrustLayout";
 }
 
+@if (Model is BaseReportCardsRatingsModel or OlderInspectionsModel)
+{
+    <h3 class="govuk-heading-m">@Model.PageMetadata.SubPageName</h3>
+}
+
+
+@if (Model is BaseReportCardsRatingsModel)
+{
+    <details class="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+                Why a report card might not be available
+            </span>
+        </summary>
+        <div class="govuk-details__text">
+    
+            <p class="govuk-body">From <strong>10 November 2025</strong>, Ofsted inspections used the report card system for state-funded school inspections.</p>
+            <p class="govuk-body">Each key aspect also includes an additional narative, which can be found within the school's record.</p>
+        </div>
+    </details>
+}
+
 @if (Model.TabList.Any())
 {
+
     <div class="govuk-tabs">
         <ul class="govuk-tabs__list" data-testid="before-or-after-joining">
             @foreach (var tab in Model.TabList)
