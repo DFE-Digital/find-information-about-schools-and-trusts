@@ -76,7 +76,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
                }
                else
                {
-                   logger.LogError("Unable to parse academy urn {urn} for trust {uid}", academy.Urn, uid);
+                   logger.LogError("Unable to parse academy urn {Urn} for trust {Uid}", academy.Urn, uid);
                }
 
            }
