@@ -46,4 +46,5 @@ public abstract class BaseOverviewAreaModelTests<T> : BaseTrustPageTests<T>, ITe
 
     [Fact]
     public abstract Task OnGetAsync_should_configure_TrustPageMetadata_SubPageName();
+
 }
