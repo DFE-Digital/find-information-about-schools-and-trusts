@@ -167,7 +167,7 @@ public class AcademiesExportServiceTests
         worksheet.Cell(4, AcademyColumns.DateJoined).GetValue<DateTime>().Should()
             .BeCloseTo(now, TimeSpan.FromSeconds(1));
 
-        worksheet.CellValue(4, AcademyColumns.CurrentOfstedRating).Should().Be("Not yet inspected");
+        worksheet.CellValue(4, AcademyColumns.CurrentOfstedRating).Should().Be("Not inspected");
         worksheet.CellValue(4, AcademyColumns.CurrentBeforeAfterJoining).Should().Be(string.Empty);
         worksheet.CellValue(4, AcademyColumns.DateOfCurrentInspection).Should().Be(string.Empty);
 

@@ -20,12 +20,12 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted.ReportCards
         public const string SubPageName = "Report cards";
         public override PageMetadata PageMetadata => base.PageMetadata with { SubPageName = SubPageName, TabName = "Previous report card" };
 
-        protected override List<ReportCardViewModel> GetReportCard(List<TrustReportCardServiceModel> reportCardServiceModel)
+        protected override List<ReportCardViewModel> GetReportCard(List<TrustOfstedReportServiceModel<ReportCardServiceModel>> reportCardServiceModel)
         {
             return reportCardServiceModel.Select(x => new ReportCardViewModel(
                 x.Urn,
                 x.SchoolName,
-                x.ReportCardDetails?.PreviousReportCard
+                x.ReportDetails?.PreviousReportCard
             )).ToList();
         }
     }

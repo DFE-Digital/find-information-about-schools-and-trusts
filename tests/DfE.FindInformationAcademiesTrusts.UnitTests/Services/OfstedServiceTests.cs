@@ -252,7 +252,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             var trustReportCard = result[0];
             trustReportCard.Urn.Should().Be(12345);
             trustReportCard.SchoolName.Should().Be(establishmentName);
-            trustReportCard.ReportCardDetails.Should().Be(reportCard);
+            trustReportCard.ReportDetails.Should().Be(reportCard);
 
             await _mockAcademyService.Received(1).GetAcademiesInTrustDetailsAsync(uid);
             await _mockReportCardsService.Received(1).GetReportCardsAsync(12345);
@@ -286,15 +286,15 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 
             result[0].Urn.Should().Be(11111);
             result[0].SchoolName.Should().Be("First Academy");
-            result[0].ReportCardDetails.Should().Be(reportCard1);
+            result[0].ReportDetails.Should().Be(reportCard1);
 
             result[1].Urn.Should().Be(22222);
             result[1].SchoolName.Should().Be("Second Academy");
-            result[1].ReportCardDetails.Should().Be(reportCard2);
+            result[1].ReportDetails.Should().Be(reportCard2);
 
             result[2].Urn.Should().Be(33333);
             result[2].SchoolName.Should().Be("Third Academy");
-            result[2].ReportCardDetails.Should().Be(reportCard3);
+            result[2].ReportDetails.Should().Be(reportCard3);
 
             await _mockAcademyService.Received(1).GetAcademiesInTrustDetailsAsync(uid);
             await _mockReportCardsService.Received(1).GetReportCardsAsync(11111);
@@ -325,7 +325,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             var trustReportCard = result[0];
             trustReportCard.Urn.Should().Be(12345);
             trustReportCard.SchoolName.Should().Be("");
-            trustReportCard.ReportCardDetails.Should().Be(reportCard);
+            trustReportCard.ReportDetails.Should().Be(reportCard);
         }
 
         [Fact]
@@ -351,7 +351,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             var trustReportCard = result[0];
             trustReportCard.Urn.Should().Be(12345);
             trustReportCard.SchoolName.Should().Be("");
-            trustReportCard.ReportCardDetails.Should().Be(reportCard);
+            trustReportCard.ReportDetails.Should().Be(reportCard);
         }
 
 
@@ -402,6 +402,217 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 
             _mockLogger.VerifyLogErrors($"Unable to parse academy urn {urn} for trust {uid}");
 
+        }
+
+        [Fact]
+        public async Task GetEstablishmentsInTrustOlderOfstedRatings_ShouldReturnEmptyList_WhenNoAcademiesInTrust()
+        {
+            const string trustUid = "1234";
+            var emptyAcademies = Array.Empty<SchoolOfsted>();
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
+                .Returns(emptyAcademies);
+
+            var result = await _sut.GetEstablishmentsInTrustOlderOfstedRatings(trustUid);
+
+            result.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task GetEstablishmentsInTrustOlderOfstedRatings_ShouldReturnCorrectData_WhenAcademiesHaveValidUrns()
+        {
+            // Arrange
+            const string trustUid = "1234";
+            const int urn1 = 123456;
+            const int urn2 = 789012;
+
+            var currentRating1 = new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2025, 7, 1, 0, 0, 0, DateTimeKind.Local));
+            var previousRating1 = new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2024, 6, 1, 0, 0, 0, DateTimeKind.Local));
+
+            var currentRating2 = new OfstedRating((int)OfstedRatingScore.Outstanding, new DateTime(2024, 8, 15, 0, 0, 0, DateTimeKind.Local));
+            var previousRating2 = new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2023, 7, 15, 0, 0, 0, DateTimeKind.Local));
+
+            var academy1 = new SchoolOfsted(
+                urn1.ToString(),
+                "First Academy",
+                new DateTime(2024, 8, 1, 0, 0, 0, DateTimeKind.Local),
+                new OfstedShortInspection(new DateTime(2024, 7, 1, 0, 0, 0, DateTimeKind.Local), "School remains Good"),
+                previousRating1,
+                currentRating1,
+                false);
+
+            var academy2 = new SchoolOfsted(
+                urn2.ToString(),
+                "Second Academy",
+                new DateTime(2023, 9, 15, 0, 0, 0, DateTimeKind.Local),
+                new OfstedShortInspection(new DateTime(2023, 8, 15, 0, 0, 0, DateTimeKind.Local), "School remains Outstanding"),
+                previousRating2,
+                currentRating2,
+                false);
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
+                .Returns([academy1, academy2]);
+
+            var result = await _sut.GetEstablishmentsInTrustOlderOfstedRatings(trustUid);
+
+            result.Should().HaveCount(2);
+
+            result[0].Urn.Should().Be(urn1);
+            result[0].SchoolName.Should().Be("First Academy");
+            result[0].ReportDetails.Should().NotBeNull();
+            result[0].ReportDetails.Ratings.Should().HaveCount(2);
+            result[0].ReportDetails.Ratings[0].Should().Be(currentRating1);
+            result[0].ReportDetails.Ratings[1].Should().Be(previousRating1);
+
+            result[1].Urn.Should().Be(urn2);
+            result[1].SchoolName.Should().Be("Second Academy");
+            result[1].ReportDetails.Should().NotBeNull();
+            result[1].ReportDetails.Ratings.Should().HaveCount(2);
+            result[1].ReportDetails.Ratings[0].Should().Be(currentRating2);
+            result[1].ReportDetails.Ratings[1].Should().Be(previousRating2);
+        }
+
+        [Fact]
+        public async Task GetEstablishmentsInTrustOlderOfstedRatings_ShouldHandleNullEstablishmentName()
+        {
+            const string trustUid = "1234";
+            const int urn = 123456;
+
+            var currentRating = new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2025, 7, 1, 0, 0, 0, DateTimeKind.Local));
+            var previousRating = new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2024, 6, 1, 0, 0, 0, DateTimeKind.Local));
+
+            var academy = new SchoolOfsted(
+                urn.ToString(),
+                null, // null establishment name
+                new DateTime(2024, 8, 1, 0, 0, 0, DateTimeKind.Local),
+                new OfstedShortInspection(new DateTime(2024, 7, 1, 0, 0, 0, DateTimeKind.Local), "School remains Good"),
+                currentRating,
+                previousRating,
+                false);
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
+                .Returns([academy]);
+
+            var result = await _sut.GetEstablishmentsInTrustOlderOfstedRatings(trustUid);
+
+            result.Should().HaveCount(1);
+            result[0].SchoolName.Should().Be(string.Empty);
+            result[0].Urn.Should().Be(urn);
+            result[0].ReportDetails.Ratings.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public async Task GetEstablishmentsInTrustOlderOfstedRatings_ShouldLogError_WhenUrnCannotBeParsed()
+        {
+            const string trustUid = "1234";
+            const string invalidUrn = "invalid-urn";
+
+            var currentRating = new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2025, 7, 1, 0, 0, 0, DateTimeKind.Local));
+            var previousRating = new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2024, 6, 1, 0, 0, 0, DateTimeKind.Local));
+
+            var academy = new SchoolOfsted(
+                invalidUrn,
+                "Test Academy",
+                new DateTime(2024, 8, 1, 0, 0, 0, DateTimeKind.Local),
+                new OfstedShortInspection(new DateTime(2024, 7, 1, 0, 0, 0, DateTimeKind.Local), "School remains Good"),
+                currentRating,
+                previousRating,
+                false);
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
+                .Returns([academy]);
+
+            var result = await _sut.GetEstablishmentsInTrustOlderOfstedRatings(trustUid);
+
+            result.Should().BeEmpty();
+            _mockLogger.VerifyLogError($"Unable to parse academy urn {invalidUrn} for trust {trustUid}");
+        }
+
+        [Fact]
+        public async Task GetEstablishmentsInTrustOlderOfstedRatings_ShouldSkipInvalidUrnsAndIncludeValidOnes()
+        {
+            const string trustUid = "1234";
+            const int validUrn = 123456;
+            const string invalidUrn = "invalid-urn";
+
+            var currentRating = new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2025, 7, 1, 0, 0, 0, DateTimeKind.Local));
+            var previousRating = new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2024, 6, 1, 0, 0, 0, DateTimeKind.Local));
+
+            var validAcademy = new SchoolOfsted(
+                validUrn.ToString(),
+                "Valid Academy",
+                new DateTime(2024, 8, 1, 0, 0, 0, DateTimeKind.Local),
+                new OfstedShortInspection(new DateTime(2024, 7, 1, 0, 0, 0, DateTimeKind.Local), "School remains Good"),
+                currentRating,
+                previousRating,
+                false);
+
+            var invalidAcademy = new SchoolOfsted(
+                invalidUrn,
+                "Invalid Academy",
+                new DateTime(2024, 8, 1, 0, 0, 0, DateTimeKind.Local),
+                new OfstedShortInspection(new DateTime(2024, 7, 1, 0, 0, 0, DateTimeKind.Local), "School remains Good"),
+                currentRating,
+                previousRating,
+                false);
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
+                .Returns([validAcademy, invalidAcademy]);
+
+            var result = await _sut.GetEstablishmentsInTrustOlderOfstedRatings(trustUid);
+
+            result.Should().HaveCount(1);
+            result[0].Urn.Should().Be(validUrn);
+            result[0].SchoolName.Should().Be("Valid Academy");
+
+            _mockLogger.VerifyLogError($"Unable to parse academy urn {invalidUrn} for trust {trustUid}");
+        }
+
+        [Fact]
+        public async Task GetEstablishmentsInTrustOlderOfstedRatings_ShouldCallRepositoryWithCorrectTrustUid()
+        {
+            const string trustUid = "1234";
+            var emptyAcademies = Array.Empty<SchoolOfsted>();
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
+                .Returns(emptyAcademies);
+
+            await _sut.GetEstablishmentsInTrustOlderOfstedRatings(trustUid);
+
+            await _mockOfstedRepository.Received(1).GetAcademiesInTrustOfstedAsync(trustUid);
+        }
+
+        [Fact]
+        public async Task GetEstablishmentsInTrustOlderOfstedRatings_ShouldCreateCorrectOlderInspectionServiceModel()
+        {
+            const string trustUid = "1234";
+            const int urn = 123456;
+
+            var currentRating = new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2025, 7, 1, 0, 0, 0, DateTimeKind.Local));
+            var previousRating = new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2024, 6, 1, 0, 0, 0, DateTimeKind.Local));
+
+            var academy = new SchoolOfsted(
+                urn.ToString(),
+                "Test Academy",
+                new DateTime(2024, 8, 1, 0, 0, 0, DateTimeKind.Local),
+                new OfstedShortInspection(new DateTime(2024, 7, 1, 0, 0, 0, DateTimeKind.Local), "School remains Good"),
+                currentRating,
+                previousRating,
+                false);
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
+                .Returns([academy]);
+
+            var result = await _sut.GetEstablishmentsInTrustOlderOfstedRatings(trustUid);
+
+            result.Should().HaveCount(1);
+            var trustReport = result[0];
+
+            trustReport.Should().BeOfType<TrustOfstedReportServiceModel<OlderInspectionServiceModel>>();
+            trustReport.ReportDetails.Should().BeOfType<OlderInspectionServiceModel>();
+            trustReport.ReportDetails.Ratings.Should().Contain(currentRating);
+            trustReport.ReportDetails.Ratings.Should().Contain(previousRating);
+            trustReport.ReportDetails.Ratings.Should().HaveCount(2);
         }
     }
 }
