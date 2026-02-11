@@ -164,12 +164,12 @@ public class OfstedTrustDataExportServiceTests
         //Current inspection
         worksheet.CellValue(4, OfstedTrustColumns.DateOfCurrentInspection).Should().Be(string.Empty);
         worksheet.CellValue(4, OfstedTrustColumns.CurrentBeforeAfterJoining).Should().Be(string.Empty);
-        worksheet.CellValue(4, OfstedTrustColumns.CurrentQualityOfEducation).Should().Be("Not yet inspected");
-        worksheet.CellValue(4, OfstedTrustColumns.CurrentBehaviourAndAttitudes).Should().Be("Not yet inspected");
-        worksheet.CellValue(4, OfstedTrustColumns.CurrentPersonalDevelopment).Should().Be("Not yet inspected");
-        worksheet.CellValue(4, OfstedTrustColumns.CurrentLeadershipAndManagement).Should().Be("Not yet inspected");
-        worksheet.CellValue(4, OfstedTrustColumns.CurrentEarlyYearsProvision).Should().Be("Not yet inspected");
-        worksheet.CellValue(4, OfstedTrustColumns.CurrentSixthFormProvision).Should().Be("Not yet inspected");
+        worksheet.CellValue(4, OfstedTrustColumns.CurrentQualityOfEducation).Should().Be("Not inspected");
+        worksheet.CellValue(4, OfstedTrustColumns.CurrentBehaviourAndAttitudes).Should().Be("Not inspected");
+        worksheet.CellValue(4, OfstedTrustColumns.CurrentPersonalDevelopment).Should().Be("Not inspected");
+        worksheet.CellValue(4, OfstedTrustColumns.CurrentLeadershipAndManagement).Should().Be("Not inspected");
+        worksheet.CellValue(4, OfstedTrustColumns.CurrentEarlyYearsProvision).Should().Be("Not inspected");
+        worksheet.CellValue(4, OfstedTrustColumns.CurrentSixthFormProvision).Should().Be("Not inspected");
 
         //Previous inspection
         worksheet.CellValue(4, OfstedTrustColumns.DateOfPreviousInspection).Should().Be(string.Empty);
@@ -182,8 +182,8 @@ public class OfstedTrustDataExportServiceTests
         worksheet.CellValue(4, OfstedTrustColumns.PreviousSixthFormProvision).Should().Be("Not inspected");
 
         //Safeguarding and concerns
-        worksheet.CellValue(4, OfstedTrustColumns.EffectiveSafeguarding).Should().Be("Not yet inspected");
-        worksheet.CellValue(4, OfstedTrustColumns.CategoryOfConcern).Should().Be("Not yet inspected");
+        worksheet.CellValue(4, OfstedTrustColumns.EffectiveSafeguarding).Should().Be("Not inspected");
+        worksheet.CellValue(4, OfstedTrustColumns.CategoryOfConcern).Should().Be("Not inspected");
     }
 
     [Fact]

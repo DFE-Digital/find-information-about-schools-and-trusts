@@ -1,5 +1,96 @@
 ﻿@page
+@using DfE.FindInformationAcademiesTrusts.Extensions
 @model DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted.OlderInspectionsModel
 @{
     Layout = "Ofsted/_OfstedLayout";
 }
+
+<section class="app-table-container" data-testid="ofsted-overview-table">
+
+    <details class="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+                Why a single headline grade might not be available
+            </span>
+        </summary>
+        <div class="govuk-details__text">
+    
+            <p class="govuk-body">From <strong>2 September 2024</strong>, Ofsted stopped giving a single headline grade for state-funded school inspections.</p>
+            <p class="govuk-body">Inspections completed after this date are broken down by category.</p>
+
+        </div>
+    </details>
+
+    <table class="govuk-table si-row-span-colours-table" aria-describedby="ofsted-overview">
+
+        <caption class="govuk-table__caption govuk-table__caption--m" id="ofsted-overview">Overview<span class="govuk-visually-hidden"> (column headers with buttons are sortable).</span></caption>
+
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header table-col--20" aria-sort="none">School name</th>
+                <th scope="col" class="govuk-table__header column-header-date" aria-sort="none">Date of inspection</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none">Quality of education</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none">Behaviour and attitudes</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none">Personal development</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none">Leadership and management</th>
+            </tr>
+        </thead>
+
+        <tbody class="govuk-table__body">
+            @{
+                int rowNumber = 0; 
+            }
+            @foreach (var overviewModel in Model.OlderOfstedInspections)
+            {
+                rowNumber++;
+                int subRowIndex = 0;
+                foreach (var overviewModelReportDetail in overviewModel.ReportDetails.Ratings)
+                {
+                    subRowIndex++;
+
+                    bool isEvenRow = rowNumber % 2 == 0;
+
+                    <tr class="govuk-table__row @(isEvenRow ? "govuk-table__row--even" : "")" data-testid="academy-row">
+                        @if (subRowIndex == 1)
+                        {
+                            <td class="govuk-table__cell" rowspan="2" data-sort-value="@overviewModel.SchoolName" data-testid="school-name">
+                                <partial name="Trusts/_AcademyLink" model="@(new AcademyLinkModel(overviewModel.SchoolName, "/schools/ofsted/ofstedoverview", overviewModel.Urn.ToString()))"/>
+                            </td>
+                        }
+
+                        @if (overviewModelReportDetail.InspectionDate is not null)
+                        {
+                            <td class="govuk-table__cell" data-sort-value="@overviewModelReportDetail.InspectionDate.Value.ToString(StringFormatConstants.SortableDateFormat)" data-testid="date-of-inspection">
+                                <span class="govuk-visually-hidden">@overviewModel.SchoolName</span>
+                                @overviewModelReportDetail.InspectionDate.Value.ToString(StringFormatConstants.DisplayDateFormat)
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="govuk-table__cell" data-testid="date-of-inspection">
+                                <span class="govuk-visually-hidden">@overviewModel.SchoolName</span>
+                                Not applicable
+                            </td>
+                        }
+
+                        <td class="govuk-table__cell" data-testid="quality-of-eduction">
+                            @overviewModelReportDetail.QualityOfEducation.ToDisplayString(false)
+                        </td>
+
+                        <td class="govuk-table__cell" data-testid="behaviour-and-attitudes">
+                            @overviewModelReportDetail.BehaviourAndAttitudes.ToDisplayString(false)
+                        </td>
+
+                        <td class="govuk-table__cell" data-testid="personal-development">
+                            @overviewModelReportDetail.PersonalDevelopment.ToDisplayString(false)
+                        </td>
+
+                        <td class="govuk-table__cell" data-testid="leadership">
+                            @overviewModelReportDetail.EffectivenessOfLeadershipAndManagement.ToDisplayString(false)
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</section>

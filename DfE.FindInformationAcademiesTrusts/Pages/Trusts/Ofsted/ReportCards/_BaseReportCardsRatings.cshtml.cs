@@ -33,5 +33,5 @@ public abstract class BaseReportCardsRatingsModel(IDataSourceService dataSourceS
         return pageResult;
     }
 
-    protected abstract List<ReportCardViewModel> GetReportCard(List<TrustReportCardServiceModel> reportCardServiceModel);
+    protected abstract List<ReportCardViewModel> GetReportCard(List<TrustOfstedReportServiceModel<ReportCardServiceModel>> reportCardServiceModel);
 }
