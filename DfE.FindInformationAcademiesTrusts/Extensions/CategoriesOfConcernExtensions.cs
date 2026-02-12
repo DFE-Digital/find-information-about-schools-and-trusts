@@ -17,7 +17,7 @@ public static class CategoriesOfConcernExtensions
             CategoriesOfConcern.SpecialMeasures => "Special measures",
             CategoriesOfConcern.SeriousWeakness => "Serious weakness",
             CategoriesOfConcern.NoticeToImprove => "Notice to improve",
-            CategoriesOfConcern.NotInspected => "Not yet inspected",
+            CategoriesOfConcern.NotInspected => "Not inspected",
             CategoriesOfConcern.DoesNotApply => "Does not apply",
             _ => "Unknown"
         };
