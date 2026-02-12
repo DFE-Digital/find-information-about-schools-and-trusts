@@ -86,19 +86,26 @@ public class TrustService(
 
     public async Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid)
     {
-        var urn = await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(uid);
+        try
+        {
+            var urn = await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(uid);
 
-        var trustContacts =
-            await trustRepository.GetTrustContactsAsync(uid, urn);
-        var internalContacts = await contactRepository.GetTrustInternalContactsAsync(uid);
+            var trustContacts =
+                await trustRepository.GetTrustContactsAsync(uid, urn);
+            var internalContacts = await contactRepository.GetTrustInternalContactsAsync(uid);
 
-        return new TrustContactsServiceModel(
-            internalContacts.TrustRelationshipManager,
-            internalContacts.SfsoLead,
-            ChairOfTrustees: trustContacts.ChairOfTrustees,
-            AccountingOfficer: trustContacts.AccountingOfficer,
-            ChiefFinancialOfficer: trustContacts.ChiefFinancialOfficer
-        );
+            return new TrustContactsServiceModel(
+                internalContacts.TrustRelationshipManager,
+                internalContacts.SfsoLead,
+                ChairOfTrustees: trustContacts.ChairOfTrustees,
+                AccountingOfficer: trustContacts.AccountingOfficer,
+                ChiefFinancialOfficer: trustContacts.ChiefFinancialOfficer
+            );
+        }
+        catch (Exception)
+        {
+            return new TrustContactsServiceModel(null, null, null, null, null);
+        }
     }
 
     public async Task<InternalContactUpdatedServiceModel> UpdateContactAsync(int uid, string? name, string? email,

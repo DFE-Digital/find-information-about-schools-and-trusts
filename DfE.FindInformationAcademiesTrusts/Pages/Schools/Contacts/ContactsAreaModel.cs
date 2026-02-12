@@ -57,33 +57,47 @@ public class ContactsAreaModel(
 
     private async Task<DataSourcePageListEntry[]> GetInDfeDataSourcesForLocalAuthorityMaintainedSchool()
     {
-        var dataSource = await dataSourceService.GetSchoolContactDataSourceAsync(Urn, SchoolContactRole.RegionsGroupLocalAuthorityLead);
-        return
-        [
-            new DataSourcePageListEntry(InDfeModel.SubPageName,
-                [new DataSourceListEntry(dataSource, "Regions group LA lead")])
-        ];
+        try
+        {
+            var dataSource = await dataSourceService.GetSchoolContactDataSourceAsync(Urn, SchoolContactRole.RegionsGroupLocalAuthorityLead);
+            return
+            [
+                new DataSourcePageListEntry(InDfeModel.SubPageName,
+                    [new DataSourceListEntry(dataSource, "Regions group LA lead")])
+            ];
+        }
+        catch (Exception)
+        {
+            return [];
+        }
     }
 
     private async Task<DataSourcePageListEntry[]> GetInDfeDataSourcesForAcademy()
     {
-        var uid = (await _trustService.GetTrustSummaryAsync(Urn))?.Uid;
+        try
+        {
+            var uid = (await _trustService.GetTrustSummaryAsync(Urn))?.Uid;
 
-        if (uid is null || !int.TryParse(uid, out var uidAsInt)) return [];
+            if (uid is null || !int.TryParse(uid, out var uidAsInt)) return [];
 
-        var trustRelationshipManagerDataSource =
-            await dataSourceService.GetTrustContactDataSourceAsync(uidAsInt, TrustContactRole.TrustRelationshipManager);
-        var sfsoLeadDataSource = await dataSourceService.GetTrustContactDataSourceAsync(uidAsInt, TrustContactRole.SfsoLead);
+            var trustRelationshipManagerDataSource =
+                await dataSourceService.GetTrustContactDataSourceAsync(uidAsInt, TrustContactRole.TrustRelationshipManager);
+            var sfsoLeadDataSource = await dataSourceService.GetTrustContactDataSourceAsync(uidAsInt, TrustContactRole.SfsoLead);
 
-        return
-        [
-            new DataSourcePageListEntry(InDfeModel.SubPageName,
+            return
             [
-                new DataSourceListEntry(trustRelationshipManagerDataSource,
-                    TrustContactRole.TrustRelationshipManager.MapRoleToViewString()),
-                new DataSourceListEntry(sfsoLeadDataSource, TrustContactRole.SfsoLead.MapRoleToViewString())
-            ])
-        ];
+                new DataSourcePageListEntry(InDfeModel.SubPageName,
+                [
+                    new DataSourceListEntry(trustRelationshipManagerDataSource,
+                        TrustContactRole.TrustRelationshipManager.MapRoleToViewString()),
+                    new DataSourceListEntry(sfsoLeadDataSource, TrustContactRole.SfsoLead.MapRoleToViewString())
+                ])
+            ];
+        }
+        catch (Exception)
+        {
+            return [];
+        }
     }
 
     private async Task<bool> ContactsInDfeForSchoolsEnabled()

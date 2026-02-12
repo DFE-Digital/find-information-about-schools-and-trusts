@@ -1,5 +1,6 @@
 ﻿using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Search;
+using Microsoft.Extensions.Logging;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Search;
 
@@ -15,32 +16,48 @@ public class SearchService(ITrustSchoolSearchRepository trustSchoolSearchReposit
 
     public async Task<SearchResultServiceModel[]> GetSearchResultsForAutocompleteAsync(string? keyWords)
     {
-        if (string.IsNullOrWhiteSpace(keyWords))
-        {
-            return [];
-        }
+        //try
+        //{
+            if (string.IsNullOrWhiteSpace(keyWords))
+            {
+                return [];
+            }
+            
+            var results = await trustSchoolSearchRepository.GetAutoCompleteSearchResultsAsync(keyWords);
 
-        var results = await trustSchoolSearchRepository.GetAutoCompleteSearchResultsAsync(keyWords);
-
-        return BuildResults(results);
+            return BuildResults(results);
+        //}
+        //catch (Exception ex)
+        //{
+        //    logger.LogError(ex, "Error getting autocomplete search results");
+        //    return [];
+        //}
     }
 
     public async Task<PagedSearchResults> GetSearchResultsForPageAsync(string? keyWords, int pageNumber)
     {
-        if (string.IsNullOrWhiteSpace(keyWords))
-        {
-            return new PagedSearchResults(PaginatedList<SearchResultServiceModel>.Empty(), new SearchResultsOverview());
-        }
+        //try
+        //{
+            if (string.IsNullOrWhiteSpace(keyWords))
+            {
+                return new PagedSearchResults(PaginatedList<SearchResultServiceModel>.Empty(), new SearchResultsOverview());
+            }
 
-        var searchResults = await trustSchoolSearchRepository.GetSearchResultsAsync(keyWords, PageSize, pageNumber);
+            var searchResults = await trustSchoolSearchRepository.GetSearchResultsAsync(keyWords, PageSize, pageNumber);
 
-        var results = BuildResults(searchResults.Results);
+            var results = BuildResults(searchResults.Results);
 
-        return new PagedSearchResults(new PaginatedList<SearchResultServiceModel>(results,
-                searchResults.NumberOfResults.TotalRecords, pageNumber,
-                PageSize),
-            new SearchResultsOverview(searchResults.NumberOfResults.NumberOfTrusts,
-                searchResults.NumberOfResults.NumberOfSchools));
+            return new PagedSearchResults(new PaginatedList<SearchResultServiceModel>(results,
+                    searchResults.NumberOfResults.TotalRecords, pageNumber,
+                    PageSize),
+                new SearchResultsOverview(searchResults.NumberOfResults.NumberOfTrusts,
+                    searchResults.NumberOfResults.NumberOfSchools));
+        //}
+        //catch (Exception ex)
+        //{
+        //    logger.LogError(ex, "Error getting search results for page");
+        //    return new PagedSearchResults(PaginatedList<SearchResultServiceModel>.Empty(), new SearchResultsOverview());
+        //}
     }
 
     private static SearchResultServiceModel[] BuildResults(SearchResult[] results)
