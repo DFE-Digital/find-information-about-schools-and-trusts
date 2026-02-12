@@ -1,6 +1,6 @@
 ﻿namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
 {
-    public class ReportCardServiceModel
+    public class ReportCardServiceModel: IOfstedInspection
     {
         public ReportCardDetails? LatestReportCard { get; set; }
         public ReportCardDetails? PreviousReportCard { get; set; }

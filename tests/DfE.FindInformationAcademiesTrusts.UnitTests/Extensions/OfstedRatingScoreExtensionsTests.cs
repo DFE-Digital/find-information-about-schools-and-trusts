@@ -20,7 +20,7 @@ public class OfstedRatingScoreExtensionsTests
     [InlineData(OfstedRatingScore.SingleHeadlineGradeNotAvailable, "Not available", false)]
     [InlineData(OfstedRatingScore.DoesNotApply, "Does not apply", true)]
     [InlineData(OfstedRatingScore.DoesNotApply, "Does not apply", false)]
-    [InlineData(OfstedRatingScore.NotInspected, "Not yet inspected", true)]
+    [InlineData(OfstedRatingScore.NotInspected, "Not inspected", true)]
     [InlineData(OfstedRatingScore.NotInspected, "Not inspected", false)]
     [InlineData((OfstedRatingScore)999, "Unknown", true)]
     [InlineData((OfstedRatingScore)999, "Unknown", false)]

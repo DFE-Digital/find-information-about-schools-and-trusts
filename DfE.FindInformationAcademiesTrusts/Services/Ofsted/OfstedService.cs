@@ -9,7 +9,8 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
         Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspectionAsync(int urn);
         Task<List<OfstedOverviewInspectionServiceModel>> GetOfstedOverviewInspectionForTrustAsync(string uid);
         Task<OlderSchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn);
-        Task<List<TrustReportCardServiceModel>> GetEstablishmentsInTrustReportCardsAsync(string uid);
+        Task<List<TrustOfstedReportServiceModel<ReportCardServiceModel>>> GetEstablishmentsInTrustReportCardsAsync(string uid);
+        Task<List<TrustOfstedReportServiceModel<OlderInspectionServiceModel>>> GetEstablishmentsInTrustOlderOfstedRatings(string uid);
     }
 
     public class OfstedService(IReportCardsService reportCardsService, IOfstedRepository ofstedRepository, IOfstedServiceModelBuilder ofstedServiceModelBuilder, IAcademyService academyService, ILogger<IOfstedService> logger) : IOfstedService
@@ -21,7 +22,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
 
             return ofstedServiceModelBuilder.BuildOfstedOverviewInspection(schoolOfstedRatings, reportCards);
         }
-
+        
         public async Task<List<OfstedOverviewInspectionServiceModel>> GetOfstedOverviewInspectionForTrustAsync(string uid)
         {
             var schoolOfstedRatings = await ofstedRepository.GetAcademiesInTrustOfstedAsync(uid);
@@ -53,21 +54,21 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
             return ofstedServiceModelBuilder.BuildSchoolOfstedRatingsAsBeforeAndAfterSeptemberGrade(schoolOfstedRatings);
         }
 
-        public async Task<List<TrustReportCardServiceModel>> GetEstablishmentsInTrustReportCardsAsync(string uid)
+        public async Task<List<TrustOfstedReportServiceModel<ReportCardServiceModel>>> GetEstablishmentsInTrustReportCardsAsync(string uid)
         {
            var academiesInTrust = await academyService.GetAcademiesInTrustDetailsAsync(uid);
 
-           var trustReportCards = new List<TrustReportCardServiceModel>();
+           var trustReportCards = new List<TrustOfstedReportServiceModel<ReportCardServiceModel>>();
 
            foreach (var academy in academiesInTrust)
            {
-               if (int.TryParse(academy.Urn, out int urn))
+               if (int.TryParse(academy.Urn, out var urn))
                {
                    var reportCard = await reportCardsService.GetReportCardsAsync(urn);
 
-                   TrustReportCardServiceModel trustReportCard = new TrustReportCardServiceModel
+                   var trustReportCard = new TrustOfstedReportServiceModel<ReportCardServiceModel>
                    {
-                       ReportCardDetails = reportCard,
+                       ReportDetails = reportCard,
                        Urn = urn,
                        SchoolName = academy.EstablishmentName ?? ""
                    };
@@ -82,6 +83,37 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
            }
 
            return trustReportCards;
+        }
+
+        public async Task<List<TrustOfstedReportServiceModel<OlderInspectionServiceModel>>> GetEstablishmentsInTrustOlderOfstedRatings(string uid)
+        {
+            var academies = await ofstedRepository.GetAcademiesInTrustOfstedAsync(uid);
+            
+            var trustOfstedReports = new List<TrustOfstedReportServiceModel<OlderInspectionServiceModel>>();
+
+            foreach (var schoolOfsted in academies)
+            {
+                if (int.TryParse(schoolOfsted.Urn, out var urn))
+                {
+                    var trustReportCard = new TrustOfstedReportServiceModel<OlderInspectionServiceModel>
+                    {
+                        ReportDetails = new OlderInspectionServiceModel
+                        {
+                            Ratings = [schoolOfsted.CurrentOfstedRating, schoolOfsted.PreviousOfstedRating]
+                        },
+                        Urn = urn,
+                        SchoolName = schoolOfsted.EstablishmentName ?? ""
+                    };
+
+                    trustOfstedReports.Add(trustReportCard);
+                }
+                else
+                {
+                    logger.LogError("Unable to parse academy urn {Urn} for trust {Uid}", schoolOfsted.Urn, uid);
+                }
+            }
+
+            return trustOfstedReports;
         }
     }
 }

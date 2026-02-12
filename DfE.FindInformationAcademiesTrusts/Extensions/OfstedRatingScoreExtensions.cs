@@ -31,7 +31,7 @@ public static class OfstedRatingScoreExtensions
             (OfstedRatingScore.InsufficientEvidence, _) => "Insufficient evidence",
             (OfstedRatingScore.SingleHeadlineGradeNotAvailable, _) => "Not available",
             (OfstedRatingScore.DoesNotApply, _) => "Does not apply",
-            (OfstedRatingScore.NotInspected, true) => "Not yet inspected",
+            (OfstedRatingScore.NotInspected, true) => "Not inspected",
             (OfstedRatingScore.NotInspected, false) => "Not inspected",
             _ => "Unknown"
         };

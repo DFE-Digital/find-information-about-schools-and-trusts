@@ -12,13 +12,13 @@ public class PreviousReportCardsModelTests : BaseOfstedAreaModelTests<PreviousRe
     private static int Urn = 1234;
     private static string SchoolName = "Test school";
 
-    private readonly List<TrustReportCardServiceModel> _mockReportCards =
+    private readonly List<TrustOfstedReportServiceModel<ReportCardServiceModel>> _mockReportCards =
     [
         new()
         {
             Urn = Urn,
             SchoolName = SchoolName,
-            ReportCardDetails = new ReportCardServiceModel
+            ReportDetails = new ReportCardServiceModel
             {
                 PreviousReportCard = reportCard,
                 LatestReportCard = null
