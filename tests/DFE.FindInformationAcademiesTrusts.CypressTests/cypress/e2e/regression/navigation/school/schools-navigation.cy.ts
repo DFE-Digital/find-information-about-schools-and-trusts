@@ -22,7 +22,7 @@ describe('Schools Navigation Tests', () => {
         schoolURN: 107188,
     };
     const navOfstedTestSchool = {
-        schoolURN: 148510
+        schoolURN: 115650
     }
 
 
