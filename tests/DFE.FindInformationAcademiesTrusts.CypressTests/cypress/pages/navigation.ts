@@ -65,7 +65,7 @@ class Navigation {
         schoolsOfstedSubNav: {
             reportCardSubnavButton: () => cy.get('[data-testid="ofsted-report-cards-subnav"]'),
             overviewSubnavButton: () => cy.get('[data-testid="ofsted-overview-subnav"]'),
-            previousReportCard :() => cy.get('[data-testid="report-cards-previous-report-card-tab"]'),
+            previousReportCard: () => cy.get('[data-testid="report-cards-previous-report-card-subnav"]'),
         }
     };
 

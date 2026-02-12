@@ -10,64 +10,43 @@ class OfstedPage {
             section: () => cy.get('[data-testid="ofsted-overview-table"]'),
             table: () => this.elements.singleHeadlineGrades.section().find('[aria-describedby="ofsted-caption"]'),
             tableRows: () => this.elements.singleHeadlineGrades.table().find('tbody tr'),
-            schoolName: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-school-name"]'),
-            schoolNameHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-school-name-header"]'),
-            dateJoined: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-date-joined"]'),
-            dateJoinedHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-date-joined-header"]'),
-            hasRecentShortInspection: () => this.elements.singleHeadlineGrades.section().find('td[data-testid="ofsted-single-headline-grades-has-recent-short-inspection"]'),
-            hasRecentShortInspectionHeader: () => cy.get('th[data-testid="ofsted-single-headline-grades-has-recent-short-inspection"]'),
-            currentSHG: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-current-single-headline-grade"]'),
+            schoolName: () => this.elements.singleHeadlineGrades.section().find('[data-testid="school-name"]'),
+            schoolNameHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-overview-grades-school-name-header"]'),
+            dateJoined: () => this.elements.singleHeadlineGrades.section().find('[data-testid="academy-date-joined"]'),
+            dateJoinedHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-overview-grades-school-date-joined-header"]'),
+            hasRecentShortInspection: () => this.elements.singleHeadlineGrades.section().find('td[data-testid="has-recent-short-inspection"]'),
+            hasRecentShortInspectionHeader: () => cy.get('th[data-testid="ofsted-overview-grades-school-short-inspection-header"]'),
+            currentSHG: () => this.elements.singleHeadlineGrades.section().find('[data-testid="current-inspection-type"]'),
             currentSHGBeforeOrAfter: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-current-before-after-joining"]'),
-            currentSHGHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-current-single-headline-grade-header"]'),
-            dateOfCurrentInspection: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-current-date-of-inspection"]'),
-            dateOfCurrentInspectionHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-date-of-current-inspection-header"]'),
-            previousSHG: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-previous-single-headline-grade"]'),
+            currentSHGHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-overview-grades-school-current-inspection-type-header"]'),
+            dateOfCurrentInspection: () => this.elements.singleHeadlineGrades.section().find('[data-testid="date-of-current-inspection"]'),
+            dateOfCurrentInspectionHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-overview-grades-school-date-current-inspection-header"]'),
+            previousSHG: () => this.elements.singleHeadlineGrades.section().find('[data-testid="previous-inspection-type"]'),
             previousSHGBeforeOrAfter: () => this.elements.singleHeadlineGrades.section().find('[data-sort-value="3"] > [data-testid="ofsted-single-headline-grades-previous-before-after-joining"]'),
-            previousSHGHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-previous-single-headline-grade-header"]'),
-            dateOfPreviousInspection: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-previous-date-of-inspection"]'),
-            dateOfPreviousInspectionHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-date-of-previous-inspection-header"]'),
+            previousSHGHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-overview-grades-school-previous-inspection-type-header"]'),
+            dateOfPreviousInspection: () => this.elements.singleHeadlineGrades.section().find('[data-testid="date-of-previous-inspection"]'),
+            dateOfPreviousInspectionHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-overview-grades-school-date-previous-inspection-header"]'),
             whereToFindShortInspectionDataDetails: () => cy.get('[data-testid="where-to-find-short-inspection-data"]').closest('details'),
-            whySingleHeadlineNotAvailableDetails: () => cy.get('[data-testid="why-single-headline-not-available"]').closest('details'),
         },
-        currentRatings: {
-            section: () => cy.get('[data-testid="ofsted-current-ratings-table"]'),
-            schoolName: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-school-name"]'),
-            schoolNameHeader: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-school-name-header"]'),
-            noDataMessage: () => this.elements.currentRatings.section().contains('No data available'),
-            qualityOfEducationHeader: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-quality-of-education-header"]'),
-            qualityOfEducation: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-quality-of-education"]'),
-            behaviourAndAttitudesHeader: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-behaviour-and-attitudes-header"]'),
-            behaviourAndAttitudes: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-behaviour-and-attitudes"]'),
-            personalDevelopmentHeader: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-personal-development-header"]'),
-            personalDevelopment: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-personal-development"]'),
-            leadershipAndManagementHeader: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-leadership-and-management-header"]'),
-            leadershipAndManagement: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-leadership-and-management"]'),
-            earlyYearsProvisionHeader: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-early-years-provision-header"]'),
-            earlyYearsProvision: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-early-years-provision"]'),
-            sixthFormProvisionHeader: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-sixth-form-provision-header"]'),
-            sixthFormProvision: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-sixth-form-provision"]'),
-            beforeOrAfterJoiningHeader: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-before-or-after-joining-header"]'),
-            beforeOrAfterJoining: () => this.elements.currentRatings.section().find('[data-testid="ofsted-current-ratings-before-or-after-joining"]'),
+        reportCard: {
+            section: () => cy.get('[data-testid="ofsted-report-cards-overview"]'),
+            schoolName: () => this.elements.reportCard.section().find('[data-testid="school-name"]'),
+            schoolNameHeader: () => this.elements.reportCard.section().find('[data-testid="school-name-header"]'),
+            noDataMessage: () => this.elements.reportCard.section().contains('No data available'),
+            inclusionHeader: () => this.elements.reportCard.section().find('[data-testid="inclusion-header"]'),
+            inclusion: () => this.elements.reportCard.section().find('[data-testid="inclusion"]'),
+            curriculumAndTeachingHeader: () => this.elements.reportCard.section().find('[data-testid="curriculum-and-teaching-header"]'),
+            curriculumAndTeaching: () => this.elements.reportCard.section().find('[data-testid="curriculum-and-teaching"]'),
+            personalDevelopmentHeader: () => this.elements.reportCard.section().find('[data-testid="personal-development-and-well-being-header"]'),
+            personalDevelopment: () => this.elements.reportCard.section().find('[data-testid="personal-development"]'),
+            leadershipAndGoveranceHeader: () => this.elements.reportCard.section().find('[data-testid="leadership-and-governance-header"]'),
+            leadershipAndGoverance: () => this.elements.reportCard.section().find('[data-testid="leadership-and-governance"]'),
+            achievementHeader: () => this.elements.reportCard.section().find('[data-testid="achievement-header"]'),
+            achievement: () => this.elements.reportCard.section().find('[data-testid="achievement"]'),
+            attendanceAndBehaviourHeader: () => this.elements.reportCard.section().find('[data-testid="attendance-and-behaviour-header"]'),
+            attendanceAndBehaviour: () => this.elements.reportCard.section().find('[data-testid="attendance-and-behaviour"]'),
         },
-        previousRatings: {
-            section: () => cy.get('[data-testid="ofsted-previous-ratings-table"]'),
-            schoolName: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-school-name"]'),
-            schoolNameHeader: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-school-name-header"]'),
-            qualityOfEducationHeader: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-quality-of-education-header"]'),
-            qualityOfEducation: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-quality-of-education"]'),
-            behaviourAndAttitudesHeader: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-behaviour-and-attitudes-header"]'),
-            behaviourAndAttitudes: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-behaviour-and-attitudes"]'),
-            personalDevelopmentHeader: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-personal-development-header"]'),
-            personalDevelopment: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-personal-development"]'),
-            leadershipAndManagementHeader: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-leadership-and-management-header"]'),
-            leadershipAndManagement: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-leadership-and-management"]'),
-            earlyYearsProvisionHeader: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-early-years-provision-header"]'),
-            earlyYearsProvision: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-early-years-provision"]'),
-            sixthFormProvisionHeader: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-sixth-form-provision-header"]'),
-            sixthFormProvision: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-sixth-form-provision"]'),
-            beforeOrAfterJoiningHeader: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-before-or-after-joining-header"]'),
-            beforeOrAfterJoining: () => this.elements.previousRatings.section().find('[data-testid="ofsted-previous-ratings-before-or-after-joining"]'),
-        },
+
         safeguardingAndConcerns: {
             section: () => cy.get('[data-testid="ofsted-safeguarding-and-concerns-name-table"]'),
             schoolNameHeader: () => this.elements.safeguardingAndConcerns.section().find('[data-testid="ofsted-safeguarding-and-concerns-name-header"]'),
@@ -234,21 +213,6 @@ class OfstedPage {
         return this;
     }
 
-    public checkWhySingleHeadlineNotAvailableDetailsPresent(): this {
-        this.elements.singleHeadlineGrades.whySingleHeadlineNotAvailableDetails().should('be.visible');
-        return this;
-    }
-
-    public clickWhySingleHeadlineNotAvailableDetails(): this {
-        this.elements.singleHeadlineGrades.whySingleHeadlineNotAvailableDetails().find('summary').click();
-        return this;
-    }
-
-    public checkWhySingleHeadlineNotAvailableDetailsIsOpen(): this {
-        this.elements.singleHeadlineGrades.whySingleHeadlineNotAvailableDetails().should('have.attr', 'open');
-        return this;
-    }
-
     public checkSchoolNamesAreCorrectLinksOnSingleHeadlineGradesPage(): this {
         TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.singleHeadlineGrades, 'ofsted-single-headline-grades-school-name', /^\/schools\/ofsted\/singleheadlinegrades\?urn=\d+$/);
         return this;
@@ -259,97 +223,86 @@ class OfstedPage {
     // #region Current ratings
 
     public checkOfstedCurrentRatingsPageHeaderPresent(): this {
-        this.elements.subpageHeader().should('contain', 'Current ratings');
+        this.elements.subpageHeader().should('contain', 'Report cards');
         return this;
     }
 
     public checkOfstedCurrentRatingsTableHeadersPresent(): this {
-        this.elements.currentRatings.schoolNameHeader().should('be.visible');
-        this.elements.currentRatings.qualityOfEducationHeader().should('be.visible');
-        this.elements.currentRatings.behaviourAndAttitudesHeader().should('be.visible');
-        this.elements.currentRatings.personalDevelopmentHeader().should('be.visible');
-        this.elements.currentRatings.leadershipAndManagementHeader().should('be.visible');
-        this.elements.currentRatings.earlyYearsProvisionHeader().should('be.visible');
-        this.elements.currentRatings.sixthFormProvisionHeader().scrollIntoView();
-        this.elements.currentRatings.sixthFormProvisionHeader().should('be.visible');
-        this.elements.currentRatings.beforeOrAfterJoiningHeader().scrollIntoView();
-        this.elements.currentRatings.beforeOrAfterJoiningHeader().should('be.visible');
+        this.elements.reportCard.schoolNameHeader().should('be.visible');
+        this.elements.reportCard.inclusionHeader().should('be.visible');
+        this.elements.reportCard.curriculumAndTeachingHeader().should('be.visible');
+        this.elements.reportCard.personalDevelopmentHeader().should('be.visible');
+        this.elements.reportCard.leadershipAndGoveranceHeader().should('be.visible');
+        this.elements.reportCard.achievementHeader().should('be.visible');
+        this.elements.reportCard.attendanceAndBehaviourHeader().scrollIntoView();
+        this.elements.reportCard.attendanceAndBehaviourHeader().should('be.visible');
         return this;
     }
 
     public checkOfstedCurrentRatingsSorting(): this {
         TableUtility.checkStringSorting(
-            this.elements.currentRatings.schoolName,
-            this.elements.currentRatings.schoolNameHeader
+            this.elements.reportCard.schoolName,
+            this.elements.reportCard.schoolNameHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.currentRatings.qualityOfEducation,
-            this.elements.currentRatings.qualityOfEducationHeader
+            this.elements.reportCard.inclusion,
+            this.elements.reportCard.inclusionHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.currentRatings.behaviourAndAttitudes,
-            this.elements.currentRatings.behaviourAndAttitudesHeader
+            this.elements.reportCard.curriculumAndTeaching,
+            this.elements.reportCard.curriculumAndTeachingHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.currentRatings.personalDevelopment,
-            this.elements.currentRatings.personalDevelopmentHeader
+            this.elements.reportCard.personalDevelopment,
+            this.elements.reportCard.personalDevelopmentHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.currentRatings.leadershipAndManagement,
-            this.elements.currentRatings.leadershipAndManagementHeader
+            this.elements.reportCard.leadershipAndGoverance,
+            this.elements.reportCard.leadershipAndGoveranceHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.currentRatings.earlyYearsProvision,
-            this.elements.currentRatings.earlyYearsProvisionHeader
+            this.elements.reportCard.achievement,
+            this.elements.reportCard.achievementHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.currentRatings.sixthFormProvision,
-            this.elements.currentRatings.sixthFormProvisionHeader
-        );
-        TableUtility.checkStringSorting(
-            this.elements.currentRatings.beforeOrAfterJoining,
-            this.elements.currentRatings.beforeOrAfterJoiningHeader
+            this.elements.reportCard.attendanceAndBehaviour,
+            this.elements.reportCard.attendanceAndBehaviourHeader
         );
         return this;
     }
 
-    public checkCurrentRatingsQualityOfEducationJudgementsPresent(): this {
-        this.elements.currentRatings.qualityOfEducation().each(this.checkValueIsValidCurrentOfstedRating);
+    public checkCurrentRatingsInclusionJudgementsPresent(): this {
+        this.elements.reportCard.inclusion().each(this.checkValueIsValidCurrentOfstedRating);
         return this;
     }
 
-    public checkCurrentRatingsBehaviourAndAttitudesJudgementsPresent(): this {
-        this.elements.currentRatings.behaviourAndAttitudes().each(this.checkValueIsValidCurrentOfstedRating);
+    public checkCurrentRatingsCurriculumAndTeachingJudgementsPresent(): this {
+        this.elements.reportCard.curriculumAndTeaching().each(this.checkValueIsValidCurrentOfstedRating);
         return this;
     }
 
     public checkCurrentRatingsPersonalDevelopmentJudgementsPresent(): this {
-        this.elements.currentRatings.personalDevelopment().each(this.checkValueIsValidCurrentOfstedRating);
+        this.elements.reportCard.personalDevelopment().each(this.checkValueIsValidCurrentOfstedRating);
         return this;
     }
 
-    public checkCurrentRatingsLeadershipAndManagementJudgementsPresent(): this {
-        this.elements.currentRatings.leadershipAndManagement().each(this.checkValueIsValidCurrentOfstedRating);
+    public checkCurrentRatingsLeadershipAndGoveranceudgementsPresent(): this {
+        this.elements.reportCard.leadershipAndGoverance().each(this.checkValueIsValidCurrentOfstedRating);
         return this;
     }
 
-    public checkCurrentRatingsEarlyYearsProvisionJudgementsPresent(): this {
-        this.elements.currentRatings.earlyYearsProvision().each(this.checkValueIsValidCurrentOfstedRating);
+    public checkCurrentRatingsAchievementJudgementsPresent(): this {
+        this.elements.reportCard.achievement().each(this.checkValueIsValidCurrentOfstedRating);
         return this;
     }
 
-    public checkCurrentRatingsSixthFormProvisionJudgementsPresent(): this {
-        this.elements.currentRatings.sixthFormProvision().each(this.checkValueIsValidCurrentOfstedRating);
-        return this;
-    }
-
-    public checkCurrentRatingsBeforeOrAfterJoiningJudgementsPresent(): this {
-        this.elements.currentRatings.beforeOrAfterJoining().each(this.checkValueIsValidBeforeOrAfterJoiningTag);
+    public checkCurrentRatingsAttendanceAndBehaviourJudgementsPresent(): this {
+        this.elements.reportCard.attendanceAndBehaviour().each(this.checkValueIsValidCurrentOfstedRating);
         return this;
     }
 
     public checkNoDataMessageIsVisible(): this {
-        this.elements.currentRatings.noDataMessage().should('be.visible');
+        this.elements.reportCard.noDataMessage().should('be.visible');
         return this;
     }
 
@@ -357,95 +310,81 @@ class OfstedPage {
     // #region previous ratings
 
     public checkOfstedPreviousRatingsPageHeaderPresent(): this {
-        this.elements.subpageHeader().should('contain', 'Previous ratings');
+        this.elements.subpageHeader().should('contain', 'Report cards');
         return this;
     }
 
     public checkOfstedPreviousRatingsTableHeadersPresent(): this {
-        this.elements.previousRatings.schoolNameHeader().should('be.visible');
-        this.elements.previousRatings.qualityOfEducationHeader().should('be.visible');
-        this.elements.previousRatings.behaviourAndAttitudesHeader().should('be.visible');
-        this.elements.previousRatings.personalDevelopmentHeader().should('be.visible');
-        this.elements.previousRatings.leadershipAndManagementHeader().should('be.visible');
-        this.elements.previousRatings.earlyYearsProvisionHeader().should('be.visible');
-        this.elements.previousRatings.sixthFormProvisionHeader().scrollIntoView();
-        this.elements.previousRatings.sixthFormProvisionHeader().should('be.visible');
-        this.elements.previousRatings.beforeOrAfterJoiningHeader().scrollIntoView();
-        this.elements.previousRatings.beforeOrAfterJoiningHeader().should('be.visible');
+        this.elements.reportCard.schoolNameHeader().should('be.visible');
+        this.elements.reportCard.inclusionHeader().should('be.visible');
+        this.elements.reportCard.curriculumAndTeachingHeader().should('be.visible');
+        this.elements.reportCard.personalDevelopmentHeader().should('be.visible');
+        this.elements.reportCard.leadershipAndGoveranceHeader().should('be.visible');
+        this.elements.reportCard.achievementHeader().should('be.visible');
+        this.elements.reportCard.attendanceAndBehaviourHeader().scrollIntoView();
+        this.elements.reportCard.attendanceAndBehaviourHeader().should('be.visible');
         return this;
     }
 
     public checkOfstedPreviousRatingsSorting(): this {
         TableUtility.checkStringSorting(
-            this.elements.previousRatings.schoolName,
-            this.elements.previousRatings.schoolNameHeader
+            this.elements.reportCard.schoolName,
+            this.elements.reportCard.schoolNameHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.previousRatings.qualityOfEducation,
-            this.elements.previousRatings.qualityOfEducationHeader
+            this.elements.reportCard.inclusion,
+            this.elements.reportCard.inclusionHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.previousRatings.behaviourAndAttitudes,
-            this.elements.previousRatings.behaviourAndAttitudesHeader
+            this.elements.reportCard.curriculumAndTeaching,
+            this.elements.reportCard.curriculumAndTeachingHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.previousRatings.personalDevelopment,
-            this.elements.previousRatings.personalDevelopmentHeader
+            this.elements.reportCard.personalDevelopment,
+            this.elements.reportCard.personalDevelopmentHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.previousRatings.leadershipAndManagement,
-            this.elements.previousRatings.leadershipAndManagementHeader
+            this.elements.reportCard.leadershipAndGoverance,
+            this.elements.reportCard.leadershipAndGoveranceHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.previousRatings.earlyYearsProvision,
-            this.elements.previousRatings.earlyYearsProvisionHeader
+            this.elements.reportCard.achievement,
+            this.elements.reportCard.achievementHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.previousRatings.sixthFormProvision,
-            this.elements.previousRatings.sixthFormProvisionHeader
-        );
-        TableUtility.checkStringSorting(
-            this.elements.previousRatings.beforeOrAfterJoining,
-            this.elements.previousRatings.beforeOrAfterJoiningHeader
+            this.elements.reportCard.attendanceAndBehaviour,
+            this.elements.reportCard.attendanceAndBehaviourHeader
         );
         return this;
     }
 
-    public checkPreviousRatingsQualityOfEducationJudgementsPresent(): this {
-        this.elements.previousRatings.qualityOfEducation().each(this.checkValueIsValidPreviousOfstedRating);
+    public checkPreviousRatingsInclusionJudgementsPresent(): this {
+        this.elements.reportCard.inclusion().each(this.checkValueIsValidPreviousOfstedRating);
         return this;
     }
 
-    public checkPreviousRatingsBehaviourAndAttitudesJudgementsPresent(): this {
-        this.elements.previousRatings.behaviourAndAttitudes().each(this.checkValueIsValidPreviousOfstedRating);
+    public checkPreviousRatingsCurriculumAndTeachingJudgementsPresent(): this {
+        this.elements.reportCard.curriculumAndTeaching().each(this.checkValueIsValidPreviousOfstedRating);
         return this;
     }
 
     public checkPreviousRatingsPersonalDevelopmentJudgementsPresent(): this {
-        this.elements.previousRatings.personalDevelopment().each(this.checkValueIsValidPreviousOfstedRating);
+        this.elements.reportCard.personalDevelopment().each(this.checkValueIsValidPreviousOfstedRating);
         return this;
     }
 
-    public checkPreviousRatingsLeadershipAndManagementJudgementsPresent(): this {
-        this.elements.previousRatings.leadershipAndManagement().each(this.checkValueIsValidPreviousOfstedRating);
+    public checkPreviousRatingsLeadershipAndGoveranceJudgementsPresent(): this {
+        this.elements.reportCard.leadershipAndGoverance().each(this.checkValueIsValidPreviousOfstedRating);
         return this;
     }
 
-    public checkPreviousRatingsEarlyYearsProvisionJudgementsPresent(): this {
-        this.elements.previousRatings.earlyYearsProvision().each(this.checkValueIsValidPreviousOfstedRating);
+    public checkPreviousRatingsAchievementJudgementsPresent(): this {
+        this.elements.reportCard.achievement().each(this.checkValueIsValidPreviousOfstedRating);
         return this;
     }
 
-    public checkPreviousRatingsSixthFormProvisionJudgementsPresent(): this {
-        this.elements.previousRatings.sixthFormProvision().each(this.checkValueIsValidPreviousOfstedRating);
-        return this;
-    }
-
-    public checkPreviousRatingsBeforeOrAfterJoiningJudgementsPresent(): this {
-        this.elements.previousRatings.beforeOrAfterJoining().each((element: JQuery<HTMLElement>) => {
-            const text = element.text().replace(/\s+/g, ' ').trim();
-            expect(text).to.match(/^(Before|After|Not inspected)$/);
-        });
+    public checkPreviousRatingsAttendanceAndBehaviourJudgementsPresent(): this {
+        this.elements.reportCard.attendanceAndBehaviour().each(this.checkValueIsValidPreviousOfstedRating);
         return this;
     }
 

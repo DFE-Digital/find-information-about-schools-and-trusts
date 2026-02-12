@@ -123,7 +123,7 @@ class SchoolsPage {
                 inspectionTable: () => cy.get('[data-testid="data-source-and-updates"]'),
             },
             ratings: {
-                schoolOfstedRatingsTable: () => cy.get('[data-testid="ratings-table"]'),
+                schoolOfstedRatingsTable: () => cy.get('[data-testid="ofsted-report-cards-overview"]'),
                 subPageHeader: () => cy.get('[data-testid="subpage-header"]')
             }
 
@@ -188,7 +188,7 @@ class SchoolsPage {
     }
 
     public checkOverviewPageNamePresent(): this {
-        this.elements.pageName().should('contain', 'Overview');
+        this.elements.pageName().should('contain', 'Ofsted');
         return this;
     }
 

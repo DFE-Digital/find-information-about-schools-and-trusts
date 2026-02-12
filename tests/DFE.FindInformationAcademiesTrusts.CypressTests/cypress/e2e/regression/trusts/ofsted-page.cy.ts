@@ -63,21 +63,10 @@ describe("Testing the Ofsted page and its subpages ", () => {
                 .checkWhereToFindShortInspectionDataDetailsPresent();
         });
 
-        it("Checks that the 'Why single headline grade might not be available' details section is present", () => {
-            ofstedPage
-                .checkWhySingleHeadlineNotAvailableDetailsPresent();
-        });
-
         it("Checks that clicking 'Where to find short inspection data' details expands the content", () => {
             ofstedPage
                 .clickWhereToFindShortInspectionDataDetails()
                 .checkWhereToFindShortInspectionDataDetailsIsOpen();
-        });
-
-        it("Checks that clicking 'Why single headline grade might not be available' details expands the content", () => {
-            ofstedPage
-                .clickWhySingleHeadlineNotAvailableDetails()
-                .checkWhySingleHeadlineNotAvailableDetailsIsOpen();
         });
 
         it('should export academies data as an xlsx and verify it has downloaded and has content', () => {
@@ -113,7 +102,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
         it("Checks the browser title is correct", () => {
             commonPage
-                .checkThatBrowserTitleForTrustPageMatches('Current ratings - Ofsted - {trustName} - Find information about schools and trusts');
+                .checkThatBrowserTitleForTrustPageMatches('Current report card - Report cards - Ofsted - {trustName} - Find information about schools and trusts');
         });
 
         it("Checks the breadcrumb shows the correct page name", () => {
@@ -133,25 +122,23 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
         it("Checks that a trusts current ratings correct judgement types are present", () => {
             ofstedPage
-                .checkCurrentRatingsQualityOfEducationJudgementsPresent()
-                .checkCurrentRatingsBehaviourAndAttitudesJudgementsPresent()
+                .checkCurrentRatingsInclusionJudgementsPresent()
+                .checkCurrentRatingsCurriculumAndTeachingJudgementsPresent()
                 .checkCurrentRatingsPersonalDevelopmentJudgementsPresent()
-                .checkCurrentRatingsLeadershipAndManagementJudgementsPresent()
-                .checkCurrentRatingsEarlyYearsProvisionJudgementsPresent()
-                .checkCurrentRatingsSixthFormProvisionJudgementsPresent()
-                .checkCurrentRatingsBeforeOrAfterJoiningJudgementsPresent();
+                .checkCurrentRatingsLeadershipAndGoveranceudgementsPresent()
+                .checkCurrentRatingsAchievementJudgementsPresent()
+                .checkCurrentRatingsAttendanceAndBehaviourJudgementsPresent()
         });
 
         it("Checks that a different trusts current ratings correct judgement types are present", () => {
             cy.visit('/trusts/ofsted/reportcards/currentreportcards?uid=5712');
             ofstedPage
-                .checkCurrentRatingsQualityOfEducationJudgementsPresent()
-                .checkCurrentRatingsBehaviourAndAttitudesJudgementsPresent()
+                .checkCurrentRatingsInclusionJudgementsPresent()
+                .checkCurrentRatingsCurriculumAndTeachingJudgementsPresent()
                 .checkCurrentRatingsPersonalDevelopmentJudgementsPresent()
-                .checkCurrentRatingsLeadershipAndManagementJudgementsPresent()
-                .checkCurrentRatingsEarlyYearsProvisionJudgementsPresent()
-                .checkCurrentRatingsSixthFormProvisionJudgementsPresent()
-                .checkCurrentRatingsBeforeOrAfterJoiningJudgementsPresent();
+                .checkCurrentRatingsLeadershipAndGoveranceudgementsPresent()
+                .checkCurrentRatingsAchievementJudgementsPresent()
+                .checkCurrentRatingsAttendanceAndBehaviourJudgementsPresent()
         });
 
         it('should export academies data as an xlsx and verify it has downloaded and has content', () => {
@@ -182,7 +169,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
         it("Checks the browser title is correct", () => {
             commonPage
-                .checkThatBrowserTitleForTrustPageMatches('Previous ratings - Ofsted - {trustName} - Find information about schools and trusts');
+                .checkThatBrowserTitleForTrustPageMatches('Previous report card - Report cards - Ofsted - {trustName} - Find information about schools and trusts');
         });
 
         it("Checks the breadcrumb shows the correct page name", () => {
@@ -202,25 +189,23 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
         it("Checks that a trusts previous ratings correct judgement types are present", () => {
             ofstedPage
-                .checkPreviousRatingsQualityOfEducationJudgementsPresent()
-                .checkPreviousRatingsBehaviourAndAttitudesJudgementsPresent()
+                .checkPreviousRatingsInclusionJudgementsPresent()
+                .checkPreviousRatingsCurriculumAndTeachingJudgementsPresent()
                 .checkPreviousRatingsPersonalDevelopmentJudgementsPresent()
-                .checkPreviousRatingsLeadershipAndManagementJudgementsPresent()
-                .checkPreviousRatingsEarlyYearsProvisionJudgementsPresent()
-                .checkPreviousRatingsSixthFormProvisionJudgementsPresent()
-                .checkPreviousRatingsBeforeOrAfterJoiningJudgementsPresent();
+                .checkPreviousRatingsLeadershipAndGoveranceJudgementsPresent()
+                .checkPreviousRatingsAchievementJudgementsPresent()
+                .checkPreviousRatingsAttendanceAndBehaviourJudgementsPresent()
         });
 
         it("Checks that a different trusts previous ratings correct judgement types are present", () => {
-            cy.visit('/trusts/ofsted/previous-ratings?uid=5712');
+            cy.visit('/trusts/ofsted/reportcards/previousreportcards?uid=5712');
             ofstedPage
-                .checkPreviousRatingsQualityOfEducationJudgementsPresent()
-                .checkPreviousRatingsBehaviourAndAttitudesJudgementsPresent()
+                .checkPreviousRatingsInclusionJudgementsPresent()
+                .checkPreviousRatingsCurriculumAndTeachingJudgementsPresent()
                 .checkPreviousRatingsPersonalDevelopmentJudgementsPresent()
-                .checkPreviousRatingsLeadershipAndManagementJudgementsPresent()
-                .checkPreviousRatingsEarlyYearsProvisionJudgementsPresent()
-                .checkPreviousRatingsSixthFormProvisionJudgementsPresent()
-                .checkPreviousRatingsBeforeOrAfterJoiningJudgementsPresent();
+                .checkPreviousRatingsLeadershipAndGoveranceJudgementsPresent()
+                .checkPreviousRatingsAchievementJudgementsPresent()
+                .checkPreviousRatingsAttendanceAndBehaviourJudgementsPresent()
         });
 
         it('should export academies data as an xlsx and verify it has downloaded and has content', () => {
