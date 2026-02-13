@@ -77,7 +77,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             var reportCards = new ReportCardServiceModel
             {
                 LatestReportCard = new ReportCardDetails(dateForReportCard, null, null, null, null, null, null, null,
-                    null, null, null, null),
+                    null, "Met", null, "None"),
                 PreviousReportCard = null
             };
 
@@ -120,10 +120,10 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             {
                 LatestReportCard = new ReportCardDetails(DateOnly.FromDateTime(reportCardLatestDate), null, null, null,
                     null, null, null, null,
-                    null, null, null, null),
+                    null, "Met", null, "None"),
                 PreviousReportCard = new ReportCardDetails(DateOnly.FromDateTime(reportCardPreviousDate), null, null,
                     null, null, null, null,
-                    null, null, null, null, null)
+                    null, null, "Met", null, "None")
             };
 
             var result = _sut.BuildOfstedOverviewInspection(schoolOfstedRatings, reportCards);

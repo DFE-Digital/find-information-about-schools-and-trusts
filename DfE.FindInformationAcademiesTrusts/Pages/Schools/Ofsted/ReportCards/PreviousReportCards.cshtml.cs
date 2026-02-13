@@ -27,6 +27,6 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.ReportCards
 
         protected override ReportCardDetails? GetReportCard(ReportCardServiceModel reportCardServiceModel) => reportCardServiceModel.PreviousReportCard;
 
-        protected override BeforeOrAfterJoining GetWhenInspectionHappened(ReportCardDetails? reportCardDetails, DateTime? dateJoinedTrust) => dateJoinedTrust.GetBeforeOrAfterJoiningTrust(reportCardDetails?.InspectionDate);
+        protected override BeforeOrAfterJoining GetWhenInspectionHappened(ReportCardDetails? reportCardDetails, DateOnly? dateJoinedTrust) => dateJoinedTrust.GetBeforeOrAfterJoiningTrust(reportCardDetails?.InspectionDate);
     }
 }

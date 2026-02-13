@@ -36,7 +36,9 @@ public abstract class BaseReportCardsRatingsModel(
         var reportCards = await reportCardsService.GetReportCardsAsync(Urn);
         ReportCard = GetReportCard(reportCards);
 
-        WhenDidCurrentInspectionHappen = GetWhenInspectionHappened(ReportCard, reportCards.DateJoinedTrust?.ToDateTime(TimeOnly.MinValue));
+        var dateJoined = await SchoolService.GetDateJoinedTrustAsync(Urn);
+
+        WhenDidCurrentInspectionHappen = GetWhenInspectionHappened(ReportCard, dateJoined);
 
         TabList = _schoolNavMenu.GetTabLinksForReportCardsOfstedPages(this);
 
@@ -45,5 +47,5 @@ public abstract class BaseReportCardsRatingsModel(
 
     protected abstract ReportCardDetails? GetReportCard(ReportCardServiceModel reportCardServiceModel);
 
-    protected abstract BeforeOrAfterJoining GetWhenInspectionHappened(ReportCardDetails? reportCardDetails, DateTime? dateJoinedTrust);
+    protected abstract BeforeOrAfterJoining GetWhenInspectionHappened(ReportCardDetails? reportCardDetails, DateOnly? dateJoinedTrust);
 }

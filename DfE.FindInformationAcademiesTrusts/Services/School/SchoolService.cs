@@ -20,6 +20,8 @@ public interface ISchoolService
     Task<SchoolOfstedServiceModel> GetSchoolOfstedRatingsAsync(int urn);
 
     Task<SchoolReligiousCharacteristicsServiceModel> GetReligiousCharacteristicsAsync(int urn);
+
+    Task<DateOnly?> GetDateJoinedTrustAsync(int urn);
 }
 
 public class SchoolService(
@@ -131,5 +133,10 @@ public class SchoolService(
         }
 
         return value;
+    }
+
+    public async Task<DateOnly?> GetDateJoinedTrustAsync(int urn)
+    {
+        return await schoolRepository.GetDateJoinedTrustAsync(urn);
     }
 }

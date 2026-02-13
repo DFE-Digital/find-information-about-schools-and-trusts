@@ -14,11 +14,10 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted
     public class OverviewModel(
         IDataSourceService dataSourceService,
         ITrustService trustService,
-        IAcademyService academyService,
         IOfstedTrustDataExportService ofstedTrustDataExportService,
         IDateTimeProvider dateTimeProvider,
-        IOfstedService ofstedService) : OfstedAreaModel(dataSourceService, trustService,
-        academyService, ofstedTrustDataExportService, dateTimeProvider)
+        IOfstedService ofstedService) : OfstedAreaModel(dataSourceService, trustService, ofstedTrustDataExportService,
+        dateTimeProvider)
     {
         public const string SubPageName = "Overview";
 

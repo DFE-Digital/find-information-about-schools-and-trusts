@@ -15,6 +15,14 @@ namespace DfE.FindInformationAcademiesTrusts.Extensions
             };
         }
 
+        public static BeforeOrAfterJoining GetBeforeOrAfterJoiningTrust(this DateOnly? dateJoined, DateOnly? inspectionDate)
+        {
+            DateTime? inspectionDateTimeValue = inspectionDate?.ToDateTime(TimeOnly.MinValue);
+            DateTime? dateJoinedDateTimeValue = dateJoined?.ToDateTime(TimeOnly.MinValue);
+
+            return GetBeforeOrAfterJoiningTrust(dateJoinedDateTimeValue, inspectionDateTimeValue);
+        }
+
         public static BeforeOrAfterJoining GetBeforeOrAfterJoiningTrust(this DateTime? dateJoined, DateOnly? inspectionDate)
         {
             DateTime? inspectionDateTimeValue = inspectionDate?.ToDateTime(TimeOnly.MinValue);

@@ -27,7 +27,6 @@ public class OlderInspectionsModelTests : BaseOfstedAreaModelTests<OlderInspecti
     {
         Sut = new OlderInspectionsModel(MockDataSourceService,
                 MockTrustService,
-                MockAcademyService,
                 MockOfstedTrustDataExportService,
                 MockDateTimeProvider,
                 MockOfstedService

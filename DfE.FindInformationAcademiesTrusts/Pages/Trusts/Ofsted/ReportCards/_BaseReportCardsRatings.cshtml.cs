@@ -1,5 +1,4 @@
 using DfE.FindInformationAcademiesTrusts.Data;
-using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
@@ -8,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted.ReportCards;
 
-public abstract class BaseReportCardsRatingsModel(IDataSourceService dataSourceService,
+public abstract class BaseReportCardsRatingsModel(
+    IDataSourceService dataSourceService,
     ITrustService trustService,
-    IAcademyService academyService,
     IOfstedTrustDataExportService ofstedTrustDataExportService,
     IDateTimeProvider dateTimeProvider,
-    IOfstedService ofstedService) : OfstedAreaModel(dataSourceService, trustService,
-    academyService, ofstedTrustDataExportService, dateTimeProvider)
+    IOfstedService ofstedService)
+    : OfstedAreaModel(dataSourceService, trustService, ofstedTrustDataExportService, dateTimeProvider)
 {
     public List<ReportCardViewModel> ReportCards { get; set; } = [];
 
@@ -33,5 +32,6 @@ public abstract class BaseReportCardsRatingsModel(IDataSourceService dataSourceS
         return pageResult;
     }
 
-    protected abstract List<ReportCardViewModel> GetReportCard(List<TrustOfstedReportServiceModel<ReportCardServiceModel>> reportCardServiceModel);
+    protected abstract List<ReportCardViewModel> GetReportCard(
+        List<TrustOfstedReportServiceModel<ReportCardServiceModel>> reportCardServiceModel);
 }
