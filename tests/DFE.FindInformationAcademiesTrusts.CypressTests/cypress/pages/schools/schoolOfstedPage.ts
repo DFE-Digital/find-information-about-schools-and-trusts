@@ -215,7 +215,7 @@ class SchoolOfstedPage {
         this.elements.safeguardingAndConcerns.effectiveSafeguardingValue()
             .each(($el) => {
                 const text = $el.text().trim();
-                expect(text).to.match(/^(Yes|No|Not recorded|Not yet inspected)$/);
+                expect(text).to.match(/^(Yes|No|Not recorded|Not yet inspected|Met|None)$/);
             });
         return this;
     }

@@ -193,7 +193,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
     describe("Testing the Ofsted Safeguarding and concerns page", () => {
         beforeEach(() => {
-            cy.visit('/trusts/ofsted/reportcards/currentreportcards?uid=5143');
+            cy.visit('/trusts/ofsted/safeguarding-and-concerns?uid=5143');
 
             cy.task('checkForFiles', 'cypress/downloads').then((files) => {
                 if (files) {
@@ -235,7 +235,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
         });
 
         it("Checks that a different trusts safeguarding and concerns correct judgement types are present", () => {
-            cy.visit('/trusts/ofsted/reportcards/currentreportcards?uid=5712');
+            cy.visit('/trusts/ofsted/safeguarding-and-concerns?uid=5712');
             ofstedPage
                 .checkSafeguardingConcernsEffectiveSafeguardingJudgementsPresent()
                 .checkSafeguardingConcernsCategoryOfConcernJudgementsPresent()
@@ -260,8 +260,8 @@ describe("Testing the Ofsted page and its subpages ", () => {
     describe("Testing that no unknown entries are found for ofsteds various tables/pages", () => {
         testTrustOfstedData.forEach(({ typeOfTrust, uid }) => {
 
-            [`trusts/ofsted/overview?uid=${uid}`, `trusts/ofsted/reportcards/currentreportcards?uid=${uid}`, `/trusts/ofsted/reportcards/previousreportcards?uid=${uid}`, `${uid}`].forEach((url) => {
-                it(`Should have no unknown entrie/trusts/ofsted/safeguarding-and-concerns?uid= on ${url} for a ${typeOfTrust}`, () => {
+            [`/trusts/ofsted/overview?uid=${uid}`, `/trusts/ofsted/reportcards/currentreportcards?uid=${uid}`, `/trusts/ofsted/reportcards/previousreportcards?uid=${uid}`, `/trusts/ofsted/safeguarding-and-concerns?uid=${uid}`].forEach((url) => {
+                it(`Should have no unknown entries on ${url} for a ${typeOfTrust}`, () => {
                     cy.visit(url);
                     commonPage
                         .checkNoUnknownEntries();

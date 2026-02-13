@@ -8,7 +8,7 @@ class OfstedPage {
         //downloadButton: () => cy.get('[data-testid="download-all-ofsted-data-button"]'),
         singleHeadlineGrades: {
             section: () => cy.get('[data-testid="ofsted-overview-table"]'),
-            table: () => this.elements.singleHeadlineGrades.section().find('[aria-describedby="ofsted-caption"]'),
+            table: () => this.elements.singleHeadlineGrades.section().find('[aria-describedby="ofsted-overview"]'),
             tableRows: () => this.elements.singleHeadlineGrades.table().find('tbody tr'),
             schoolName: () => this.elements.singleHeadlineGrades.section().find('[data-testid="school-name"]'),
             schoolNameHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-overview-grades-school-name-header"]'),
@@ -378,7 +378,7 @@ class OfstedPage {
     public checkSafeguardingConcernsEffectiveSafeguardingJudgementsPresent(): this {
         this.elements.safeguardingAndConcerns.effectiveSafeguarding().each((element) => {
             const text = element.text().trim();
-            expect(text).to.match(/^(Yes|No|Not recorded|Not yet inspected)$/);
+            expect(text).to.match(/^(Yes|No|Not recorded|Not yet inspected|Met|None)$/);
         });
         return this;
     }
@@ -386,7 +386,7 @@ class OfstedPage {
     public checkSafeguardingConcernsCategoryOfConcernJudgementsPresent(): this {
         this.elements.safeguardingAndConcerns.categoryOfConcern().each((element) => {
             const text = element.text().trim();
-            expect(text).to.match(/^(None|Special measures|Serious weakness|Notice to improve|Not yet inspected|Does not apply)$/);
+            expect(text).to.match(/^(None|Special measures|Serious weakness|Notice to improve|Not yet inspected|Does not apply|Not inspected)$/);
         });
         return this;
     }

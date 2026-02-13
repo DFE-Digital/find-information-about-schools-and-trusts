@@ -4,7 +4,7 @@
   Layout = "_TrustLayout";
 }
 
-@if (Model is BaseReportCardsRatingsModel or OlderInspectionsModel)
+@if (Model is BaseReportCardsRatingsModel or OlderInspectionsModel or SafeguardingAndConcernsModel)
 {
     <h3 class="govuk-heading-m" data-testid="subpage-header">@Model.PageMetadata.SubPageName</h3>
 }

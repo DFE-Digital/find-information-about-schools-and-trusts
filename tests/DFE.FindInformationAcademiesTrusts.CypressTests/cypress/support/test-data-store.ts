@@ -31,7 +31,8 @@ export class TestDataStore {
                 subpages: [
                     { subpageName: "Overview", url: `/trusts/ofsted/overview?uid=${uid}` },
                     { subpageName: "Report cards", url: `/trusts/ofsted/reportcards/currentreportcards?uid=${uid}` },
-                    { subpageName: "Older inspections (before November 2025)", url: `/trusts/ofsted/olderinspections?uid=${uid}` }
+                    { subpageName: "Older inspections (before November 2025)", url: `/trusts/ofsted/olderinspections?uid=${uid}` },
+                    { subpageName: "Safeguarding and concerns", url: `/trusts/ofsted/safeguarding-and-concerns?uid=${uid}` }
                 ]
             },
             {
