@@ -188,7 +188,7 @@ class SchoolsPage {
     }
 
     public checkOverviewPageNamePresent(): this {
-        this.elements.pageName().should('contain', 'Ofsted');
+        this.elements.pageName().should('contain', 'Overview');
         return this;
     }
 

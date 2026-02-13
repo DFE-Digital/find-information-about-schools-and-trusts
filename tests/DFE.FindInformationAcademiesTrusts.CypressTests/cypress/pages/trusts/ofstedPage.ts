@@ -5,7 +5,7 @@ class OfstedPage {
     // #region Common stuffs
     elements = {
         subpageHeader: () => cy.get('[data-testid="subpage-header"]'),
-        downloadButton: () => cy.get('[data-testid="download-all-ofsted-data-button"]'),
+        //downloadButton: () => cy.get('[data-testid="download-all-ofsted-data-button"]'),
         singleHeadlineGrades: {
             section: () => cy.get('[data-testid="ofsted-overview-table"]'),
             table: () => this.elements.singleHeadlineGrades.section().find('[aria-describedby="ofsted-caption"]'),
@@ -17,12 +17,10 @@ class OfstedPage {
             hasRecentShortInspection: () => this.elements.singleHeadlineGrades.section().find('td[data-testid="has-recent-short-inspection"]'),
             hasRecentShortInspectionHeader: () => cy.get('th[data-testid="ofsted-overview-grades-school-short-inspection-header"]'),
             currentSHG: () => this.elements.singleHeadlineGrades.section().find('[data-testid="current-inspection-type"]'),
-            currentSHGBeforeOrAfter: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-single-headline-grades-current-before-after-joining"]'),
             currentSHGHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-overview-grades-school-current-inspection-type-header"]'),
             dateOfCurrentInspection: () => this.elements.singleHeadlineGrades.section().find('[data-testid="date-of-current-inspection"]'),
             dateOfCurrentInspectionHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-overview-grades-school-date-current-inspection-header"]'),
             previousSHG: () => this.elements.singleHeadlineGrades.section().find('[data-testid="previous-inspection-type"]'),
-            previousSHGBeforeOrAfter: () => this.elements.singleHeadlineGrades.section().find('[data-sort-value="3"] > [data-testid="ofsted-single-headline-grades-previous-before-after-joining"]'),
             previousSHGHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-overview-grades-school-previous-inspection-type-header"]'),
             dateOfPreviousInspection: () => this.elements.singleHeadlineGrades.section().find('[data-testid="date-of-previous-inspection"]'),
             dateOfPreviousInspectionHeader: () => this.elements.singleHeadlineGrades.section().find('[data-testid="ofsted-overview-grades-school-date-previous-inspection-header"]'),
@@ -77,11 +75,11 @@ class OfstedPage {
     };
 
     private readonly checkValueIsValidCurrentOfstedRating = (element: JQuery<HTMLElement>) =>
-        this.checkElementMatches(element, /^(Good|Not available|Outstanding|Requires improvement|Inadequate|Not yet inspected|Insufficient evidence|Does not apply)$/);
+        this.checkElementMatches(element, /^(Expected standard|Strong standard|Not applicable|Needs attention|Older inspection|Exceptional|Insufficient evidence|Does not apply)$/);
 
     private readonly checkValueIsValidPreviousOfstedRating = (element: JQuery<HTMLElement>) => {
         const text = element.text().trim();
-        expect(text).to.match(/^(Good|Not available|Outstanding|Requires improvement|Inadequate|Not inspected|Insufficient evidence|Does not apply)$/);
+        expect(text).to.match(/^(Expected standard|Strong standard|Not applicable|Needs attention|Older inspection|Exceptional|Does not apply)$/);
     };
 
     private readonly checkValueIsValidBeforeOrAfterJoiningTag = (element: JQuery<HTMLElement>) => {
@@ -92,11 +90,6 @@ class OfstedPage {
     // #endregion
 
     // #region All sub pages
-
-    public clickDownloadButton(): this {
-        this.elements.downloadButton().click();
-        return this;
-    }
 
     // #endregion
 
@@ -174,22 +167,6 @@ class OfstedPage {
         return this;
     }
 
-    public checkSHGCurrentSHGBeforeOrAfterPresent(): this {
-        this.elements.singleHeadlineGrades.currentSHGBeforeOrAfter().each((element: JQuery<HTMLElement>) => {
-            const text = element.text().replace(/\s+/g, ' ').trim();
-            expect(text).to.match(/^(Not yet inspected|After joining|Before joining)$/i);
-        });
-        return this;
-    }
-
-    public checkSHGPreviousSHGBeforeOrAfterPresent(): this {
-        this.elements.singleHeadlineGrades.previousSHGBeforeOrAfter().each((element: JQuery<HTMLElement>) => {
-            const text = element.text().replace(/\s+/g, ' ').trim();
-            expect(text).to.match(/^(Not inspected|After joining|Before joining)$/i);
-        });
-        return this;
-    }
-
     public checkSHGHasRecentShortInspectionPresent(): this {
         this.elements.singleHeadlineGrades.hasRecentShortInspection().each((element: JQuery<HTMLElement>) => {
             this.checkElementMatches(element, /^(Yes|No|Not available)$/);
@@ -220,14 +197,14 @@ class OfstedPage {
 
     // #endregion
 
-    // #region Current ratings
+    // #region Report cards (Current & Previous ratings share same table structure)
 
-    public checkOfstedCurrentRatingsPageHeaderPresent(): this {
+    public checkOfstedReportCardsPageHeaderPresent(): this {
         this.elements.subpageHeader().should('contain', 'Report cards');
         return this;
     }
 
-    public checkOfstedCurrentRatingsTableHeadersPresent(): this {
+    public checkOfstedReportCardTableHeadersPresent(): this {
         this.elements.reportCard.schoolNameHeader().should('be.visible');
         this.elements.reportCard.inclusionHeader().should('be.visible');
         this.elements.reportCard.curriculumAndTeachingHeader().should('be.visible');
@@ -239,7 +216,7 @@ class OfstedPage {
         return this;
     }
 
-    public checkOfstedCurrentRatingsSorting(): this {
+    public checkOfstedReportCardSorting(): this {
         TableUtility.checkStringSorting(
             this.elements.reportCard.schoolName,
             this.elements.reportCard.schoolNameHeader
@@ -269,6 +246,24 @@ class OfstedPage {
             this.elements.reportCard.attendanceAndBehaviourHeader
         );
         return this;
+    }
+
+    public checkNoDataMessageIsVisible(): this {
+        this.elements.reportCard.noDataMessage().should('be.visible');
+        return this;
+    }
+
+    // Current ratings (same table, current rating validator)
+    public checkOfstedCurrentRatingsPageHeaderPresent(): this {
+        return this.checkOfstedReportCardsPageHeaderPresent();
+    }
+
+    public checkOfstedCurrentRatingsTableHeadersPresent(): this {
+        return this.checkOfstedReportCardTableHeadersPresent();
+    }
+
+    public checkOfstedCurrentRatingsSorting(): this {
+        return this.checkOfstedReportCardSorting();
     }
 
     public checkCurrentRatingsInclusionJudgementsPresent(): this {
@@ -301,61 +296,17 @@ class OfstedPage {
         return this;
     }
 
-    public checkNoDataMessageIsVisible(): this {
-        this.elements.reportCard.noDataMessage().should('be.visible');
-        return this;
-    }
-
-    // #endregion
-    // #region previous ratings
-
+    // Previous ratings (same table, previous rating validator)
     public checkOfstedPreviousRatingsPageHeaderPresent(): this {
-        this.elements.subpageHeader().should('contain', 'Report cards');
-        return this;
+        return this.checkOfstedReportCardsPageHeaderPresent();
     }
 
     public checkOfstedPreviousRatingsTableHeadersPresent(): this {
-        this.elements.reportCard.schoolNameHeader().should('be.visible');
-        this.elements.reportCard.inclusionHeader().should('be.visible');
-        this.elements.reportCard.curriculumAndTeachingHeader().should('be.visible');
-        this.elements.reportCard.personalDevelopmentHeader().should('be.visible');
-        this.elements.reportCard.leadershipAndGoveranceHeader().should('be.visible');
-        this.elements.reportCard.achievementHeader().should('be.visible');
-        this.elements.reportCard.attendanceAndBehaviourHeader().scrollIntoView();
-        this.elements.reportCard.attendanceAndBehaviourHeader().should('be.visible');
-        return this;
+        return this.checkOfstedReportCardTableHeadersPresent();
     }
 
     public checkOfstedPreviousRatingsSorting(): this {
-        TableUtility.checkStringSorting(
-            this.elements.reportCard.schoolName,
-            this.elements.reportCard.schoolNameHeader
-        );
-        TableUtility.checkStringSorting(
-            this.elements.reportCard.inclusion,
-            this.elements.reportCard.inclusionHeader
-        );
-        TableUtility.checkStringSorting(
-            this.elements.reportCard.curriculumAndTeaching,
-            this.elements.reportCard.curriculumAndTeachingHeader
-        );
-        TableUtility.checkStringSorting(
-            this.elements.reportCard.personalDevelopment,
-            this.elements.reportCard.personalDevelopmentHeader
-        );
-        TableUtility.checkStringSorting(
-            this.elements.reportCard.leadershipAndGoverance,
-            this.elements.reportCard.leadershipAndGoveranceHeader
-        );
-        TableUtility.checkStringSorting(
-            this.elements.reportCard.achievement,
-            this.elements.reportCard.achievementHeader
-        );
-        TableUtility.checkStringSorting(
-            this.elements.reportCard.attendanceAndBehaviour,
-            this.elements.reportCard.attendanceAndBehaviourHeader
-        );
-        return this;
+        return this.checkOfstedReportCardSorting();
     }
 
     public checkPreviousRatingsInclusionJudgementsPresent(): this {

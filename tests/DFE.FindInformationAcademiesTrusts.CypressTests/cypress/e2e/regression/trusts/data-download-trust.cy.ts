@@ -11,12 +11,4 @@ describe('Trust export and content verification', () => {
       }
     });
   });
-
-  it('should export academies data as an xlsx and verify it has downloaded and has content', () => {
-    dataDownload
-      .clickDownloadButton()
-      .checkFileDownloaded()
-      .checkFileHasContent()
-      .deleteDownloadedFile();
-  });
 });

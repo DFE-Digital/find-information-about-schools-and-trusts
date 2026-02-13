@@ -3,12 +3,6 @@ class DataDownload {
         downloadButton: () => cy.get('[data-testid="export-academy-data"]'),
     };
 
-    // Method to click the download button
-    public clickDownloadButton(): this {
-        this.elements.downloadButton().click();
-        return this;
-    }
-
     // Method to find the latest downloaded file
     public findLatestDownloadedFile(): Cypress.Chainable<string> {
         return cy.task('findLatestFile', 'cypress/downloads').then((latestFile) => {

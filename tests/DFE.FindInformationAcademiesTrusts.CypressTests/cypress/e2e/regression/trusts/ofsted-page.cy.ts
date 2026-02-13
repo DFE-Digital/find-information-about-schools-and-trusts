@@ -46,8 +46,6 @@ describe("Testing the Ofsted page and its subpages ", () => {
             ofstedPage
                 .checkSHGCurrentSHGJudgementsPresent()
                 .checkSHGPreviousSHGJudgementsPresent()
-                .checkSHGCurrentSHGBeforeOrAfterPresent()
-                .checkSHGPreviousSHGBeforeOrAfterPresent()
                 .checkSHGHasRecentShortInspectionPresent();
         });
 
@@ -67,15 +65,6 @@ describe("Testing the Ofsted page and its subpages ", () => {
             ofstedPage
                 .clickWhereToFindShortInspectionDataDetails()
                 .checkWhereToFindShortInspectionDataDetailsIsOpen();
-        });
-
-        it('should export academies data as an xlsx and verify it has downloaded and has content', () => {
-            ofstedPage
-                .clickDownloadButton();
-            dataDownload
-                .checkFileDownloaded()
-                .checkFileHasContent()
-                .deleteDownloadedFile();
         });
 
         it('checks that each academy name is a link to the academy details page with the correct URN', () => {
@@ -141,14 +130,6 @@ describe("Testing the Ofsted page and its subpages ", () => {
                 .checkCurrentRatingsAttendanceAndBehaviourJudgementsPresent()
         });
 
-        it('should export academies data as an xlsx and verify it has downloaded and has content', () => {
-            ofstedPage
-                .clickDownloadButton();
-            dataDownload
-                .checkFileDownloaded()
-                .checkFileHasContent()
-                .deleteDownloadedFile();
-        });
     });
 
     describe("Testing the Ofsted previous ratings page ", () => {
@@ -208,14 +189,6 @@ describe("Testing the Ofsted page and its subpages ", () => {
                 .checkPreviousRatingsAttendanceAndBehaviourJudgementsPresent()
         });
 
-        it('should export academies data as an xlsx and verify it has downloaded and has content', () => {
-            ofstedPage
-                .clickDownloadButton();
-            dataDownload
-                .checkFileDownloaded()
-                .checkFileHasContent()
-                .deleteDownloadedFile();
-        });
     });
 
     describe("Testing the Ofsted Safeguarding and concerns page", () => {
@@ -269,14 +242,6 @@ describe("Testing the Ofsted page and its subpages ", () => {
                 .checkSafeguardingConcernsBeforeOrAfterJoiningJudgementsPresent();
         });
 
-        it('should export academies data as an xlsx and verify it has downloaded and has content', () => {
-            ofstedPage
-                .clickDownloadButton();
-            dataDownload
-                .checkFileDownloaded()
-                .checkFileHasContent()
-                .deleteDownloadedFile();
-        });
     });
 
     describe("Testing a trust that has no ofsted data within it to ensure the issue of a 500 page appearing does not happen", () => {
@@ -295,8 +260,8 @@ describe("Testing the Ofsted page and its subpages ", () => {
     describe("Testing that no unknown entries are found for ofsteds various tables/pages", () => {
         testTrustOfstedData.forEach(({ typeOfTrust, uid }) => {
 
-            [`trusts/ofsted/single-headline-grades?uid=${uid}`, `trusts/ofsted/current-ratings?uid=${uid}`, `trusts/ofsted/previous-ratings?uid=${uid}`, `${uid}`].forEach((url) => {
-                it(`Should have no unknown entrie/trusts/ofsted/safeguarding-and-concerns?uid=s on ${url} for a ${typeOfTrust}`, () => {
+            [`trusts/ofsted/overview?uid=${uid}`, `trusts/ofsted/reportcards/currentreportcards?uid=${uid}`, `/trusts/ofsted/reportcards/previousreportcards?uid=${uid}`, `${uid}`].forEach((url) => {
+                it(`Should have no unknown entrie/trusts/ofsted/safeguarding-and-concerns?uid= on ${url} for a ${typeOfTrust}`, () => {
                     cy.visit(url);
                     commonPage
                         .checkNoUnknownEntries();
@@ -316,3 +281,4 @@ describe("Testing the Ofsted page and its subpages ", () => {
         });
     });
 });
+
