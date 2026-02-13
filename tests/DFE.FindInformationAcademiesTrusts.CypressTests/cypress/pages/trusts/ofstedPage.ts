@@ -191,7 +191,7 @@ class OfstedPage {
     }
 
     public checkSchoolNamesAreCorrectLinksOnSingleHeadlineGradesPage(): this {
-        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.singleHeadlineGrades, 'ofsted-single-headline-grades-school-name', /^\/schools\/ofsted\/singleheadlinegrades\?urn=\d+$/);
+        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.singleHeadlineGrades, 'school-name', /^\/schools\/ofsted\/(overview|ofstedoverview)\?urn=\d+$/i);
         return this;
     }
 
