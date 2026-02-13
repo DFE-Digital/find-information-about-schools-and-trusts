@@ -89,7 +89,9 @@ public static class TrustNavMenu
                 GetSubNavLinkTo<BaseReportCardsRatingsModel>(OfstedAreaModel.PageName, CurrentReportCardsModel.SubPageName,
                     "/Trusts/Ofsted/ReportCards/CurrentReportCards", activePage),
                 GetSubNavLinkTo<OlderInspectionsModel>(OfstedAreaModel.PageName, OlderInspectionsModel.SubPageName,
-                    "/Trusts/Ofsted/OlderInspections", activePage)
+                    "/Trusts/Ofsted/OlderInspections", activePage),
+                GetSubNavLinkTo<SafeguardingAndConcernsModel>(OfstedAreaModel.PageName, SafeguardingAndConcernsModel.SubPageName,
+                    "/Trusts/Ofsted/SafeguardingAndConcerns", activePage)
             ],
             FinancialDocumentsAreaModel =>
             [

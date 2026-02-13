@@ -4,7 +4,6 @@ using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.NavMenu;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted.ReportCards;
-using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
@@ -15,7 +14,6 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted;
 public class OfstedAreaModel(
     IDataSourceService dataSourceService,
     ITrustService trustService,
-    IAcademyService academyService,
     IOfstedTrustDataExportService ofstedTrustDataExportService,
     IDateTimeProvider dateTimeProvider)
     : TrustsAreaModel(dataSourceService, trustService)
@@ -24,8 +22,6 @@ public class OfstedAreaModel(
 
     public override PageMetadata PageMetadata => base.PageMetadata with { PageName = PageName };
 
-    public SchoolOfstedServiceModel[] Academies { get; set; } = [];
-    private IAcademyService AcademyService { get; } = academyService;
     public IDateTimeProvider DateTimeProvider { get; } = dateTimeProvider;
 
     public NavLink[] TabList { get; set; } = [];
@@ -35,9 +31,7 @@ public class OfstedAreaModel(
         var pageResult = await base.OnGetAsync();
 
         if (pageResult.GetType() == typeof(NotFoundResult)) return pageResult;
-
-        Academies = await AcademyService.GetAcademiesInTrustOfstedAsync(Uid);
-
+        
         // Add data sources
         var giasDataSource = await DataSourceService.GetAsync(Source.Gias);
         var misDataSource = await DataSourceService.GetAsync(Source.Mis);

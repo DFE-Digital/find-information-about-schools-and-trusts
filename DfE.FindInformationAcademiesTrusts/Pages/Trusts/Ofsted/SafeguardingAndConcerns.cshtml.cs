@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted
 {
-    public class OlderInspectionsModel(
+    public class SafeguardingAndConcernsModel(
         IDataSourceService dataSourceService,
         ITrustService trustService,
         IOfstedTrustDataExportService ofstedTrustDataExportService,
@@ -16,14 +16,14 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted
         IOfstedService ofstedService) : OfstedAreaModel(dataSourceService, trustService, ofstedTrustDataExportService,
         dateTimeProvider)
     {
-        public const string SubPageName = "Older inspections (before November 2025)";
+        public const string SubPageName = "Safeguarding and concerns";
 
         public override PageMetadata PageMetadata => base.PageMetadata with { SubPageName = SubPageName };
 
-        public List<TrustOfstedReportServiceModel<OlderInspectionServiceModel>> OlderOfstedInspections
+        public List<TrustOfstedReportServiceModel<SafeGuardingAndConcernsServiceModel>> SafeGuardingInspectionModels
         {
             get;
-            private set;
+            set;
         } = [];
 
         public override async Task<IActionResult> OnGetAsync()
@@ -32,7 +32,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted
 
             if (pageResult.GetType() == typeof(NotFoundResult)) return pageResult;
 
-            OlderOfstedInspections = await ofstedService.GetEstablishmentsInTrustOlderOfstedRatings(Uid);
+            SafeGuardingInspectionModels = await ofstedService.GetOfstedOverviewSafeguardingAndConcerns(Uid);
 
             return pageResult;
         }

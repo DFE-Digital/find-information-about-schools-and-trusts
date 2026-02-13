@@ -23,7 +23,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 
         public ReportCardsServiceTests()
         {
-            _sut = new ReportCardsService(_mockReportCardsRepository, _mockSchoolRepository, _mockCacheService);
+            _sut = new ReportCardsService(_mockReportCardsRepository, _mockCacheService);
 
             _mockReportCardsRepository.GetReportCardAsync(Urn)
                 .Returns((
@@ -91,15 +91,12 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             var result = await _sut.GetReportCardsAsync(Urn);
             result.LatestReportCard.Should().NotBeNull();
             result.PreviousReportCard.Should().BeNull();
-            result.DateJoinedTrust.Should().BeNull();
         }
 
         [Fact]
         public async Task GetReportCardsAsync_ShouldMapAllProperties()
         {
             var reportCards = await _sut.GetReportCardsAsync(Urn);
-            reportCards.DateJoinedTrust.Should().NotBeNull();
-            reportCards.DateJoinedTrust.Should().Be(new DateOnly(2020, 01, 01));
             reportCards.LatestReportCard.Should().NotBeNull();
             reportCards.PreviousReportCard.Should().NotBeNull();
 
@@ -140,5 +137,41 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             await _mockCacheService.Received(1).GetOrAddAsync(expectedCacheKey, Arg.Any<Func<Task<(EstablishmentReportCard? LatestReportCard, EstablishmentReportCard?
                 PreviousReportCard)>>>(), "GetReportCardsAsync");
         }
+
+        [Theory]
+        [InlineData (null, "Not inspected")]
+        [InlineData("", "No concerns")]
+        [InlineData("SM", "Special measures")]
+        [InlineData("SWK", "Serious weaknesses")]
+        [InlineData("NTI", "Notice to improve")]
+        [InlineData("All good", "All good")]
+        public async Task GetReportCardsAsync_ShouldMapCategoryOfConcern(string? categoryOfConcern, string expected)
+        {
+            _mockReportCardsRepository.GetReportCardAsync(Urn).Returns((
+                new EstablishmentReportCard(new DateOnly(2025, 01, 20), "https://ofsted.gov.uk/1", "Good", "Good",
+                    "Excellent", "Good", "Good", "Outstanding", null, "Met", "Good", categoryOfConcern), null));
+
+            var reportCards = await _sut.GetReportCardsAsync(Urn);
+            reportCards.LatestReportCard!.CategoryOfConcern.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData(null, "Not inspected")]
+        [InlineData("NULL", "Not inspected")]
+        [InlineData("", "Not inspected")]
+        [InlineData("Yes", "Yes")]
+        [InlineData("No", "No")]
+        [InlineData("9", "Not recorded")]
+        [InlineData("All good", "All good")]
+        public async Task GetReportCardsAsync_ShouldMapSafeGuarding(string? safeguarding, string expected)
+        {
+            _mockReportCardsRepository.GetReportCardAsync(Urn).Returns((
+                new EstablishmentReportCard(new DateOnly(2025, 01, 20), "https://ofsted.gov.uk/1", "Good", "Good",
+                    "Excellent", "Good", "Good", "Outstanding", null, safeguarding, "Good", "None"), null));
+
+            var reportCards = await _sut.GetReportCardsAsync(Urn);
+            reportCards.LatestReportCard!.Safeguarding.Should().Be(expected);
+        }
+
     }
 }

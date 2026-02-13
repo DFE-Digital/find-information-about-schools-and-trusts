@@ -1,4 +1,6 @@
-﻿using DfE.FindInformationAcademiesTrusts.Services.Academy;
+﻿using System.Globalization;
+using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using Microsoft.Extensions.Logging;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
@@ -9,6 +11,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
     using DfE.FindInformationAcademiesTrusts.Services.School;
     using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
     using NSubstitute;
+    using NSubstitute.ExceptionExtensions;
 
     public class OfstedServiceTests
     {
@@ -59,7 +62,6 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 
             var expectedReportCards = new ReportCardServiceModel
             {
-                DateJoinedTrust = new DateOnly(2024, 8, 1),
                 LatestReportCard = null,
                 PreviousReportCard = null
             };
@@ -613,6 +615,360 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             trustReport.ReportDetails.Ratings.Should().Contain(currentRating);
             trustReport.ReportDetails.Ratings.Should().Contain(previousRating);
             trustReport.ReportDetails.Ratings.Should().HaveCount(2);
+        }
+
+        // GetOfstedOverviewSafeguardingAndConcerns tests
+
+        [Fact]
+        public async Task GetOfstedOverviewSafeguardingAndConcerns_WhenCalledWithValidUid_ReturnsExpectedResults()
+        {
+
+            const string uid = "12345";
+            const int schoolUrn1 = 123456;
+            const int schoolUrn2 = 234567;
+            var dateJoinedTrust1 = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Local);
+            var dateJoinedTrust2 = new DateTime(2020, 2, 1, 0, 0, 0, DateTimeKind.Local);
+
+            var schoolOfstedRatings = new List<SchoolOfsted>
+            {
+                new(schoolUrn1.ToString(), "Test School 1", dateJoinedTrust1,
+                    new OfstedShortInspection(new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local),
+                        "School remains Good"),
+                    new OfstedRating((int)OfstedRatingScore.RequiresImprovement,
+                        new DateTime(2022, 1, 1, 0, 0, 0, DateTimeKind.Local)),
+                    new OfstedRating((int)OfstedRatingScore.Good,
+                        new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local)),
+                    false),
+                new(schoolUrn2.ToString(), "Test School 2", dateJoinedTrust2,
+                    new OfstedShortInspection(new DateTime(2023, 2, 1, 0, 0, 0, DateTimeKind.Local),
+                        "School remains Outstanding"),
+                    new OfstedRating((int)OfstedRatingScore.Good,
+                        new DateTime(2022, 2, 1, 0, 0, 0, DateTimeKind.Local)),
+                    new OfstedRating((int)OfstedRatingScore.Outstanding,
+                        new DateTime(2023, 2, 1, 0, 0, 0, DateTimeKind.Local)),
+                    false)
+            };
+
+            var reportCards1 = new ReportCardServiceModel
+            {
+                LatestReportCard = new ReportCardDetails(
+                    new DateOnly(2023, 1, 1),
+                    "https://reports.ofsted.gov.uk",
+                    "Good", "Good", "Good", "Good", "Good", "Good", null, "Met", "Yes", "None")
+            };
+
+            var reportCards2 = new ReportCardServiceModel
+            {
+                LatestReportCard = new ReportCardDetails(
+                    new DateOnly(2023, 2, 1),
+                    "https://reports.ofsted.gov.uk",
+                    "Outstanding", "Outstanding", "Outstanding", "Outstanding", "Outstanding", "Outstanding", null, "Met", "Yes", "None")
+            };
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
+            _mockReportCardsService.GetReportCardsAsync(schoolUrn1).Returns(reportCards1);
+            _mockReportCardsService.GetReportCardsAsync(schoolUrn2).Returns(reportCards2);
+
+         
+            var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
+
+            result.Should().HaveCount(2);
+
+            var firstResult = result.First(r => r.Urn == schoolUrn1);
+            firstResult.SchoolName.Should().Be("Test School 1");
+            firstResult.ReportDetails.Should().NotBeNull();
+            firstResult.ReportDetails.SafeGuarding.Should().Be("Met");
+            firstResult.ReportDetails.Concerns.Should().Be("None");
+
+            var secondResult = result.First(r => r.Urn == schoolUrn2);
+            secondResult.SchoolName.Should().Be("Test School 2");
+            secondResult.ReportDetails.Should().NotBeNull();
+            secondResult.ReportDetails.SafeGuarding.Should().Be("Met");
+            secondResult.ReportDetails.Concerns.Should().Be("None");
+        }
+
+        [Fact]
+        public async Task GetOfstedOverviewSafeguardingAndConcerns_WhenSchoolHasNullEstablishmentName_UsesEmptyString()
+        {
+
+            const string uid = "12345";
+            const int schoolUrn = 123456;
+            var dateJoinedTrust = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Local);
+
+            var schoolOfstedRatings = new List<SchoolOfsted>
+            {
+                new(schoolUrn.ToString(), null, dateJoinedTrust,
+                    new OfstedShortInspection(new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local),
+                        "School remains Good"),
+                    new OfstedRating((int)OfstedRatingScore.RequiresImprovement,
+                        new DateTime(2022, 1, 1, 0, 0, 0, DateTimeKind.Local)),
+                    new OfstedRating((int)OfstedRatingScore.Good,
+                        new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local)),
+                    false)
+            };
+
+            var reportCards = new ReportCardServiceModel
+            {
+                LatestReportCard = new ReportCardDetails(
+                    new DateOnly(2023, 1, 1),
+                    "https://reports.ofsted.gov.uk",
+                    "Good", "Good", "Good", "Good", "Good", "Good", null, "Met", "Yes", "None")
+            };
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
+            _mockReportCardsService.GetReportCardsAsync(schoolUrn).Returns(reportCards);
+
+            var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
+
+            result.Should().HaveCount(1);
+            result.First().SchoolName.Should().Be("");
+        }
+
+        [Fact]
+        public async Task GetOfstedOverviewSafeguardingAndConcerns_WhenNoReportCardsAvailable_UsesOlderInspectionData()
+        {
+            const string uid = "12345";
+            const int schoolUrn = 123456;
+            var dateJoinedTrust = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Local);
+            var inspectionDate = new DateTime(2022, 5, 1, 0, 0, 0, DateTimeKind.Local);
+
+            var schoolOfstedRatings = new List<SchoolOfsted>
+            {
+                new(schoolUrn.ToString(), "Test School", dateJoinedTrust,
+                    new OfstedShortInspection(new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local),
+                        "School remains Good"),
+                    new OfstedRating((int)OfstedRatingScore.RequiresImprovement,
+                        new DateTime(2021, 1, 1, 0, 0, 0, DateTimeKind.Local)),
+                    new OfstedRating((int)OfstedRatingScore.Good, inspectionDate),
+                    false)
+            };
+
+            var reportCards = new ReportCardServiceModel
+            {
+                LatestReportCard = null,
+                PreviousReportCard = null
+            };
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
+            _mockReportCardsService.GetReportCardsAsync(schoolUrn).Returns(reportCards);
+
+            var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
+
+            result.Should().HaveCount(1);
+            var firstResult = result.First();
+            firstResult.ReportDetails.InspectionDate.Should().Be(DateOnly.FromDateTime(inspectionDate));
+        }
+
+        [Fact]
+        public async Task GetOfstedOverviewSafeguardingAndConcerns_WhenPreviousReportCardIsMoreRecent_UsesPreviousReportCard()
+        {
+            const string uid = "12345";
+            const int schoolUrn = 123456;
+            var dateJoinedTrust = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Local);
+
+            var schoolOfstedRatings = new List<SchoolOfsted>
+            {
+                new(schoolUrn.ToString(), "Test School", dateJoinedTrust,
+                    new OfstedShortInspection(new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local),
+                        "School remains Good"),
+                    new OfstedRating((int)OfstedRatingScore.RequiresImprovement,
+                        new DateTime(2022, 1, 1, 0, 0, 0, DateTimeKind.Local)),
+                    new OfstedRating((int)OfstedRatingScore.Good,
+                        new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local)),
+                    false)
+            };
+
+            var reportCards = new ReportCardServiceModel
+            {
+                LatestReportCard = new ReportCardDetails(
+                    new DateOnly(2023, 1, 1),
+                    "https://reports.ofsted.gov.uk",
+                    "Good", "Good", "Good", "Good", "Good", "Good", null, "Met", "Yes", "None"),
+                PreviousReportCard = new ReportCardDetails(
+                    new DateOnly(2023, 5, 1),
+                    "https://reports.ofsted.gov.uk",
+                    "Good", "Good", "Good", "Good", "Good", "Good", null, "Met", "No", "Special Measures")
+            };
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
+            _mockReportCardsService.GetReportCardsAsync(schoolUrn).Returns(reportCards);
+
+            var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
+
+            result.Should().HaveCount(1);
+            var firstResult = result.First();
+            firstResult.ReportDetails.SafeGuarding.Should().Be("Met");
+            firstResult.ReportDetails.Concerns.Should().Be("Special Measures");
+            firstResult.ReportDetails.InspectionDate.Should().Be(new DateOnly(2023, 5, 1));
+        }
+
+        [Fact]
+        public async Task GetOfstedOverviewSafeguardingAndConcerns_WhenEmptySchoolList_ReturnsEmptyList()
+        {
+            const string uid = "12345";
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns([]);
+
+            var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
+
+            result.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("   ")]
+        [InlineData("\t")]
+        public async Task GetOfstedOverviewSafeguardingAndConcerns_WhenUidIsWhitespace_StillCallsRepository(string uid)
+        {
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns([]);
+
+            var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
+
+            result.Should().BeEmpty();
+            await _mockOfstedRepository.Received(1).GetAcademiesInTrustOfstedAsync(uid);
+        }
+        
+
+        [Fact]
+        public async Task GetOfstedOverviewSafeguardingAndConcerns_WhenUrnCannotBeParsed_ShouldSkipInvalidUrnsAndIncludeValidOnes()
+        {
+            const string uid = "12345";
+            const string invalidUrn = "invalid-urn";
+            var dateJoinedTrust = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Local);
+
+            var schoolOfstedRatings = new List<SchoolOfsted>
+            {
+                 new(invalidUrn, "Test School", dateJoinedTrust,
+                    new OfstedShortInspection(new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local),
+                        "School remains Good"),
+                    new OfstedRating((int)OfstedRatingScore.RequiresImprovement,
+                        new DateTime(2022, 1, 1, 0, 0, 0, DateTimeKind.Local)),
+                    new OfstedRating((int)OfstedRatingScore.Good,
+                        new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local)),
+                    false)
+            };
+
+            var reportCards = new ReportCardServiceModel();
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
+            _mockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(reportCards);
+
+            var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
+
+            result.Should().BeEmpty();
+            _mockLogger.VerifyLogError($"Unable to parse academy urn {invalidUrn} for trust {uid}");
+        }
+
+        [Fact]
+        public async Task GetOfstedOverviewSafeguardingAndConcerns_ShouldCallDependenciesWithCorrectParameters()
+        {
+            const string uid = "12345";
+            const int schoolUrn = 123456;
+            var dateJoinedTrust = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Local);
+
+            var schoolOfstedRatings = new List<SchoolOfsted>
+            {
+                new(schoolUrn.ToString(), "Test School", dateJoinedTrust,
+                    new OfstedShortInspection(new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local),
+                        "School remains Good"),
+                    new OfstedRating((int)OfstedRatingScore.RequiresImprovement,
+                        new DateTime(2022, 1, 1, 0, 0, 0, DateTimeKind.Local)),
+                    new OfstedRating((int)OfstedRatingScore.Good,
+                        new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local)),
+                    false)
+            };
+
+            var reportCards = new ReportCardServiceModel();
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
+            _mockReportCardsService.GetReportCardsAsync(schoolUrn).Returns(reportCards);
+
+            await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
+
+            await _mockOfstedRepository.Received(1).GetAcademiesInTrustOfstedAsync(uid);
+            await _mockReportCardsService.Received(1).GetReportCardsAsync(schoolUrn);
+        }
+
+        [Fact]
+        public async Task GetOfstedOverviewSafeguardingAndConcerns_ForOlderInspectionsIfDateIsNullForLatest_ReturnEmptyData()
+        {
+            const string uid = "12345";
+            const int schoolUrn = 123456;
+            var dateJoinedTrust = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Local);
+
+            var schoolOfstedRatings = new List<SchoolOfsted>
+            {
+                new(schoolUrn.ToString(), "Test School", dateJoinedTrust,
+                    new OfstedShortInspection(new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local),
+                        "School remains Good"),
+                    new OfstedRating((int)OfstedRatingScore.RequiresImprovement,
+                        new DateTime(2024, 11, 12, 0, 0, 0, DateTimeKind.Local)),
+                    new OfstedRating((int)OfstedRatingScore.Good,
+                        new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local)),
+                    false)
+            };
+
+            var reportCards = new ReportCardServiceModel();
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
+            _mockReportCardsService.GetReportCardsAsync(schoolUrn).Returns(reportCards);
+
+            var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
+            result[0].Urn.Should().Be(schoolUrn);
+            result[0].SchoolName.Should().Be("Test School");
+            result[0].ReportDetails.InspectionDate.Should().Be(new DateOnly(2024, 11, 12));
+        }
+
+        [Fact]
+        public async Task GetOfstedOverviewSafeguardingAndConcerns_ForOlderInspectionsIfPreviousDataIsAfterCurrent_ReturnLatest()
+        {
+            const string uid = "12345";
+            const int schoolUrn = 123456;
+            var dateJoinedTrust = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Local);
+
+            var schoolOfstedRatings = new List<SchoolOfsted>
+            {
+                new(schoolUrn.ToString(), "Test School", dateJoinedTrust,
+                    new OfstedShortInspection(new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local),
+                        "School remains Good"),
+                    new OfstedRating((int)OfstedRatingScore.RequiresImprovement, null),
+                    new OfstedRating((int)OfstedRatingScore.Good,null), false)
+            };
+
+            var reportCards = new ReportCardServiceModel();
+
+            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
+            _mockReportCardsService.GetReportCardsAsync(schoolUrn).Returns(reportCards);
+
+            var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
+            result[0].Urn.Should().Be(schoolUrn);
+            result[0].SchoolName.Should().Be("Test School");
+            result[0].ReportDetails.Should().BeEquivalentTo(new SafeGuardingAndConcernsServiceModel(dateJoinedTrust)
+            {
+                InspectionDate = null,
+                SafeGuarding = string.Empty,
+                Concerns = string.Empty
+            });
+
+            result[0].ReportDetails.WhenDidCurrentInspectionHappen.Should().Be(BeforeOrAfterJoining.NotYetInspected);
+        }
+
+        [Theory]
+        [InlineData("2023-01-01", "2020-01-05", BeforeOrAfterJoining.After)]
+        [InlineData("2020-01-05", "2020-01-05", BeforeOrAfterJoining.After)]
+        [InlineData("2020-01-02", "2020-01-05", BeforeOrAfterJoining.Before)]
+        [InlineData(null, "2020-01-01", BeforeOrAfterJoining.NotYetInspected)]
+        public void SafeGuardingAndConcernsServiceModel_ShouldHaveValid_WhenDidCurrentInspectionHappen(string? inspectionDate, string dateJoinedTrust, BeforeOrAfterJoining expected)
+        {
+            DateTime dateJoined = DateTime.Parse(dateJoinedTrust, CultureInfo.InvariantCulture);
+            DateOnly? dateOfInspection = inspectionDate == null ? null : DateOnly.Parse(inspectionDate, CultureInfo.InvariantCulture);
+
+            var model = new SafeGuardingAndConcernsServiceModel(dateJoined)
+            {
+                InspectionDate = dateOfInspection
+            };
+
+            model.WhenDidCurrentInspectionHappen.Should().Be(expected);
         }
     }
 }

@@ -21,8 +21,8 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.Ofsted
 
         public OverviewModelTests()
         {
-            Sut = new OverviewModel(MockDataSourceService, MockTrustService, MockAcademyService,
-                    MockOfstedTrustDataExportService, MockDateTimeProvider, MockOfstedService)
+            Sut = new OverviewModel(MockDataSourceService, MockTrustService, MockOfstedTrustDataExportService,
+                    MockDateTimeProvider, MockOfstedService)
                 { Uid = TrustUid };
 
             MockOfstedService.GetOfstedOverviewInspectionForTrustAsync(TrustUid).Returns([mockInspectionResult]);
@@ -37,7 +37,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.Ofsted
         }
 
         [Fact]
-        public async Task OnGetAsnc_should_get_OverviewInspectionModels()
+        public async Task OnGetAsync_should_get_OverviewInspectionModels()
         {
             Sut.OverviewInspectionModels.Should().BeEmpty();
 

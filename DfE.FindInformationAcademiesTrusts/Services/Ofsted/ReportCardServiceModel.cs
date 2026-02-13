@@ -4,7 +4,6 @@
     {
         public ReportCardDetails? LatestReportCard { get; set; }
         public ReportCardDetails? PreviousReportCard { get; set; }
-        public DateOnly? DateJoinedTrust { get; set; }
     }
 
     public record ReportCardDetails(
@@ -17,7 +16,7 @@
         string? Inclusion,
         string? Achievement,
         string? EarlyYearsProvision,
-        string? Safeguarding,
+        string Safeguarding,
         string? Post16Provision, 
-        string? CategoryOfConcern);
+        string CategoryOfConcern);
 }

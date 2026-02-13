@@ -59,9 +59,9 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Extensions
                 Achievement: null,
                 AttendanceAndBehaviour: null,
                 EarlyYearsProvision: null,
-                Safeguarding: null,
+                Safeguarding: string.Empty,
                 Post16Provision: null,
-                CategoryOfConcern: null);
+                CategoryOfConcern: string.Empty);
 
             var result = details.ToDictionary();
 
