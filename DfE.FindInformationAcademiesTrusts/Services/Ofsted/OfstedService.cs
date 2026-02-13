@@ -1,4 +1,5 @@
 ﻿using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
+using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 
@@ -11,6 +12,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
         Task<OlderSchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn);
         Task<List<TrustOfstedReportServiceModel<ReportCardServiceModel>>> GetEstablishmentsInTrustReportCardsAsync(string uid);
         Task<List<TrustOfstedReportServiceModel<OlderInspectionServiceModel>>> GetEstablishmentsInTrustOlderOfstedRatings(string uid);
+        Task<List<TrustOfstedReportServiceModel<SafeGuardingAndConcernsServiceModel>>> GetOfstedOverviewSafeguardingAndConcerns(string uid);
     }
 
     public class OfstedService(IReportCardsService reportCardsService, IOfstedRepository ofstedRepository, IOfstedServiceModelBuilder ofstedServiceModelBuilder, IAcademyService academyService, ILogger<IOfstedService> logger) : IOfstedService
@@ -114,6 +116,103 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
             }
 
             return trustOfstedReports;
+        }
+
+        public async Task<List<TrustOfstedReportServiceModel<SafeGuardingAndConcernsServiceModel>>> GetOfstedOverviewSafeguardingAndConcerns(string uid)
+        {
+            var schoolOfstedRatings = await ofstedRepository.GetAcademiesInTrustOfstedAsync(uid);
+
+            var result = new List<TrustOfstedReportServiceModel<SafeGuardingAndConcernsServiceModel>>();
+
+            foreach (var schoolOfstedRating in schoolOfstedRatings)
+            {
+                if (int.TryParse(schoolOfstedRating.Urn, out var urn))
+                {
+                    var reportCards = await reportCardsService.GetReportCardsAsync(urn);
+
+                    var latestInspection = GetLatestSafeGuardingInspection(reportCards, schoolOfstedRating);
+
+                    var safeGuarding = new TrustOfstedReportServiceModel<SafeGuardingAndConcernsServiceModel>
+                    {
+                        Urn = urn,
+                        SchoolName = schoolOfstedRating.EstablishmentName ?? "",
+                        ReportDetails = latestInspection
+                    };
+
+                    result.Add(safeGuarding);
+                }
+                else
+                {
+                    logger.LogError("Unable to parse academy urn {Urn} for trust {Uid}", schoolOfstedRating.Urn, uid);
+                }
+            }
+
+            return result;
+        }
+
+        private static SafeGuardingAndConcernsServiceModel GetLatestSafeGuardingInspection(ReportCardServiceModel reportCards, SchoolOfsted schoolOfstedRating)
+        {
+            var safeGuardingAndConcerns = new SafeGuardingAndConcernsServiceModel(schoolOfstedRating.DateAcademyJoinedTrust!.Value);
+
+            if (TryGetSafeGuarding(safeGuardingAndConcerns, reportCards))
+            {
+                return safeGuardingAndConcerns;
+            }
+
+            return GetSafeGuardingFromOlderInspections(safeGuardingAndConcerns, schoolOfstedRating);
+        }
+
+        private static bool TryGetSafeGuarding(SafeGuardingAndConcernsServiceModel safeGuardingAndConcerns, ReportCardServiceModel reportCards)
+        {
+
+            var recentReportCard = reportCards.LatestReportCard;
+            var previousReportCard = reportCards.PreviousReportCard;
+
+            var latestInspection = recentReportCard;
+
+            if (previousReportCard?.InspectionDate is { } prevDate &&
+                recentReportCard?.InspectionDate is { } recentDate &&
+                prevDate > recentDate)
+            {
+                latestInspection = previousReportCard;
+            }
+
+            if (latestInspection == null)
+            {
+                return false;
+            }
+
+            safeGuardingAndConcerns.Concerns = latestInspection.CategoryOfConcern;
+            safeGuardingAndConcerns.SafeGuarding = latestInspection.Safeguarding;
+            safeGuardingAndConcerns.InspectionDate = latestInspection.InspectionDate;
+
+            return true;
+        }
+
+        private static SafeGuardingAndConcernsServiceModel GetSafeGuardingFromOlderInspections(SafeGuardingAndConcernsServiceModel safeGuardingAndConcerns, SchoolOfsted schoolOfstedRating)
+        {
+            var recent = schoolOfstedRating.CurrentOfstedRating;
+            var previous = schoolOfstedRating.PreviousOfstedRating;
+
+            var latestInspection = recent;
+
+            if (previous.InspectionDate is { } prevDate &&
+                recent.InspectionDate is { } recentDate &&
+                prevDate > recentDate)
+            {
+                latestInspection = previous;
+            }
+
+            if (latestInspection.InspectionDate == null)
+            {
+                return safeGuardingAndConcerns;
+            }
+
+            safeGuardingAndConcerns.Concerns = latestInspection.CategoryOfConcern.ToDisplayString();
+            safeGuardingAndConcerns.SafeGuarding = latestInspection.SafeguardingIsEffective.ToDisplayString();
+            safeGuardingAndConcerns.InspectionDate = DateOnly.FromDateTime(latestInspection.InspectionDate.Value);
+
+            return safeGuardingAndConcerns;
         }
     }
 }

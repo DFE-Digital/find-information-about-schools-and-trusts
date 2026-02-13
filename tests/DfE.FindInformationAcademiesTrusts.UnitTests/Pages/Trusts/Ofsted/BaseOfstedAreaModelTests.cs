@@ -13,7 +13,6 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.Ofsted;
 public abstract class BaseOfstedAreaModelTests<T> : BaseTrustPageTests<T>, ITestSubpages, ITestExport
     where T : OfstedAreaModel
 {
-    protected readonly IAcademyService MockAcademyService = Substitute.For<IAcademyService>();
 
     protected readonly IOfstedTrustDataExportService
         MockOfstedTrustDataExportService = Substitute.For<IOfstedTrustDataExportService>();
@@ -48,33 +47,6 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseTrustPageTests<T>, ITest
                 ]
             )
         ]);
-    }
-
-    [Fact]
-    public async Task OnGetAsync_sets_academies_from_academyService()
-    {
-        var academies = new[]
-        {
-            new SchoolOfstedServiceModel("1", "Academy 1", new DateTime(2022, 12, 1),
-                new OfstedShortInspection(new DateTime(2025, 7, 1), "School remains Good"),
-                new OfstedRating(2, new DateTime(2023, 1, 1)),
-                new OfstedRating(3, new DateTime(2023, 2, 1)), false),
-
-            new SchoolOfstedServiceModel("2", "Academy 2", new DateTime(2022, 11, 2),
-                new OfstedShortInspection(new DateTime(2025, 7, 1), "School remains Good"),
-                new OfstedRating(2, new DateTime(2023, 1, 2)),
-                new OfstedRating(3, new DateTime(2023, 3, 1)), false),
-
-            new SchoolOfstedServiceModel("3", "Academy 3", new DateTime(2022, 10, 3),
-                new OfstedShortInspection(new DateTime(2025, 7, 1), "School remains Good"),
-                new OfstedRating(2, new DateTime(2023, 1, 3)),
-                new OfstedRating(3, new DateTime(2023, 4, 1)), false)
-        };
-        MockAcademyService.GetAcademiesInTrustOfstedAsync(Sut.Uid).Returns(academies);
-
-        _ = await Sut.OnGetAsync();
-
-        Sut.Academies.Should().BeEquivalentTo(academies);
     }
 
     [Fact]

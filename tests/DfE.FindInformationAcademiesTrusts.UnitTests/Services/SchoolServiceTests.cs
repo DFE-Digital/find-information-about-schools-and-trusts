@@ -328,5 +328,23 @@ public class SchoolServiceTests
 
         result.ReligiousEthos.Should().BeEquivalentTo(expectedResult);
     }
+    
+    [Theory]
+    [InlineData ("2021/09/01")]
+    [InlineData (null)]
+    public async Task GetDateJoinedTrustAsync_should_return_expected_date(string? date)
+    {
+        const int urn = 123456;
+
+        var expectedDate = date is not null ? DateOnly.Parse(date, System.Globalization.CultureInfo.InvariantCulture) : (DateOnly?)null;
+
+        _mockSchoolRepository.GetDateJoinedTrustAsync(urn).Returns(expectedDate);
+
+        var result = await _sut.GetDateJoinedTrustAsync(urn);
+
+        await _mockSchoolRepository.Received(1).GetDateJoinedTrustAsync(urn);
+
+        result.Should().Be(expectedDate);
+    }
 
 }

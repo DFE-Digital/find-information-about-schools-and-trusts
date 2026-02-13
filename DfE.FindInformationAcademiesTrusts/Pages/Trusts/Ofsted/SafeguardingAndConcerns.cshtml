@@ -1,0 +1,72 @@
+﻿@page "/trusts/ofsted/safeguarding-and-concerns"
+@model SafeguardingAndConcernsModel
+
+@{
+    Layout = "Ofsted/_OfstedLayout";
+}
+
+<section class="app-table-container" data-testid="ofsted-safeguarding-and-concerns-name-table">
+    <details class="govuk-details">
+        <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+                What this information means
+            </span>
+        </summary>
+        <div class="govuk-details__text">
+            <p class="govuk-body">
+                <strong class="govuk-!-font-weight-bold">'Effective safeguarding'</strong> means that a school has been judged to have adequate safeguarding policies and processes in place. It reviews them regularly and implements them well.
+            </p>
+            <p class="govuk-body">
+                <strong class="govuk-!-font-weight-bold">'Category of concern'</strong> means that a school has been found inadequate in a key or provision judgement. The school either has ‘serious weaknesses’ or requires ‘special measures’.
+            </p>
+        </div>
+    </details>
+    <hr class="govuk-section-break govuk-section-break--m">
+    <table class="govuk-table si-row-colours-table" data-module="moj-sortable-table">
+        <caption class="govuk-table__caption govuk-table__caption--m" data-testid="subpage-header">Safeguarding and concerns</caption>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-body" aria-sort="ascending" data-testid="ofsted-safeguarding-and-concerns-name-header">
+                    School name
+                </th>
+                <th scope="col" class="govuk-table__header govuk-body column-header-ofsted-concern" aria-sort="none">
+                    Date of inspection
+                </th>
+
+                <th scope="col" class="govuk-table__header govuk-body column-header-ofsted-concern" aria-sort="none" data-testid="ofsted-safeguarding-and-concerns-effective-safeguarding-header">
+                    Effective safeguarding
+                </th>
+                <th scope="col" class="govuk-table__header govuk-body column-header-ofsted-concern" aria-sort="none" data-testid="ofsted-safeguarding-and-concerns-category-of-concern-header">
+                    Category of concern
+                </th>
+                <th scope="col" class="govuk-table__header govuk-body column-header-ofsted-concern" aria-sort="none" data-testid="ofsted-safeguarding-and-concerns-before-or-after-joining-header">
+                    Before or after joining
+                </th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            @foreach (var academy in Model.SafeGuardingInspectionModels)
+            {
+                <tr class="govuk-table__row" data-testid="academy-row">
+                    <td class="govuk-table__cell govuk-body" data-sort-value="@academy.SchoolName" data-testid="ofsted-safeguarding-and-concerns-school-name">
+                        @academy.SchoolName<br />
+                    </td>
+                    
+                    <td class="govuk-table__cell govuk-body" data-testid="ofsted-safeguarding-and-concerns-inspection-date">
+                        @academy.ReportDetails.InspectionDate?.ToString(StringFormatConstants.DisplayDateFormat)
+                    </td>
+                    
+                    <td class="govuk-table__cell govuk-body" data-testid="ofsted-safeguarding-and-concerns-effective-safeguarding">
+                        @academy.ReportDetails.SafeGuarding
+                    </td>
+                    <td class="govuk-table__cell govuk-body" data-testid="ofsted-safeguarding-and-concerns-category-of-concern">
+                        @academy.ReportDetails.Concerns
+                    </td>
+                    <td class="govuk-table__cell govuk-body" data-sort-value="@academy.ReportDetails.WhenDidCurrentInspectionHappen" data-testid="ofsted-safeguarding-before-or-after-joining">
+                        <partial name="_BeforeOrAfterTag" model="academy.ReportDetails.WhenDidCurrentInspectionHappen" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>

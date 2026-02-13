@@ -4,7 +4,7 @@
     {
         public required T ReportDetails { get; set; }
 
-        public string SchoolName { get; set; } = string.Empty;
+        public required string SchoolName { get; set; }
         public int Urn { get; set; }
     }
 }

@@ -255,6 +255,12 @@ public class SubNav : TrustNavMenuTestsBase
                 l.LinkDisplayText.Should().Be("Older inspections (before November 2025)");
                 l.AspPage.Should().Be("/Trusts/Ofsted/OlderInspections");
                 l.TestId.Should().Be("ofsted-older-inspections-subnav");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Safeguarding and concerns");
+                l.AspPage.Should().Be("/Trusts/Ofsted/SafeguardingAndConcerns");
+                l.TestId.Should().Be("ofsted-safeguarding-and-concerns-subnav");
             }
         );
     }

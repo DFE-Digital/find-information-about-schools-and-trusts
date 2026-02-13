@@ -20,9 +20,9 @@
                { "Achievement", reportCardDetails.Achievement ?? string.Empty },
                { "Attendance and Behaviour", reportCardDetails.AttendanceAndBehaviour ?? string.Empty },
                { "Early Years Provision", reportCardDetails.EarlyYearsProvision ?? string.Empty },
-               { "Safeguarding", reportCardDetails.Safeguarding ?? string.Empty },
+               { "Safeguarding", reportCardDetails.Safeguarding },
                { "Post 16 Provision", reportCardDetails.Post16Provision ?? string.Empty },
-               { "Category of Concern", reportCardDetails.CategoryOfConcern ?? string.Empty }
+               { "Category of Concern", reportCardDetails.CategoryOfConcern }
            };
         }
     }

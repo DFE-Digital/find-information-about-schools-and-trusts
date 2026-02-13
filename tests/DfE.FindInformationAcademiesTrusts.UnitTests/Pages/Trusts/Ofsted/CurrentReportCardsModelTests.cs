@@ -32,7 +32,6 @@ public class CurrentReportCardsModelTests : BaseOfstedAreaModelTests<CurrentRepo
     {
         Sut = new CurrentReportCardsModel(MockDataSourceService,
                 MockTrustService,
-                MockAcademyService,
                 MockOfstedTrustDataExportService,
                 MockDateTimeProvider,
                 MockOfstedService

@@ -31,7 +31,6 @@ public class PreviousReportCardsModelTests : BaseOfstedAreaModelTests<PreviousRe
     {
         Sut = new PreviousReportCardsModel(MockDataSourceService,
                 MockTrustService,
-                MockAcademyService,
                 MockOfstedTrustDataExportService,
                 MockDateTimeProvider,
                 MockOfstedService
