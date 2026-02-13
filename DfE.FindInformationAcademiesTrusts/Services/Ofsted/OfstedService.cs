@@ -29,6 +29,8 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
         {
             var schoolOfstedRatings = await ofstedRepository.GetAcademiesInTrustOfstedAsync(uid);
 
+            var urns = schoolOfstedRatings.Select(x => int.Parse(x.Urn));
+
             var result = new List<OfstedOverviewInspectionServiceModel>();
 
             foreach (var schoolOfstedRating in schoolOfstedRatings)
