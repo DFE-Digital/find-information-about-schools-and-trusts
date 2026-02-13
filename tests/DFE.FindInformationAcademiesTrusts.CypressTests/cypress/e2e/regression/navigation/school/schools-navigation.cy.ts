@@ -14,8 +14,8 @@ describe('Schools Navigation Tests', () => {
 
         {
             academyURN: 140884,
-            trustAcademyName: "MARYLEBONE SCHOOL LTD", //school in SAT
-            trustUID: 3874
+            trustAcademyName: "UNITED LEARNING TRUST", //school in SAT
+            trustUID: 5143
         }];
 
     const navTestSchool = {
