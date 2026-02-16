@@ -14,7 +14,7 @@ describe('Schools Navigation Tests', () => {
 
         {
             academyURN: 140884,
-            trustAcademyName: "UNITED LEARNING TRUST",
+            trustAcademyName: "UNITED LEARNING TRUST", //school in SAT
             trustUID: 5143
         }];
 
