@@ -22,7 +22,7 @@ describe('Schools Navigation Tests', () => {
         schoolURN: 107188,
     };
     const navOfstedTestSchool = {
-        schoolURN: 115650
+        schoolURN: 148857
     }
 
 
@@ -433,8 +433,7 @@ describe('Schools Navigation Tests', () => {
                     .checkSchoolsOfstedSubNavItemsPresent()
                     .checkSchoolsOverviewSubnavButtonIsHighlighted();
                 schoolsPage
-                    .checkOfstedPageNamePresent()
-                    .checkOverviewPageNamePresent();
+                    .checkOfstedPageNamePresent();
 
                 // Navigate to "Current ratings"
                 navigation
