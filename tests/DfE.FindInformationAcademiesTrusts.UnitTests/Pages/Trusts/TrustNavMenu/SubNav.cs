@@ -365,13 +365,13 @@ public class SubNav : TrustNavMenuTestsBase
             {
                 l.LinkDisplayText.Should().Be("Current report card");
                 l.AspPage.Should().Be("./currentreportcards");
-                l.TestId.Should().Be("report-cards-current-report-card-subnav");
+                l.TestId.Should().Be("report-cards-current-report-card-tab");
             },
             l =>
             {
                 l.LinkDisplayText.Should().Be("Previous report card");
                 l.AspPage.Should().Be("./previousreportcards");
-                l.TestId.Should().Be("report-cards-previous-report-card-subnav");
+                l.TestId.Should().Be("report-cards-previous-report-card-tab");
             }
         );
     }
