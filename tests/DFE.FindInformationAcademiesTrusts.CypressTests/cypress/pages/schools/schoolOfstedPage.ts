@@ -25,7 +25,7 @@ class SchoolOfstedPage {
             // Details sections
             whyShortInspectionNotAvailableDetails: () => cy.get('[data-testid="why-short-inspection-not-available-details"]'),
             // Links
-            //inspectionReportsLink: () => cy.get('[data-testid="ofsted-inspection-reports-link"]'),
+            inspectionReportsLink: () => cy.get('[data-testid="ofsted-inspection-reports-link"]'),
         },
         safeguardingAndConcerns: {
             // Summary list (not table)
@@ -147,21 +147,20 @@ class SchoolOfstedPage {
         this.elements.singleHeadlineGrades.whyShortInspectionNotAvailableDetails().should('have.attr', 'open');
         return this;
     }
-    //inspectionReportsLink may be removed.
-    // Inspection reports link check
-    // public checkInspectionReportsLinkPresent(): this {
-    //     this.elements.singleHeadlineGrades.inspectionReportsLink().should('be.visible');
-    //     return this;
-    // }
 
-    // public checkInspectionReportsLinkValid(): this {
-    //     this.elements.singleHeadlineGrades.inspectionReportsLink()
-    //         .should(($a) => {
-    //             expect($a).to.have.attr('href').match(/^https:\/\/reports\.ofsted\.gov\.uk/);
-    //             expect($a).to.have.attr('target', '_blank');
-    //         });
-    //     return this;
-    // }
+    public checkInspectionReportsLinkPresent(): this {
+        this.elements.singleHeadlineGrades.inspectionReportsLink().should('be.visible');
+        return this;
+    }
+
+    public checkInspectionReportsLinkValid(): this {
+        this.elements.singleHeadlineGrades.inspectionReportsLink()
+            .should(($a) => {
+                expect($a).to.have.attr('href').match(/^https:\/\/reports\.ofsted\.gov\.uk/);
+                expect($a).to.have.attr('target', '_blank');
+            });
+        return this;
+    }
 
     // Date validation methods
     public checkCurrentInspectionDateValid(): this {
