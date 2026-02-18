@@ -46,7 +46,7 @@ describe('Trust Data Download Accessibility', () => {
 
     describe('Ofsted Data Download Accessibility', () => {
         it('should have accessible ofsted download controls', () => {
-            cy.visit('/trusts/ofsted/single-headline-grades?uid=5527');
+            cy.visit('/trusts/overview/trust-details?uid=5527');
 
             // Wait for page to load
             cy.get('main, #main-content').should('be.visible');

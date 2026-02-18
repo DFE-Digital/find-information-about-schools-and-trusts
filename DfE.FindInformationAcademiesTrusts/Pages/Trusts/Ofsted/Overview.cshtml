@@ -1,4 +1,4 @@
-﻿@page
+@page
 @using DfE.FindInformationAcademiesTrusts.Extensions
 @model DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted.OverviewModel
 
@@ -8,9 +8,9 @@
 
 <section class="app-table-container" data-testid="ofsted-overview-table">
 
-    <details class="govuk-details">
+    <details class="govuk-details" data-testid="where-to-find-short-inspection-data">
         <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">
+            <span class="govuk-details__summary-text" data-testid="where-to-find-short-inspection-data">
                 Where to find short inspection data
             </span>
         </summary>
@@ -25,17 +25,17 @@
     
     <table class="govuk-table si-row-colours-table" data-module="moj-sortable-table" aria-describedby="ofsted-overview">
 
-        <caption class="govuk-table__caption govuk-table__caption--m" id="ofsted-overview">Overview<span class="govuk-visually-hidden"> (column headers with buttons are sortable).</span></caption>
+        <caption class="govuk-table__caption govuk-table__caption--m" id="ofsted-overview" data-testid="subpage-header">Overview<span class="govuk-visually-hidden"> (column headers with buttons are sortable).</span></caption>
 
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header" aria-sort="ascending">School name</th>
-                <th scope="col" class="govuk-table__header column-header-date" aria-sort="none">Date joined</th>
-                <th scope="col" class="govuk-table__header" aria-sort="none">Has recent short inspection</th>
-                <th scope="col" class="govuk-table__header" aria-sort="none">Current inspection type</th>
-                <th scope="col" class="govuk-table__header" aria-sort="none">Date of current inspection</th>
-                <th scope="col" class="govuk-table__header" aria-sort="none">Previous inspection type</th>
-                <th scope="col" class="govuk-table__header" aria-sort="none">Date of previous inspection</th>
+                <th scope="col" class="govuk-table__header" aria-sort="ascending" data-testid="ofsted-overview-grades-school-name-header">School name</th>
+                <th scope="col" class="govuk-table__header column-header-date" aria-sort="none" data-testid="ofsted-overview-grades-school-date-joined-header">Date joined</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none" data-testid="ofsted-overview-grades-school-short-inspection-header">Has recent short inspection</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none" data-testid="ofsted-overview-grades-school-current-inspection-type-header">Current inspection type</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none" data-testid="ofsted-overview-grades-school-date-current-inspection-header">Date of current inspection</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none" data-testid="ofsted-overview-grades-school-previous-inspection-type-header">Previous inspection type</th>
+                <th scope="col" class="govuk-table__header" aria-sort="none" data-testid="ofsted-overview-grades-school-date-previous-inspection-header">Date of previous inspection</th>
             </tr>
         </thead>
 

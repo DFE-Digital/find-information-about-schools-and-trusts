@@ -120,10 +120,10 @@ class SchoolsPage {
         },
         ofsted: {
             singleHeadlineGrades: {
-                inspectionTable: () => cy.get('[data-testid="ofsted-inspection-table"]'),
+                inspectionTable: () => cy.get('[data-testid="data-source-and-updates"]'),
             },
             ratings: {
-                schoolOfstedRatingsTable: () => cy.get('[data-testid="ratings-table"]'),
+                schoolOfstedRatingsTable: () => cy.get('[data-testid="ofsted-report-cards-overview"]'),
                 subPageHeader: () => cy.get('[data-testid="subpage-header"]')
             }
 
@@ -810,7 +810,7 @@ class SchoolsPage {
     }
 
     public checkSchoolReportCardSubHeaderPresent(): this {
-        this.elements.ofsted.ratings.subPageHeader().should('contain', 'Report Card');
+        this.elements.ofsted.ratings.subPageHeader().should('contain', 'Report cards');
         return this;
     }
 

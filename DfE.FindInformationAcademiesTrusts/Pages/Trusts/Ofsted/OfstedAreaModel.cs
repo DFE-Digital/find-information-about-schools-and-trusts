@@ -52,6 +52,10 @@ public class OfstedAreaModel(
                     new DataSourceListEntry(misDataSource, "Inspection ratings after September 24"),
                     new DataSourceListEntry(misDataSource, "Inspection ratings before September 24")
                 ]
+            ),
+            new DataSourcePageListEntry(SafeguardingAndConcernsModel.SubPageName, [
+                    new DataSourceListEntry(misDataSource, "Effective safeguarding and category of concern")
+                ]
             )
         ]);
 

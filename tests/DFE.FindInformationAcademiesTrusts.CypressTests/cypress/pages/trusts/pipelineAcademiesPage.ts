@@ -82,11 +82,6 @@ class PipelineAcademies {
         return this;
     }
 
-    public clickDownloadButton(): this {
-        this.elements.downloadButton().click();
-        return this;
-    }
-
     public checkPreAdvisoryTableHeadersPresent(): this {
         this.elements.preAdvisory.schoolNameHeader().should('be.visible');
         this.elements.preAdvisory.urnHeader().should('be.visible');

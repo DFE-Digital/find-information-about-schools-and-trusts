@@ -389,7 +389,7 @@ public class SchoolNavMenuSubNavTests : SchoolNavMenuTestsBase
             {
                 l.LinkDisplayText.Should().Be("Report cards");
                 l.AspPage.Should().Be("/Schools/Ofsted/ReportCards/CurrentReportCards");
-                l.TestId.Should().Be("ofsted-report-cards-current-subnav");
+                l.TestId.Should().Be("ofsted-report-cards-subnav");
             },
             l =>
             {

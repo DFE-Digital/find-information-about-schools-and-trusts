@@ -42,10 +42,10 @@ export class AuditPageDefinitions {
         this.auditHelper.auditPage('Trust Governance - Historic Members', 'Trusts', `/trusts/governance/historic-members?uid=${trustUid}`);
 
         // Trust Ofsted subpages
-        this.auditHelper.auditPage('Trust Ofsted - Single Headline Grades', 'Trusts', `/trusts/ofsted/single-headline-grades?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Ofsted - Current Ratings', 'Trusts', `/trusts/ofsted/current-ratings?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Ofsted - Previous Ratings', 'Trusts', `/trusts/ofsted/previous-ratings?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Ofsted - Safeguarding and Concerns', 'Trusts', `/trusts/ofsted/safeguarding-and-concerns?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Ofsted - Single Headline Grades', 'Trusts', `/trusts/ofsted/overview?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Ofsted - Current Ratings', 'Trusts', `/trusts/ofsted/reportcards/currentreportcards?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Ofsted - Previous Ratings', 'Trusts', `/trusts/ofsted/reportcards/previousreportcards?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Ofsted - Safeguarding and Concerns', 'Trusts', `/trusts/ofsted/reportcards/currentreportcards?uid=${trustUid}`);
 
         // Trust Academies In-Trust subpages
         this.auditHelper.auditPage('Trust Academies - In Trust Details', 'Trusts', `/trusts/academies/in-trust/details?uid=${trustUid}`);

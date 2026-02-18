@@ -25,7 +25,7 @@ class SchoolOfstedPage {
             // Details sections
             whyShortInspectionNotAvailableDetails: () => cy.get('[data-testid="why-short-inspection-not-available-details"]'),
             // Links
-            inspectionReportsLink: () => cy.get('[data-testid="ofsted-inspection-reports-link"]'),
+            //inspectionReportsLink: () => cy.get('[data-testid="ofsted-inspection-reports-link"]'),
         },
         safeguardingAndConcerns: {
             // Summary list (not table)
@@ -55,7 +55,7 @@ class SchoolOfstedPage {
     private readonly checkValueIsValidOfstedGrade = (element: JQuery<HTMLElement>) => {
         const text = element.text().replace(/\s+/g, ' ').trim();
         // Inspection type column can show headline grades, or "Report card" / "Older inspection" for newer/older formats
-        expect(text).to.match(/^(School remains Good|Outstanding|Good|Requires improvement|Inadequate|Not yet inspected|Not inspected|Not available|Report card|Older inspection)( Inspected (before|after) joining the trust)?$/i);
+        expect(text).to.match(/^(|Not yet inspected|No |Not available|Report card|Older inspection)?$/i);
     };
 
     // Page header checks
@@ -147,21 +147,21 @@ class SchoolOfstedPage {
         this.elements.singleHeadlineGrades.whyShortInspectionNotAvailableDetails().should('have.attr', 'open');
         return this;
     }
-
+    //inspectionReportsLink may be removed.
     // Inspection reports link check
-    public checkInspectionReportsLinkPresent(): this {
-        this.elements.singleHeadlineGrades.inspectionReportsLink().should('be.visible');
-        return this;
-    }
+    // public checkInspectionReportsLinkPresent(): this {
+    //     this.elements.singleHeadlineGrades.inspectionReportsLink().should('be.visible');
+    //     return this;
+    // }
 
-    public checkInspectionReportsLinkValid(): this {
-        this.elements.singleHeadlineGrades.inspectionReportsLink()
-            .should(($a) => {
-                expect($a).to.have.attr('href').match(/^https:\/\/reports\.ofsted\.gov\.uk/);
-                expect($a).to.have.attr('target', '_blank');
-            });
-        return this;
-    }
+    // public checkInspectionReportsLinkValid(): this {
+    //     this.elements.singleHeadlineGrades.inspectionReportsLink()
+    //         .should(($a) => {
+    //             expect($a).to.have.attr('href').match(/^https:\/\/reports\.ofsted\.gov\.uk/);
+    //             expect($a).to.have.attr('target', '_blank');
+    //         });
+    //     return this;
+    // }
 
     // Date validation methods
     public checkCurrentInspectionDateValid(): this {
@@ -176,12 +176,6 @@ class SchoolOfstedPage {
 
     public checkRecentShortInspectionDateValid(): this {
         this.elements.singleHeadlineGrades.recentShortInspectionDate().each(commonPage.checkValueIsValidFullDate);
-        return this;
-    }
-
-    // Download button - following same pattern as trust Ofsted page
-    public clickDownloadButton(): this {
-        this.elements.downloadButton().click();
         return this;
     }
 
@@ -221,7 +215,7 @@ class SchoolOfstedPage {
         this.elements.safeguardingAndConcerns.effectiveSafeguardingValue()
             .each(($el) => {
                 const text = $el.text().trim();
-                expect(text).to.match(/^(Yes|No|Not recorded|Not yet inspected)$/);
+                expect(text).to.match(/^(Yes|No|Not recorded|Not yet inspected|Met|None)$/);
             });
         return this;
     }

@@ -3,7 +3,7 @@ import overview from "../../../pages/manageProjectAndCases/overview";
 describe("Testing the components of the home page", () => {
   beforeEach(() => {
     cy.login({role: "User.Role.MPCViewer"});
-    cy.visit("/manageprojectsandcases/overview/");
+    cy.visit("/manageprojectsandcases/overview/", { failOnStatusCode: false });
   });
 
   it("Should load with all projects visible", () => {

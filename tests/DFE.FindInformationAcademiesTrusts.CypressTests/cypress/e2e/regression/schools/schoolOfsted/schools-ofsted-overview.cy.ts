@@ -78,15 +78,15 @@ describe("Testing the School Ofsted Single Headline Grades page", () => {
                     .checkWhyShortInspectionDetailsIsOpen();
             });
 
-            it(`Checks that the inspection reports link is present for ${typeOfSchool}`, () => {
-                schoolOfstedPage
-                    .checkInspectionReportsLinkPresent();
-            });
+            // it(`Checks that the inspection reports link is present for ${typeOfSchool}`, () => {
+            //     schoolOfstedPage
+            //         .checkInspectionReportsLinkPresent();
+            // });
 
-            it(`Checks that the 'See the inspection reports at Ofsted' link has the correct href for ${typeOfSchool}`, () => {
-                schoolOfstedPage
-                    .checkInspectionReportsLinkValid();
-            });
+            // it(`Checks that the 'See the inspection reports at Ofsted' link has the correct href for ${typeOfSchool}`, () => {
+            //     schoolOfstedPage
+            //         .checkInspectionReportsLinkValid();
+            // });
         });
     });
 

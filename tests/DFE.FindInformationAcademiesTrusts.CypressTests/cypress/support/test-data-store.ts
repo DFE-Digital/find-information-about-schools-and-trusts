@@ -29,9 +29,9 @@ export class TestDataStore {
             {
                 pageName: "Ofsted",
                 subpages: [
-                    { subpageName: "Single headline grades", url: `/trusts/ofsted/single-headline-grades?uid=${uid}` },
-                    { subpageName: "Current ratings", url: `/trusts/ofsted/current-ratings?uid=${uid}` },
-                    { subpageName: "Previous ratings", url: `/trusts/ofsted/previous-ratings?uid=${uid}` },
+                    { subpageName: "Overview", url: `/trusts/ofsted/overview?uid=${uid}` },
+                    { subpageName: "Report cards", url: `/trusts/ofsted/reportcards/currentreportcards?uid=${uid}` },
+                    { subpageName: "Older inspections (before November 2025)", url: `/trusts/ofsted/olderinspections?uid=${uid}` },
                     { subpageName: "Safeguarding and concerns", url: `/trusts/ofsted/safeguarding-and-concerns?uid=${uid}` }
                 ]
             },
