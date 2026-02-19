@@ -2,6 +2,7 @@
 {
     public class ReportCardServiceModel: IOfstedInspection
     {
+        public int Urn { get; set; }
         public ReportCardDetails? LatestReportCard { get; set; }
         public ReportCardDetails? PreviousReportCard { get; set; }
     }

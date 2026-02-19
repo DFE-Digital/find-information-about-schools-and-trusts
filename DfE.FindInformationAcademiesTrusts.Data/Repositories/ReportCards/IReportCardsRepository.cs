@@ -1,8 +1,7 @@
 ﻿namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.ReportCards;
 
-using DfE.FindInformationAcademiesTrusts.Data;
-
 public interface IReportCardsRepository
 {
-    Task<(EstablishmentReportCard? LatestReportCard, EstablishmentReportCard? PreviousReportCard)> GetReportCardAsync(int urn);
+    Task<ReportCardData> GetReportCardAsync(int urn);
+    Task<List<ReportCardData>> GetReportCardsAsync(List<int> urns);
 }
