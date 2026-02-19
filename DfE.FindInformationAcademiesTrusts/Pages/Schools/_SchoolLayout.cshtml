@@ -1,3 +1,4 @@
+@using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted
 @model ISchoolAreaModel
 
 @{
@@ -11,14 +12,18 @@
   <div class="dfe-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
-        <main id="main-content">
-          @await RenderSectionAsync("SchoolPageMessage", false)
-          <header>
-            <h2 class="govuk-heading-l" data-testid="page-name">@Model.PageMetadata.PageName</h2>
-          </header>
-          <partial name="Shared/NavMenu/_SubNav" model="@Model.SubNavLinks"/>
-          @RenderBody()
-        </main>
+          <main id="main-content">
+              @await RenderSectionAsync("SchoolPageMessage", false)
+              <header>
+                  <h2 class="govuk-heading-l" data-testid="page-name">@Model.PageMetadata.PageName</h2>
+              </header>
+              <partial name="Shared/NavMenu/_SubNav" model="@Model.SubNavLinks"/>
+              @RenderBody()
+          </main>
+          @if (Model is OfstedAreaModel)
+          {
+              <partial name="Ofsted/_LinkToOfsted" model="@Model"/>
+          }
         <partial name="Shared/DataSource/_SourceList" model="@Model.DataSourcesPerPage"/>
       </div>
     </div>

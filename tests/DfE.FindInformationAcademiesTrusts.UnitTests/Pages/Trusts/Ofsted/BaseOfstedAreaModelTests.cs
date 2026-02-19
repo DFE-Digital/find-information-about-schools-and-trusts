@@ -45,6 +45,10 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseTrustPageTests<T>, ITest
                     new DataSourceListEntry(MisDataSource, "Inspection ratings after September 24"),
                     new DataSourceListEntry(MisDataSource, "Inspection ratings before September 24")
                 ]
+            ),
+            new DataSourcePageListEntry(SafeguardingAndConcernsModel.SubPageName, [
+                    new DataSourceListEntry(MisDataSource, "Effective safeguarding and category of concern")
+                ]
             )
         ]);
     }

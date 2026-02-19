@@ -48,8 +48,8 @@ public static class TrustNavMenu
     {
         return
         [
-            GetSubNavLinkTo<CurrentReportCardsModel>("Report cards", "Current report card", "./currentreportcards", activePage),
-            GetSubNavLinkTo<PreviousReportCardsModel>("Report cards", "Previous report card", "./previousreportcards", activePage)
+            GetSubNavLinkTo<CurrentReportCardsModel>("Report cards", "Current report card", "./currentreportcards", activePage, "report-cards-current-report-card-tab"),
+            GetSubNavLinkTo<PreviousReportCardsModel>("Report cards", "Previous report card", "./previousreportcards", activePage, "report-cards-previous-report-card-tab")
         ];
     }
 
@@ -126,14 +126,14 @@ public static class TrustNavMenu
     }
 
     private static NavLink GetSubNavLinkTo<T>(string serviceName, string linkDisplayText, string aspPage,
-        ITrustsAreaModel activePage)
+        ITrustsAreaModel activePage, string? testIdOverride = null)
     {
         return new NavLink(
             activePage is T,
             serviceName,
             linkDisplayText,
             aspPage,
-            $"{serviceName}-{linkDisplayText}-subnav".Kebabify(),
+            testIdOverride ?? $"{serviceName}-{linkDisplayText}-subnav".Kebabify(),
             new Dictionary<string, string> { { "uid", activePage.Uid } }
         );
     }
