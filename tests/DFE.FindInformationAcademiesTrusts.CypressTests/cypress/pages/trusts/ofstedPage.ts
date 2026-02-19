@@ -75,11 +75,11 @@ class OfstedPage {
     };
 
     private readonly checkValueIsValidCurrentOfstedRating = (element: JQuery<HTMLElement>) =>
-        this.checkElementMatches(element, /^(Expected standard|Strong standard|Not applicable|Needs attention|Older inspection|Exceptional|Insufficient evidence|Does not apply)$/);
+        this.checkElementMatches(element, /^(Expected standard|Strong standard|Not applicable|Needs attention|Older inspection|Exceptional|Urgent improvement|Does not apply|Yes|Not Met|)$/);
 
     private readonly checkValueIsValidPreviousOfstedRating = (element: JQuery<HTMLElement>) => {
         const text = element.text().trim();
-        expect(text).to.match(/^(Expected standard|Strong standard|Not applicable|Needs attention|Older inspection|Exceptional|Does not apply)$/);
+        expect(text).to.match(/^(Expected standard|Strong standard|Not applicable|Needs attention|Older inspection|Exceptional|Does not apply|Urgent improvement|Yes|Not Met|)$/);
     };
 
     private readonly checkValueIsValidBeforeOrAfterJoiningTag = (element: JQuery<HTMLElement>) => {
@@ -378,7 +378,7 @@ class OfstedPage {
     public checkSafeguardingConcernsEffectiveSafeguardingJudgementsPresent(): this {
         this.elements.safeguardingAndConcerns.effectiveSafeguarding().each((element) => {
             const text = element.text().trim();
-            expect(text).to.match(/^(Yes|No|Not recorded|Not yet inspected|Met|None)$/);
+            expect(text).to.match(/^(Yes|No|Not recorded|Not yet inspected|Met|None|Not Met)$/);
         });
         return this;
     }
@@ -386,7 +386,7 @@ class OfstedPage {
     public checkSafeguardingConcernsCategoryOfConcernJudgementsPresent(): this {
         this.elements.safeguardingAndConcerns.categoryOfConcern().each((element) => {
             const text = element.text().trim();
-            expect(text).to.match(/^(None|Special measures|Serious weakness|Notice to improve|Not yet inspected|Does not apply|Not inspected)$/);
+            expect(text).to.match(/^(None|Special measures|Serious weakness|Notice to improve|Not yet inspected|Does not apply|Not inspected|Yes|Not Met)$/);
         });
         return this;
     }
