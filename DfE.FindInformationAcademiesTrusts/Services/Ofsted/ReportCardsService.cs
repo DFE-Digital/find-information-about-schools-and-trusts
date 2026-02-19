@@ -41,7 +41,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
                 }
             }
 
-            if (!parsedUrns.Any())
+            if (parsedUrns.Count == 0)
             {
                 return [];
             }
