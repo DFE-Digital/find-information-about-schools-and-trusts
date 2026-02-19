@@ -22,7 +22,7 @@ describe('Schools Navigation Tests', () => {
         schoolURN: 107188,
     };
     const navOfstedTestSchool = {
-        schoolURN: 148857
+        schoolURN: 140320
     }
 
 
@@ -468,8 +468,8 @@ describe('Schools Navigation Tests', () => {
         });
 
         context('School Ofsted subnav navigation tests -- (Academy)', () => {
-            it('Should navigate from Single headlinegrades → current ratings → previous ratings and back', () => {
-                // Start at academy overview (single headline grades / Ofsted overview)
+            it('Should navigate from Overview → current ratings → previous ratings and back', () => {
+                // Start at academy overview (Ofsted overview)
                 cy.visit(`/trusts/ofsted/overview?uid=${navTestAcademies[0].trustUID}`);
                 navigation
                     .checkSchoolsOfstedSubNavItemsPresent()
@@ -500,7 +500,7 @@ describe('Schools Navigation Tests', () => {
                 schoolsPage
                     .checkOfstedPageNamePresent();
 
-                // Navigate back to single headline grades
+                // Navigate back to Overview
                 navigation
                     .clickSchoolsOfstedOverviewSubnavButton()
                     .checkCurrentURLIsCorrect(`/trusts/ofsted/overview?uid=${navTestAcademies[0].trustUID}`)
