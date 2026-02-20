@@ -1,27 +1,68 @@
 ﻿using DfE.FindInformationAcademiesTrusts.Data;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.ReportCards;
 using GovUK.Dfe.CoreLibs.Caching.Helpers;
 using GovUK.Dfe.CoreLibs.Caching.Interfaces;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
 {
-    public class ReportCardsService(
-        IReportCardsRepository reportCardsRepository,
-        ICacheService<IMemoryCacheType> cacheService) : IReportCardsService
+    public class ReportCardsService(IReportCardsRepository reportCardsRepository, ICacheService<IMemoryCacheType> cacheService, ILogger<IReportCardsService> logger) : IReportCardsService
     {
         public async Task<ReportCardServiceModel> GetReportCardsAsync(int urn)
         {
             var cacheKey = $"ReportCards_{CacheKeyHelper.GenerateHashedCacheKey(urn.ToString())}";
             var methodName = nameof(GetReportCardsAsync);
 
-            var reportCards = await cacheService.GetOrAddAsync(cacheKey,
+            var reportCard = await cacheService.GetOrAddAsync(cacheKey,
                 async () => await reportCardsRepository.GetReportCardAsync(urn), methodName);
 
             return new ReportCardServiceModel
             {
-                LatestReportCard = MapToReportCardDetails(reportCards.LatestReportCard),
-                PreviousReportCard = MapToReportCardDetails(reportCards.PreviousReportCard)
+                Urn = urn,
+                LatestReportCard = MapToReportCardDetails(reportCard.LatestReportCard),
+                PreviousReportCard = MapToReportCardDetails(reportCard.PreviousReportCard)
             };
+        }
+
+        public async Task<List<ReportCardServiceModel>> GetReportCardsAsync(List<string> urns)
+        {
+
+            List<int> parsedUrns = [];
+
+            foreach (var urnString in urns)
+            {
+                if (int.TryParse(urnString, out var urn))
+                {
+                    parsedUrns.Add(urn);
+                }
+                else
+                {
+                    logger.LogError("Unable to parse academy urn {Urn}", urnString);
+                }
+            }
+
+            if (parsedUrns.Count == 0)
+            {
+                return [];
+            }
+
+            var cacheKey = $"ReportCards_{CacheKeyHelper.GenerateHashedCacheKey(string.Join(",", parsedUrns))}_list";
+            var methodName = nameof(GetReportCardsAsync);
+
+            var reportCards = await cacheService.GetOrAddAsync(cacheKey,
+                async () => await reportCardsRepository.GetReportCardsAsync(parsedUrns), methodName);
+
+            if (reportCards is null)
+            {
+                return [];
+            }
+
+            return reportCards.Select(reportCard => new ReportCardServiceModel
+            {
+                Urn = reportCard.Urn,
+                LatestReportCard = MapToReportCardDetails(reportCard.LatestReportCard),
+                PreviousReportCard = MapToReportCardDetails(reportCard.PreviousReportCard)
+            }).ToList();
         }
 
         private static ReportCardDetails? MapToReportCardDetails(EstablishmentReportCard? reportCard)

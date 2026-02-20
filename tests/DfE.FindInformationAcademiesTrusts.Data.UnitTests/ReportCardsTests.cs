@@ -3,19 +3,22 @@
 namespace DfE.FindInformationAcademiesTrusts.Data.UnitTests
 {
     using DfE.FindInformationAcademiesTrusts.Data.Repositories.ReportCards;
+    using Microsoft.Extensions.Logging;
     using NSubstitute;
 
     public class ReportCardsTests
     {
         private readonly ReportCardsRepository _sut;
         private readonly IEstablishmentsV5Client mockEstablishmentsV5Client;
+        private readonly ILogger<IReportCardsRepository> _mockLogger = Substitute.For<ILogger<IReportCardsRepository>>();
         private readonly int Urn = 1234;
 
         public ReportCardsTests()
         {
             mockEstablishmentsV5Client = Substitute.For<IEstablishmentsV5Client>();
 
-            _sut = new ReportCardsRepository(mockEstablishmentsV5Client);
+
+            _sut = new ReportCardsRepository(mockEstablishmentsV5Client, _mockLogger);
 
             mockEstablishmentsV5Client.SearchEstablishmentsWithOfstedReportCardsAsync(null, null, Urn.ToString(), null, null).Returns([]);
         }
@@ -114,6 +117,145 @@ namespace DfE.FindInformationAcademiesTrusts.Data.UnitTests
             previous.EarlyYearsProvision.Should().Be("Requires Improvement");
             previous.Safeguarding.Should().Be("Effective");
             previous.WebLink.Should().Be("https://ofsted.gov.uk/report/1234");
+        }
+
+        [Fact]
+        public async Task WhenCalling_GetReportCardAsync_IfDataIsNotReturn_ShouldReturnEmptyObject()
+        {
+            mockEstablishmentsV5Client.SearchEstablishmentsWithOfstedReportCardsAsync(null, null, Urn.ToString(), null, null).Returns([new EstablishmentDto2()
+            {
+                ReportCardFullInspection = new ReportCardFullInspectionDto
+                {
+                    LatestInspectionDate = "25/12/2020",
+                    PreviousInspectionDate = null,
+                },
+                Urn = "A different urn"
+            }]);
+
+            var result = await _sut.GetReportCardAsync(Urn);
+            result.Should().NotBeNull();
+            result.Urn.Should().Be(Urn);
+            result.LatestReportCard.Should().BeNull();
+            result.PreviousReportCard.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task GetReportCardsAsync_ShouldReturnEmptyList_WhenClientReturnsNoResults()
+        {
+            var urns = new List<int> { 100001 };
+            mockEstablishmentsV5Client.GetEstablishmentsWithOfstedReportCardsByUrnsAsync(Arg.Any<UrnRequestModel>())
+                .Returns([]);
+
+            var result = await _sut.GetReportCardsAsync(urns);
+
+            result.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task GetReportCardsAsync_ShouldSendAllUrns_ToService()
+        {
+            var urns = new List<int> { 100001, 123344 };
+
+            mockEstablishmentsV5Client.GetEstablishmentsWithOfstedReportCardsByUrnsAsync(Arg.Any<UrnRequestModel>())
+                .Returns([]);
+
+            await _sut.GetReportCardsAsync(urns);
+
+           await mockEstablishmentsV5Client.Received(1).GetEstablishmentsWithOfstedReportCardsByUrnsAsync(Arg.Is<UrnRequestModel>(x => x.Urns == urns));
+        }
+
+        [Fact]
+        public async Task GetReportCardsAsync_ShouldMapEstablishmentDataToReportCardData()
+        {
+            var urns = new List<int> { Urn };
+            var establishmentDto = new EstablishmentDto2
+            {
+                Urn = Urn.ToString(),
+                ReportCardFullInspection = CreateMockReportCardDto()
+            };
+            mockEstablishmentsV5Client.GetEstablishmentsWithOfstedReportCardsByUrnsAsync(Arg.Any<UrnRequestModel>())
+                .Returns([establishmentDto]);
+
+            var result = await _sut.GetReportCardsAsync(urns);
+
+            result.Should().HaveCount(1);
+            var reportCardData = result.First();
+            reportCardData.Urn.Should().Be(Urn);
+
+            var latest = reportCardData.LatestReportCard;
+            latest.Should().NotBeNull();
+            latest!.InspectionDate.Should().Be(new DateOnly(2023, 1, 1));
+            latest.WebLink.Should().Be("https://ofsted.gov.uk/report/1234");
+
+            var previous = reportCardData.PreviousReportCard;
+            previous.Should().NotBeNull();
+            previous!.InspectionDate.Should().Be(new DateOnly(2021, 1, 1));
+            previous.WebLink.Should().Be("https://ofsted.gov.uk/report/1234");
+        }
+
+        [Fact]
+        public async Task GetReportCardsAsync_ShouldLogAndSkipInvalidUrn()
+        {
+            var urns = new List<int> { Urn };
+            var establishmentDto = new EstablishmentDto2
+            {
+                Urn = "invalid-urn",
+                ReportCardFullInspection = CreateMockReportCardDto()
+            };
+            mockEstablishmentsV5Client.GetEstablishmentsWithOfstedReportCardsByUrnsAsync(Arg.Any<UrnRequestModel>())
+                .Returns([establishmentDto]);
+
+            var result = await _sut.GetReportCardsAsync(urns);
+
+            result.Should().BeEmpty();
+            _mockLogger.VerifyLogError($"Unable to parse academy urn invalid-urn");
+        }
+
+        [Fact]
+        public async Task GetReportCardsAsync_ShouldContinueProcessing_WhenUrnCannotBeParsed()
+        {
+            var urns = new List<int> { Urn, 9999 };
+            var establishmentDto1 = new EstablishmentDto2
+            {
+                Urn = Urn.ToString(),
+                ReportCardFullInspection = CreateMockReportCardDto()
+            };
+            var establishmentDto2 = new EstablishmentDto2
+            {
+                Urn = "not-a-urn",
+                ReportCardFullInspection = CreateMockReportCardDto()
+            };
+            var establishmentDto3 = new EstablishmentDto2
+            {
+                Urn = "9999",
+                ReportCardFullInspection = CreateMockReportCardDto()
+            };
+            mockEstablishmentsV5Client.GetEstablishmentsWithOfstedReportCardsByUrnsAsync(Arg.Any<UrnRequestModel>())
+                .Returns([establishmentDto1, establishmentDto2, establishmentDto3]);
+
+            var result = await _sut.GetReportCardsAsync(urns);
+
+            result.Should().HaveCount(2);
+            result.Should().Contain(r => r.Urn == Urn);
+            result.Should().Contain(r => r.Urn == 9999);
+            _mockLogger.VerifyLogError("Unable to parse academy urn not-a-urn");
+        }
+
+        [Fact]
+        public async Task GetReportCardsAsync_ShouldSkipResult_WhenUrnIsNotInTheRequest()
+        {
+            var urns = new List<int> { 100001 };
+            var establishmentDto = new EstablishmentDto2
+            {
+                Urn = "100002", // This URN is not in the requested list
+                ReportCardFullInspection = CreateMockReportCardDto()
+            };
+            mockEstablishmentsV5Client.GetEstablishmentsWithOfstedReportCardsByUrnsAsync(Arg.Any<UrnRequestModel>())
+                .Returns([establishmentDto]);
+
+            var result = await _sut.GetReportCardsAsync(urns);
+
+            result.Should().BeEmpty();
         }
 
         private static ReportCardFullInspectionDto CreateMockReportCardDto()

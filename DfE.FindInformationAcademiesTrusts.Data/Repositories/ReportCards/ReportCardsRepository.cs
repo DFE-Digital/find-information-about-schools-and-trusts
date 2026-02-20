@@ -1,28 +1,70 @@
 ﻿using System.Globalization;
 using Dfe.AcademiesApi.Client.Contracts;
+using Microsoft.Extensions.Logging;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.ReportCards
 {
-    public class ReportCardsRepository(IEstablishmentsV5Client establishmentsClient) : IReportCardsRepository
+    public class ReportCardsRepository(IEstablishmentsV5Client establishmentsClient, ILogger<IReportCardsRepository> logger) : IReportCardsRepository
     {
-        public async Task<(EstablishmentReportCard? LatestReportCard, EstablishmentReportCard? PreviousReportCard)>
-            GetReportCardAsync(int urn)
+        public async Task<ReportCardData> GetReportCardAsync(int urn)
         {
-            var result =
-                await establishmentsClient.SearchEstablishmentsWithOfstedReportCardsAsync(null, null, urn.ToString(),
+            var result = await establishmentsClient.SearchEstablishmentsWithOfstedReportCardsAsync(null, null, urn.ToString(),
                     null, null);
 
             var establishmentData = result.FirstOrDefault(x => x.Urn == urn.ToString());
 
-            if (establishmentData is not null)
+            if (establishmentData is null)
             {
-                var latestReportCard = MapLatestReportCard(establishmentData.ReportCardFullInspection);
-                var previousReportCard = MapPreviousReportCard(establishmentData.ReportCardFullInspection);
-
-                return (latestReportCard, previousReportCard);
+                return new ReportCardData
+                {
+                    Urn = urn,
+                    LatestReportCard = null,
+                    PreviousReportCard = null
+                };
             }
 
-            return (null, null);
+            var latestReportCard = MapLatestReportCard(establishmentData.ReportCardFullInspection);
+            var previousReportCard = MapPreviousReportCard(establishmentData.ReportCardFullInspection);
+
+            return new ReportCardData
+            {
+                Urn = urn,
+                LatestReportCard = latestReportCard,
+                PreviousReportCard = previousReportCard
+            };
+
+        }
+
+        public async Task<List<ReportCardData>> GetReportCardsAsync(List<int> urns)
+        {
+            var response = new List<ReportCardData>();
+
+            var results = await establishmentsClient.GetEstablishmentsWithOfstedReportCardsByUrnsAsync(new UrnRequestModel
+            {
+                Urns = urns
+            });
+
+            foreach (var result in results)
+            {
+                if (!int.TryParse(result.Urn, out var establishmentUrn))
+                {
+                    logger.LogError("Unable to parse academy urn {Urn}", result.Urn);
+
+                    continue;
+                }
+
+                if (urns.Contains(establishmentUrn))
+                {
+                    response.Add(new ReportCardData
+                    {
+                        Urn = establishmentUrn,
+                        LatestReportCard = MapLatestReportCard(result.ReportCardFullInspection),
+                        PreviousReportCard = MapPreviousReportCard(result.ReportCardFullInspection)
+                    });
+                }
+            }
+
+            return response;
         }
 
         private static EstablishmentReportCard? MapLatestReportCard(ReportCardFullInspectionDto? reportCardDto)
