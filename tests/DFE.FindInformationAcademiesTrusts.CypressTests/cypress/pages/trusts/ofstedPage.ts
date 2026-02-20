@@ -378,7 +378,7 @@ class OfstedPage {
     public checkSafeguardingConcernsEffectiveSafeguardingJudgementsPresent(): this {
         this.elements.safeguardingAndConcerns.effectiveSafeguarding().each((element) => {
             const text = element.text().trim();
-            expect(text).to.match(/^(Yes|No|Not recorded|Not yet inspected|Met|None|Not Met)$/);
+            expect(text).to.match(/^(Yes|No|Not recorded|Not yet inspected|Met|None|Not Met|Not applicable)$/);
         });
         return this;
     }
@@ -386,7 +386,7 @@ class OfstedPage {
     public checkSafeguardingConcernsCategoryOfConcernJudgementsPresent(): this {
         this.elements.safeguardingAndConcerns.categoryOfConcern().each((element) => {
             const text = element.text().trim();
-            expect(text).to.match(/^(None|Special measures|Serious weakness|Notice to improve|Not yet inspected|Does not apply|Not inspected|Yes|Not Met)$/);
+            expect(text).to.match(/^(None|Special measures|Serious weakness|Notice to improve|Not yet inspected|Does not apply|Not inspected|Yes|Not Met|Not applicable)$/);
         });
         return this;
     }
