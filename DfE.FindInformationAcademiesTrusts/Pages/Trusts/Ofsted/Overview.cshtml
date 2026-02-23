@@ -54,13 +54,13 @@
                         @Html.Raw(overviewModel.Current is null ? "None" : overviewModel.Current.AsInspectionTypeString())
                     </td>
                     <td class="govuk-body govuk-table__cell" data-sort-value="@overviewModel.Current?.InspectionDate.ToString(StringFormatConstants.SortableDateFormat)" data-testid="date-of-current-inspection">
-                        @overviewModel.Current?.InspectionDate.ToString(StringFormatConstants.DisplayDateFormat)
+                        @(overviewModel.Current?.InspectionDate is null? "Not applicable": @overviewModel.Current?.InspectionDate.ToString(StringFormatConstants.DisplayDateFormat))
                     </td>
                     <td class="govuk-body govuk-table__cell" data-testid="previous-inspection-type">
                         @Html.Raw(overviewModel.Previous is null ? "None" : overviewModel.Previous.AsInspectionTypeString())
                     </td>
                     <td class="govuk-body govuk-table__cell" data-sort-value="@overviewModel.Previous?.InspectionDate.ToString(StringFormatConstants.SortableDateFormat)" data-testid="date-of-previous-inspection">
-                        @overviewModel.Previous?.InspectionDate.ToString(StringFormatConstants.DisplayDateFormat)
+                        @(overviewModel.Previous?.InspectionDate is null? "Not applicable" : @overviewModel.Previous?.InspectionDate.ToString(StringFormatConstants.DisplayDateFormat))
                     </td>
                 </tr>
             }
