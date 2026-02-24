@@ -19,11 +19,10 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted.Repo
                     MockSchoolOverviewDetailsService,
                     MockTrustService,
                     MockDataSourceService,
-                    MockOfstedSchoolDataExportService,
-                    MockDateTimeProvider,
                     MockOtherServicesLinkBuilder,
                     MockSchoolNavMenu,
-                    MockReportCardsService
+                    MockReportCardsService,
+                    MockPowerBiLinkBuilderService
                     )
                 { Urn = SchoolUrn };
         }
@@ -62,6 +61,18 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted.Repo
             _ = await Sut.OnGetAsync();
 
             _ = MockSchoolNavMenu.Received(1).GetTabLinksForReportCardsOfstedPages(Arg.Any<CurrentReportCardsModel>());
+        }
+
+
+        [Fact]
+        public override async Task OnGetAsync_ShouldSetPowerBiLinkUrl()
+        {
+            Sut.PowerBiLink.Should().BeNullOrEmpty();
+
+            _ = await Sut.OnGetAsync();
+
+            Sut.PowerBiLink.Should().Be("https://powerbi.com/reportcards");
+            MockPowerBiLinkBuilderService.Received(1).BuildReportCardsLink(Sut.Urn);
         }
     }
 }

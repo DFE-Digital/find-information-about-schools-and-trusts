@@ -23,7 +23,6 @@ public abstract class AcademiesAreaModel(
     public IDateTimeProvider DateTimeProvider { get; } = dateTimeProvider;
 
     public AcademyPipelineSummaryServiceModel PipelineSummary { get; set; } = null!;
-    public string TrustReferenceNumber { get; set; } = null!;
     public NavLink[] TabList { get; set; } = null!;
 
     public override async Task<IActionResult> OnGetAsync()
@@ -31,8 +30,7 @@ public abstract class AcademiesAreaModel(
         var pageResult = await base.OnGetAsync();
 
         if (pageResult.GetType() == typeof(NotFoundResult)) return pageResult;
-        TrustReferenceNumber = await TrustService.GetTrustReferenceNumberAsync(Uid);
-
+ 
         PipelineSummary = await AcademyService.GetAcademiesPipelineSummaryAsync(TrustReferenceNumber);
 
         return pageResult;

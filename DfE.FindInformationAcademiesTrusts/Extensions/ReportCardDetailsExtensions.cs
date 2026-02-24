@@ -14,7 +14,7 @@
            return new Dictionary<string, string>
            {
                { "Leadership and Governance", reportCardDetails.LeadershipAndGovernance ?? string.Empty },
-               { "Personal Development and Well Being", reportCardDetails.PersonalDevelopmentAndWellBeing ?? string.Empty },
+               { "Personal Development and Wellbeing", reportCardDetails.PersonalDevelopmentAndWellBeing ?? string.Empty },
                { "Curriculum and Teaching", reportCardDetails.CurriculumAndTeaching ?? string.Empty },
                { "Inclusion", reportCardDetails.Inclusion ?? string.Empty },
                { "Achievement", reportCardDetails.Achievement ?? string.Empty },

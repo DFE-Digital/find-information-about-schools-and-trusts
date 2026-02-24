@@ -1,7 +1,5 @@
-using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
-using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
@@ -14,13 +12,10 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted
         ISchoolOverviewDetailsService schoolOverviewDetailsService,
         ITrustService trustService,
         IDataSourceService dataSourceService,
-        IOfstedSchoolDataExportService ofstedSchoolDataExportService,
-        IDateTimeProvider dateTimeProvider,
         IOtherServicesLinkBuilder otherServicesLinkBuilder,
         ISchoolNavMenu schoolNavMenu,
         IOfstedService ofstedService) : OfstedAreaModel(schoolService, schoolOverviewDetailsService,
-        trustService,
-        dataSourceService, ofstedSchoolDataExportService, dateTimeProvider, otherServicesLinkBuilder, schoolNavMenu)
+        trustService, dataSourceService, otherServicesLinkBuilder, schoolNavMenu)
     {
         public const string SubPageName = "Overview";
 

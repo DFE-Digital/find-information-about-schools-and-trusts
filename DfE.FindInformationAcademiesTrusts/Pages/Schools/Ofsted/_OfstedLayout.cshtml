@@ -22,15 +22,17 @@
     <ul class="govuk-tabs__list" data-testid="before-or-after-joining">
         @foreach (var tab in Model.TabList)
         {
-        <li class="govuk-tabs__list-item @(tab.LinkIsActive ? "govuk-tabs__list-item--selected" : "")">
-            <a class="govuk-tabs__tab" asp-page="@tab.AspPage" asp-all-route-data="@tab.AspAllRouteData"
-               data-testid="@tab.TestId">
-                <span class="govuk-visually-hidden">@tab.VisuallyHiddenLinkText </span>@tab.LinkDisplayText
-            </a>
-        </li>
+            <li class="govuk-tabs__list-item @(tab.LinkIsActive ? "govuk-tabs__list-item--selected" : "")">
+                <a class="govuk-tabs__tab" asp-page="@tab.AspPage" asp-all-route-data="@tab.AspAllRouteData"
+                   data-testid="@tab.TestId">
+                    <span class="govuk-visually-hidden">@tab.VisuallyHiddenLinkText </span>@tab.LinkDisplayText
+                </a>
+            </li>
         }
     </ul>
     <div class="govuk-tabs__panel">
         @RenderBody()
     </div>
 </div>
+
+@await Html.PartialAsync("_OfstedPowerBiLink", Model.PowerBiLink)

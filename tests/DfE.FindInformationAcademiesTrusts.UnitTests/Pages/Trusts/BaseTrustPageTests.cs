@@ -29,6 +29,7 @@ public abstract class BaseTrustPageTests<T> where T : TrustsAreaModel
         new(Source.CompareSchoolCollegePerformanceEnglandPopulation, new DateTime(2023, 11, 9), UpdateFrequency.Annually);
 
     protected const string TrustUid = "1234";
+    protected const string TrustReference = "TR5678";
     protected readonly TrustSummaryServiceModel DummyTrustSummary = new(TrustUid, "My Trust", "Multi-academy trust", 3);
 
     private const string EmptyTrustUid = "";
@@ -38,7 +39,8 @@ public abstract class BaseTrustPageTests<T> where T : TrustsAreaModel
 
     protected BaseTrustPageTests()
     {
-        MockTrustService.GetTrustSummaryAsync(TrustUid)!.Returns(Task.FromResult(DummyTrustSummary));
+        MockTrustService.GetTrustSummaryAsync(TrustUid).Returns(DummyTrustSummary);
+        MockTrustService.GetTrustReferenceNumberAsync(TrustUid).Returns(TrustReference);
     }
 
     [Fact]

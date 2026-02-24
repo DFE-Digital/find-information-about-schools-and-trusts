@@ -105,8 +105,6 @@ public static class Dependencies
         builder.Services.AddScoped<ITrustPupilService, TrustPupilService>();
 
         builder.Services.AddScoped<IPipelineAcademiesExportService, PipelineAcademiesExportService>();
-        builder.Services.AddScoped<IOfstedTrustDataExportService, OfstedTrustDataExportService>();
-        builder.Services.AddScoped<IOfstedSchoolDataExportService, OfstedSchoolDataExportService>();
         builder.Services.AddScoped<IAcademiesExportService, AcademiesExportService>();
         builder.Services.AddScoped<ISchoolPupilsExportService, SchoolPupilsExportService>();
 
@@ -131,6 +129,7 @@ public static class Dependencies
         builder.Services.AddScoped<IReportCardsService, ReportCardsService>();
         builder.Services.AddScoped<IOfstedService, OfstedService>();
         builder.Services.AddScoped<IOfstedServiceModelBuilder, OfstedServiceModelBuilder>();
+        builder.Services.AddScoped<IPowerBiLinkBuilderService, PowerBiLinkBuilderService>();
 
         builder.Services.AddServiceCaching(builder.Configuration);
 

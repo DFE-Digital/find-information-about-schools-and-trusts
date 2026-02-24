@@ -1,7 +1,5 @@
-using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
-using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +9,13 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted
     public class OlderInspectionsModel(
         IDataSourceService dataSourceService,
         ITrustService trustService,
-        IOfstedTrustDataExportService ofstedTrustDataExportService,
-        IDateTimeProvider dateTimeProvider,
-        IOfstedService ofstedService) : OfstedAreaModel(dataSourceService, trustService, ofstedTrustDataExportService,
-        dateTimeProvider)
+        IOfstedService ofstedService,
+        IPowerBiLinkBuilderService powerBiLinkBuilderService) : OfstedAreaModel(dataSourceService, trustService)
     {
         public const string SubPageName = "Older inspections (before November 2025)";
 
         public override PageMetadata PageMetadata => base.PageMetadata with { SubPageName = SubPageName };
-
+        
         public List<TrustOfstedReportServiceModel<OlderInspectionServiceModel>> OlderOfstedInspections
         {
             get;
@@ -33,6 +29,8 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted
             if (pageResult.GetType() == typeof(NotFoundResult)) return pageResult;
 
             OlderOfstedInspections = await ofstedService.GetEstablishmentsInTrustOlderOfstedRatings(Uid);
+
+            PowerBiLink = powerBiLinkBuilderService.BuildOfstedPublishedLinkForTrust(TrustReferenceNumber);
 
             return pageResult;
         }

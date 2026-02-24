@@ -1,6 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
-using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +9,9 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted.ReportCards;
 public abstract class BaseReportCardsRatingsModel(
     IDataSourceService dataSourceService,
     ITrustService trustService,
-    IOfstedTrustDataExportService ofstedTrustDataExportService,
-    IDateTimeProvider dateTimeProvider,
-    IOfstedService ofstedService)
-    : OfstedAreaModel(dataSourceService, trustService, ofstedTrustDataExportService, dateTimeProvider)
+    IOfstedService ofstedService,
+    IPowerBiLinkBuilderService powerBiLinkBuilderService)
+    : OfstedAreaModel(dataSourceService, trustService)
 {
     public List<ReportCardViewModel> ReportCards { get; set; } = [];
 
@@ -28,6 +26,8 @@ public abstract class BaseReportCardsRatingsModel(
         ReportCards = GetReportCard(reportCardServiceModels);
 
         TabList = TrustNavMenu.GetTabLinksForReportCardsOfstedPage(this);
+
+        PowerBiLink = powerBiLinkBuilderService.BuildReportCardsLinkForTrust(TrustReferenceNumber);
 
         return pageResult;
     }

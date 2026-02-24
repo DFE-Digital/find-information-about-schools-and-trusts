@@ -21,8 +21,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.Ofsted
 
         public SafeguardingAndConcernsModelTests()
         {
-            Sut = new SafeguardingAndConcernsModel(MockDataSourceService, MockTrustService, 
-                    MockOfstedTrustDataExportService, MockDateTimeProvider, MockOfstedService)
+            Sut = new SafeguardingAndConcernsModel(MockDataSourceService, MockTrustService, MockOfstedService)
                 { Uid = TrustUid };
 
             MockOfstedService.GetOfstedOverviewSafeguardingAndConcerns(TrustUid).Returns(_mockSafeGuardingResults);
@@ -46,6 +45,18 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.Ofsted
             await MockOfstedService.Received(1).GetOfstedOverviewSafeguardingAndConcerns(TrustUid);
 
             Sut.SafeGuardingInspectionModels.Should().BeEquivalentTo(_mockSafeGuardingResults);
+        }
+
+        [Fact]
+        public override async Task OnGetAsync_ShouldSetPowerBiLinkUrl()
+        {
+            Sut.PowerBiLink.Should().BeNullOrEmpty();
+
+            _ = await Sut.OnGetAsync();
+
+            Sut.PowerBiLink.Should().BeNullOrEmpty();
+            MockPowerBiLinkBuilderService.DidNotReceiveWithAnyArgs().BuildOfstedPublishedLinkForTrust(Arg.Any<string>());
+            MockPowerBiLinkBuilderService.DidNotReceiveWithAnyArgs().BuildReportCardsLinkForTrust(Arg.Any<string>());
         }
     }
 }

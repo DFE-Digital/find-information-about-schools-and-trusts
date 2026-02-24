@@ -34,11 +34,10 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
                 MockSchoolOverviewDetailsService,
                 MockTrustService,
                 MockDataSourceService,
-                MockOfstedSchoolDataExportService,
-                MockDateTimeProvider,
                 MockOtherServicesLinkBuilder,
                 MockSchoolNavMenu,
-                MockOfstedService)
+                MockOfstedService,
+                MockPowerBiLinkBuilderService)
             { Urn = SchoolUrn };
 
         MockOfstedService.GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(Arg.Any<int>()).Returns(_dummySchoolOfstedServiceModel);
@@ -87,5 +86,17 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
         _ = await Sut.OnGetAsync();
 
         _ = MockSchoolNavMenu.Received(1).GetTabLinksForOlderOfstedPages(Arg.Any<OlderBaseRatingsModel>());
+    }
+
+
+    [Fact]
+    public override async Task OnGetAsync_ShouldSetPowerBiLinkUrl()
+    {
+        Sut.PowerBiLink.Should().BeNullOrEmpty();
+
+        _ = await Sut.OnGetAsync();
+
+        Sut.PowerBiLink.Should().Be("https://powerbi.com/ofstedpublished");
+        MockPowerBiLinkBuilderService.Received(1).BuildOfstedPublishedLink(Sut.Urn);
     }
 }

@@ -30,15 +30,12 @@ public class CurrentReportCardsModelTests : BaseOfstedAreaModelTests<CurrentRepo
 
     public CurrentReportCardsModelTests()
     {
-        Sut = new CurrentReportCardsModel(MockDataSourceService,
-                MockTrustService,
-                MockOfstedTrustDataExportService,
-                MockDateTimeProvider,
-                MockOfstedService
-            )
+        Sut = new CurrentReportCardsModel(MockDataSourceService, MockTrustService, MockOfstedService, MockPowerBiLinkBuilderService)
         { Uid = TrustUid };
 
         MockOfstedService.GetEstablishmentsInTrustReportCardsAsync(TrustUid).Returns(_mockReportCards);
+
+        MockPowerBiLinkBuilderService.BuildReportCardsLinkForTrust(TrustReference).Returns("https://powerbi.com/reportcards");
     }
 
     [Fact]
@@ -70,5 +67,16 @@ public class CurrentReportCardsModelTests : BaseOfstedAreaModelTests<CurrentRepo
         await MockOfstedService.Received(1).GetEstablishmentsInTrustReportCardsAsync(TrustUid);
 
         Sut.ReportCards.Should().BeEquivalentTo(expectedReportCards);
+    }
+
+    [Fact]
+    public override async Task OnGetAsync_ShouldSetPowerBiLinkUrl()
+    {
+        Sut.PowerBiLink.Should().BeNullOrEmpty();
+
+        _ = await Sut.OnGetAsync();
+
+        Sut.PowerBiLink.Should().Be("https://powerbi.com/reportcards");
+        MockPowerBiLinkBuilderService.Received(1).BuildReportCardsLinkForTrust(TrustReference);
     }
 }

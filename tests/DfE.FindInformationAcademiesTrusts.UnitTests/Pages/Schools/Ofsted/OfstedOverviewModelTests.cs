@@ -15,8 +15,6 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted
                     MockSchoolOverviewDetailsService,
                     MockTrustService,
                     MockDataSourceService,
-                    MockOfstedSchoolDataExportService,
-                    MockDateTimeProvider,
                     MockOtherServicesLinkBuilder,
                     MockSchoolNavMenu,
                     MockOfstedService)
@@ -60,6 +58,20 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted
         {
             await Sut.OnGetAsync();
             Sut.TabList.Should().BeEmpty();
+        }
+
+
+
+        [Fact]
+        public override async Task OnGetAsync_ShouldSetPowerBiLinkUrl()
+        {
+            Sut.PowerBiLink.Should().BeNullOrEmpty();
+
+            _ = await Sut.OnGetAsync();
+
+            Sut.PowerBiLink.Should().BeNullOrEmpty();
+            MockPowerBiLinkBuilderService.Received(0).BuildOfstedPublishedLink(Arg.Any<int>());
+            MockPowerBiLinkBuilderService.Received(0).BuildReportCardsLink(Arg.Any<int>());
         }
     }
 }

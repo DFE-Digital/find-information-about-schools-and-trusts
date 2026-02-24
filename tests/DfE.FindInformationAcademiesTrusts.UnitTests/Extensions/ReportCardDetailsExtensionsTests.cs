@@ -37,7 +37,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Extensions
             result.Count.Should().Be(10);
 
             result["Leadership and Governance"].Should().Be("1");
-            result["Personal Development and Well Being"].Should().Be("2");
+            result["Personal Development and Wellbeing"].Should().Be("2");
             result["Curriculum and Teaching"].Should().Be("3");
             result["Inclusion"].Should().Be("4");
             result["Achievement"].Should().Be("5");
@@ -66,7 +66,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Extensions
             var result = details.ToDictionary();
 
             result["Leadership and Governance"].Should().BeEmpty();
-            result["Personal Development and Well Being"].Should().BeEmpty();
+            result["Personal Development and Wellbeing"].Should().BeEmpty();
             result["Curriculum and Teaching"].Should().BeEmpty();
             result["Inclusion"].Should().BeEmpty();
             result["Achievement"].Should().BeEmpty();
