@@ -55,7 +55,7 @@ class SchoolOfstedPage {
     private readonly checkValueIsValidOfstedGrade = (element: JQuery<HTMLElement>) => {
         const text = element.text().replace(/\s+/g, ' ').trim();
         // Inspection type column can show headline grades, or "Report card" / "Older inspection" for newer/older formats
-        expect(text).to.match(/^(|Not yet inspected|No |Not available|Report card|Older inspection)?$/i);
+        expect(text).to.match(/^(Not yet inspected|No |Not available|Report card|Older inspection)?$/i);
     };
 
     // Page header checks

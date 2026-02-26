@@ -1,5 +1,3 @@
-import dataDownload from "../../../pages/trusts/dataDownload";
-
 describe('Trust export and content verification', () => {
   beforeEach(() => {
     cy.visit('/trusts/academies/in-trust/details?uid=5712');
