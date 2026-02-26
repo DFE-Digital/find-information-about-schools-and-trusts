@@ -1,6 +1,5 @@
 import commonPage from "../../../../pages/commonPage";
 import pipelineAcademiesPage from "../../../../pages/trusts/pipelineAcademiesPage";
-import dataDownload from "../../../../pages/trusts/dataDownload";
 import { testPreAdvisoryData, testPostAdvisoryData, testFreeSchoolsData } from "../../../../support/test-data-store";
 
 describe("Testing the Pipeline academies pages", () => {
