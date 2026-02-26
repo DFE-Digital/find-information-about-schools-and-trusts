@@ -1,7 +1,5 @@
-using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
-using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
@@ -14,12 +12,11 @@ public abstract class BaseReportCardsRatingsModel(
     ISchoolOverviewDetailsService schoolOverviewDetailsService,
     ITrustService trustService,
     IDataSourceService dataSourceService,
-    IOfstedSchoolDataExportService ofstedSchoolDataExportService,
-    IDateTimeProvider dateTimeProvider,
     IOtherServicesLinkBuilder otherServicesLinkBuilder,
     ISchoolNavMenu schoolNavMenu, 
-    IReportCardsService reportCardsService) : OfstedAreaModel(schoolService, schoolOverviewDetailsService, trustService,
-    dataSourceService, ofstedSchoolDataExportService, dateTimeProvider, otherServicesLinkBuilder, schoolNavMenu)
+    IReportCardsService reportCardsService,
+    IPowerBiLinkBuilderService powerBiLinkBuilderService) : OfstedAreaModel(schoolService, schoolOverviewDetailsService, trustService,
+    dataSourceService, otherServicesLinkBuilder, schoolNavMenu)
 {
     private readonly ISchoolNavMenu _schoolNavMenu = schoolNavMenu;
 
@@ -41,6 +38,8 @@ public abstract class BaseReportCardsRatingsModel(
         WhenDidCurrentInspectionHappen = GetWhenInspectionHappened(ReportCard, dateJoined);
 
         TabList = _schoolNavMenu.GetTabLinksForReportCardsOfstedPages(this);
+
+        PowerBiLink = powerBiLinkBuilderService.BuildReportCardsLink(Urn);
 
         return pageResult;
     }

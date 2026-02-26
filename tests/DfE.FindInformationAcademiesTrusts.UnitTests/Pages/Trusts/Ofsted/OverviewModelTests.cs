@@ -21,8 +21,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.Ofsted
 
         public OverviewModelTests()
         {
-            Sut = new OverviewModel(MockDataSourceService, MockTrustService, MockOfstedTrustDataExportService,
-                    MockDateTimeProvider, MockOfstedService)
+            Sut = new OverviewModel(MockDataSourceService, MockTrustService, MockOfstedService)
                 { Uid = TrustUid };
 
             MockOfstedService.GetOfstedOverviewInspectionForTrustAsync(TrustUid).Returns([mockInspectionResult]);
@@ -46,6 +45,18 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.Ofsted
             await MockOfstedService.Received(1).GetOfstedOverviewInspectionForTrustAsync(TrustUid);
 
             Sut.OverviewInspectionModels.Should().BeEquivalentTo([mockInspectionResult]);
+        }
+
+        [Fact]
+        public override async Task OnGetAsync_ShouldSetPowerBiLinkUrl()
+        {
+            Sut.PowerBiLink.Should().BeNullOrEmpty();
+
+            _ = await Sut.OnGetAsync();
+
+            Sut.PowerBiLink.Should().BeNullOrEmpty();
+            MockPowerBiLinkBuilderService.DidNotReceiveWithAnyArgs().BuildOfstedPublishedLinkForTrust(Arg.Any<string>());
+            MockPowerBiLinkBuilderService.DidNotReceiveWithAnyArgs().BuildReportCardsLinkForTrust(Arg.Any<string>());
         }
     }
 }

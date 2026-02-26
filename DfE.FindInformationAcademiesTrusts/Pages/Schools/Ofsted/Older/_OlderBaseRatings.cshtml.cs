@@ -1,6 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
-using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
@@ -13,12 +12,11 @@ public abstract class OlderBaseRatingsModel(
     ISchoolOverviewDetailsService schoolOverviewDetailsService,
     ITrustService trustService,
     IDataSourceService dataSourceService,
-    IOfstedSchoolDataExportService ofstedSchoolDataExportService,
-    IDateTimeProvider dateTimeProvider,
     IOtherServicesLinkBuilder otherServicesLinkBuilder,
     ISchoolNavMenu schoolNavMenu,
-    IOfstedService ofstedService) : OfstedAreaModel(schoolService, schoolOverviewDetailsService, trustService,
-    dataSourceService, ofstedSchoolDataExportService, dateTimeProvider, otherServicesLinkBuilder, schoolNavMenu)
+    IOfstedService ofstedService,
+    IPowerBiLinkBuilderService powerBiLinkBuilderService) : OfstedAreaModel(schoolService, schoolOverviewDetailsService, trustService,
+    dataSourceService, otherServicesLinkBuilder, schoolNavMenu)
 {
     private readonly ISchoolNavMenu _schoolNavMenu = schoolNavMenu;
     public List<OfstedRating> OfstedRatings { get; set; } = [];
@@ -34,6 +32,8 @@ public abstract class OlderBaseRatingsModel(
         OfstedRatings = GetOfstedRating(ofstedRatings);
 
         TabList = _schoolNavMenu.GetTabLinksForOlderOfstedPages(this);
+
+        PowerBiLink = powerBiLinkBuilderService.BuildOfstedPublishedLink(Urn);
 
         return pageResult;
     }

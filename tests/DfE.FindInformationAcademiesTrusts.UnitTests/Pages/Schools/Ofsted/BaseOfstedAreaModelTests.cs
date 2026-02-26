@@ -3,10 +3,8 @@ using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
-using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted;
 
@@ -15,15 +13,12 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
     protected readonly ISchoolOverviewDetailsService MockSchoolOverviewDetailsService =
         Substitute.For<ISchoolOverviewDetailsService>();
 
-    protected readonly IOfstedSchoolDataExportService MockOfstedSchoolDataExportService =
-        Substitute.For<IOfstedSchoolDataExportService>();
-
-    protected readonly IDateTimeProvider MockDateTimeProvider = Substitute.For<IDateTimeProvider>();
-
     protected readonly IOtherServicesLinkBuilder MockOtherServicesLinkBuilder =
         Substitute.For<IOtherServicesLinkBuilder>();
 
     protected readonly IOfstedService MockOfstedService = Substitute.For<IOfstedService>();
+
+    protected readonly IPowerBiLinkBuilderService MockPowerBiLinkBuilderService = Substitute.For<IPowerBiLinkBuilderService>();
 
     protected readonly SchoolOverviewServiceModel DummySchoolDetails =
         new("Cool school", "some street, in a town", "Yorkshire", "Leeds", "Secondary", new AgeRange(11, 18),
@@ -37,9 +32,11 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
         MockOtherServicesLinkBuilder.OfstedReportLinkForSchool(Arg.Any<int>())
             .Returns(call => $"https://reports.ofsted.gov.uk/test/{call.ArgAt<int>(0)}");
 
-        MockOfstedSchoolDataExportService.BuildAsync(Arg.Any<int>()).Returns("Some Excel data"u8.ToArray());
+        MockPowerBiLinkBuilderService.BuildReportCardsLink(Arg.Any<int>())
+            .Returns("https://powerbi.com/reportcards");
 
-        MockDateTimeProvider.Now.Returns(new DateTime(2025, 7, 1));
+        MockPowerBiLinkBuilderService.BuildOfstedPublishedLink(Arg.Any<int>())
+            .Returns("https://powerbi.com/ofstedpublished");
 
     }
 
@@ -101,35 +98,6 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
         Sut.OfstedReportUrl.Should().Be($"https://reports.ofsted.gov.uk/test/{AcademyUrn}");
     }
 
-    [Fact]
-    public async Task OnGetExportAsync_returns_NotFoundResult_for_unknown_urn()
-    {
-        var result = await Sut.OnGetExportAsync(999111);
-
-        result.Should().BeOfType<NotFoundResult>();
-    }
-
-    [Fact]
-    public async Task OnGetExportAsync_returns_expected_file()
-    {
-        var result = await Sut.OnGetExportAsync(SchoolUrn);
-
-        result.Should().BeOfType<FileContentResult>();
-        result.As<FileContentResult>().FileDownloadName.Should().Be("Ofsted-Cool school-2025-07-01.xlsx");
-    }
-
-    [Fact]
-    public async Task OnGetExportAsync_sanitises_school_name_for_file()
-    {
-        MockSchoolService.GetSchoolSummaryAsync(SchoolUrn)
-            .Returns(DummySchoolSummary with { Name = "  School name with invalid characters\0/ " });
-
-        var result = await Sut.OnGetExportAsync(SchoolUrn);
-
-        result.Should().BeOfType<FileContentResult>();
-        result.As<FileContentResult>().FileDownloadName.Should()
-            .Be("Ofsted-School name with invalid characters-2025-07-01.xlsx");
-    }
 
     [Fact]
     public abstract Task OnGetAsync_should_call_populate_tablist();
@@ -159,4 +127,7 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
             ])
         ]);
     }
+
+    [Fact]
+    public abstract Task OnGetAsync_ShouldSetPowerBiLinkUrl();
 }

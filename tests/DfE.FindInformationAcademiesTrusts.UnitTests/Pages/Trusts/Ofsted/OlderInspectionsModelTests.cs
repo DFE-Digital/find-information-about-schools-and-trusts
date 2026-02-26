@@ -25,15 +25,12 @@ public class OlderInspectionsModelTests : BaseOfstedAreaModelTests<OlderInspecti
 
     public OlderInspectionsModelTests()
     {
-        Sut = new OlderInspectionsModel(MockDataSourceService,
-                MockTrustService,
-                MockOfstedTrustDataExportService,
-                MockDateTimeProvider,
-                MockOfstedService
-            )
+        Sut = new OlderInspectionsModel(MockDataSourceService, MockTrustService, MockOfstedService, MockPowerBiLinkBuilderService)
         { Uid = TrustUid };
 
         MockOfstedService.GetEstablishmentsInTrustOlderOfstedRatings(TrustUid).Returns(_mockInspections);
+
+        MockPowerBiLinkBuilderService.BuildOfstedPublishedLinkForTrust(TrustReference).Returns("https://powerbi.com/report");
     }
 
     [Fact]
@@ -54,5 +51,16 @@ public class OlderInspectionsModelTests : BaseOfstedAreaModelTests<OlderInspecti
         await MockOfstedService.Received(1).GetEstablishmentsInTrustOlderOfstedRatings(TrustUid);
 
         Sut.OlderOfstedInspections.Should().BeEquivalentTo(_mockInspections);
+    }
+
+    [Fact]
+    public override async Task OnGetAsync_ShouldSetPowerBiLinkUrl()
+    {
+        Sut.PowerBiLink.Should().BeNullOrEmpty();
+
+        _ = await Sut.OnGetAsync();
+
+        Sut.PowerBiLink.Should().Be("https://powerbi.com/report");
+        MockPowerBiLinkBuilderService.Received(1).BuildOfstedPublishedLinkForTrust(TrustReference);
     }
 }
