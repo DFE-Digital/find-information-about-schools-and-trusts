@@ -5,6 +5,7 @@ using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.FinancialDocuments;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Governance;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted;
+using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted.ReportCards;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Overview;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
@@ -59,10 +60,7 @@ public class SubNav : TrustNavMenuTestsBase
                 nameof(PreAdvisoryBoardModel) or
                 nameof(PostAdvisoryBoardModel) or
                 nameof(FreeSchoolsModel) => "Academies",
-            nameof(SingleHeadlineGradesModel) or
-                nameof(CurrentRatingsModel) or
-                nameof(PreviousRatingsModel) or
-                nameof(SafeguardingAndConcernsModel) => "Ofsted",
+            nameof(OverviewModel) => "Ofsted",
             nameof(FinancialStatementsModel) or
                 nameof(ManagementLettersModel) or
                 nameof(InternalScrutinyReportsModel) or
@@ -102,10 +100,6 @@ public class SubNav : TrustNavMenuTestsBase
             nameof(PreAdvisoryBoardModel) => "/Trusts/Academies/Pipeline/PreAdvisoryBoard",
             nameof(PostAdvisoryBoardModel) => "/Trusts/Academies/Pipeline/PreAdvisoryBoard",
             nameof(FreeSchoolsModel) => "/Trusts/Academies/Pipeline/PreAdvisoryBoard",
-            nameof(SingleHeadlineGradesModel) => "/Trusts/Ofsted/SingleHeadlineGrades",
-            nameof(CurrentRatingsModel) => "/Trusts/Ofsted/CurrentRatings",
-            nameof(PreviousRatingsModel) => "/Trusts/Ofsted/PreviousRatings",
-            nameof(SafeguardingAndConcernsModel) => "/Trusts/Ofsted/SafeguardingAndConcerns",
             nameof(FinancialStatementsModel) => "/Trusts/FinancialDocuments/FinancialStatements",
             nameof(ManagementLettersModel) => "/Trusts/FinancialDocuments/ManagementLetters",
             nameof(InternalScrutinyReportsModel) => "/Trusts/FinancialDocuments/InternalScrutinyReports",
@@ -114,6 +108,7 @@ public class SubNav : TrustNavMenuTestsBase
             nameof(TrusteesModel) => "/Trusts/Governance/Trustees",
             nameof(MembersModel) => "/Trusts/Governance/Members",
             nameof(HistoricMembersModel) => "/Trusts/Governance/HistoricMembers",
+            nameof(OverviewModel) => "/Trusts/Ofsted/Overview",
             _ => throw new ArgumentException("Couldn't get expected sub page nav asp link for given page type",
                 nameof(pageType))
         };
@@ -238,28 +233,28 @@ public class SubNav : TrustNavMenuTestsBase
     [Fact]
     public void GetSubNavLinks_should_return_expected_links_for_ofsted()
     {
-        var activePage = GetMockTrustPage(typeof(SafeguardingAndConcernsModel));
+        var activePage = GetMockTrustPage(typeof(OverviewModel));
 
         var results = Sut.GetSubNavLinks(activePage);
 
         results.Should().SatisfyRespectively(
             l =>
             {
-                l.LinkDisplayText.Should().Be("Single headline grades");
-                l.AspPage.Should().Be("/Trusts/Ofsted/SingleHeadlineGrades");
-                l.TestId.Should().Be("ofsted-single-headline-grades-subnav");
+                l.LinkDisplayText.Should().Be("Overview");
+                l.AspPage.Should().Be("/Trusts/Ofsted/Overview");
+                l.TestId.Should().Be("ofsted-overview-subnav");
             },
             l =>
             {
-                l.LinkDisplayText.Should().Be("Current ratings");
-                l.AspPage.Should().Be("/Trusts/Ofsted/CurrentRatings");
-                l.TestId.Should().Be("ofsted-current-ratings-subnav");
+                l.LinkDisplayText.Should().Be("Report cards");
+                l.AspPage.Should().Be("/Trusts/Ofsted/ReportCards/CurrentReportCards");
+                l.TestId.Should().Be("ofsted-report-cards-subnav");
             },
             l =>
             {
-                l.LinkDisplayText.Should().Be("Previous ratings");
-                l.AspPage.Should().Be("/Trusts/Ofsted/PreviousRatings");
-                l.TestId.Should().Be("ofsted-previous-ratings-subnav");
+                l.LinkDisplayText.Should().Be("Older inspections (before November 2025)");
+                l.AspPage.Should().Be("/Trusts/Ofsted/OlderInspections");
+                l.TestId.Should().Be("ofsted-older-inspections-subnav");
             },
             l =>
             {
@@ -356,6 +351,29 @@ public class SubNav : TrustNavMenuTestsBase
 
         action.Should().Throw<ArgumentOutOfRangeException>()
             .Which.Message.Should().StartWith("Page type is not supported.");
+    }
+
+    [Fact]
+    public void GetTabLinksForReportCardsOfstedPage_Should_Return_Expected_links()
+    {
+        var activePage = GetMockTrustPage(typeof(PreviousReportCardsModel));
+
+        var results = Sut.GetTabLinksForReportCardsOfstedPage(activePage);
+
+        results.Should().SatisfyRespectively(
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Current report card");
+                l.AspPage.Should().Be("./currentreportcards");
+                l.TestId.Should().Be("report-cards-current-report-card-tab");
+            },
+            l =>
+            {
+                l.LinkDisplayText.Should().Be("Previous report card");
+                l.AspPage.Should().Be("./previousreportcards");
+                l.TestId.Should().Be("report-cards-previous-report-card-tab");
+            }
+        );
     }
 
     private class SubNavUnsupportedTrustPageModel(

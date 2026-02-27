@@ -67,7 +67,7 @@ public class ServiceNav : TrustNavMenuTestsBase
             l =>
             {
                 l.LinkDisplayText.Should().Be("Ofsted");
-                l.AspPage.Should().Be("/Trusts/Ofsted/SingleHeadlineGrades");
+                l.AspPage.Should().Be("/Trusts/Ofsted/Overview");
                 l.TestId.Should().Be("ofsted-nav");
             },
             l =>
@@ -125,10 +125,7 @@ public class ServiceNav : TrustNavMenuTestsBase
                 nameof(PreAdvisoryBoardModel) or
                 nameof(PostAdvisoryBoardModel) or
                 nameof(FreeSchoolsModel) => "/Trusts/Academies/InTrust/Details",
-            nameof(SingleHeadlineGradesModel) or
-                nameof(CurrentRatingsModel) or
-                nameof(PreviousRatingsModel) or
-                nameof(SafeguardingAndConcernsModel) => "/Trusts/Ofsted/SingleHeadlineGrades",
+            nameof(OverviewModel) => "/Trusts/Ofsted/Overview",
             nameof(FinancialStatementsModel) or
                 nameof(ManagementLettersModel) or
                 nameof(InternalScrutinyReportsModel) or

@@ -42,10 +42,10 @@ export class AuditPageDefinitions {
         this.auditHelper.auditPage('Trust Governance - Historic Members', 'Trusts', `/trusts/governance/historic-members?uid=${trustUid}`);
 
         // Trust Ofsted subpages
-        this.auditHelper.auditPage('Trust Ofsted - Single Headline Grades', 'Trusts', `/trusts/ofsted/single-headline-grades?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Ofsted - Current Ratings', 'Trusts', `/trusts/ofsted/current-ratings?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Ofsted - Previous Ratings', 'Trusts', `/trusts/ofsted/previous-ratings?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Ofsted - Safeguarding and Concerns', 'Trusts', `/trusts/ofsted/safeguarding-and-concerns?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Ofsted - Single Headline Grades', 'Trusts', `/trusts/ofsted/overview?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Ofsted - Current Ratings', 'Trusts', `/trusts/ofsted/reportcards/currentreportcards?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Ofsted - Previous Ratings', 'Trusts', `/trusts/ofsted/reportcards/previousreportcards?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Ofsted - Safeguarding and Concerns', 'Trusts', `/trusts/ofsted/reportcards/currentreportcards?uid=${trustUid}`);
 
         // Trust Academies In-Trust subpages
         this.auditHelper.auditPage('Trust Academies - In Trust Details', 'Trusts', `/trusts/academies/in-trust/details?uid=${trustUid}`);
@@ -100,17 +100,17 @@ export class AuditPageDefinitions {
         this.auditHelper.auditPage('School Governance - Historic governors', 'Schools', `/schools/governance/historic?urn=${academyUrn}`);
 
         // School Ofsted subpages
-        this.auditHelper.auditPage('School Ofsted - Single Headline Grades', 'Schools', `/schools/ofsted/singleheadlinegrades?urn=${academyUrn}`);
-        this.auditHelper.auditPage('LA Maintained School Ofsted - Single Headline Grades', 'Schools', `/schools/ofsted/singleheadlinegrades?urn=${laMaintainedSchoolUrn}`);
+        this.auditHelper.auditPage('School Ofsted - Single Headline Grades', 'Schools', `schools/ofsted/overview?urn=${academyUrn}`);
+        this.auditHelper.auditPage('LA Maintained School Ofsted - Single Headline Grades', 'Schools', `schools/ofsted/overview?urn=${laMaintainedSchoolUrn}`);
 
-        this.auditHelper.auditPage('School Ofsted - Current Ratings', 'Schools', `/schools/ofsted/currentratings?urn=${academyUrn}`);
-        this.auditHelper.auditPage('LA Maintained School Ofsted - Current Ratings', 'Schools', `/schools/ofsted/currentratings?urn=${laMaintainedSchoolUrn}`);
+        this.auditHelper.auditPage('School Ofsted - Current Ratings', 'Schools', `/schools/ofsted/reportcards/currentreportcards?urn=${academyUrn}`);
+        this.auditHelper.auditPage('LA Maintained School Ofsted - Current Ratings', 'Schools', `/schools/ofsted/reportcards/currentreportcards?urn=${laMaintainedSchoolUrn}`);
 
-        this.auditHelper.auditPage('School Ofsted - Previous Ratings', 'Schools', `/schools/ofsted/previousratings?urn=${academyUrn}`);
-        this.auditHelper.auditPage('LA Maintained School Ofsted - Previous Ratings', 'Schools', `/schools/ofsted/previousratings?urn=${laMaintainedSchoolUrn}`);
+        this.auditHelper.auditPage('School Ofsted - Previous Ratings', 'Schools', `/schools/ofsted/reportcards/previousreportcards?urn=${academyUrn}`);
+        this.auditHelper.auditPage('LA Maintained School Ofsted - Previous Ratings', 'Schools', `/schools/ofsted/reportcards/previousreportcards?urn=${laMaintainedSchoolUrn}`);
 
-        this.auditHelper.auditPage('School Ofsted - Safeguarding and concerns', 'Schools', `/Schools/Ofsted/SafeguardingAndConcerns?urn=${academyUrn}`);
-        this.auditHelper.auditPage('LA Maintained School Ofsted - Safeguarding and concerns', 'Schools', `/Schools/Ofsted/SafeguardingAndConcerns?urn=${laMaintainedSchoolUrn}`);
+        this.auditHelper.auditPage('School Ofsted - Safeguarding and concerns', 'Schools', `/schools/ofsted/reportcards/currentreportcards?urn=${academyUrn}`);
+        this.auditHelper.auditPage('LA Maintained School Ofsted - Safeguarding and concerns', 'Schools', `/schools/ofsted/reportcards/currentreportcards?urn=${laMaintainedSchoolUrn}`);
 
     }
 

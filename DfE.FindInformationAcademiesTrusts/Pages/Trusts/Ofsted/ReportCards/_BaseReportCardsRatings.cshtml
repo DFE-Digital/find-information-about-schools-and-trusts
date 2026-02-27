@@ -1,0 +1,38 @@
+@model BaseReportCardsRatingsModel
+
+<section class="app-table-container" data-testid="ofsted-report-cards-overview">
+    <table class="govuk-table si-row-colours-table" data-module="moj-sortable-table">
+
+        <caption class="govuk-table__caption govuk-table__caption--s govuk-!-margin-bottom-5">@Model.PageMetadata.TabName</caption>
+
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header table-col--20" data-testid="school-name-header" aria-sort="ascending">School name</th>
+                <th scope="col" class="govuk-table__header" data-testid="leadership-and-governance-header" aria-sort="none">Leadership and Governance</th>
+                <th scope="col" class="govuk-table__header" data-testid="personal-development-and-well-being-header" aria-sort="none">Personal Development and Wellbeing</th>
+                <th scope="col" class="govuk-table__header" data-testid="curriculum-and-teaching-header" aria-sort="none">Curriculum and Teaching</th>
+                <th scope="col" class="govuk-table__header" data-testid="inclusion-header" aria-sort="none">Inclusion</th>
+                <th scope="col" class="govuk-table__header" data-testid="achievement-header" aria-sort="none">Achievement</th>
+                <th scope="col" class="govuk-table__header" data-testid="attendance-and-behaviour-header" aria-sort="none">Attendance and Behaviour</th>
+            </tr>
+        </thead>
+
+
+        <tbody class="govuk-table__body">
+            @foreach (var reportCard in Model.ReportCards)
+            {
+                <tr class="govuk-table__row" data-testid="academy-row">
+                    <td class="govuk-body govuk-table__cell" data-sort-value="@reportCard.SchoolName" data-testid="school-name">
+                        <partial name="Trusts/_AcademyLink" model="@(new AcademyLinkModel(reportCard.SchoolName, "/schools/ofsted/ofstedoverview", reportCard.Urn.ToString()))" />
+                    </td>
+                    <td class="govuk-table__cell" data-testid="leadership-and-governance">@(reportCard.ReportCardDetails?.LeadershipAndGovernance ?? "Not applicable")</td>
+                    <td class="govuk-table__cell" data-testid="personal-development">@(reportCard.ReportCardDetails?.PersonalDevelopmentAndWellBeing ?? "Not applicable")</td>
+                    <td class="govuk-table__cell" data-testid="curriculum-and-teaching">@(reportCard.ReportCardDetails?.CurriculumAndTeaching ?? "Not applicable")</td>
+                    <td class="govuk-table__cell" data-testid="inclusion">@(reportCard.ReportCardDetails?.Inclusion ?? "Not applicable")</td>
+                    <td class="govuk-table__cell" data-testid="achievement">@(reportCard.ReportCardDetails?.Achievement ?? "Not applicable")</td>
+                    <td class="govuk-table__cell" data-testid="attendance-and-behaviour">@(reportCard.ReportCardDetails?.AttendanceAndBehaviour ?? "Not applicable")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>

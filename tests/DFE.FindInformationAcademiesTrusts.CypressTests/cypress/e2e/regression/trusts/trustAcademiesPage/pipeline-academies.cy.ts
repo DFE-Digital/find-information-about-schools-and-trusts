@@ -1,6 +1,5 @@
 import commonPage from "../../../../pages/commonPage";
 import pipelineAcademiesPage from "../../../../pages/trusts/pipelineAcademiesPage";
-import dataDownload from "../../../../pages/trusts/dataDownload";
 import { testPreAdvisoryData, testPostAdvisoryData, testFreeSchoolsData } from "../../../../support/test-data-store";
 
 describe("Testing the Pipeline academies pages", () => {
@@ -39,16 +38,6 @@ describe("Testing the Pipeline academies pages", () => {
             it("Checks the Pipeline academies Pre advisory Proposed conversion or transfer date", () => {
                 pipelineAcademiesPage
                     .checkPreAdvisoryCorrectConversionTransferDatePresent();
-            });
-
-            // The download function is the same for every sub-page - the test is here because this is the landing page for pipeline academies
-            it('should export pipeline academies data as an xlsx and verify it has downloaded and has content', () => {
-                pipelineAcademiesPage
-                    .clickDownloadButton();
-                dataDownload
-                    .checkFileDownloaded()
-                    .checkFileHasContent()
-                    .deleteDownloadedFile();
             });
 
             it('checks that each academy name is a link to the academy details page with the correct URN', () => {

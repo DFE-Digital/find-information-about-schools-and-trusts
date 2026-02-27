@@ -1,5 +1,11 @@
 @import "../variables";
 
+.autocomplete__wrapper {
+  .autocomplete__option-hint {
+    margin-left: 5px;
+  }
+}
+
 .app-search {
   &__form {
     line-height: 0;

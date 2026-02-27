@@ -1,20 +1,22 @@
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
-using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.Older;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
+using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
+using NSubstitute;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted;
 
 public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRatingsModel>
 {
-    private readonly SchoolOfstedServiceModel _dummySchoolOfstedServiceModel = new(
+    private readonly OlderSchoolOfstedServiceModel _dummySchoolOfstedServiceModel = new(
         SchoolUrn.ToString(),
         null,
         null,
         OfstedShortInspection.Unknown,
-        OfstedRating.Unknown,
-        OfstedRating.Unknown,
+        [],
+        [],
         false
     );
 
@@ -32,13 +34,13 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
                 MockSchoolOverviewDetailsService,
                 MockTrustService,
                 MockDataSourceService,
-                MockOfstedSchoolDataExportService,
-                MockDateTimeProvider,
                 MockOtherServicesLinkBuilder,
-                MockSchoolNavMenu)
+                MockSchoolNavMenu,
+                MockOfstedService,
+                MockPowerBiLinkBuilderService)
             { Urn = SchoolUrn };
 
-        MockSchoolService.GetSchoolOfstedRatingsAsync(Arg.Any<int>()).Returns(_dummySchoolOfstedServiceModel);
+        MockOfstedService.GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(Arg.Any<int>()).Returns(_dummySchoolOfstedServiceModel);
         MockTrustService.GetTrustSummaryAsync(AcademyUrn).Returns(_dummyTrustSummaryServiceModel);
     }
 
@@ -47,7 +49,8 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
     {
         await Sut.OnGetAsync();
 
-        Sut.PageMetadata.SubPageName.Should().Be("Previous ratings");
+        Sut.PageMetadata.SubPageName.Should().Be("Older inspections (before November 2025)");
+        Sut.PageMetadata.TabName.Should().Be("Before September 2024");
     }
 
     [Fact]
@@ -66,101 +69,34 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
             new DateTime(2025, 1, 1)
         );
 
-        MockSchoolService
-            .GetSchoolOfstedRatingsAsync(SchoolUrn)
-            .Returns(_dummySchoolOfstedServiceModel with { PreviousOfstedRating = expectedRating });
+        _dummySchoolOfstedServiceModel.RatingsWithSingleHeadlineGrade.Add(expectedRating);
+
+        MockOfstedService
+            .GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(SchoolUrn)
+            .Returns(_dummySchoolOfstedServiceModel);
 
         await Sut.OnGetAsync();
 
-        Sut.OfstedRating.Should().Be(expectedRating);
+        Sut.OfstedRatings.Should().BeEquivalentTo([expectedRating]);
     }
 
     [Fact]
-    public async Task OnGetAsync_should_set_InspectionBeforeOrAfterJoiningTrust_to_not_applicable_when_school_is_la()
+    public override async Task OnGetAsync_should_call_populate_tablist()
     {
-        var expectedRating = new OfstedRating(
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            CategoriesOfConcern.NoConcerns,
-            SafeguardingScore.Yes,
-            new DateTime(2025, 1, 1)
-        );
+        _ = await Sut.OnGetAsync();
 
-        MockSchoolService
-            .GetSchoolOfstedRatingsAsync(SchoolUrn)
-            .Returns(_dummySchoolOfstedServiceModel with { PreviousOfstedRating = expectedRating });
-
-        await Sut.OnGetAsync();
-
-        Sut.InspectionBeforeOrAfterJoiningTrust.Should().Be(BeforeOrAfterJoining.NotApplicable);
+        _ = MockSchoolNavMenu.Received(1).GetTabLinksForOlderOfstedPages(Arg.Any<OlderBaseRatingsModel>());
     }
 
-    [Fact]
-    public async Task
-        OnGetAsync_should_set_InspectionBeforeOrAfterJoiningTrust_to_after_when_school_is_academy_and_previous_inspection_date_is_after_date_joined_trust()
-    {
-        Sut.Urn = AcademyUrn;
-
-        var expectedRating = new OfstedRating(
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            CategoriesOfConcern.NoConcerns,
-            SafeguardingScore.Yes,
-            new DateTime(2025, 1, 1)
-        );
-
-        MockSchoolService
-            .GetSchoolOfstedRatingsAsync(AcademyUrn)
-            .Returns(_dummySchoolOfstedServiceModel with
-            {
-                DateAcademyJoinedTrust = new DateTime(2024, 1, 1),
-                PreviousOfstedRating = expectedRating
-            });
-
-        await Sut.OnGetAsync();
-
-        Sut.InspectionBeforeOrAfterJoiningTrust.Should().Be(BeforeOrAfterJoining.After);
-    }
 
     [Fact]
-    public async Task
-        OnGetAsync_should_set_InspectionBeforeJoiningTrust_to_before_when_school_is_academy_and_previous_inspection_date_is_before_date_joined_trust()
+    public override async Task OnGetAsync_ShouldSetPowerBiLinkUrl()
     {
-        Sut.Urn = AcademyUrn;
+        Sut.PowerBiLink.Should().BeNullOrEmpty();
 
-        var expectedRating = new OfstedRating(
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            OfstedRatingScore.Good,
-            CategoriesOfConcern.NoConcerns,
-            SafeguardingScore.Yes,
-            new DateTime(2025, 1, 1)
-        );
+        _ = await Sut.OnGetAsync();
 
-        MockSchoolService
-            .GetSchoolOfstedRatingsAsync(AcademyUrn)
-            .Returns(_dummySchoolOfstedServiceModel with
-            {
-                DateAcademyJoinedTrust = new DateTime(2026, 1, 1),
-                PreviousOfstedRating = expectedRating
-            });
-
-        await Sut.OnGetAsync();
-
-        Sut.InspectionBeforeOrAfterJoiningTrust.Should().Be(BeforeOrAfterJoining.Before);
+        Sut.PowerBiLink.Should().Be("https://powerbi.com/ofstedpublished");
+        MockPowerBiLinkBuilderService.Received(1).BuildOfstedPublishedLink(Sut.Urn);
     }
 }

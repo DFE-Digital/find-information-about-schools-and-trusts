@@ -3,10 +3,8 @@ using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
-using DfE.FindInformationAcademiesTrusts.Services.DataSource;
-using DfE.FindInformationAcademiesTrusts.Services.Export;
+using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Ofsted;
 
@@ -15,13 +13,12 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
     protected readonly ISchoolOverviewDetailsService MockSchoolOverviewDetailsService =
         Substitute.For<ISchoolOverviewDetailsService>();
 
-    protected readonly IOfstedSchoolDataExportService MockOfstedSchoolDataExportService =
-        Substitute.For<IOfstedSchoolDataExportService>();
-
-    protected readonly IDateTimeProvider MockDateTimeProvider = Substitute.For<IDateTimeProvider>();
-
     protected readonly IOtherServicesLinkBuilder MockOtherServicesLinkBuilder =
         Substitute.For<IOtherServicesLinkBuilder>();
+
+    protected readonly IOfstedService MockOfstedService = Substitute.For<IOfstedService>();
+
+    protected readonly IPowerBiLinkBuilderService MockPowerBiLinkBuilderService = Substitute.For<IPowerBiLinkBuilderService>();
 
     protected readonly SchoolOverviewServiceModel DummySchoolDetails =
         new("Cool school", "some street, in a town", "Yorkshire", "Leeds", "Secondary", new AgeRange(11, 18),
@@ -35,9 +32,12 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
         MockOtherServicesLinkBuilder.OfstedReportLinkForSchool(Arg.Any<int>())
             .Returns(call => $"https://reports.ofsted.gov.uk/test/{call.ArgAt<int>(0)}");
 
-        MockOfstedSchoolDataExportService.BuildAsync(Arg.Any<int>()).Returns("Some Excel data"u8.ToArray());
+        MockPowerBiLinkBuilderService.BuildReportCardsLink(Arg.Any<int>())
+            .Returns("https://powerbi.com/reportcards");
 
-        MockDateTimeProvider.Now.Returns(new DateTime(2025, 7, 1));
+        MockPowerBiLinkBuilderService.BuildOfstedPublishedLink(Arg.Any<int>())
+            .Returns("https://powerbi.com/ofstedpublished");
+
     }
 
     [Fact]
@@ -98,68 +98,36 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
         Sut.OfstedReportUrl.Should().Be($"https://reports.ofsted.gov.uk/test/{AcademyUrn}");
     }
 
-    [Fact]
-    public async Task OnGetExportAsync_returns_NotFoundResult_for_unknown_urn()
-    {
-        var result = await Sut.OnGetExportAsync(999111);
-
-        result.Should().BeOfType<NotFoundResult>();
-    }
 
     [Fact]
-    public async Task OnGetExportAsync_returns_expected_file()
-    {
-        var result = await Sut.OnGetExportAsync(SchoolUrn);
-
-        result.Should().BeOfType<FileContentResult>();
-        result.As<FileContentResult>().FileDownloadName.Should().Be("Ofsted-Cool school-2025-07-01.xlsx");
-    }
-
-    [Fact]
-    public async Task OnGetExportAsync_sanitises_school_name_for_file()
-    {
-        MockSchoolService.GetSchoolSummaryAsync(SchoolUrn)
-            .Returns(DummySchoolSummary with { Name = "  School name with invalid characters\0/ " });
-
-        var result = await Sut.OnGetExportAsync(SchoolUrn);
-
-        result.Should().BeOfType<FileContentResult>();
-        result.As<FileContentResult>().FileDownloadName.Should()
-            .Be("Ofsted-School name with invalid characters-2025-07-01.xlsx");
-    }
+    public abstract Task OnGetAsync_should_call_populate_tablist();
 
     private async Task VerifyCorrectDataSources(int urn)
     {
         Sut.Urn = urn;
 
         _ = await Sut.OnGetAsync();
+        await MockDataSourceService.Received(1).GetAsync(Source.Gias);
         await MockDataSourceService.Received(1).GetAsync(Source.Mis);
-        await MockDataSourceService.Received(1).GetAsync(Source.MisFurtherEducation);
 
-        List<DataSourceServiceModel> expectedDataSources =
-        [
-            Mocks.MockDataSourceService.Mis,
-            Mocks.MockDataSourceService.MisFurtherEducation
-        ];
 
         Sut.DataSourcesPerPage.Should().BeEquivalentTo([
-            new DataSourcePageListEntry("Single headline grades", [
-                new DataSourceListEntry(expectedDataSources, "Single headline grades were"),
-                new DataSourceListEntry(expectedDataSources, "All inspection dates were")
+            new DataSourcePageListEntry("Overview", [
+                new DataSourceListEntry(Mocks.MockDataSourceService.Gias, "Date joined trust"),
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "All inspection types"),
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "All inspection dates")
             ]),
-            new DataSourcePageListEntry("Current ratings", [
-                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Current Ofsted rating"),
-                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Date of current inspection"),
+            new DataSourcePageListEntry("Report cards", [
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Current report card ratings"),
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Previous report card ratings")
             ]),
-            new DataSourcePageListEntry("Previous ratings", [
-                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Previous Ofsted rating"),
-                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Date of previous inspection")
-            ]),
-            new DataSourcePageListEntry("Safeguarding and concerns", [
-                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Effective safeguarding"),
-                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Category of concern"),
-                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Date of current inspection")
+            new DataSourcePageListEntry("Older inspections (before November 2025)", [
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Inspection ratings after September 24"),
+                new DataSourceListEntry(Mocks.MockDataSourceService.Mis, "Inspection ratings before September 24")
             ])
         ]);
     }
+
+    [Fact]
+    public abstract Task OnGetAsync_ShouldSetPowerBiLinkUrl();
 }

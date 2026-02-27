@@ -1,0 +1,33 @@
+@using DfE.FindInformationAcademiesTrusts.Extensions
+@model BaseReportCardsRatingsModel
+
+
+@if (Model.ReportCard is not null)
+{
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds" data-testid="ofsted-report-cards-overview">
+            <h1 class="govuk-heading-m" data-testid="subpage-header">
+                @Model.PageMetadata.TabName
+            </h1>
+
+            @await Html.PartialAsync("Schools/Ofsted/_InspectionDate", Model.ReportCard.InspectionDate.ToDateTime(TimeOnly.MinValue))
+            @await Html.PartialAsync("Schools/Ofsted/_InspectionBeforeOrAfter", Model.WhenDidCurrentInspectionHappen)
+
+            <dl class="govuk-summary-list" data-testid="ratings-table">
+
+                @foreach (var reportCardItem in Model.ReportCard.ToDictionary())
+                {
+                    <div class="govuk-summary-list__row">
+                        <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                            @reportCardItem.Key
+                        </dt>
+                        <dd class="govuk-summary-list__value">
+                            @reportCardItem.Value
+                        </dd>
+                    </div>
+                }
+
+            </dl>
+        </div>
+    </div>
+}

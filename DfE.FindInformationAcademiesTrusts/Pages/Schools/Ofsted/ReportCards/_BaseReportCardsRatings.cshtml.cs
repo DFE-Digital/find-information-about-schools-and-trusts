@@ -1,0 +1,50 @@
+using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Services.DataSource;
+using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
+using DfE.FindInformationAcademiesTrusts.Services.School;
+using DfE.FindInformationAcademiesTrusts.Services.Trust;
+using Microsoft.AspNetCore.Mvc;
+
+namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.ReportCards;
+
+public abstract class BaseReportCardsRatingsModel(
+    ISchoolService schoolService,
+    ISchoolOverviewDetailsService schoolOverviewDetailsService,
+    ITrustService trustService,
+    IDataSourceService dataSourceService,
+    IOtherServicesLinkBuilder otherServicesLinkBuilder,
+    ISchoolNavMenu schoolNavMenu, 
+    IReportCardsService reportCardsService,
+    IPowerBiLinkBuilderService powerBiLinkBuilderService) : OfstedAreaModel(schoolService, schoolOverviewDetailsService, trustService,
+    dataSourceService, otherServicesLinkBuilder, schoolNavMenu)
+{
+    private readonly ISchoolNavMenu _schoolNavMenu = schoolNavMenu;
+
+    public ReportCardDetails? ReportCard { get; set; }
+
+    public BeforeOrAfterJoining WhenDidCurrentInspectionHappen { get; private set; }
+
+    public override async Task<IActionResult> OnGetAsync()
+    {
+        var pageResult = await base.OnGetAsync();
+
+        if (pageResult is NotFoundResult) return pageResult;
+
+        var reportCards = await reportCardsService.GetReportCardsAsync(Urn);
+        ReportCard = GetReportCard(reportCards);
+
+        var dateJoined = await SchoolService.GetDateJoinedTrustAsync(Urn);
+
+        WhenDidCurrentInspectionHappen = GetWhenInspectionHappened(ReportCard, dateJoined);
+
+        TabList = _schoolNavMenu.GetTabLinksForReportCardsOfstedPages(this);
+
+        PowerBiLink = powerBiLinkBuilderService.BuildReportCardsLink(Urn);
+
+        return pageResult;
+    }
+
+    protected abstract ReportCardDetails? GetReportCard(ReportCardServiceModel reportCardServiceModel);
+
+    protected abstract BeforeOrAfterJoining GetWhenInspectionHappened(ReportCardDetails? reportCardDetails, DateOnly? dateJoinedTrust);
+}

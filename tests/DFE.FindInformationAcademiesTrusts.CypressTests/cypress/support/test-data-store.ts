@@ -29,9 +29,9 @@ export class TestDataStore {
             {
                 pageName: "Ofsted",
                 subpages: [
-                    { subpageName: "Single headline grades", url: `/trusts/ofsted/single-headline-grades?uid=${uid}` },
-                    { subpageName: "Current ratings", url: `/trusts/ofsted/current-ratings?uid=${uid}` },
-                    { subpageName: "Previous ratings", url: `/trusts/ofsted/previous-ratings?uid=${uid}` },
+                    { subpageName: "Overview", url: `/trusts/ofsted/overview?uid=${uid}` },
+                    { subpageName: "Report cards", url: `/trusts/ofsted/reportcards/currentreportcards?uid=${uid}` },
+                    { subpageName: "Older inspections (before November 2025)", url: `/trusts/ofsted/olderinspections?uid=${uid}` },
                     { subpageName: "Safeguarding and concerns", url: `/trusts/ofsted/safeguarding-and-concerns?uid=${uid}` }
                 ]
             },
@@ -68,10 +68,9 @@ export class TestDataStore {
             {
                 pageName: "Ofsted",
                 subpages: [
-                    { subpageName: "Single headline grades", url: `/schools/ofsted/singleheadlinegrades?urn=${urn}` },
-                    { subpageName: "Current ratings", url: `/schools/ofsted/currentratings?urn=${urn}` },
-                    { subpageName: "Previous ratings", url: `/schools/ofsted/previousratings?urn=${urn}` },
-                    { subpageName: "Safeguarding and concerns", url: `/schools/ofsted/safeguardingandconcerns?urn=${urn}` }
+                    { subpageName: "Overview", url: `/schools/ofsted/overview?urn=${urn}` },
+                    { subpageName: "Report cards", url: `/schools/ofsted/reportcards/currentreportcards?urn=${urn}` },
+                    { subpageName: "Older inspections (before November 2025)", url: `/schools/ofsted/older/currentratings?urn=${urn}` }
                 ]
             },
             {
@@ -111,10 +110,9 @@ export class TestDataStore {
             {
                 pageName: "Ofsted",
                 subpages: [
-                    { subpageName: "Single headline grades", url: `/schools/ofsted/singleheadlinegrades?urn=${urn}` },
-                    { subpageName: "Current ratings", url: `/schools/ofsted/currentratings?urn=${urn}` },
-                    { subpageName: "Previous ratings", url: `/schools/ofsted/previousratings?urn=${urn}` },
-                    { subpageName: "Safeguarding and concerns", url: `/schools/ofsted/safeguardingandconcerns?urn=${urn}` }
+                    { subpageName: "Overview", url: `/schools/ofsted/overview?urn=${urn}` },
+                    { subpageName: "Report cards", url: `/schools/ofsted/reportcards/currentreportcards?urn=${urn}` },
+                    { subpageName: "Older inspections (before November 2025)", url: `/schools/ofsted/older/currentratings?urn=${urn}` }
                 ]
             },
             {

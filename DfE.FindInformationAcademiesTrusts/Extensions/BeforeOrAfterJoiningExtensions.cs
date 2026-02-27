@@ -1,4 +1,5 @@
 ﻿using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DocumentFormat.OpenXml.Office.PowerPoint.Y2021.M06.Main;
 
 namespace DfE.FindInformationAcademiesTrusts.Extensions
 {
@@ -13,5 +14,44 @@ namespace DfE.FindInformationAcademiesTrusts.Extensions
                 _ => "Unknown"
             };
         }
+
+        public static BeforeOrAfterJoining GetBeforeOrAfterJoiningTrust(this DateOnly? dateJoined, DateOnly? inspectionDate)
+        {
+            DateTime? inspectionDateTimeValue = inspectionDate?.ToDateTime(TimeOnly.MinValue);
+            DateTime? dateJoinedDateTimeValue = dateJoined?.ToDateTime(TimeOnly.MinValue);
+
+            return GetBeforeOrAfterJoiningTrust(dateJoinedDateTimeValue, inspectionDateTimeValue);
+        }
+
+        public static BeforeOrAfterJoining GetBeforeOrAfterJoiningTrust(this DateTime? dateJoined, DateOnly? inspectionDate)
+        {
+            DateTime? inspectionDateTimeValue = inspectionDate?.ToDateTime(TimeOnly.MinValue);
+
+            return GetBeforeOrAfterJoiningTrust(dateJoined, inspectionDateTimeValue);
+        }
+
+        public static BeforeOrAfterJoining GetBeforeOrAfterJoiningTrust(this DateTime? dateJoined, DateTime? inspectionDate)
+        {
+            if (dateJoined is null)
+            {
+                return BeforeOrAfterJoining.NotApplicable;
+            }
+
+            if (inspectionDate is null)
+            {
+                return BeforeOrAfterJoining.NotYetInspected;
+            }
+
+            if (inspectionDate >= dateJoined)
+            {
+                return BeforeOrAfterJoining.After;
+            }
+
+            // Must be inspectionDate < dateJoined by process of elimination
+
+            return BeforeOrAfterJoining.Before;
+        }
+
     }
+
 }

@@ -1,0 +1,16 @@
+@page
+@model CurrentRatingsModel
+
+@{
+    Layout = "Ofsted/_OlderOfstedLayout";
+}
+
+@if (Model.OfstedRatings.Any())
+{
+    <partial name="_OlderBaseRatings" model="@Model"/>
+}
+else
+{
+    <p class="govuk-body"><strong>This school does not have an Ofsted inspection after September 2024 to show.</strong>
+    </p>
+}

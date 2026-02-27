@@ -1,7 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Dfe.AcademiesApi.Client;
+using Dfe.AcademiesApi.Client.Contracts;
 using Dfe.CaseAggregationService.Api.Client.Extensions;
-using Dfe.CaseAggregationService.Client.Contracts;
 using Dfe.CaseAggregationService.Client;
+using Dfe.CaseAggregationService.Client.Contracts;
+using Dfe.TramsDataApi.Client.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
@@ -14,6 +16,7 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories.DataSource;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PipelineAcademy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.ReportCards;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Search;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
@@ -25,10 +28,13 @@ using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Export;
 using DfE.FindInformationAcademiesTrusts.Services.FinancialDocument;
 using DfE.FindInformationAcademiesTrusts.Services.ManageProjectsAndCases;
+using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Search;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DfE.FindInformationAcademiesTrusts.Setup;
 
@@ -99,8 +105,6 @@ public static class Dependencies
         builder.Services.AddScoped<ITrustPupilService, TrustPupilService>();
 
         builder.Services.AddScoped<IPipelineAcademiesExportService, PipelineAcademiesExportService>();
-        builder.Services.AddScoped<IOfstedTrustDataExportService, OfstedTrustDataExportService>();
-        builder.Services.AddScoped<IOfstedSchoolDataExportService, OfstedSchoolDataExportService>();
         builder.Services.AddScoped<IAcademiesExportService, AcademiesExportService>();
         builder.Services.AddScoped<ISchoolPupilsExportService, SchoolPupilsExportService>();
 
@@ -119,6 +123,15 @@ public static class Dependencies
         builder.Services.AddScoped<ITrustSchoolSearchRepository, TrustSchoolSearchRepository>();
 
         builder.Services.AddScoped<ISchoolNavMenu, SchoolNavMenu>();
+
+        builder.Services.AddAcademiesApiClient<IEstablishmentsV5Client, EstablishmentsV5Client>(builder.Configuration);
+        builder.Services.AddScoped<IReportCardsRepository, ReportCardsRepository>();
+        builder.Services.AddScoped<IReportCardsService, ReportCardsService>();
+        builder.Services.AddScoped<IOfstedService, OfstedService>();
+        builder.Services.AddScoped<IOfstedServiceModelBuilder, OfstedServiceModelBuilder>();
+        builder.Services.AddScoped<IPowerBiLinkBuilderService, PowerBiLinkBuilderService>();
+
+        builder.Services.AddServiceCaching(builder.Configuration);
 
         builder.Services.AddHttpContextAccessor();
     }

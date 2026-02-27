@@ -69,8 +69,8 @@ class ContactsPage {
     public editTrustRelationshipManager(name: string, email: string): this {
         const { trustRelationshipManager, editContacts } = this.elements;
         trustRelationshipManager.editLink().click();
-        editContacts.nameInput().clear().type(name);
-        editContacts.emailInput().clear().type(email);
+        editContacts.nameInput().should('not.be.disabled').clear().type(name);
+        editContacts.emailInput().should('not.be.disabled').clear().type(email);
         editContacts.saveButton().click();
         return this;
     }
@@ -78,8 +78,8 @@ class ContactsPage {
     public editTrustRelationshipManagerWithoutSaving(name: string, email: string): this {
         const { trustRelationshipManager, editContacts } = this.elements;
         trustRelationshipManager.editLink().click();
-        editContacts.nameInput().clear().type(name);
-        editContacts.emailInput().clear().type(email);
+        editContacts.nameInput().should('not.be.disabled').clear().type(name);
+        editContacts.emailInput().should('not.be.disabled').clear().type(email);
         return this;
     }
 
@@ -104,8 +104,8 @@ class ContactsPage {
     public editSfsoLead(name: string, email: string): this {
         const { schoolsFinancialSupportOversight, editContacts } = this.elements;
         schoolsFinancialSupportOversight.editLink().click();
-        editContacts.nameInput().clear().type(name);
-        editContacts.emailInput().clear().type(email);
+        editContacts.nameInput().should('not.be.disabled').clear().type(name);
+        editContacts.emailInput().should('not.be.disabled').clear().type(email);
         editContacts.saveButton().click();
         return this;
     }
@@ -113,8 +113,8 @@ class ContactsPage {
     public editSfsoLeadWithoutSaving(name: string, email: string): this {
         const { schoolsFinancialSupportOversight, editContacts } = this.elements;
         schoolsFinancialSupportOversight.editLink().click();
-        editContacts.nameInput().clear().type(name);
-        editContacts.emailInput().clear().type(email);
+        editContacts.nameInput().should('not.be.disabled').clear().type(name);
+        editContacts.emailInput().should('not.be.disabled').clear().type(email);
         return this;
     }
 

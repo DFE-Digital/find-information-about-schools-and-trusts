@@ -1,9 +1,7 @@
-﻿@using DfE.FindInformationAcademiesTrusts.Data
-@using DfE.FindInformationAcademiesTrusts.Data.Enums
-@using DfE.FindInformationAcademiesTrusts.Extensions
-@model BeforeOrAfterTagModel
+﻿@using DfE.FindInformationAcademiesTrusts.Data.Enums
+@model BeforeOrAfterJoining
 
-@switch (Model.BeforeOrAfterJoining)
+@switch (Model)
 {
   case BeforeOrAfterJoining.After:
   {
@@ -21,7 +19,7 @@
   }
   case BeforeOrAfterJoining.NotYetInspected:
   {
-    <span class="govuk-body">@OfstedRatingScore.NotInspected.ToDisplayString(Model.IsCurrent)</span>
+    <span class="govuk-body">Not yet inspected</span>
     break;
   }
   default:

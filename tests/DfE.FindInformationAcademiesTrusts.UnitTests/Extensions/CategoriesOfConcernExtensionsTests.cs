@@ -6,7 +6,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Extensions;
 public class CategoriesOfConcernExtensionsTests
 {
     [Theory]
-    [InlineData(CategoriesOfConcern.NotInspected, "Not yet inspected")]
+    [InlineData(CategoriesOfConcern.NotInspected, "Not inspected")]
     [InlineData(CategoriesOfConcern.DoesNotApply, "Does not apply")]
     [InlineData(CategoriesOfConcern.NoConcerns, "None")]
     [InlineData(CategoriesOfConcern.SpecialMeasures, "Special measures")]
@@ -23,7 +23,7 @@ public class CategoriesOfConcernExtensionsTests
     }
 
     [Theory]
-    [InlineData(CategoriesOfConcern.NotInspected, "not yet inspected")]
+    [InlineData(CategoriesOfConcern.NotInspected, "not inspected")]
     [InlineData(CategoriesOfConcern.DoesNotApply, "does not apply")]
     [InlineData(CategoriesOfConcern.NoConcerns, "none")]
     [InlineData(CategoriesOfConcern.SpecialMeasures, "special measures")]

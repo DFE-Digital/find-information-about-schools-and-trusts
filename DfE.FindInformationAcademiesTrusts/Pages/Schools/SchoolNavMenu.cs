@@ -4,10 +4,13 @@ using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.Older;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.ReportCards;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Pupils;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.NavMenu;
 using Microsoft.FeatureManagement;
+using CurrentModel = DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance.CurrentModel;
 using GovernanceAreaModel = DfE.FindInformationAcademiesTrusts.Pages.Schools.Governance.GovernanceAreaModel;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Schools;
@@ -16,6 +19,10 @@ public interface ISchoolNavMenu
 {
     Task<NavLink[]> GetServiceNavLinksAsync(ISchoolAreaModel activePage);
     Task<NavLink[]> GetSubNavLinksAsync(ISchoolAreaModel activePage);
+
+    NavLink[] GetTabLinksForOlderOfstedPages(ISchoolAreaModel activePage);
+
+    NavLink[] GetTabLinksForReportCardsOfstedPages(ISchoolAreaModel activePage);
 }
 
 public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMenu
@@ -34,7 +41,7 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
             GetServiceNavLinkTo<ContactsAreaModel>(ContactsAreaModel.PageName, contactLink, activePage),
             GetServiceNavLinkTo<GovernanceAreaModel>(GovernanceAreaModel.PageName, "/Schools/Governance/Current",
                 activePage),
-            GetServiceNavLinkTo<OfstedAreaModel>(OfstedAreaModel.PageName, "/Schools/Ofsted/SingleHeadlineGrades",
+            GetServiceNavLinkTo<OfstedAreaModel>(OfstedAreaModel.PageName, "/Schools/Ofsted/OfstedOverview",
                 activePage)
         ];
     }
@@ -61,6 +68,25 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
             _ => throw new ArgumentOutOfRangeException(nameof(activePage), activePage, "Page type is not supported.")
         };
     }
+
+    public NavLink[] GetTabLinksForOlderOfstedPages(ISchoolAreaModel activePage)
+    {
+        return
+        [
+            GetSubNavLinkTo<CurrentRatingsModel>("older", "After September 2024", "./CurrentRatings", activePage, "older-after-september-2024-tab"),
+            GetSubNavLinkTo<PreviousRatingsModel>("older", "Before September 2024", "./PreviousRatings", activePage, "older-before-september-2024-tab")
+        ];
+    }
+
+    public NavLink[] GetTabLinksForReportCardsOfstedPages(ISchoolAreaModel activePage)
+    {
+        return
+        [
+            GetSubNavLinkTo<CurrentReportCardsModel>("Report cards", "Current report card", "./CurrentReportCards", activePage, "report-cards-current-report-card-tab"),
+            GetSubNavLinkTo<PreviousReportCardsModel>("Report cards", "Previous report card", "./PreviousReportCards", activePage, "report-cards-previous-report-card-tab")
+        ];
+    }
+
 
     private static NavLink[] BuildLinksForOverviewPage(ISchoolAreaModel activePage)
     {
@@ -166,15 +192,12 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
     {
         return
         [
-            GetSubNavLinkTo<SingleHeadlineGradesModel>(OfstedAreaModel.PageName, SingleHeadlineGradesModel.SubPageName,
-                "/Schools/Ofsted/SingleHeadlineGrades", activePage, "ofsted-single-headline-grades-subnav"),
-            GetSubNavLinkTo<CurrentRatingsModel>(OfstedAreaModel.PageName, CurrentRatingsModel.SubPageName,
-                "/Schools/Ofsted/CurrentRatings", activePage, "ofsted-current-ratings-subnav"),
-            GetSubNavLinkTo<PreviousRatingsModel>(OfstedAreaModel.PageName, PreviousRatingsModel.SubPageName,
-                "/Schools/Ofsted/PreviousRatings", activePage, "ofsted-previous-ratings-subnav"),
-            GetSubNavLinkTo<SafeguardingAndConcernsModel>(OfstedAreaModel.PageName,
-                SafeguardingAndConcernsModel.SubPageName,
-                "/Schools/Ofsted/SafeguardingAndConcerns", activePage, "ofsted-safeguarding-and-concerns-subnav")
+            GetSubNavLinkTo<OfstedOverviewModel>(OfstedAreaModel.PageName, "Overview",
+                "/Schools/Ofsted/OfstedOverview", activePage, "ofsted-overview-subnav"),
+            GetSubNavLinkTo<BaseReportCardsRatingsModel>(OfstedAreaModel.PageName, "Report cards",
+                "/Schools/Ofsted/ReportCards/CurrentReportCards", activePage, "ofsted-report-cards-subnav"),
+            GetSubNavLinkTo<OlderBaseRatingsModel>(OfstedAreaModel.PageName, "Older inspections (before November 2025)",
+                "/Schools/Ofsted/Older/CurrentRatings", activePage, "ofsted-older-ratings-subnav"),
         ];
     }
 

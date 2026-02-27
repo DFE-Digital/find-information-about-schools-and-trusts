@@ -7,4 +7,8 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Dfe.AcademiesApi.Client" Version="1.0.15" />
+    </ItemGroup>
+
 </Project>

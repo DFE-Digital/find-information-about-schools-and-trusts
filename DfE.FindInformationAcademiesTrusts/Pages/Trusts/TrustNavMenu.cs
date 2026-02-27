@@ -1,4 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Extensions;
+using DfE.FindInformationAcademiesTrusts.Pages.Schools;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.NavMenu;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Academies;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Academies.InTrust;
@@ -7,6 +8,7 @@ using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.FinancialDocuments;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Governance;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted;
+using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted.ReportCards;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Overview;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts;
@@ -23,7 +25,7 @@ public static class TrustNavMenu
             GetServiceNavLinkTo<AcademiesAreaModel>(
                 $"{AcademiesAreaModel.PageName} ({activePage.TrustSummary.NumberOfAcademies})",
                 "/Trusts/Academies/InTrust/Details", activePage),
-            GetServiceNavLinkTo<OfstedAreaModel>(OfstedAreaModel.PageName, "/Trusts/Ofsted/SingleHeadlineGrades",
+            GetServiceNavLinkTo<OfstedAreaModel>(OfstedAreaModel.PageName, "/Trusts/Ofsted/Overview",
                 activePage),
             GetServiceNavLinkTo<FinancialDocumentsAreaModel>(FinancialDocumentsAreaModel.PageName,
                 "/Trusts/FinancialDocuments/FinancialStatements", activePage),
@@ -40,6 +42,15 @@ public static class TrustNavMenu
             aspPage,
             $"{linkDisplayText}-nav".Kebabify(),
             new Dictionary<string, string> { { "uid", activePage.Uid } });
+    }
+
+    public static NavLink[] GetTabLinksForReportCardsOfstedPage(ITrustsAreaModel activePage)
+    {
+        return
+        [
+            GetSubNavLinkTo<CurrentReportCardsModel>("Report cards", "Current report card", "./currentreportcards", activePage, "report-cards-current-report-card-tab"),
+            GetSubNavLinkTo<PreviousReportCardsModel>("Report cards", "Previous report card", "./previousreportcards", activePage, "report-cards-previous-report-card-tab")
+        ];
     }
 
     public static NavLink[] GetSubNavLinks(ITrustsAreaModel activePage)
@@ -73,14 +84,14 @@ public static class TrustNavMenu
             ],
             OfstedAreaModel =>
             [
-                GetSubNavLinkTo<SingleHeadlineGradesModel>(OfstedAreaModel.PageName,
-                    SingleHeadlineGradesModel.SubPageName, "/Trusts/Ofsted/SingleHeadlineGrades", activePage),
-                GetSubNavLinkTo<CurrentRatingsModel>(OfstedAreaModel.PageName, CurrentRatingsModel.SubPageName,
-                    "/Trusts/Ofsted/CurrentRatings", activePage),
-                GetSubNavLinkTo<PreviousRatingsModel>(OfstedAreaModel.PageName, PreviousRatingsModel.SubPageName,
-                    "/Trusts/Ofsted/PreviousRatings", activePage),
-                GetSubNavLinkTo<SafeguardingAndConcernsModel>(OfstedAreaModel.PageName,
-                    SafeguardingAndConcernsModel.SubPageName, "/Trusts/Ofsted/SafeguardingAndConcerns", activePage)
+                GetSubNavLinkTo<OverviewModel>(OfstedAreaModel.PageName,
+                    OverviewModel.SubPageName, "/Trusts/Ofsted/Overview", activePage),
+                GetSubNavLinkTo<BaseReportCardsRatingsModel>(OfstedAreaModel.PageName, CurrentReportCardsModel.SubPageName,
+                    "/Trusts/Ofsted/ReportCards/CurrentReportCards", activePage),
+                GetSubNavLinkTo<OlderInspectionsModel>(OfstedAreaModel.PageName, OlderInspectionsModel.SubPageName,
+                    "/Trusts/Ofsted/OlderInspections", activePage),
+                GetSubNavLinkTo<SafeguardingAndConcernsModel>(OfstedAreaModel.PageName, SafeguardingAndConcernsModel.SubPageName,
+                    "/Trusts/Ofsted/SafeguardingAndConcerns", activePage)
             ],
             FinancialDocumentsAreaModel =>
             [
@@ -115,14 +126,14 @@ public static class TrustNavMenu
     }
 
     private static NavLink GetSubNavLinkTo<T>(string serviceName, string linkDisplayText, string aspPage,
-        ITrustsAreaModel activePage)
+        ITrustsAreaModel activePage, string? testIdOverride = null)
     {
         return new NavLink(
             activePage is T,
             serviceName,
             linkDisplayText,
             aspPage,
-            $"{serviceName}-{linkDisplayText}-subnav".Kebabify(),
+            testIdOverride ?? $"{serviceName}-{linkDisplayText}-subnav".Kebabify(),
             new Dictionary<string, string> { { "uid", activePage.Uid } }
         );
     }
