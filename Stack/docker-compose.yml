@@ -15,7 +15,7 @@ services:
     restart: always 
 
    fastdb.configurator:
-    image: mcr.microsoft.com/mssql/server:2022-latest@sha256:db9a8fe3098b7e8bbde41106bdc7caee942e97124e5fdb71b872ca208de3092d
+    image: mcr.microsoft.com/mssql/server:2022-latest@sha256:0ec7739e1c5ec2f57861facbe1f2b74f1d3e147c7c97edf91eeea920c5944d9c
     volumes:
       - ./init:/initdb.d
     networks:
