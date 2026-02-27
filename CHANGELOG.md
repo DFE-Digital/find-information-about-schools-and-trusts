@@ -4,14 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-01-19.6967...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-02-27.7168...HEAD)
 
 --- 
 
-### Changed
-- 258984 - Show Not available when any school in the Trust is missing capacity data
+## [Release-61][release-61] - 2026-02-27
 
- ## [Release-60][release-60] - 2026-02-06
+### Added
+
+- 199431 introduce new Ofsted report cards
+- Added integration with academies api client
+- Added report cards for school level
+- Added report cards for trust level
+- added new link to see reports on power Bi
+
+### Changed
+- changes to use reports cards or older inspections for overview
+-  Moved the 'classic' ofsted reports into the page "Older inspections (before November 2025)" under the tabs before/after September 2024
+  
+--- 
+
+## [Release-60][release-60] - 2026-02-06
 
 ### Changed
 
@@ -779,5 +792,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-01-14.6916
 [release-59]:
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-01-19.6967
- [release-60]:
+[release-60]:
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-02-06.7041
+[release-61]:
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-02-27.7168
+
