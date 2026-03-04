@@ -9,34 +9,25 @@ function readReportData() {
     let reportStats = { tests: 0, passes: 0, failures: 0 };
     let failedTests = [];
 
-    const reportDir = path.join(process.cwd(), "cypress", "reports", "mocha");
+    const reportPath = path.join(process.cwd(), "mochareports", "report.json");
 
-    const files = fs.readdirSync(reportDir);
-    const jsonFile = files.find(f => f.endsWith(".json"));
-
-    if (!jsonFile) {
-    throw new Error(`No mochawesome JSON report found in ${reportDir}`);
+    if (!fs.existsSync(reportPath)) {
+        console.warn("Merged report file not found at:", reportPath);
+        return { reportStats, failedTests };
     }
 
-    const reportPath = path.join(reportDir, jsonFile);
+    const reportData = JSON.parse(fs.readFileSync(reportPath, "utf8"));
 
-    if (fs.existsSync(reportPath)) {
-        const reportData = JSON.parse(fs.readFileSync(reportPath, "utf8"));
+    if (reportData?.stats) {
+        reportStats = {
+            tests: reportData.stats.tests || 0,
+            passes: reportData.stats.passes || 0,
+            failures: reportData.stats.failures || 0,
+        };
 
-        if (reportData?.stats) {
-            reportStats = {
-                tests: reportData.stats.tests || 0,
-                passes: reportData.stats.passes || 0,
-                failures: reportData.stats.failures || 0,
-            };
-
-            // Only extract failed tests if there are actually failures
-            if (reportStats.failures > 0 && reportData.results) {
-                failedTests = extractFailedTests(reportData.results);
-            }
+        if (reportStats.failures > 0 && reportData.results) {
+            failedTests = extractFailedTests(reportData.results);
         }
-    } else {
-        console.warn("Report file not found at:", reportPath);
     }
 
     return { reportStats, failedTests };
