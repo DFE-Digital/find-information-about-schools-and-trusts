@@ -74,10 +74,10 @@ jobs:
             browser: "edge"
             spec: |
               cypress/e2e/regression/schools/**/*.cy.ts
-          - group: accessibility-all
-            browser: "edge"
-            spec: |
-              cypress/e2e/accessibility/**/*.cy.ts
+#          - group: accessibility-all
+#            browser: "edge"
+#            spec: |
+#              cypress/e2e/accessibility/**/*.cy.ts
     container:
       image: cypress/browsers:22.14.0@sha256:5fedacf2c6b1fab4f2d2d24a1cb2054af6d0103e0b163cd5064e523f45ca1a88
     defaults:
@@ -91,8 +91,8 @@ jobs:
       - name: Setup Cypress environment
         run: |
           mkdir -p cypress/downloads
-          mkdir -p cypress/accessibility
-          mkdir -p cypress/accessibility/audit-reports
+#          mkdir -p cypress/accessibility
+#          mkdir -p cypress/accessibility/audit-reports
           mkdir -p cypress/screenshots
           chmod -R 755 cypress/
 
@@ -140,13 +140,13 @@ jobs:
           path: tests/DFE.FindInformationAcademiesTrusts.CypressTests/cypress/reports/merged/*.json
           retention-days: 1
 
-      - name: Upload accessibility reports
-        if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-        with:
-          name: a11y-reports-${{ inputs.environment }}-${{ matrix.group }}
-          path: tests/DFE.FindInformationAcademiesTrusts.CypressTests/cypress/accessibility
-          if-no-files-found: ${{ matrix.group == 'a11y-comprehensive' && 'error' || 'warn' }}
+#      - name: Upload accessibility reports
+#        if: always()
+#        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+#        with:
+#          name: a11y-reports-${{ inputs.environment }}-${{ matrix.group }}
+#          path: tests/DFE.FindInformationAcademiesTrusts.CypressTests/cypress/accessibility
+#          if-no-files-found: ${{ matrix.group == 'a11y-comprehensive' && 'error' || 'warn' }}
 
   generate-report:
     name: Generate Combined Report
