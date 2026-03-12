@@ -27,9 +27,13 @@ on:
 concurrency:
   group: ${{ github.workflow }}
 
+env:
+  NODE_VERSION: '20'
+  WORKING_DIRECTORY: tests/DFE.FindInformationAcademiesTrusts.CypressTests
+
 jobs:
   cypress-tests:
-    name: Run Cypress Tests
+    name: Run Cypress Tests (${{ matrix.group }})
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     strategy:
@@ -104,38 +108,93 @@ jobs:
           wait-on: ${{ secrets.BASE_URL }}
 
       - name: Upload screenshots
-        if: ${{ failure() }}
+        if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: screenshots-${{ inputs.environment }}-${{ matrix.group }}
           path: tests/DFE.FindInformationAcademiesTrusts.CypressTests/cypress/screenshots
+          retention-days: 5
+          if-no-files-found: ignore
 
-      - name: Generate report
-        if: ${{ failure() }}
+      - name: Prepare test results
+        id: prepare-results
+        if: always()
         run: |
-          mkdir mochareports
-          npm run generate:html:report
+          mkdir -p cypress/reports/merged
+          if [ -d "cypress/reports/mocha" ] && [ "$(find cypress/reports/mocha -name '*.json' 2>/dev/null | wc -l)" -gt 0 ]; then
+            for file in cypress/reports/mocha/*.json; do
+              filename=$(basename "$file")
+              cp "$file" "cypress/reports/merged/${{ matrix.group }}-$filename"
+            done
+            echo "results_found=true" >> $GITHUB_OUTPUT
+          else
+            echo '{"stats":{"suites":0,"tests":0,"passes":0,"pending":0,"failures":0,"start":"","end":"","duration":0}}' > "cypress/reports/merged/${{ matrix.group }}-placeholder.json"
+            echo "results_found=false" >> $GITHUB_OUTPUT
+          fi
 
-      - name: Upload report
-        if: ${{ failure() }}
+      - name: Upload test results
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: reports-${{ inputs.environment }}-${{ matrix.group }}
-          path: tests/DFE.FindInformationAcademiesTrusts.CypressTests/mochareports
+          name: test-results-${{ matrix.group }}
+          path: tests/DFE.FindInformationAcademiesTrusts.CypressTests/cypress/reports/merged/*.json
+          retention-days: 1
 
       - name: Upload accessibility reports
-        if: ${{ always() }}
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: a11y-reports-${{ inputs.environment }}-${{ matrix.group }}
           path: tests/DFE.FindInformationAcademiesTrusts.CypressTests/cypress/accessibility
           if-no-files-found: ${{ matrix.group == 'a11y-comprehensive' && 'error' || 'warn' }}
 
+  generate-report:
+    name: Generate Combined Report
+    needs: cypress-tests
+    if: always()
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: ${{ env.WORKING_DIRECTORY }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: npm ci --ignore-scripts
+
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: test-results-*
+          path: ${{ env.WORKING_DIRECTORY }}/cypress/reports/mocha
+          merge-multiple: true
+
+      - name: Generate combined HTML report
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          mkdir -p mochareports
+          npm run generate:html:report
+
+      - name: Upload combined report
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: cypress-report-${{ inputs.environment }}
+          path: ${{ env.WORKING_DIRECTORY }}/mochareports
+          retention-days: 30
+
       - name: Report results to Teams
         if: always()
-        run: |
-          node scripts/send-teams-notification.js
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: node scripts/send-teams-notification.js
         env:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
           ENVIRONMENT: ${{ inputs.environment }}
-          INFORMATION_LINK: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          INFORMATION_LINK: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
