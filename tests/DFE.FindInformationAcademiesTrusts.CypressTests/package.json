@@ -26,21 +26,21 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@eslint/js": "^9.15.0",
-    "cypress": "^15.6.0",
+    "@eslint/js": "^10.0.1",
+    "cypress": "^15.12.0",
     "cypress-axe": "^1.7.0",
-    "cypress-multi-reporters": "^2.0.4",
-    "eslint": "^9.15.0",
-    "eslint-plugin-cypress": "^4.1.0",
-    "mochawesome": "^7.0.1",
-    "mochawesome-merge": "^4.2.1",
-    "mochawesome-report-generator": "^6.0.1",
-    "typescript": "^5.6.3",
-    "typescript-eslint": "^8.15.0",
-    "wick-a11y": "^2.0.1"
+    "cypress-multi-reporters": "^2.0.5",
+    "eslint": "^10.0.3",
+    "eslint-plugin-cypress": "^6.2.0",
+    "mochawesome": "^7.1.4",
+    "mochawesome-merge": "^5.1.1",
+    "mochawesome-report-generator": "^6.3.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.1",
+    "wick-a11y": "^3.0.1"
   },
   "dependencies": {
-    "axios": "^1.13.2",
-    "puppeteer": "^24.28.0"
+    "axios": "^1.13.6",
+    "puppeteer": "^24.39.1"
   }
 }
