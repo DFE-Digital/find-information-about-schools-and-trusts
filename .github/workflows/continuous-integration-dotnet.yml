@@ -21,7 +21,7 @@ jobs:
   build:
     name: Build & Test
     runs-on: ubuntu-24.04
-    container: mcr.microsoft.com/dotnet/sdk:8.0@sha256:8f710c2f7f3e60392fba1d408dcd9c30c26295bd4ded326cb7cf6cc6fd66cfde
+    container: mcr.microsoft.com/dotnet/sdk:8.0@sha256:a9330090b730c2abde8f3f43b3d1e24e4b8cba028de7bab1a7fdcd50cb7a3b7e
     steps:
     - name: Check out code
       uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
