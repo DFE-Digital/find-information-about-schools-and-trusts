@@ -35,12 +35,12 @@ public abstract class PipelineAcademiesAreaModel(
 
         TabList =
         [
-            GetTabFor<PreAdvisoryBoardModel>("Pipeline",
-                $"{PreAdvisoryBoardModel.TabName} ({PipelineSummary.PreAdvisoryCount})",
-                "./PreAdvisoryBoard"),
-            GetTabFor<PostAdvisoryBoardModel>("Pipeline",
-                $"{PostAdvisoryBoardModel.TabName} ({PipelineSummary.PostAdvisoryCount})",
-                "./PostAdvisoryBoard"),
+            GetTabFor<PreDecisionModel>("Pipeline",
+                $"{PreDecisionModel.TabName} ({PipelineSummary.PreAdvisoryCount})",
+                "./PreDecision"),
+            GetTabFor<PostDecisionModel>("Pipeline",
+                $"{PostDecisionModel.TabName} ({PipelineSummary.PostAdvisoryCount})",
+                "./PostDecision"),
             GetTabFor<FreeSchoolsModel>("Pipeline", $"{FreeSchoolsModel.TabName} ({PipelineSummary.FreeSchoolsCount})",
                 "./FreeSchools")
         ];
@@ -49,8 +49,8 @@ public abstract class PipelineAcademiesAreaModel(
         var completeSource = await DataSourceService.GetAsync(Source.Complete);
         var manageFreeSchoolSource = await DataSourceService.GetAsync(Source.ManageFreeSchoolProjects);
         DataSourcesPerPage.AddRange([
-            new DataSourcePageListEntry(PreAdvisoryBoardModel.TabName, [new DataSourceListEntry(prepareSource)]),
-            new DataSourcePageListEntry(PostAdvisoryBoardModel.TabName, [new DataSourceListEntry(completeSource)]),
+            new DataSourcePageListEntry(PreDecisionModel.TabName, [new DataSourceListEntry(prepareSource)]),
+            new DataSourcePageListEntry(PostDecisionModel.TabName, [new DataSourceListEntry(completeSource)]),
             new DataSourcePageListEntry(FreeSchoolsModel.TabName, [new DataSourceListEntry(manageFreeSchoolSource)])
         ]);
 

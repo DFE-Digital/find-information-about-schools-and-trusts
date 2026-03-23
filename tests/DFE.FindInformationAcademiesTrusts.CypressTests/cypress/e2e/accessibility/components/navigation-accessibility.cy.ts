@@ -84,7 +84,7 @@ describe('Navigation Accessibility', () => {
         });
 
         describe("Pipeline academies breadcrumb accessibility", () => {
-            [`/trusts/academies/pipeline/pre-advisory-board?uid=16002`, `/trusts/academies/pipeline/post-advisory-board?uid=17584`, `/trusts/academies/pipeline/free-schools?uid=17584`].forEach((url) => {
+            [`/trusts/academies/pipeline/pre-decision?uid=16002`, `/trusts/academies/pipeline/post-decision?uid=17584`, `/trusts/academies/pipeline/free-schools?uid=17584`].forEach((url) => {
                 it(`Should have accessible "Academies" page breadcrumb on ${url}`, () => {
                     cy.visit(url);
 

@@ -80,7 +80,7 @@ public static class TrustNavMenu
                     "/Trusts/Academies/InTrust/Details", activePage),
                 GetSubNavLinkTo<PipelineAcademiesAreaModel>(AcademiesAreaModel.PageName,
                     $"{PipelineAcademiesAreaModel.SubPageName} ({academiesAreaModel.PipelineSummary.Total})",
-                    "/Trusts/Academies/Pipeline/PreAdvisoryBoard", activePage)
+                    "/Trusts/Academies/Pipeline/PreDecision", activePage)
             ],
             OfstedAreaModel =>
             [

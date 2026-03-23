@@ -4,11 +4,11 @@ using DfE.FindInformationAcademiesTrusts.Services.Academy;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.Academies.Pipeline;
 
-public class PostAdvisoryBoardModelTests : BasePipelineAcademiesAreaModelTests<PostAdvisoryBoardModel>
+public class PreDecisionModelTests : BasePipelineAcademiesAreaModelTests<PreDecisionModel>
 {
-    public PostAdvisoryBoardModelTests()
+    public PreDecisionModelTests()
     {
-        Sut = new PostAdvisoryBoardModel(
+        Sut = new PreDecisionModel(
                 MockDataSourceService,
                 MockTrustService, MockAcademyService, MockPipelineAcademiesExportService,
                 MockDateTimeProvider)
@@ -20,19 +20,18 @@ public class PostAdvisoryBoardModelTests : BasePipelineAcademiesAreaModelTests<P
     {
         AcademyPipelineServiceModel[] academies =
         [
-            new("1234", "Baking academy", new AgeRange(4, 16), "Bristol", "Conversion", new DateTime(2025, 3, 3)),
-            new("1234", "Chocolate academy", new AgeRange(11, 18), "Birmingham", "Conversion",
-                new DateTime(2025, 5, 3)),
-            new("1234", "Fruity academy", new AgeRange(9, 16), "Sheffield", "Transfer", new DateTime(2025, 9, 3)),
-            new(null, null, null, null, null, null)
+            new("1", "Baking academy", new AgeRange(4, 16), "Bristol", "Conversion", new DateTime(2025, 3, 3)),
+            new("2", "Chocolate academy", new AgeRange(11, 18), "Birmingham", "Conversion", new DateTime(2025, 5, 3)),
+            new("3", "Fruity academy", new AgeRange(9, 16), "Sheffield", "Transfer", new DateTime(2025, 9, 3)),
+            new("4", null, null, null, null, null)
         ];
 
-        MockAcademyService.GetAcademiesPipelinePostAdvisoryAsync(TrustReferenceNumber)
+        MockAcademyService.GetAcademiesPipelinePreAdvisoryAsync(TrustReferenceNumber)
             .Returns(Task.FromResult(academies));
 
         _ = await Sut.OnGetAsync();
 
-        Sut.PostAdvisoryPipelineEstablishments.Should().BeEquivalentTo(academies);
+        Sut.PreAdvisoryPipelineEstablishments.Should().BeEquivalentTo(academies);
     }
 
     [Fact]
@@ -40,7 +39,7 @@ public class PostAdvisoryBoardModelTests : BasePipelineAcademiesAreaModelTests<P
     {
         _ = await Sut.OnGetAsync();
 
-        Sut.PageMetadata.TabName.Should().Be("Post advisory board");
+        Sut.PageMetadata.TabName.Should().Be("Pre decision");
     }
 
     [Fact]
@@ -49,6 +48,6 @@ public class PostAdvisoryBoardModelTests : BasePipelineAcademiesAreaModelTests<P
         _ = await Sut.OnGetAsync();
 
         Sut.TabList.Should().ContainSingle(l => l.LinkIsActive)
-            .Which.AspPage.Should().Be("./PostAdvisoryBoard");
+            .Which.AspPage.Should().Be("./PreDecision");
     }
 }

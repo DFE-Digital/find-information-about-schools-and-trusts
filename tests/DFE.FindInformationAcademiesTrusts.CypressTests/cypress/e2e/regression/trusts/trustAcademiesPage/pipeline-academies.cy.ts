@@ -4,93 +4,93 @@ import { testPreAdvisoryData, testPostAdvisoryData, testFreeSchoolsData } from "
 
 describe("Testing the Pipeline academies pages", () => {
 
-    describe(`On the Pre advisory board page for a trust`, () => {
+    describe(`On the Pre decision page for a trust`, () => {
         testPreAdvisoryData.forEach(({ uid }) => {
             beforeEach(() => {
-                cy.visit(`/trusts/academies/pipeline/pre-advisory-board?uid=${uid}`);
+                cy.visit(`/trusts/academies/pipeline/pre-decision?uid=${uid}`);
             });
 
             it("Checks the browser title is correct", () => {
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Pre advisory board - Pipeline academies - Academies - {trustName} - Find information about schools and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Pre decision - Pipeline academies - Academies - {trustName} - Find information about schools and trusts');
             });
 
-            it("Checks the Pre advisory board Pipeline academies subpage header is present", () => {
+            it("Checks the Pre decision Pipeline academies subpage header is present", () => {
                 pipelineAcademiesPage
-                    .checkPreAdvisoryPageHeaderPresent();
+                    .checkPreDecisionPageHeaderPresent();
             });
 
-            it("Checks the correct Pipeline academies Pre advisory board table headers are present", () => {
+            it("Checks the correct Pipeline academies Pre decision table headers are present", () => {
                 pipelineAcademiesPage
-                    .checkPreAdvisoryTableHeadersPresent();
+                    .checkPreDecisionTableHeadersPresent();
             });
 
-            it("Checks the Pipeline academies Pre advisory page sorting", () => {
+            it("Checks the Pipeline academies Pre decision page sorting", () => {
                 pipelineAcademiesPage
-                    .checkPreAdvisoryTableSorting();
+                    .checkPreDecisionTableSorting();
             });
 
-            it("Checks the Pipeline academies Pre advisory project type", () => {
+            it("Checks the Pipeline academies Pre decision project type", () => {
                 pipelineAcademiesPage
-                    .checkPreAdvisoryCorrectProjectTypePresent();
+                    .checkPreDecisionCorrectProjectTypePresent();
             });
 
-            it("Checks the Pipeline academies Pre advisory Proposed conversion or transfer date", () => {
+            it("Checks the Pipeline academies Pre decision Proposed conversion or transfer date", () => {
                 pipelineAcademiesPage
-                    .checkPreAdvisoryCorrectConversionTransferDatePresent();
+                    .checkPreDecisionCorrectConversionTransferDatePresent();
             });
 
             it('checks that each academy name is a link to the academy details page with the correct URN', () => {
-                pipelineAcademiesPage.checkSchoolNamesAreCorrectLinksOnPreAdvisoryPage();
+                pipelineAcademiesPage.checkSchoolNamesAreCorrectLinksOnPreDecisionPage();
             });
         });
     });
 
-    describe(`On the Post advisory board page for`, () => {
+    describe(`On the Post decision page for a trust`, () => {
         testPostAdvisoryData.forEach(({ uid }) => {
             beforeEach(() => {
-                cy.visit(`/trusts/academies/pipeline/post-advisory-board?uid=${uid}`);
+                cy.visit(`/trusts/academies/pipeline/post-decision?uid=${uid}`);
             });
 
             it("Checks the browser title is correct", () => {
                 commonPage
-                    .checkThatBrowserTitleForTrustPageMatches('Post advisory board - Pipeline academies - Academies - {trustName} - Find information about schools and trusts');
+                    .checkThatBrowserTitleForTrustPageMatches('Post decision - Pipeline academies - Academies - {trustName} - Find information about schools and trusts');
             });
 
-            it("Checks the Post advisory board Pipeline academies subpage header is present", () => {
+            it("Checks the Post decision Pipeline academies subpage header is present", () => {
                 pipelineAcademiesPage
-                    .checkPostAdvisoryPageHeaderPresent();
+                    .checkPostDecisionPageHeaderPresent();
             });
 
-            it("Checks the correct Pipeline academies Post advisory board table headers are present", () => {
+            it("Checks the correct Pipeline academies Post decision table headers are present", () => {
                 pipelineAcademiesPage
-                    .checkPostAdvisoryTableHeadersPresent();
+                    .checkPostDecisionTableHeadersPresent();
             });
 
-            it("Checks the Pipeline academies Post advisory page sorting", () => {
+            it("Checks the Pipeline academies Post decision page sorting", () => {
                 pipelineAcademiesPage
-                    .checkPostAdvisoryTableHeadersPresent();
+                    .checkPostDecisionTableHeadersPresent();
             });
 
-            it("Checks the Pipeline academies Post advisory page sorting", () => {
+            it("Checks the Pipeline academies Post decision page sorting", () => {
                 pipelineAcademiesPage
-                    .checkPostAdvisoryTableSorting();
+                    .checkPostDecisionTableSorting();
             });
 
-            it("Checks the Pipeline academies Post advisory project type", () => {
+            it("Checks the Pipeline academies Post decision project type", () => {
                 pipelineAcademiesPage
-                    .checkPostAdvisoryCorrectProjectTypePresent();
+                    .checkPostDecisionCorrectProjectTypePresent();
             });
 
-            it("Checks the Pipeline academies Post advisory Proposed conversion or transfer date", () => {
+            it("Checks the Pipeline academies Post decision Proposed conversion or transfer date", () => {
                 pipelineAcademiesPage
-                    .checkPostAdvisoryCorrectConversionTransferDatePresent();
+                    .checkPostDecisionCorrectConversionTransferDatePresent();
             });
 
         });
 
         it('checks that each academy name is a link to the academy details page with the correct URN', () => {
-            pipelineAcademiesPage.checkSchoolNamesAreCorrectLinksOnPostAdvisoryPage();
+            pipelineAcademiesPage.checkSchoolNamesAreCorrectLinksOnPostDecisionPage();
         });
     });
 
@@ -143,16 +143,16 @@ describe("Testing the Pipeline academies pages", () => {
 
     describe(`On the pages with no pipeline academy data under them`, () => {
 
-        it("Checks the Pipeline academies Pre advisory page when an academy does not exist under it to ensure the correct message is displayed", () => {
-            cy.visit(`/trusts/academies/pipeline/pre-advisory-board?uid=5712`);
+        it("Checks the Pipeline academies Pre decision page when an academy does not exist under it to ensure the correct message is displayed", () => {
+            cy.visit(`/trusts/academies/pipeline/pre-decision?uid=5712`);
             pipelineAcademiesPage
-                .checkPreAdvisoryNoAcademyPresent();
+                .checkPreDecisionNoAcademyPresent();
         });
 
-        it("Checks the Pipeline academies Post advisory page when an academy does not exist under it to ensure the correct message is displayed", () => {
-            cy.visit(`/trusts/academies/pipeline/post-advisory-board?uid=5712`);
+        it("Checks the Pipeline academies Post decision page when an academy does not exist under it to ensure the correct message is displayed", () => {
+            cy.visit(`/trusts/academies/pipeline/post-decision?uid=5712`);
             pipelineAcademiesPage
-                .checkPostAdvisoryNoAcademyPresent();
+                .checkPostDecisionNoAcademyPresent();
         });
 
         it("Checks the Pipeline academies Free schools page when an academy does not exist under it to ensure the correct message is displayed", () => {
@@ -168,12 +168,12 @@ describe("Testing the Pipeline academies pages", () => {
                 .interceptAndVerifyNo500Errors();
         });
 
-        it(`Should have no 500 error on the Pre advisory page`, () => {
-            cy.visit(`/trusts/academies/pipeline/pre-advisory-board?uid=5712`);
+        it(`Should have no 500 error on the Pre decision page`, () => {
+            cy.visit(`/trusts/academies/pipeline/pre-decision?uid=5712`);
         });
 
-        it(`Should have no 500 error on the Post advisory page`, () => {
-            cy.visit(`/trusts/academies/pipeline/post-advisory-board?uid=5712`);
+        it(`Should have no 500 error on the Post decision page`, () => {
+            cy.visit(`/trusts/academies/pipeline/post-decision?uid=5712`);
         });
 
         it(`Should have no 500 error on the free schools page`, () => {

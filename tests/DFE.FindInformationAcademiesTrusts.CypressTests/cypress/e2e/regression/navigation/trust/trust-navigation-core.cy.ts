@@ -101,12 +101,12 @@ describe('Trust Navigation Core Tests', () => {
 
                 navigation
                     .clickPipelineAcademiesNavButton()
-                    .checkCurrentURLIsCorrect('/trusts/academies/pipeline/pre-advisory-board?uid=16002');
+                    .checkCurrentURLIsCorrect('/trusts/academies/pipeline/pre-decision?uid=16002');
             });
 
             it('Navigates from In this trust to pipeline academies', () => {
                 // Pipeline Academies -> Academies in Trust
-                cy.visit('/trusts/academies/pipeline/pre-advisory-board?uid=16002');
+                cy.visit('/trusts/academies/pipeline/pre-decision?uid=16002');
 
                 navigation
                     .clickAcademiesInThisTrustNavButton()
@@ -115,15 +115,15 @@ describe('Trust Navigation Core Tests', () => {
 
             it('Navigates from In this trust to pipeline academies', () => {
                 // Pipeline Academies page nav buttons
-                cy.visit('/trusts/academies/pipeline/pre-advisory-board?uid=16002');
+                cy.visit('/trusts/academies/pipeline/pre-decision?uid=16002');
 
                 navigation
-                    .clickPipelineAcademiesPostAdvisoryNavButton()
-                    .checkCurrentURLIsCorrect('/trusts/academies/pipeline/post-advisory-board?uid=16002')
+                    .clickPipelineAcademiesPostDecisionNavButton()
+                    .checkCurrentURLIsCorrect('/trusts/academies/pipeline/post-decision?uid=16002')
                     .clickPipelineAcademiesFreeSchoolsNavButton()
                     .checkCurrentURLIsCorrect('/trusts/academies/pipeline/free-schools?uid=16002')
-                    .clickPipelineAcademiesPreAdvisoryNavButton()
-                    .checkCurrentURLIsCorrect('/trusts/academies/pipeline/pre-advisory-board?uid=16002');
+                    .clickPipelineAcademiesPreDecisionNavButton()
+                    .checkCurrentURLIsCorrect('/trusts/academies/pipeline/pre-decision?uid=16002');
             });
         });
 
