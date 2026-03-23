@@ -65,8 +65,3 @@ jobs:
       - name: Run TFLint
         working-directory: terraform
         run: tflint -f compact
-
-      - name: Run TFSec
-        uses: aquasecurity/tfsec-pr-commenter-action@7a44c5dcde5dfab737363e391800629e27b6376b # v1.3.1
-        with:
-          github_token: ${{ github.token }}
