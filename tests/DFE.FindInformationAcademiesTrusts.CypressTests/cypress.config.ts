@@ -14,6 +14,8 @@ module.exports = defineConfig({
     enableAccessibilityVoice: false,
   },
   e2e: {
+    allowCypressEnv: false,
+    trashAssetsBeforeRuns: false,
     experimentalRunAllSpecs: true,
     reporter: 'cypress-multi-reporters',
     reporterOptions: {
@@ -34,30 +36,7 @@ module.exports = defineConfig({
       const addAccessibilityTasks = require('wick-a11y/accessibility-tasks');
       addAccessibilityTasks(on);
 
-      // Override wick-a11y task with robust directory creation
       on('task', {
-        moveScreenshotToFolder(args: { from: string; to: string; }) {
-          try {
-            // Ensure the target directory exists
-            const targetDir = path.dirname(args.to);
-            if (!fs.existsSync(targetDir)) {
-              fs.mkdirSync(targetDir, { recursive: true });
-            }
-
-            // Move the file if source exists
-            if (fs.existsSync(args.from)) {
-              fs.renameSync(args.from, args.to);
-              return { success: true };
-            }
-
-            // If source doesn't exist, just return success (no screenshot to move)
-            return { success: true, message: 'No screenshot to move' };
-          } catch (error) {
-            console.warn('Screenshot move failed:', error);
-            return { success: true, message: 'Screenshot move failed but continuing' };
-          }
-        },
-
         // Custom task to find the most recent .xlsx file in the downloads folder
         findLatestFile(folderPath: string) {
           const files = fs.readdirSync(folderPath);

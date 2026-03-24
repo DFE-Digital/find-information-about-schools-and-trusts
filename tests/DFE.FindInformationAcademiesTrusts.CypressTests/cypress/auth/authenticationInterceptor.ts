@@ -1,21 +1,24 @@
+import {EnvAuthKey, EnvUrl} from "../support/cypressConstants";
 
 export class AuthenticationInterceptor {
 
     register(params?: AuthenticationInterceptorParams) {
-        cy.intercept(
-            {
-                url: Cypress.env("URL") + "/**",
-                middleware: true,
-            },
-            (req) => {
-                // Set an auth header on every request made by the browser
-                req.headers = {
-                    ...req.headers,
-                    'Authorization': `Bearer ${Cypress.env("AUTH_KEY")}`,
-                    ...(params?.role && { 'X-test-role': params.role }), 
-                };
-            }
-        ).as("AuthInterceptor");
+        cy.env([EnvAuthKey]).then((envValues) => {
+            const authKey = envValues[EnvAuthKey] as string;
+            cy.intercept(
+                {
+                    url: Cypress.expose(EnvUrl) + "/**",
+                    middleware: true,
+                },
+                (req) => {
+                    req.headers = {
+                        ...req.headers,
+                        'Authorization': `Bearer ${authKey}`,
+                        ...(params?.role && {'X-test-role': params.role}),
+                    };
+                }
+            ).as("AuthInterceptor");
+        });
     }
 }
 
