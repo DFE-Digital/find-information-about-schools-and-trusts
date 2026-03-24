@@ -92,9 +92,9 @@ public abstract class BasePipelineAcademiesAreaModelTests<T> : BaseAcademiesArea
         await MockDataSourceService.Received(1).GetAsync(Source.Complete);
 
         Sut.DataSourcesPerPage.Should().BeEquivalentTo([
-            new DataSourcePageListEntry("Pre advisory board",
+            new DataSourcePageListEntry("Pre decision",
                 [new DataSourceListEntry(Mocks.MockDataSourceService.Prepare)]),
-            new DataSourcePageListEntry("Post advisory board",
+            new DataSourcePageListEntry("Post decision",
                 [new DataSourceListEntry(Mocks.MockDataSourceService.Complete)]),
             new DataSourcePageListEntry("Free schools",
                 [new DataSourceListEntry(Mocks.MockDataSourceService.ManageFreeSchool)])
@@ -118,15 +118,15 @@ public abstract class BasePipelineAcademiesAreaModelTests<T> : BaseAcademiesArea
             .SatisfyRespectively(
                 l =>
                 {
-                    l.LinkDisplayText.Should().Be("Pre advisory board (1)");
-                    l.AspPage.Should().Be("./PreAdvisoryBoard");
-                    l.TestId.Should().Be("pipeline-pre-advisory-board-tab");
+                    l.LinkDisplayText.Should().Be("Pre decision (1)");
+                    l.AspPage.Should().Be("./PreDecision");
+                    l.TestId.Should().Be("pipeline-pre-decision-tab");
                 },
                 l =>
                 {
-                    l.LinkDisplayText.Should().Be("Post advisory board (2)");
-                    l.AspPage.Should().Be("./PostAdvisoryBoard");
-                    l.TestId.Should().Be("pipeline-post-advisory-board-tab");
+                    l.LinkDisplayText.Should().Be("Post decision (2)");
+                    l.AspPage.Should().Be("./PostDecision");
+                    l.TestId.Should().Be("pipeline-post-decision-tab");
                 },
                 l =>
                 {

@@ -57,8 +57,8 @@ public class SubNav : TrustNavMenuTestsBase
             nameof(AcademiesInTrustDetailsModel) or
                 nameof(PupilNumbersModel) or
                 nameof(FreeSchoolMealsModel) or
-                nameof(PreAdvisoryBoardModel) or
-                nameof(PostAdvisoryBoardModel) or
+                nameof(PreDecisionModel) or
+                nameof(PostDecisionModel) or
                 nameof(FreeSchoolsModel) => "Academies",
             nameof(OverviewModel) => "Ofsted",
             nameof(FinancialStatementsModel) or
@@ -97,9 +97,9 @@ public class SubNav : TrustNavMenuTestsBase
             nameof(AcademiesInTrustDetailsModel) => "/Trusts/Academies/InTrust/Details",
             nameof(PupilNumbersModel) => "/Trusts/Academies/InTrust/Details",
             nameof(FreeSchoolMealsModel) => "/Trusts/Academies/InTrust/Details",
-            nameof(PreAdvisoryBoardModel) => "/Trusts/Academies/Pipeline/PreAdvisoryBoard",
-            nameof(PostAdvisoryBoardModel) => "/Trusts/Academies/Pipeline/PreAdvisoryBoard",
-            nameof(FreeSchoolsModel) => "/Trusts/Academies/Pipeline/PreAdvisoryBoard",
+            nameof(PreDecisionModel) => "/Trusts/Academies/Pipeline/PreDecision",
+            nameof(PostDecisionModel) => "/Trusts/Academies/Pipeline/PreDecision",
+            nameof(FreeSchoolsModel) => "/Trusts/Academies/Pipeline/PreDecision",
             nameof(FinancialStatementsModel) => "/Trusts/FinancialDocuments/FinancialStatements",
             nameof(ManagementLettersModel) => "/Trusts/FinancialDocuments/ManagementLetters",
             nameof(InternalScrutinyReportsModel) => "/Trusts/FinancialDocuments/InternalScrutinyReports",
@@ -184,7 +184,7 @@ public class SubNav : TrustNavMenuTestsBase
             l =>
             {
                 l.LinkDisplayText.Should().Be("Pipeline academies (6)");
-                l.AspPage.Should().Be("/Trusts/Academies/Pipeline/PreAdvisoryBoard");
+                l.AspPage.Should().Be("/Trusts/Academies/Pipeline/PreDecision");
                 l.TestId.Should().Be("academies-pipeline-academies-subnav");
             }
         );
@@ -195,8 +195,8 @@ public class SubNav : TrustNavMenuTestsBase
         typeof(AcademiesInTrustDetailsModel),
         typeof(PupilNumbersModel),
         typeof(FreeSchoolMealsModel),
-        typeof(PreAdvisoryBoardModel),
-        typeof(PostAdvisoryBoardModel),
+        typeof(PreDecisionModel),
+        typeof(PostDecisionModel),
         typeof(FreeSchoolsModel)
     ];
 
@@ -205,7 +205,7 @@ public class SubNav : TrustNavMenuTestsBase
     [InlineData(25)]
     public void GetSubNavLinks_should_show_number_of_academies_in_this_trust_subnav_display_text(int numberOfAcademies)
     {
-        var activePage = GetMockTrustPage(typeof(PostAdvisoryBoardModel), numberOfAcademies: numberOfAcademies);
+        var activePage = GetMockTrustPage(typeof(PostDecisionModel), numberOfAcademies: numberOfAcademies);
 
         var results = Sut.GetSubNavLinks(activePage);
 

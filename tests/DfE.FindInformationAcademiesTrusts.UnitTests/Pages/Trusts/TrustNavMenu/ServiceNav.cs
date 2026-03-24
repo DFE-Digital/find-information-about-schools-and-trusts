@@ -122,8 +122,8 @@ public class ServiceNav : TrustNavMenuTestsBase
             nameof(AcademiesInTrustDetailsModel) or
                 nameof(PupilNumbersModel) or
                 nameof(FreeSchoolMealsModel) or
-                nameof(PreAdvisoryBoardModel) or
-                nameof(PostAdvisoryBoardModel) or
+                nameof(PreDecisionModel) or
+                nameof(PostDecisionModel) or
                 nameof(FreeSchoolsModel) => "/Trusts/Academies/InTrust/Details",
             nameof(OverviewModel) => "/Trusts/Ofsted/Overview",
             nameof(FinancialStatementsModel) or

@@ -1,44 +1,45 @@
-﻿@page "/trusts/academies/pipeline/post-advisory-board"
+﻿@page "/trusts/academies/pipeline/post-decision"
 @using DfE.FindInformationAcademiesTrusts.Extensions
 @using DfE.FindInformationAcademiesTrusts.Pages.Shared
-@model PostAdvisoryBoardModel
+@model PostDecisionModel
 
 @{
     Layout = "Academies/_AcademiesLayout";
 }
 
-<section class="app-table-container" data-testid="post-advisory-board-table">
+<section class="app-table-container" data-testid="post-decision-table">
     @if (!Model.PostAdvisoryPipelineEstablishments.Any())
     {
         <div class="govuk-body" data-testid="empty-state-message">
-            There are no post advisory board academies in the pipeline for this trust.
+            There are no post decision academies in the pipeline for this trust.
         </div>
     }
     else
     {
-        <table class="govuk-table si-row-colours-table" data-module="moj-sortable-table" aria-describedby="post-advisory-caption">
-            <caption class="govuk-table__caption govuk-table__caption--m" id="post-advisory-caption"
-                     data-testid="subpage-header">Post advisory board
+        <table class="govuk-table si-row-colours-table" data-module="moj-sortable-table" aria-describedby="post-decision-caption">
+            <caption class="govuk-table__caption govuk-table__caption--m" id="post-decision-caption"
+                     data-testid="subpage-header">
+                Post decision
             </caption>
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-body govuk-table__header"
-                    data-testid="post-advisory-board-school-name-header" aria-sort="ascending">School name
+                    data-testid="post-decision-school-name-header" aria-sort="ascending">School name
                 </th>
-                <th scope="col" class="govuk-body govuk-table__header" data-testid="post-advisory-board-URN-header"
+                    <th scope="col" class="govuk-body govuk-table__header" data-testid="post-decision-URN-header"
                     aria-sort="none">URN
                 </th>
                 <th scope="col" class="govuk-body govuk-table__header"
-                    data-testid="post-advisory-board-age-range-header" aria-sort="none">Age range
+                    data-testid="post-decision-age-range-header" aria-sort="none">Age range
                 </th>
                 <th scope="col" class="govuk-body govuk-table__header"
-                    data-testid="post-advisory-board-local-authority-header" aria-sort="none">Local authority
+                    data-testid="post-decision-local-authority-header" aria-sort="none">Local authority
                 </th>
                 <th scope="col" class="govuk-body govuk-table__header"
-                    data-testid="post-advisory-board-project-type-header" aria-sort="none">Project type
+                    data-testid="post-decision-project-type-header" aria-sort="none">Project type
                 </th>
                 <th scope="col" class="govuk-body govuk-table__header govuk-!-width-one-quarter"
-                    data-testid="post-advisory-board-proposed-conversion-transfer-date-header" aria-sort="none">Proposed
+                    data-testid="post-decision-proposed-conversion-transfer-date-header" aria-sort="none">Proposed
                     conversion or transfer date
                 </th>
             </tr>
@@ -48,21 +49,21 @@
             {
                 <tr class="govuk-table__row" data-testid="academy-row">
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.EstablishmentName"
-                        data-testid="post-advisory-board-school-name">
+                            data-testid="post-decision-school-name">
                         <partial name="Trusts/_AcademyLink" model="@(new AcademyLinkModel(academy.EstablishmentName.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText), "/Schools/Overview/Details", academy.Urn))" />
                     </td>
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.Urn"
-                        data-testid="post-advisory-board-URN">@academy.Urn.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText)</td>
+                        data-testid="post-decision-URN">@academy.Urn.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText)</td>
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.AgeRange.ToDataSortValue()"
-                        data-testid="post-advisory-board-age-range">
+                        data-testid="post-decision-age-range">
                         @(academy.AgeRange?.ToTabularDisplayString() ?? ViewConstants.UnconfirmedDateText)
                     </td>
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.LocalAuthority"
-                        data-testid="post-advisory-board-local-authority">@academy.LocalAuthority.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText)</td>
+                        data-testid="post-decision-local-authority">@academy.LocalAuthority.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText)</td>
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.ProjectType"
-                        data-testid="post-advisory-board-project-type">@academy.ProjectType.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText)</td>
+                        data-testid="post-decision-project-type">@academy.ProjectType.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText)</td>
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.ChangeDate.ToDataSortValue()"
-                        data-testid="post-advisory-board-conversion-transfer-date">
+                        data-testid="post-decision-conversion-transfer-date">
                         @academy.ChangeDate.ShowDateStringOrReplaceWithText(ViewConstants.UnconfirmedDateText)
                     </td>
                 </tr>
