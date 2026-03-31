@@ -3,6 +3,8 @@ import { AuthenticationInterceptorParams } from '../auth/authenticationIntercept
 import './commands';
 import 'wick-a11y';
 
+Cypress.expose('URL', Cypress.config("baseUrl"));
+
 declare global {
     namespace Cypress {
         interface Chainable {
