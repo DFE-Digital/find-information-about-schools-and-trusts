@@ -65,7 +65,7 @@ describe('Trust Data Download Accessibility', () => {
 
     describe('Pipeline Academies Data Download Accessibility', () => {
         it('should have accessible pipeline academies download controls', () => {
-            cy.visit('/trusts/academies/pipeline/pre-advisory-board?uid=5527');
+            cy.visit('/trusts/academies/pipeline/pre-decision?uid=5527');
 
             // Wait for page to load
             cy.get('main, #main-content').should('be.visible');

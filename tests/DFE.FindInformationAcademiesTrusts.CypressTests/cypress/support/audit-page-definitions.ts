@@ -53,8 +53,8 @@ export class AuditPageDefinitions {
         this.auditHelper.auditPage('Trust Academies - In Trust Free School Meals', 'Trusts', `/trusts/academies/in-trust/free-school-meals?uid=${trustUid}`);
 
         // Trust Pipeline Academies subpages
-        this.auditHelper.auditPage('Trust Pipeline Academies - Pre Advisory', 'Trusts', `/trusts/academies/pipeline/pre-advisory-board?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Pipeline Academies - Post Advisory', 'Trusts', `/trusts/academies/pipeline/post-advisory-board?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Pipeline Academies - Pre Decision', 'Trusts', `/trusts/academies/pipeline/pre-decision?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Pipeline Academies - Post Decision', 'Trusts', `/trusts/academies/pipeline/post-decision?uid=${trustUid}`);
         this.auditHelper.auditPage('Trust Pipeline Academies - Free Schools', 'Trusts', `/trusts/academies/pipeline/free-schools?uid=${trustUid}`);
 
         // Trust Financial Documents (sensitive data - no screenshots)

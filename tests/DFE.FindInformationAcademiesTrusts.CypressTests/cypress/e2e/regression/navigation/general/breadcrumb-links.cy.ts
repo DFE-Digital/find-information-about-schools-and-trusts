@@ -44,7 +44,7 @@ describe('Testing breadcrumb functionality across FAST', () => {
             });
 
             describe("Testing the breadcrumb links on the pipeline academies pages", () => {
-                [`/trusts/academies/pipeline/pre-advisory-board?uid=16002`, `/trusts/academies/pipeline/post-advisory-board?uid=17584`, `/trusts/academies/pipeline/free-schools?uid=17584`].forEach((url) => {
+                [`/trusts/academies/pipeline/pre-decision?uid=16002`, `/trusts/academies/pipeline/post-decision?uid=17584`, `/trusts/academies/pipeline/free-schools?uid=17584`].forEach((url) => {
                     it("Checks the breadcrumb shows the correct page name", () => {
                         cy.visit(url);
                         navigation

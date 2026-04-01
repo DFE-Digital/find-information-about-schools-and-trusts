@@ -1,44 +1,46 @@
-﻿@page "/trusts/academies/pipeline/pre-advisory-board"
+﻿@page "/trusts/academies/pipeline/pre-decision"
 @using DfE.FindInformationAcademiesTrusts.Extensions
 @using DfE.FindInformationAcademiesTrusts.Pages.Shared
-@model PreAdvisoryBoardModel
+@model PreDecisionModel
 
 @{
     Layout = "Academies/_AcademiesLayout";
 }
 
-<section class="app-table-container" data-testid="pre-advisory-board-table">
+<section class="app-table-container" data-testid="pre-decision-table">
     @if (!Model.PreAdvisoryPipelineEstablishments.Any())
     {
         <div class="govuk-body" data-testid="empty-state-message">
-            There are no pre advisory board academies in the pipeline for this trust.
+            There are no pre decision academies in the pipeline for this trust.
         </div>
     }
     else
     {
-        <table class="govuk-table si-row-colours-table" data-module="moj-sortable-table" aria-describedby="pre-advisory-caption">
-            <caption class="govuk-table__caption govuk-table__caption--m" id="pre-advisory-caption"
-                     data-testid="subpage-header">Pre advisory board
+        <table class="govuk-table si-row-colours-table" data-module="moj-sortable-table" aria-describedby="pre-decision-caption">
+            <caption class="govuk-table__caption govuk-table__caption--m" id="pre-decision-caption"
+                     data-testid="subpage-header">
+                Pre decision
             </caption>
             <thead class="govuk-table__head">
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-body govuk-table__header"
-                    data-testid="pre-advisory-board-school-name-header" aria-sort="ascending">School name
+                        data-testid="pre-decision-school-name-header" aria-sort="ascending">
+                        School name
                 </th>
-                <th scope="col" class="govuk-body govuk-table__header" data-testid="pre-advisory-board-URN-header"
+                <th scope="col" class="govuk-body govuk-table__header" data-testid="pre-decision-URN-header"
                     aria-sort="none">URN
                 </th>
-                <th scope="col" class="govuk-body govuk-table__header" data-testid="pre-advisory-board-age-range-header"
+                <th scope="col" class="govuk-body govuk-table__header" data-testid="pre-decision-age-range-header"
                     aria-sort="none">Age range
                 </th>
                 <th scope="col" class="govuk-body govuk-table__header"
-                    data-testid="pre-advisory-board-local-authority-header" aria-sort="none">Local authority
+                    data-testid="pre-decision-local-authority-header" aria-sort="none">Local authority
                 </th>
                 <th scope="col" class="govuk-body govuk-table__header"
-                    data-testid="pre-advisory-board-project-type-header" aria-sort="none">Project type
+                    data-testid="pre-decision-project-type-header" aria-sort="none">Project type
                 </th>
                 <th scope="col" class="govuk-body govuk-table__header govuk-!-width-one-quarter"
-                    data-testid="pre-advisory-board-proposed-conversion-transfer-date-header" aria-sort="none">Proposed
+                    data-testid="pre-decision-proposed-conversion-transfer-date-header" aria-sort="none">Proposed
                     conversion or transfer date
                 </th>
             </tr>
@@ -48,19 +50,19 @@
             {
                 <tr class="govuk-table__row" data-testid="academy-row">
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.EstablishmentName"
-                        data-testid="pre-advisory-board-school-name">
+                            data-testid="pre-decision-school-name">
                         <partial name="Trusts/_AcademyLink" model="@(new AcademyLinkModel(academy.EstablishmentName.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText), "/Schools/Overview/Details", academy.Urn))" />
                     </td>
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.Urn"
-                        data-testid="pre-advisory-board-URN">@academy.Urn.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText)</td>
+                        data-testid="pre-decision-URN">@academy.Urn.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText)</td>
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.AgeRange.ToDataSortValue()"
-                        data-testid="pre-advisory-board-age-range">@(academy.AgeRange?.ToTabularDisplayString() ?? ViewConstants.UnconfirmedDateText)</td>
+                        data-testid="pre-decision-age-range">@(academy.AgeRange?.ToTabularDisplayString() ?? ViewConstants.UnconfirmedDateText)</td>
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.LocalAuthority"
-                        data-testid="pre-advisory-board-local-authority">@academy.LocalAuthority.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText)</td>
+                        data-testid="pre-decision-local-authority">@academy.LocalAuthority.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText)</td>
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.ProjectType"
-                        data-testid="pre-advisory-board-project-type">@academy.ProjectType.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText)</td>
+                        data-testid="pre-decision-project-type">@academy.ProjectType.DefaultIfNullOrWhiteSpace(ViewConstants.UnconfirmedDateText)</td>
                     <td class="govuk-body govuk-table__cell" data-sort-value="@academy.ChangeDate.ToDataSortValue()"
-                        data-testid="pre-advisory-board-date">@academy.ChangeDate.ShowDateStringOrReplaceWithText(ViewConstants.UnconfirmedDateText)</td>
+                        data-testid="pre-decision-date">@academy.ChangeDate.ShowDateStringOrReplaceWithText(ViewConstants.UnconfirmedDateText)</td>
                 </tr>
             }
             </tbody>

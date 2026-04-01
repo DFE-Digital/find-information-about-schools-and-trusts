@@ -24,8 +24,8 @@ class Navigation {
             academiesInTrustDetailsButton: () => cy.get('[data-testid="in-this-trust-details-tab"]'),
         },
         pipelineAcademiesSubNav: {
-            pipelineAcademiesPreAdvisoryButton: () => cy.get('[data-testid="pipeline-pre-advisory-board-tab"]'),
-            pipelineAcademiesPostAdvisoryButton: () => cy.get('[data-testid="pipeline-post-advisory-board-tab"]'),
+            pipelineAcademiesPreDecisionButton: () => cy.get('[data-testid="pipeline-pre-decision-tab"]'),
+            pipelineAcademiesPostDecisionButton: () => cy.get('[data-testid="pipeline-post-decision-tab"]'),
             pipelineAcademiesFreeSchoolMealsButton: () => cy.get('[data-testid="pipeline-free-schools-tab"]'),
         },
         breadcrumbs: {
@@ -279,13 +279,13 @@ class Navigation {
         return this;
     }
 
-    public clickPipelineAcademiesPreAdvisoryNavButton(): this {
-        this.elements.pipelineAcademiesSubNav.pipelineAcademiesPreAdvisoryButton().click();
+    public clickPipelineAcademiesPreDecisionNavButton(): this {
+        this.elements.pipelineAcademiesSubNav.pipelineAcademiesPreDecisionButton().click();
         return this;
     }
 
-    public clickPipelineAcademiesPostAdvisoryNavButton(): this {
-        this.elements.pipelineAcademiesSubNav.pipelineAcademiesPostAdvisoryButton().click();
+    public clickPipelineAcademiesPostDecisionNavButton(): this {
+        this.elements.pipelineAcademiesSubNav.pipelineAcademiesPostDecisionButton().click();
         return this;
     }
 
