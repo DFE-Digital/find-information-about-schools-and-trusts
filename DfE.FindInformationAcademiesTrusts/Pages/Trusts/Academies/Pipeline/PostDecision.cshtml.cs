@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Academies.Pipeline;
 
-public class PreAdvisoryBoardModel(
+public class PostDecisionModel(
     IDataSourceService dataSourceService,
     ITrustService trustService,
     IAcademyService academyService,
@@ -17,11 +17,11 @@ public class PreAdvisoryBoardModel(
     : PipelineAcademiesAreaModel(dataSourceService, trustService, academyService, pipelineAcademiesExportService,
         dateTimeProvider)
 {
-    public const string TabName = "Pre advisory board";
+    public const string TabName = "Post decision";
 
     public override PageMetadata PageMetadata => base.PageMetadata with { TabName = TabName };
 
-    public AcademyPipelineServiceModel[] PreAdvisoryPipelineEstablishments { get; set; } = [];
+    public AcademyPipelineServiceModel[] PostAdvisoryPipelineEstablishments { get; set; } = [];
 
     public override async Task<IActionResult> OnGetAsync()
     {
@@ -29,8 +29,8 @@ public class PreAdvisoryBoardModel(
 
         if (pageResult.GetType() == typeof(NotFoundResult)) return pageResult;
 
-        PreAdvisoryPipelineEstablishments =
-            await AcademyService.GetAcademiesPipelinePreAdvisoryAsync(TrustReferenceNumber);
+        PostAdvisoryPipelineEstablishments =
+            await AcademyService.GetAcademiesPipelinePostAdvisoryAsync(TrustReferenceNumber);
 
         return pageResult;
     }

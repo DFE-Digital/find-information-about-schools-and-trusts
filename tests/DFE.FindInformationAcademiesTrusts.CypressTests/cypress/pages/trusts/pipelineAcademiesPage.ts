@@ -6,46 +6,46 @@ class PipelineAcademies {
         subpageHeader: () => cy.get('[data-testid="subpage-header"]'),
         emptyStateMessage: () => cy.get('[data-testid="empty-state-message"]'),
         downloadButton: () => cy.get('[data-testid="download-all-pipeline-data-button"]'),
-        preAdvisory: {
-            section: () => cy.get('[data-testid="pre-advisory-board-table"]'),
-            table: () => this.elements.preAdvisory.section().find('[aria-describedby="pre-advisory-caption"]'),
-            tableRows: () => this.elements.preAdvisory.table().find('tbody tr'),
-            schoolName: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-school-name"]'),
-            schoolNameHeader: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-school-name-header"]'),
-            urn: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-URN"]'),
-            urnHeader: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-URN-header"]'),
-            ageRange: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-age-range"]'),
-            ageRangeHeader: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-age-range-header"]'),
-            localAuthority: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-local-authority"]'),
-            localAuthorityHeader: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-local-authority-header"]'),
-            projectType: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-project-type"]'),
-            projectTypeHeader: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-project-type-header"]'),
-            proposedConversionTransferDate: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-date"]'),
-            proposedConversionTransferDateHeader: () => this.elements.preAdvisory.section().find('[data-testid="pre-advisory-board-proposed-conversion-transfer-date-header"]'),
+        preDecision: {
+            section: () => cy.get('[data-testid="pre-decision-table"]'),
+            table: () => this.elements.preDecision.section().find('[aria-describedby="pre-decision-caption"]'),
+            tableRows: () => this.elements.preDecision.table().find('tbody tr'),
+            schoolName: () => this.elements.preDecision.section().find('[data-testid="pre-decision-school-name"]'),
+            schoolNameHeader: () => this.elements.preDecision.section().find('[data-testid="pre-decision-school-name-header"]'),
+            urn: () => this.elements.preDecision.section().find('[data-testid="pre-decision-URN"]'),
+            urnHeader: () => this.elements.preDecision.section().find('[data-testid="pre-decision-URN-header"]'),
+            ageRange: () => this.elements.preDecision.section().find('[data-testid="pre-decision-age-range"]'),
+            ageRangeHeader: () => this.elements.preDecision.section().find('[data-testid="pre-decision-age-range-header"]'),
+            localAuthority: () => this.elements.preDecision.section().find('[data-testid="pre-decision-local-authority"]'),
+            localAuthorityHeader: () => this.elements.preDecision.section().find('[data-testid="pre-decision-local-authority-header"]'),
+            projectType: () => this.elements.preDecision.section().find('[data-testid="pre-decision-project-type"]'),
+            projectTypeHeader: () => this.elements.preDecision.section().find('[data-testid="pre-decision-project-type-header"]'),
+            proposedConversionTransferDate: () => this.elements.preDecision.section().find('[data-testid="pre-decision-date"]'),
+            proposedConversionTransferDateHeader: () => this.elements.preDecision.section().find('[data-testid="pre-decision-proposed-conversion-transfer-date-header"]'),
         },
-        postAdvisory: {
-            section: () => cy.get('[data-testid="post-advisory-board-table"]'),
-            table: () => this.elements.postAdvisory.section().find('[aria-describedby="post-advisory-caption"]'),
-            tableRows: () => this.elements.postAdvisory.table().find('tbody tr'),
-            schoolName: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-school-name"]'),
-            schoolNameHeader: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-school-name-header"]'),
-            urn: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-URN"]'),
-            urnHeader: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-URN-header"]'),
-            ageRange: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-age-range"]'),
-            ageRangeHeader: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-age-range-header"]'),
-            localAuthority: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-local-authority"]'),
-            localAuthorityHeader: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-local-authority-header"]'),
-            projectType: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-project-type"]'),
-            projectTypeHeader: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-project-type-header"]'),
-            proposedConversionTransferDate: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-conversion-transfer-date"]'),
-            proposedConversionTransferDateHeader: () => this.elements.postAdvisory.section().find('[data-testid="post-advisory-board-proposed-conversion-transfer-date-header"]'),
+        postDecision: {
+            section: () => cy.get('[data-testid="post-decision-table"]'),
+            table: () => this.elements.postDecision.section().find('[aria-describedby="post-decision-caption"]'),
+            tableRows: () => this.elements.postDecision.table().find('tbody tr'),
+            schoolName: () => this.elements.postDecision.section().find('[data-testid="post-decision-school-name"]'),
+            schoolNameHeader: () => this.elements.postDecision.section().find('[data-testid="post-decision-school-name-header"]'),
+            urn: () => this.elements.postDecision.section().find('[data-testid="post-decision-URN"]'),
+            urnHeader: () => this.elements.postDecision.section().find('[data-testid="post-decision-URN-header"]'),
+            ageRange: () => this.elements.postDecision.section().find('[data-testid="post-decision-age-range"]'),
+            ageRangeHeader: () => this.elements.postDecision.section().find('[data-testid="post-decision-age-range-header"]'),
+            localAuthority: () => this.elements.postDecision.section().find('[data-testid="post-decision-local-authority"]'),
+            localAuthorityHeader: () => this.elements.postDecision.section().find('[data-testid="post-decision-local-authority-header"]'),
+            projectType: () => this.elements.postDecision.section().find('[data-testid="post-decision-project-type"]'),
+            projectTypeHeader: () => this.elements.postDecision.section().find('[data-testid="post-decision-project-type-header"]'),
+            proposedConversionTransferDate: () => this.elements.postDecision.section().find('[data-testid="post-decision-conversion-transfer-date"]'),
+            proposedConversionTransferDateHeader: () => this.elements.postDecision.section().find('[data-testid="post-decision-proposed-conversion-transfer-date-header"]'),
 
         },
         freeSchools: {
             section: () => cy.get('[data-testid="free-schools-table"]'),
             table: () => this.elements.freeSchools.section().find('[aria-describedby="free-schools-caption"]'),
             tableRows: () => this.elements.freeSchools.table().find('tbody tr'),
-            schoolName: () => this.elements.freeSchools.section().find('[data-testid="free-schools-board-school-name"]'),
+            schoolName: () => this.elements.freeSchools.section().find('[data-testid="free-schools-school-name"]'),
             schoolNameHeader: () => this.elements.freeSchools.section().find('[data-testid="free-schools-school-name-header"]'),
             urn: () => this.elements.freeSchools.section().find('[data-testid="free-schools-URN"]'),
             urnHeader: () => this.elements.freeSchools.section().find('[data-testid="free-schools-URN-header"]'),
@@ -77,88 +77,88 @@ class PipelineAcademies {
         expect(text).to.match(/^\d{1,2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec) \d{4}$|^Unconfirmed$/);
     };
 
-    public checkPreAdvisoryPageHeaderPresent(): this {
-        this.elements.subpageHeader().should('contain', 'Pre advisory board');
+    public checkPreDecisionPageHeaderPresent(): this {
+        this.elements.subpageHeader().should('contain', 'Pre decision');
         return this;
     }
 
-    public checkPreAdvisoryTableHeadersPresent(): this {
-        this.elements.preAdvisory.schoolNameHeader().should('be.visible');
-        this.elements.preAdvisory.urnHeader().should('be.visible');
-        this.elements.preAdvisory.ageRangeHeader().should('be.visible');
-        this.elements.preAdvisory.localAuthorityHeader().should('be.visible');
-        this.elements.preAdvisory.projectTypeHeader().should('be.visible');
-        this.elements.preAdvisory.proposedConversionTransferDateHeader().should('be.visible');
+    public checkPreDecisionTableHeadersPresent(): this {
+        this.elements.preDecision.schoolNameHeader().should('be.visible');
+        this.elements.preDecision.urnHeader().should('be.visible');
+        this.elements.preDecision.ageRangeHeader().should('be.visible');
+        this.elements.preDecision.localAuthorityHeader().should('be.visible');
+        this.elements.preDecision.projectTypeHeader().should('be.visible');
+        this.elements.preDecision.proposedConversionTransferDateHeader().should('be.visible');
         return this;
     }
 
-    public checkPreAdvisoryTableSorting(): this {
+    public checkPreDecisionTableSorting(): this {
         TableUtility.checkStringSorting(
-            this.elements.preAdvisory.schoolName,
-            this.elements.preAdvisory.schoolNameHeader
+            this.elements.preDecision.schoolName,
+            this.elements.preDecision.schoolNameHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.preAdvisory.urn,
-            this.elements.preAdvisory.urnHeader
+            this.elements.preDecision.urn,
+            this.elements.preDecision.urnHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.preAdvisory.ageRange,
-            this.elements.preAdvisory.ageRangeHeader
+            this.elements.preDecision.ageRange,
+            this.elements.preDecision.ageRangeHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.preAdvisory.localAuthority,
-            this.elements.preAdvisory.localAuthorityHeader
+            this.elements.preDecision.localAuthority,
+            this.elements.preDecision.localAuthorityHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.preAdvisory.projectType,
-            this.elements.preAdvisory.projectTypeHeader
+            this.elements.preDecision.projectType,
+            this.elements.preDecision.projectTypeHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.preAdvisory.proposedConversionTransferDate,
-            this.elements.preAdvisory.proposedConversionTransferDateHeader
+            this.elements.preDecision.proposedConversionTransferDate,
+            this.elements.preDecision.proposedConversionTransferDateHeader
         );
         return this;
     }
 
-    public checkPostAdvisoryPageHeaderPresent(): this {
-        this.elements.subpageHeader().should('contain', 'Post advisory board');
+    public checkPostDecisionPageHeaderPresent(): this {
+        this.elements.subpageHeader().should('contain', 'Post decision');
         return this;
     }
 
-    public checkPostAdvisoryTableHeadersPresent(): this {
-        this.elements.postAdvisory.schoolNameHeader().should('be.visible');
-        this.elements.postAdvisory.urnHeader().should('be.visible');
-        this.elements.postAdvisory.ageRangeHeader().should('be.visible');
-        this.elements.postAdvisory.localAuthorityHeader().should('be.visible');
-        this.elements.postAdvisory.projectTypeHeader().should('be.visible');
-        this.elements.postAdvisory.proposedConversionTransferDateHeader().should('be.visible');
+    public checkPostDecisionTableHeadersPresent(): this {
+        this.elements.postDecision.schoolNameHeader().should('be.visible');
+        this.elements.postDecision.urnHeader().should('be.visible');
+        this.elements.postDecision.ageRangeHeader().should('be.visible');
+        this.elements.postDecision.localAuthorityHeader().should('be.visible');
+        this.elements.postDecision.projectTypeHeader().should('be.visible');
+        this.elements.postDecision.proposedConversionTransferDateHeader().should('be.visible');
         return this;
     }
 
-    public checkPostAdvisoryTableSorting(): this {
+    public checkPostDecisionTableSorting(): this {
         TableUtility.checkStringSorting(
-            this.elements.postAdvisory.schoolName,
-            this.elements.postAdvisory.schoolNameHeader
+            this.elements.postDecision.schoolName,
+            this.elements.postDecision.schoolNameHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.postAdvisory.urn,
-            this.elements.postAdvisory.urnHeader
+            this.elements.postDecision.urn,
+            this.elements.postDecision.urnHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.postAdvisory.ageRange,
-            this.elements.postAdvisory.ageRangeHeader
+            this.elements.postDecision.ageRange,
+            this.elements.postDecision.ageRangeHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.postAdvisory.localAuthority,
-            this.elements.postAdvisory.localAuthorityHeader
+            this.elements.postDecision.localAuthority,
+            this.elements.postDecision.localAuthorityHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.postAdvisory.projectType,
-            this.elements.postAdvisory.projectTypeHeader
+            this.elements.postDecision.projectType,
+            this.elements.postDecision.projectTypeHeader
         );
         TableUtility.checkStringSorting(
-            this.elements.postAdvisory.proposedConversionTransferDate,
-            this.elements.postAdvisory.proposedConversionTransferDateHeader
+            this.elements.postDecision.proposedConversionTransferDate,
+            this.elements.postDecision.proposedConversionTransferDateHeader
         );
         return this;
     }
@@ -206,13 +206,13 @@ class PipelineAcademies {
         return this;
     }
 
-    public checkPreAdvisoryNoAcademyPresent(): this {
-        this.elements.emptyStateMessage().should('contain', 'There are no pre advisory board academies in the pipeline for this trust');
+    public checkPreDecisionNoAcademyPresent(): this {
+        this.elements.emptyStateMessage().should('contain', 'There are no pre decision academies in the pipeline for this trust');
         return this;
     }
 
-    public checkPostAdvisoryNoAcademyPresent(): this {
-        this.elements.emptyStateMessage().should('contain', 'There are no post advisory board academies in the pipeline for this trust');
+    public checkPostDecisionNoAcademyPresent(): this {
+        this.elements.emptyStateMessage().should('contain', 'There are no post decision academies in the pipeline for this trust');
         return this;
     }
 
@@ -221,23 +221,23 @@ class PipelineAcademies {
         return this;
     }
 
-    public checkPreAdvisoryCorrectProjectTypePresent(): this {
-        this.elements.preAdvisory.projectType().each(this.checkValueIsValidConversionTransfer);
+    public checkPreDecisionCorrectProjectTypePresent(): this {
+        this.elements.preDecision.projectType().each(this.checkValueIsValidConversionTransfer);
         return this;
     }
 
-    public checkPreAdvisoryCorrectConversionTransferDatePresent(): this {
-        this.elements.preAdvisory.proposedConversionTransferDate().each(this.checkValueIsValidOpeningDate);
+    public checkPreDecisionCorrectConversionTransferDatePresent(): this {
+        this.elements.preDecision.proposedConversionTransferDate().each(this.checkValueIsValidOpeningDate);
         return this;
     }
 
-    public checkPostAdvisoryCorrectProjectTypePresent(): this {
-        this.elements.postAdvisory.projectType().each(this.checkValueIsValidConversionTransfer);
+    public checkPostDecisionCorrectProjectTypePresent(): this {
+        this.elements.postDecision.projectType().each(this.checkValueIsValidConversionTransfer);
         return this;
     }
 
-    public checkPostAdvisoryCorrectConversionTransferDatePresent(): this {
-        this.elements.postAdvisory.proposedConversionTransferDate().each(this.checkValueIsValidOpeningDate);
+    public checkPostDecisionCorrectConversionTransferDatePresent(): this {
+        this.elements.postDecision.proposedConversionTransferDate().each(this.checkValueIsValidOpeningDate);
         return this;
     }
 
@@ -253,13 +253,13 @@ class PipelineAcademies {
         return this;
     }
 
-    public checkSchoolNamesAreCorrectLinksOnPreAdvisoryPage(): this {
-        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.preAdvisory, "pre-advisory-board-school-name", { path: "/schools/overview/details", urnTestId: "pre-advisory-board-URN" });
+    public checkSchoolNamesAreCorrectLinksOnPreDecisionPage(): this {
+        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.preDecision, "pre-decision-school-name", { path: "/schools/overview/details", urnTestId: "pre-decision-URN" });
         return this;
     }
 
-    public checkSchoolNamesAreCorrectLinksOnPostAdvisoryPage(): this {
-        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.postAdvisory, "post-advisory-board-school-name", { path: "/schools/overview/details", urnTestId: "post-advisory-board-URN" });
+    public checkSchoolNamesAreCorrectLinksOnPostDecisionPage(): this {
+        TableUtility.checkSchoolNamesAreCorrectLinksOnPage(this.elements.postDecision, "post-decision-school-name", { path: "/schools/overview/details", urnTestId: "post-decision-URN" });
         return this;
     }
 

@@ -28,8 +28,8 @@ public abstract class TrustNavMenuTestsBase
         typeof(AcademiesInTrustDetailsModel),
         typeof(PupilNumbersModel),
         typeof(FreeSchoolMealsModel),
-        typeof(PreAdvisoryBoardModel),
-        typeof(PostAdvisoryBoardModel),
+        typeof(PreDecisionModel),
+        typeof(PostDecisionModel),
         typeof(FreeSchoolsModel),
         //Ofsted
         typeof(OverviewModel),
