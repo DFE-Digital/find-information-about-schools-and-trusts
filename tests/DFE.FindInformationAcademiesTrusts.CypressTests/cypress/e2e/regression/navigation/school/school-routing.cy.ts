@@ -48,7 +48,7 @@ describe('School Routing and error handling Tests', () => {
             });
 
             it(`Should have no 500 error on the pupils population page for a school with no pupils`, () => {
-                cy.visit('/schools/pupils/population?urn=147855');
+                cy.visit('/schools/pupils/population?urn=151140');
 
                 // Verify page loads successfully without 500 errors
                 cy.get('body').should('be.visible');
