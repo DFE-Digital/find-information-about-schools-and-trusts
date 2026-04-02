@@ -32,8 +32,8 @@ public class GetCasesServiceTests
                 Arg.Is<string>(x => x == "1"))
             .Returns(new GetCasesByUserResponseModel { CaseInfos = new List<UserCaseInfo>(), TotalRecordCount = 0 });
 
-        var result = await _sut.GetCasesAsync(new GetCasesParameters("n", "m", false, false, false, false, 1, 25, [],
-            SortCriteria.CreatedDateAscending));
+        var result = await _sut.GetCasesAsync(new GetCasesParameters("n", "m", false ,false, false, false, 1, 25, [],
+            SortCriteria.CreatedDateAscending, false));
 
         await _mockCasesClient.Received(1).GetCasesByUserAsync(Arg.Any<string>(),
             Arg.Any<string>(),

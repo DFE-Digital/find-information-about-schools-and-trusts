@@ -13,7 +13,8 @@ public record GetCasesParameters(
     int Page,
     int RecordCount,
     IEnumerable<string> ProjectFilters,
-    SortCriteria Sort);
+    SortCriteria Sort,
+    bool IncludeSigChange);
 
 public interface IGetCasesService
 {
@@ -27,7 +28,7 @@ public class GetCasesService(ICasesClient caseAggregationServiceClient) : IGetCa
         var cases = await caseAggregationServiceClient.GetCasesByUserAsync(
             parameters.UserName,
             parameters.UserEmail,
-            false,
+            parameters.IncludeSigChange,
             parameters.IncludePrepare,
             parameters.IncludeComplete,
             parameters.IncludeManageFreeSchools,

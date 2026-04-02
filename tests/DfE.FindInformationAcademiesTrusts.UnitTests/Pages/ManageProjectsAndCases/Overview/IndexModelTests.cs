@@ -85,6 +85,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.ManageProjectsAndCa
                 "Manage free school projects",
                 "Prepare conversions and transfers",
                 "Record concerns and support for trusts",
+                "Significant change tracker"
             };
 
             IPaginatedList<UserCaseInfo> emptyList = PaginatedList<UserCaseInfo>.Empty();

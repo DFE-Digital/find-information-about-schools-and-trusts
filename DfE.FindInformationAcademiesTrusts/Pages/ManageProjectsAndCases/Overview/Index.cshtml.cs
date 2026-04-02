@@ -62,7 +62,8 @@ public class IndexModel : BasePageModel, IPaginationModel
             "Complete conversions, transfers and changes",
             "Manage free school projects",
             "Prepare conversions and transfers",
-            "Record concerns and support for trusts"
+            "Record concerns and support for trusts",
+            "Significant change tracker"
         ];
 
         var (userName, userEmail) = _userDetailsProvider.GetUserDetails();
@@ -79,7 +80,8 @@ public class IndexModel : BasePageModel, IPaginationModel
                 PageNumber,
                 25,
                 Filters.SelectedProjectTypes,
-                ConvertSortCriteria()
+                ConvertSortCriteria(),
+                IncludeSigChange()
             ));
 
         TotalProjects = Cases.Count;
@@ -107,6 +109,11 @@ public class IndexModel : BasePageModel, IPaginationModel
     private bool IncludeConcerns()
     {
         return Include("Record concerns and support for trusts");
+    }
+
+    private bool IncludeSigChange()
+    {
+        return Include("Significant change tracker");
     }
 
     private bool Include(string system)
