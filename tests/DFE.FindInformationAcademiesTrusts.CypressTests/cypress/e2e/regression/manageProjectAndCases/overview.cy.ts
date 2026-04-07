@@ -8,13 +8,10 @@ describe("Testing the components of the home page", () => {
 
   it("Should load with all projects visible", () => {
     overview
-      .CheckProjectCountIs("5")
+      .ClickApplyFilters()
+      .CheckProjectCountIs("11")
       .CheckSortOrdering()
-      .CheckCaseItemsHaveCorrectItems(0)
-      .CheckCaseItemsHaveCorrectItems(1)
-      .CheckCaseItemsHaveCorrectItems(2)
-      .CheckCaseItemsHaveCorrectItems(3)
-      .CheckCaseItemsHaveCorrectItems(4);
+      .CheckCaseItemsHaveCorrectItemsRange(0, 10);
   });
 
   it("Should apply filters for different systems", () => {
@@ -38,7 +35,7 @@ describe("Testing the components of the home page", () => {
       .ClickApplyFilters()
       .CheckProjectCountIs("0")
       .ClickClearFilters()
-      .CheckProjectCountIs("5")
+      .CheckProjectCountIs("11")
       .ToggleProjectTypeFilter()
       .ClickConversionProjectType()
       .ClickApplyFilters()
@@ -47,5 +44,11 @@ describe("Testing the components of the home page", () => {
       .ClickApplyFilters()
       .CheckProjectCountIs("1")
       .CheckAllSystemsAreComplete()
+      .ClickClearFilters()
+      .CheckProjectCountIs("11")
+      .ClickSigChangeSystem()
+      .ClickApplyFilters()
+      .CheckProjectCountIs("6")
+      .CheckAllSystemsAreSigChange();
   });
 });
