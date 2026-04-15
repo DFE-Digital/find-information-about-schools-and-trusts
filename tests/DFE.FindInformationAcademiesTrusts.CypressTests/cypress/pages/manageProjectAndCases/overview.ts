@@ -28,6 +28,10 @@ class Overview {
                     cy
                         .get("#system-filter-section")
                         .contains("Record concerns and support for trusts"),
+                sigChange: () =>
+                    cy
+                        .get("#system-filter-section")
+                        .contains("Significant change tracker"),
             },
             projectTypeFilters: {
                 conversion: () =>
@@ -98,6 +102,14 @@ class Overview {
         return this;
     }
 
+    
+    public CheckAllSystemsAreSigChange(): this {
+        this.elements.cases.systems().each(($el) => {
+            cy.wrap($el).contains("Significant Change Tracker");
+        });
+        return this;
+    }
+
     public ToggleSystemFilter(): this {
         this.elements.filters.toggleButtons.system().click();
         return this;
@@ -113,6 +125,7 @@ class Overview {
         this.elements.filters.systemFilters.mfsp().should("be.visible");
         this.elements.filters.systemFilters.prepare().should("be.visible");
         this.elements.filters.systemFilters.recast().should("be.visible");
+        this.elements.filters.systemFilters.sigChange().should("be.visible");
         return this;
     }
 
@@ -133,6 +146,11 @@ class Overview {
 
     public ClickRecastSystem(): this {
         this.elements.filters.systemFilters.recast().click();
+        return this;
+    }
+
+    public ClickSigChangeSystem(): this {
+        this.elements.filters.systemFilters.sigChange().click();
         return this;
     }
 
@@ -199,15 +217,27 @@ class Overview {
                 cy.get("#sorting").trigger("change");
                 cy.get("#sorting").should("have.value", "createdAsc");
                 cy.get('[id^="case-title-"]').then(($els) => {
+                    
                     const newTitles = Array.from($els, (el) => el.innerText);
+                    const newIds = Array.from($els, (el) => el.id);
                     const expectedReversed = [...originalTitles].reverse();
-                    console.log(newTitles);
                     console.log(originalTitles);
+
+                    console.log(newTitles);
+                    console.log(newIds);
+                    
                     console.log(expectedReversed);
                     expect(newTitles).to.deep.equal(expectedReversed);
                 });
             });
 
+        return this;
+    }
+
+    public CheckCaseItemsHaveCorrectItemsRange(firstCaseIndex: number, lastCaseIndex: number): this {
+        for (let caseIndex = firstCaseIndex; caseIndex <= lastCaseIndex; caseIndex++) {
+            this.CheckCaseItemsHaveCorrectItems(caseIndex);
+        };
         return this;
     }
 
