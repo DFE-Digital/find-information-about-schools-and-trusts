@@ -80,9 +80,9 @@ public class TrustSchoolSearchRepository(
             .OrderBy(x =>
                 x.Name == text ? 0 :
                 x.Id == text ? 0 :
-                x.Name.StartsWith(text + " ") ? 1 :
-                x.Name.EndsWith(" " + text) ? 2 :
-                x.Name.Contains(" " + text + " ") ? 2 : 3)
+                x.Name.StartsWith(text) ? 1 :
+                x.Name.EndsWith(text) ? 2 :
+                x.Name.Contains(text) ? 2 : 3)
             .ThenBy(x => x.Id)
             .Select(BuildAutoCompleteResult());
     }
