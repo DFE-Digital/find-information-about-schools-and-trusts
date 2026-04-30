@@ -115,7 +115,7 @@ public class TrustSchoolSearchRepository(
         return query;
     }
 
-    private IQueryable<TempSearchResult> SelectSchools(IQueryable<GiasEstablishment> schoolsBaseQuery)
+    private static IQueryable<TempSearchResult> SelectSchools(IQueryable<GiasEstablishment> schoolsBaseQuery)
     {
         var query = schoolsBaseQuery
             .Select(e => new TempSearchResult
