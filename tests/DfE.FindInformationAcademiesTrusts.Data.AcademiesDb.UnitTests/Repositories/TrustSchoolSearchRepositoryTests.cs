@@ -341,10 +341,95 @@ public class TrustSchoolSearchRepositoryTests
             .And.NotContain(t => t.Name == "zetta school");
     }
 
+
     [Theory]
-    [InlineData("a")]
+    [InlineData("united")]
+    public async Task SearchAutocompleteAsync_should_return_trusts_or_schools_ordered_by_starts_with(string searchTerm)
+    {
+        //Set up 3 unordered trusts with duplicate names (one is "zetta" which we don't want to be returned)
+        (string uid, string name)[] unorderedTrusts =
+        [
+            ("2340", "united trusts"),
+            ("2232", "some united trust"),
+            ("1230", "all stars")
+        ];
+
+        foreach (var (uid, name) in unorderedTrusts)
+        {
+            _mockAcademiesDbContext.AddGiasGroupForTrust(uid, name);
+        }
+
+        //Set up 4 unordered schools with duplicate names (one is "zetta" which we don't want to be returned)
+        (int urn, string name)[] schoolNames =
+        [
+            (900231, "united school"),
+            (200232, "some united school"),
+            (700235, "united"),
+            (800231, "beta school")
+        ];
+
+        foreach (var (urn, name) in schoolNames)
+        {
+            _mockAcademiesDbContext.AddGiasEstablishment(urn, name, "Local authority maintained schools");
+        }
+
+        var result = await _sut.GetAutoCompleteSearchResultsAsync(searchTerm);
+
+        result.Should()
+            .HaveCount(5)
+            .And.OnlyContain(t => t.Name.Contains("united"));
+
+        result[0].Name.Should().Be("united");
+        result[1].Name.Should().Be("united trusts");
+        result[2].Name.Should().Be("united school");
+        result[3].Name.Should().Be("some united trust");
+        result[4].Name.Should().Be("some united school");
+    }
+
+
+    [Theory]
+    [InlineData("all")]
+    public async Task SearchAutocompleteAsync_should_return_trusts_or_schools_ordered_by_exact_match(string searchTerm)
+    {
+        //Set up 3 unordered trusts with duplicate names (one is "zetta" which we don't want to be returned)
+        (string uid, string name)[] unorderedTrusts =
+        [
+            ("2340", "all stars"),
+            ("2232", "zetta trust"),
+            ("1230", "all stars")
+        ];
+
+        foreach (var (uid, name) in unorderedTrusts)
+        {
+            _mockAcademiesDbContext.AddGiasGroupForTrust(uid, name);
+        }
+
+        //Set up 4 unordered schools with duplicate names (one is "zetta" which we don't want to be returned)
+        (int urn, string name)[] schoolNames =
+        [
+            (900231, "beta school"),
+            (200232, "zetta school"),
+            (700235, "all stars"),
+            (800231, "beta school")
+        ];
+
+        foreach (var (urn, name) in schoolNames)
+        {
+            _mockAcademiesDbContext.AddGiasEstablishment(urn, name, "Local authority maintained schools");
+        }
+
+        var result = await _sut.GetAutoCompleteSearchResultsAsync(searchTerm);
+
+        result.Should()
+            .HaveCount(3)
+            .And.BeInAscendingOrder(t => t.Id)
+            .And.OnlyContain(t => t.Name == "all stars");
+    }
+
+    [Theory]
+    [InlineData("all")]
     public async Task
-        SearchAutocompleteAsync_should_return_first_5_trusts_or_schools_after_sorting_alphabetically_by_name_and_id(
+        SearchAutocompleteAsync_should_return_first_5_trusts_or_schools_after_ordering_by_weighting_and_id(
             string searchTerm)
     {
         //Set up 3 unordered trusts with duplicate names (one is "zetta" which we don't want to be returned)
@@ -378,7 +463,7 @@ public class TrustSchoolSearchRepositoryTests
 
         result.Should()
             .HaveCount(5)
-            .And.BeInAscendingOrder(t => t.Name).And.ThenBeInAscendingOrder(t => t.Id)
+            .And.BeInAscendingOrder(t => t.Id)
             .And.NotContain(t => t.Name == "zetta trust")
             .And.NotContain(t => t.Name == "zetta school");
     }
