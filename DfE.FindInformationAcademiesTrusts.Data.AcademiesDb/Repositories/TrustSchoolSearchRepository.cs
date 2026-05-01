@@ -69,20 +69,15 @@ public class TrustSchoolSearchRepository(
     }
 
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Critical Code Smell", "S3776:Cognitive Complexity of methods should not be too high", Justification = "In order for this to work the query needs to be inside the OrderBy statement")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Major Code Smell", "S3358:Ternary operators should not be nested", Justification = "Need to have the :2 on the end for other results")]
     private IQueryable<SearchResult> BuildOrderedSearchResultQuery(string text)
     {
         IQueryable<TempSearchResult> searchResults = SelectTrusts(CreateTrustSearchQuery(text));
         searchResults = searchResults.Union(SelectSchools(CreateSchoolSearchQuery(text)));
 
         return searchResults
-            .OrderBy(x =>
-                x.Name == text ? 0 :
-                x.Id == text ? 0 :
-                x.Name.StartsWith(text) ? 1 :
-                x.Name.EndsWith(text) ? 2 :
-                x.Name.Contains(text) ? 2 : 3)
+            .OrderBy(x => x.Name == text || x.Id == text ? 0 : 1)
+            .ThenBy(x => x.Name.StartsWith(text) ? 1 : 2)
+            .ThenBy(x => x.Name.EndsWith(text) || x.Name.Contains(text) ? 2 : 3)
             .ThenBy(x => x.Id)
             .Select(BuildAutoCompleteResult());
     }
