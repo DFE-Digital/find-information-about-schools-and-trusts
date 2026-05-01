@@ -281,8 +281,8 @@ export const schoolsWithGovernanceData = [
     },
     {
         typeOfSchool: "academy with governance data",
-        urn: 134224,
-        description: "Manchester Academy - Academy sponsor led with governance information"
+        urn: 145313,
+        description: "Bacon's College - Academy sponsor led with governance information"
     }
 ];
 
