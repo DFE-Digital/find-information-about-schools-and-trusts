@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -33,7 +33,7 @@
 
     <ItemGroup>
       <Reference Include="Dfe.CaseAggregationService.Api.Client">
-        <HintPath>..\..\..\..\_gittest\rsd-case-aggregation-api\src\Dfe.CaseAggregationService.Api.Client\bin\Debug\net8.0\Dfe.CaseAggregationService.Api.Client.dll</HintPath>
+        <HintPath>..\..\..\..\_gittest\rsd-case-aggregation-api\src\Dfe.CaseAggregationService.Api.Client\bin\Debug\net10.0\Dfe.CaseAggregationService.Api.Client.dll</HintPath>
       </Reference>
     </ItemGroup>
 
