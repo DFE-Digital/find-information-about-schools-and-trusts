@@ -1,5 +1,5 @@
 # Set the major version of dotnet
-ARG DOTNET_VERSION=8.0
+ARG DOTNET_VERSION=10.0
 # Set the major version of nodejs
 ARG NODEJS_VERSION_MAJOR=22
 
