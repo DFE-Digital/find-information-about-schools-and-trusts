@@ -1,4 +1,5 @@
-﻿using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
+﻿using System.Linq.Expressions;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Search;
@@ -67,20 +68,29 @@ public class TrustSchoolSearchRepository(
                 || x.Urn.ToString().Contains(searchTerm));
     }
 
+
     private IQueryable<SearchResult> BuildOrderedSearchResultQuery(string text)
     {
-        return SelectTrusts(CreateTrustSearchQuery(text))
-            .Union(SelectSchools(CreateSchoolSearchQuery(text)))
-            //Two entities could have the same (case-insensitive) name (e.g. a single academy trust or a school with a
-            //common name like "St. Mary's") so ensure that we order by another property too for consistent returns
-            .OrderBy(g => g.Name)
-            .ThenBy(g => g.Id)
-            .Select(x => new SearchResult(x.Id, x.Name, x.Type, stringFormattingUtilities.BuildAddressString(
-                x.Street,
-                x.Locality,
-                x.Town,
-                x.PostCode), x.IsTrust, x.TrustGroupId));
+        IQueryable<TempSearchResult> searchResults = SelectTrusts(CreateTrustSearchQuery(text));
+        searchResults = searchResults.Union(SelectSchools(CreateSchoolSearchQuery(text)));
+
+        return searchResults
+            .OrderBy(x => x.Name == text || x.Id == text ? 0 : 1)
+            .ThenBy(x => x.Name.StartsWith(text) ? 1 : 2)
+            .ThenBy(x => x.Name.EndsWith(text) || x.Name.Contains(text) ? 2 : 3)
+            .ThenBy(x => x.Id)
+            .Select(BuildAutoCompleteResult());
     }
+
+    private Expression<Func<TempSearchResult, SearchResult>> BuildAutoCompleteResult()
+    {
+        return x => new SearchResult(x.Id, x.Name, x.Type, stringFormattingUtilities.BuildAddressString(
+            x.Street,
+            x.Locality,
+            x.Town,
+            x.PostCode), x.IsTrust, x.TrustGroupId);
+    }
+
 
     private static IQueryable<TempSearchResult> SelectTrusts(IQueryable<GiasGroup> trustsBaseQuery)
     {
