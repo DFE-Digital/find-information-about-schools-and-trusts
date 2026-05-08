@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-04-16.7347...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-05-08.7382...HEAD)
+
+--- 
+
+## [Release-63][release-63] - 2026-05-08
+
+### Fixed
+- 278811 - Improve way Fast Searches
 
 --- 
 ## [Release-63][release-63] - 2026-04-16
@@ -23,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 271932 - update pipeline academies tab headings from 'advisory board' to 'pre decision'
   
 --- 
+
 ## [Release-61][release-61] - 2026-02-27
 
 ### Added
@@ -814,4 +822,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 [release-62]:
   https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-04-01.7305
 [release-63]:
-  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-04-16.7347
+  https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-05-08.7382
