@@ -26,5 +26,24 @@
       }
    });
 
+    // track click event by css class name
+    document.addEventListener("click", function (e) {
+        const trackedClasses = ["govuk-details__summary-text"];
+
+        const el = e.target.closest(trackedClasses.map(c => "." + c).join(","));
+        if (!el) return;
+
+        const matchedClass = trackedClasses.find(c => el.classList.contains(c));
+
+        window.appInsights.trackEvent({
+            name: "RSD track clicks accordion",
+            properties: {
+                className: matchedClass,
+                text: el.innerText?.trim()
+            }
+        });
+    });
+
+
    window.appInsights.setAuthenticatedUserContext("@authenticatedUserId", null, true);
 </script>
