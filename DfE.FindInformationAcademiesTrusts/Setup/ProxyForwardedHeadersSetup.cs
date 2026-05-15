@@ -14,7 +14,7 @@ public static class ProxyForwardedHeadersSetup
             ForwardedHeaders = ForwardedHeaders.All,
             RequireHeaderSymmetry = false
         };
-        forwardOptions.KnownNetworks.Clear();
+        forwardOptions.KnownIPNetworks.Clear();
         forwardOptions.KnownProxies.Clear();
         app.UseForwardedHeaders(forwardOptions);
     }
