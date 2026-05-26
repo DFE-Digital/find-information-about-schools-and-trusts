@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-05-08.7382...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-05-14.7420...HEAD)
+
+--- 
+
+## [Release-64][release-64] - 2026-05-26
+
+### Fixed 
+
+- 283310 Hyphenated names allowed in email addresses
 
 --- 
 
