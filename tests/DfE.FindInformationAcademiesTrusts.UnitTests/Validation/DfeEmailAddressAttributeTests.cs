@@ -3,7 +3,7 @@ using DfE.FindInformationAcademiesTrusts.Validation;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Validation;
 
-public class DfeEmailAddressAttributeTests
+public class DfeEmailAddressAsttributeTests
 {
     [Theory]
     [InlineData(1)]
@@ -28,6 +28,10 @@ public class DfeEmailAddressAttributeTests
     [InlineData("joe..bloggs@education.gov.uk")]
     [InlineData(".joe@education.gov.uk")]
     [InlineData("joe.@education.gov.uk")]
+    [InlineData("-joe.bloggs@education.gov.uk")]
+    [InlineData("-joe.bloggs-@education.gov.uk")]
+    [InlineData("joe.bloggs-@education.gov.uk")]
+    [InlineData("joe.bloggs_bloggs@education.gov.uk")]
     [InlineData("!\"£$%^&*()@education.gov.uk")]
     [InlineData("${7*7}@education.gov.uk")]
     [InlineData("\"\"@education.gov.uk")]
@@ -46,6 +50,13 @@ public class DfeEmailAddressAttributeTests
     [InlineData("joe.bloggs@education.gov.uk")]
     [InlineData("david.lloyd.george@education.gov.uk")]
     [InlineData("JOE.BLOGGS@EDUCATION.GOV.UK")]
+    [InlineData("JOE-JOE.BLOGGS-BLOGGS@EDUCATION.GOV.UK")]
+    [InlineData("JOE.BLOGGS-BLOGGS@EDUCATION.GOV.UK")]
+    [InlineData("JOE-JOE.BLOGGS@EDUCATION.GOV.UK")]
+    [InlineData("joe-joe.bloggs-bloggs@education.gov.uk")]
+    [InlineData("joe.bloggs-bloggs@education.gov.uk")]
+    [InlineData("joe-joe.bloggs@education.gov.uk")]
+    
     public void GetValidationResult_ShouldReturnSuccess_WhenEmailAddressIsValid(string email)
     {
         var attribute = new DfeEmailAddressAttribute();

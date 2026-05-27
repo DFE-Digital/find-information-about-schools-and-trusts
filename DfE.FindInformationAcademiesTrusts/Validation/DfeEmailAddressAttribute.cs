@@ -38,6 +38,19 @@ public class DfeEmailAddressAttribute()
     private static bool IsCorrectName(string name)
     {
         var nameParts = name.Split(".");
-        return !nameParts.Any(string.IsNullOrWhiteSpace) && nameParts.All(part => part.All(char.IsLetterOrDigit));
+
+        return !nameParts.Any(string.IsNullOrWhiteSpace) &&
+               nameParts.All(IsValidNamePart);
+    }
+
+    private static bool IsValidNamePart(string part)
+    {
+        // Cannot start or end with hyphen
+        if (part.StartsWith('-') || part.EndsWith('-'))
+        {
+            return false;
+        }
+
+        return part.All(c => char.IsLetterOrDigit(c) || c == '-');
     }
 }
