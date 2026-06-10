@@ -3,7 +3,8 @@ import { AuthenticationInterceptorParams } from '../auth/authenticationIntercept
 import './commands';
 import 'wick-a11y';
 
-Cypress.expose('URL', Cypress.config("baseUrl"));
+//Cypress.expose('URL', Cypress.config("baseUrl"));
+Cypress.config('baseUrl')
 
 declare global {
     namespace Cypress {
@@ -26,7 +27,6 @@ declare global {
         }
     }
 }
-
 //Always log in before every test
 beforeEach(() => {
     cy.login();
