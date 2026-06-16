@@ -1,4 +1,5 @@
 using System.Globalization;
+using Dfe.AcademiesApi.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
-public class SchoolRepository(
+public class SchoolRepository(IEstablishmentsV4Client establishmentsClient,
     IAcademiesDbContext academiesDbContext,
     IStringFormattingUtilities stringFormattingUtilities,
     ILogger<SchoolRepository> logger) : ISchoolRepository
@@ -29,21 +30,23 @@ public class SchoolRepository(
 
     public async Task<SchoolDetails> GetSchoolDetailsAsync(int urn)
     {
-        return await academiesDbContext.GiasEstablishments
-            .Where(e => e.Urn == urn)
-            .Select(establishment => new SchoolDetails(establishment.EstablishmentName!,
+
+        var establishment = await establishmentsClient.GetEstablishmentByUrnAsync(urn.ToString());
+        
+        //var  cat =   academiesDbContext.GiasEstablishments.First(e => e.Urn == urn);
+            
+            return new SchoolDetails(establishment.Name!,
                 stringFormattingUtilities.BuildAddressString(
-                    establishment.Street,
+                    establishment.Address!.Street!,
                     null,
-                    establishment.Town,
-                    establishment.Postcode
+                    establishment.Address.Town!,
+                    establishment.Address.Postcode!
                 ),
-                establishment.GorName!,
-                establishment.LaName!,
-                establishment.PhaseOfEducationName!,
+                establishment.Gor!.Name!,
+                establishment.LocalAuthorityName!,
+                establishment.PhaseOfEducation!.Name!,
                 new AgeRange(establishment.StatutoryLowAge, establishment.StatutoryHighAge),
-                establishment.NurseryProvisionName))
-            .SingleAsync();
+                "No Nursery Classes");
     }
 
     public async Task<DateOnly?> GetDateJoinedTrustAsync(int urn)
@@ -145,8 +148,10 @@ public class SchoolRepository(
 
     public async Task<SchoolReferenceNumbers?> GetReferenceNumbersAsync(int urn)
     {
-        return await academiesDbContext.GiasEstablishments.Where(e => e.Urn == urn)
-            .Select(e => new SchoolReferenceNumbers(e.LaCode, e.EstablishmentNumber, e.Ukprn)).SingleOrDefaultAsync();
+        var establishment = await establishmentsClient.GetEstablishmentByUrnAsync(urn.ToString());
+        
+        return new SchoolReferenceNumbers(establishment.LocalAuthorityCode, establishment.EstablishmentNumber, establishment.Ukprn);
+        
     }
 
     public async Task<Governor[]> GetGovernanceAsync(int urn)

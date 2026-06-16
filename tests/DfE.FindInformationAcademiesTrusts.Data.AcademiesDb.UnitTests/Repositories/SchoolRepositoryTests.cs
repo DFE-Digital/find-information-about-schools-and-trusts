@@ -1,3 +1,4 @@
+using Dfe.AcademiesApi.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
@@ -9,6 +10,7 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Reposito
 
 public class SchoolRepositoryTests
 {
+    private readonly IEstablishmentsV4Client _mockEstablishmentsV4Client;
     private readonly SchoolRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
 
@@ -17,7 +19,8 @@ public class SchoolRepositoryTests
 
     public SchoolRepositoryTests()
     {
-        _sut = new SchoolRepository(_mockAcademiesDbContext.Object, _stringFormattingUtilities, _mockLogger);
+        _mockEstablishmentsV4Client = Substitute.For<IEstablishmentsV4Client>();
+        _sut = new SchoolRepository(_mockEstablishmentsV4Client,_mockAcademiesDbContext.Object, _stringFormattingUtilities, _mockLogger);
     }
 
     [Fact]
@@ -88,31 +91,37 @@ public class SchoolRepositoryTests
     {
         var urn = 123456;
 
-        _mockAcademiesDbContext.GiasEstablishments.AddRange(
-        [
-            new GiasEstablishment
+        _mockEstablishmentsV4Client.GetEstablishmentByUrnAsync(123456.ToString()).Returns(new EstablishmentDto
             {
-                Urn = urn,
-                TypeOfEstablishmentName = "Foundation school",
-                EstablishmentTypeGroupName = "Local authority maintained schools",
-                EstablishmentName = "cool school",
+            Urn = 1223.ToString(),
+            Name = "cool school",
+            Address = new AddressDto
+            {
                 Street = "1st line",
                 Town = "Funky Town",
                 Postcode = "BBL 123",
-                GorName = "Yorkshire",
-                LaName = "Leeds",
-                PhaseOfEducationName = "Secondary",
-                StatutoryLowAge = "5",
-                StatutoryHighAge = "16",
-                NurseryProvisionName = "None",
-                EstablishmentStatusName = "Open"
-            }
-        ]);
-
+            },
+            Gor = new NameAndCodeDto
+            {
+                Name = "Yorkshire",
+                Code = "1"
+            },
+            LocalAuthorityName = "Leeds",
+            PhaseOfEducation = new NameAndCodeDto()
+            {
+                Name = "Secondary",
+                Code = "2"
+            },
+            StatutoryLowAge = "5",
+            StatutoryHighAge = "16",
+            
+        });
+        
+        
         var result = await _sut.GetSchoolDetailsAsync(urn);
 
         result.Should().BeEquivalentTo(new SchoolDetails("cool school", "1st line, Funky Town, BBL 123", "Yorkshire",
-            "Leeds", "Secondary", new AgeRange(5, 16), "None"));
+            "Leeds", "Secondary", new AgeRange(5, 16), "No Nursery Classes"));
     }
 
     [Fact]
@@ -389,20 +398,22 @@ public class SchoolRepositoryTests
         string establishmentNumber, string ukprn, string type, string typeGroup)
     {
         var name = $"School {urn}";
-
-        _mockAcademiesDbContext.GiasEstablishments.AddRange([
-            new GiasEstablishment
+        
+        _mockEstablishmentsV4Client.GetEstablishmentByUrnAsync(urn.ToString()).Returns(new EstablishmentDto
+        {
+            Urn = urn.ToString(),
+            LocalAuthorityCode = laCode,
+            EstablishmentNumber = establishmentNumber,
+            Ukprn = ukprn,
+            EstablishmentType = new NameAndCodeDto
             {
-                Urn = urn,
-                LaCode = laCode,
-                EstablishmentNumber = establishmentNumber,
-                Ukprn = ukprn,
-                EstablishmentName = name,
-                TypeOfEstablishmentName = type,
-                EstablishmentTypeGroupName = typeGroup,
-                EstablishmentStatusName = "Open"
-            }
-        ]);
+                Name = type,
+                Code = typeGroup
+            },
+            Name = name,
+       
+        });
+        
 
         var result = await _sut.GetReferenceNumbersAsync(urn);
 
@@ -420,6 +431,22 @@ public class SchoolRepositoryTests
     public async Task GetReferenceNumbersAsync_should_not_return_reference_numbers_for_unsupported_establishment_types(
         string type, string typeGroup)
     {
+        
+        _mockEstablishmentsV4Client.GetEstablishmentByUrnAsync(123456.ToString()).Returns(new EstablishmentDto
+        {
+            Urn = 123456.ToString(),
+            LocalAuthorityCode = "123",
+            EstablishmentNumber = "4567",
+            Ukprn = "10012345",
+            EstablishmentType = new NameAndCodeDto
+            {
+                Name = type,
+                Code = typeGroup
+            },
+            Name = "Unsupported Establishment",
+       
+        });
+        
         _mockAcademiesDbContext.GiasEstablishments.Add(new GiasEstablishment
         {
             Urn = 123456,

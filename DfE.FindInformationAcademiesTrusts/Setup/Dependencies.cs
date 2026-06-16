@@ -126,6 +126,7 @@ public static class Dependencies
 
         builder.Services.AddAcademiesApiClient<IEstablishmentsV5Client, EstablishmentsV5Client>(builder.Configuration);
         builder.Services.AddAcademiesApiClient<IEstablishmentsV4Client, EstablishmentsV4Client>(builder.Configuration);
+        builder.Services.AddAcademiesApiClient<ITrustsV4Client, TrustsV4Client>(builder.Configuration);
         builder.Services.AddScoped<IReportCardsRepository, ReportCardsRepository>();
         builder.Services.AddScoped<IReportCardsService, ReportCardsService>();
         builder.Services.AddScoped<IOfstedService, OfstedService>();
