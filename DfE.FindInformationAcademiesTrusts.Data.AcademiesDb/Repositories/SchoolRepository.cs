@@ -80,6 +80,8 @@ public class SchoolRepository(IEstablishmentsV4Client establishmentsClient,
 
     public async Task<SenProvision> GetSchoolSenProvisionAsync(int urn)
     {
+        var establishment = await establishmentsClient.GetEstablishmentByUrnAsync(urn.ToString());
+        
         return await academiesDbContext.GiasEstablishments
             .Where(e => e.Urn == urn)
             .Select(establishment => new SenProvision(
@@ -172,10 +174,7 @@ public class SchoolRepository(IEstablishmentsV4Client establishmentsClient,
 
     public async Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn)
     {
-        return await academiesDbContext.GiasEstablishments
-            .Where(x => x.Urn == urn)
-            .Select(g =>
-                new ReligiousCharacteristics(g.DioceseName, g.ReligiousCharacterName, g.ReligiousEthosName))
-            .SingleAsync();
+        var establishment = await establishmentsClient.GetEstablishmentByUrnAsync(urn.ToString());
+        return new ReligiousCharacteristics(establishment.Diocese!.Name, establishment.ReligiousCharacter!.Name, establishment.ReligousEthos);
     }
 }

@@ -1,4 +1,5 @@
-﻿using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
+﻿using Dfe.AcademiesApi.Client.Contracts;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Search;
 
@@ -7,13 +8,16 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Reposito
 public class TrustSchoolSearchRepositoryTests
 {
     private readonly TrustSchoolSearchRepository _sut;
-    private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
+    private readonly IEstablishmentsV4Client _mockEstablishmentsV4Client;
+    private readonly ITrustsV4Client _mockTrustsClient;
 
     private const int PageSize = 20;
 
     public TrustSchoolSearchRepositoryTests()
     {
-        _sut = new TrustSchoolSearchRepository(_mockAcademiesDbContext.Object, new StringFormattingUtilities());
+        _mockEstablishmentsV4Client = Substitute.For<IEstablishmentsV4Client>();
+        _mockTrustsClient = Substitute.For<ITrustsV4Client>();
+        _sut = new TrustSchoolSearchRepository(_mockEstablishmentsV4Client, _mockTrustsClient, new StringFormattingUtilities());
     }
 
     [Theory]
