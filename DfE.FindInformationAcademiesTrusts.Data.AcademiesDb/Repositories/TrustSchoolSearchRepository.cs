@@ -24,10 +24,10 @@ public class TrustSchoolSearchRepository(
 
         // Run API calls in parallel
         var establishmentsTask =
-            establishmentsClient.SearchEstablishments2Async(text, null, null, false, false);
+            establishmentsClient.SearchEstablishments2Async(text, null, text, true, true);
 
         var trustsTask =
-            trustsClient.SearchTrusts3Async(text, null, null, 1, 10, null);
+            trustsClient.SearchTrusts3Async(text, text, null, 1, 10, null);
 
         await Task.WhenAll(establishmentsTask, trustsTask);
 
@@ -36,13 +36,12 @@ public class TrustSchoolSearchRepository(
 
         // Filter (STARTS WITH ONLY)
         var filteredEstablishments = establishments
-                .Where(x => x.Name!.StartsWith(text, StringComparison.OrdinalIgnoreCase))
-                .OrderBy(x => x.Name)
+                .OrderBy(x => x.Name!.StartsWith(text, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
                 .ToList();
         
 
         var filteredTrusts = trusts
-            .Where(t =>
+            .OrderBy(t =>
                 !string.IsNullOrWhiteSpace(t.Name) &&
                 t.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase))
             .ToList();
