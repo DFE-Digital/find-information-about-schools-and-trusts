@@ -27,12 +27,16 @@ public class TrustSchoolSearchRepository(
             establishmentsClient.SearchEstablishments2Async(text, null, text, true, true);
 
         var trustsTask =
-            trustsClient.SearchTrusts3Async(text, text, null, 1, 10, null);
+            trustsClient.SearchTrusts3Async(text, null, null, 1, 10, null);
 
+        
+        var trustByTrn = trustsClient.GetTrustByTrustReferenceNumberAsync(text).Result;
+        
         await Task.WhenAll(establishmentsTask, trustsTask);
 
         var establishments = establishmentsTask.Result;
         var trusts = trustsTask.Result?.Data ?? [];
+        trusts.Add(trustByTrn);
 
         // Filter (STARTS WITH ONLY)
         var filteredEstablishments = establishments
