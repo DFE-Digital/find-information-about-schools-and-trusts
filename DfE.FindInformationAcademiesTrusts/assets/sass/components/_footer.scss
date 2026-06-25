@@ -2,6 +2,30 @@
   border-bottom: 0;
 }
 
+// Intake footer layout. These rules live in the stylesheet (served from
+// 'self') rather than inline style attributes, which the Content Security
+// Policy (style-src 'self', no 'unsafe-inline') would otherwise block.
+.app-footer-intake__row {
+  @include govuk-responsive-padding(5, "top");
+  @include govuk-responsive-padding(4, "bottom");
+}
+
+.app-footer-intake__brand {
+  @include govuk-media-query($from: tablet) {
+    border-right: 1px solid $govuk-border-colour;
+  }
+}
+
+.app-footer-intake__cta {
+  display: flex;
+  align-items: flex-start;
+  gap: govuk-spacing(3);
+}
+
+.app-footer-intake__cta-icon {
+  flex-shrink: 0;
+}
+
 .rsd-footer-phase .govuk-phase-banner__content {
   font-size: 1rem;
   line-height: 1.25;

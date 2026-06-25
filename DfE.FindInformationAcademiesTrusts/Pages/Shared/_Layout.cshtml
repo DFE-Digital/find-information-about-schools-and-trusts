@@ -65,7 +65,9 @@
 
     @RenderBody()
 
-    <partial name="_Footer"/>
+    @* <partial name="_Footer"/> *@
+    <partial name="_Footer_Intake" />
+
     <script src="~/dist/main.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", false)
 </body>
