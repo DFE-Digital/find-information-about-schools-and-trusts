@@ -14,7 +14,6 @@ public class GetTrusts(IDfeHttpClientFactory httpClientFactory,
         
         string path = $"v4/trusts?groupName={searchQuery}&urn={searchQuery}&page=1&count=10&status=Open";
         
-        //_httpClient.DefaultRequestHeaders.Remove("x-correlationId");
         _httpClient.DefaultRequestHeaders.Add("x-correlationId", Guid.NewGuid().ToString());
         
         
@@ -30,7 +29,7 @@ public class GetTrusts(IDfeHttpClientFactory httpClientFactory,
         
         string path = $"v4/trust/trustReferenceNumber/{referenceNumber}";
         
-        //_httpClient.DefaultRequestHeaders.Remove("x-correlationId");
+   
         _httpClient.DefaultRequestHeaders.Add("x-correlationId", Guid.NewGuid().ToString());
         
         

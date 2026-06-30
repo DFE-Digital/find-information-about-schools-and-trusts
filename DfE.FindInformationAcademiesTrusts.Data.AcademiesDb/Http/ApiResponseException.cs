@@ -9,7 +9,8 @@ public class ApiResponseException : Exception
     {
     }
 
-    protected ApiResponseException(SerializationInfo info, StreamingContext context) 
+    [Obsolete(DiagnosticId = "SYSLIB0051")]
+    protected ApiResponseException(SerializationInfo info, StreamingContext context)  : base(info, context)
     {
     }
 }
