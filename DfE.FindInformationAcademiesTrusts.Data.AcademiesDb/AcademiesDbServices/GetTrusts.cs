@@ -2,7 +2,7 @@ using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
 
-namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb;
+namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 
 public class GetTrusts(IDfeHttpClientFactory httpClientFactory,
     IHttpClientService httpClientService) : IGetTrusts

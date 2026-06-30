@@ -1,4 +1,4 @@
-namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb;
+namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 
 public class NameAndCodeEnums
 {

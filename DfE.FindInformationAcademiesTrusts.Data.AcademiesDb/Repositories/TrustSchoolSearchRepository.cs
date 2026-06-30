@@ -1,4 +1,5 @@
-﻿using DfE.FindInformationAcademiesTrusts.Data.Repositories.Search;
+﻿using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.Search;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
 

@@ -5,7 +5,7 @@ using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 using Microsoft.Extensions.Logging;
 
 
-namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb;
+namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 
 public class GetEstablishments(IDfeHttpClientFactory httpClientFactory,
     IHttpClientService httpClientService) : IGetEstablishments
@@ -16,7 +16,6 @@ public class GetEstablishments(IDfeHttpClientFactory httpClientFactory,
     {
         string path = $"v4/establishments?name={searchQuery}&urn={searchQuery}&excludeClosed=true&matchAny=true";
         
-        //_httpClient.DefaultRequestHeaders.Remove("x-correlationId");
         _httpClient.DefaultRequestHeaders.Add("x-correlationId", Guid.NewGuid().ToString());
         
         
