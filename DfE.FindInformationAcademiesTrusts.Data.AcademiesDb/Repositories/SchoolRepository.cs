@@ -1,5 +1,4 @@
 using System.Globalization;
-using Dfe.AcademiesApi.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
@@ -10,8 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
-public class SchoolRepository(IEstablishmentsV4Client establishmentsClient,
-    IAcademiesDbContext academiesDbContext,
+public class SchoolRepository(IAcademiesDbContext academiesDbContext,
     IStringFormattingUtilities stringFormattingUtilities,
     ILogger<SchoolRepository> logger) : ISchoolRepository
 {
@@ -30,23 +28,21 @@ public class SchoolRepository(IEstablishmentsV4Client establishmentsClient,
 
     public async Task<SchoolDetails> GetSchoolDetailsAsync(int urn)
     {
-
-        var establishment = await establishmentsClient.GetEstablishmentByUrnAsync(urn.ToString());
-        
-        //var  cat =   academiesDbContext.GiasEstablishments.First(e => e.Urn == urn);
-            
-            return new SchoolDetails(establishment.Name!,
+        return await academiesDbContext.GiasEstablishments
+            .Where(e => e.Urn == urn)
+            .Select(establishment => new SchoolDetails(establishment.EstablishmentName!,
                 stringFormattingUtilities.BuildAddressString(
-                    establishment.Address!.Street!,
+                    establishment.Street,
                     null,
-                    establishment.Address.Town!,
-                    establishment.Address.Postcode!
+                    establishment.Town,
+                    establishment.Postcode
                 ),
-                establishment.Gor!.Name!,
-                establishment.LocalAuthorityName!,
-                establishment.PhaseOfEducation!.Name!,
+                establishment.GorName!,
+                establishment.LaName!,
+                establishment.PhaseOfEducationName!,
                 new AgeRange(establishment.StatutoryLowAge, establishment.StatutoryHighAge),
-                "No Nursery Classes");
+                establishment.NurseryProvisionName))
+            .SingleAsync();
     }
 
     public async Task<DateOnly?> GetDateJoinedTrustAsync(int urn)
@@ -80,8 +76,6 @@ public class SchoolRepository(IEstablishmentsV4Client establishmentsClient,
 
     public async Task<SenProvision> GetSchoolSenProvisionAsync(int urn)
     {
-        var establishment = await establishmentsClient.GetEstablishmentByUrnAsync(urn.ToString());
-        
         return await academiesDbContext.GiasEstablishments
             .Where(e => e.Urn == urn)
             .Select(establishment => new SenProvision(
@@ -150,10 +144,8 @@ public class SchoolRepository(IEstablishmentsV4Client establishmentsClient,
 
     public async Task<SchoolReferenceNumbers?> GetReferenceNumbersAsync(int urn)
     {
-        var establishment = await establishmentsClient.GetEstablishmentByUrnAsync(urn.ToString());
-        
-        return new SchoolReferenceNumbers(establishment.LocalAuthorityCode, establishment.EstablishmentNumber, establishment.Ukprn);
-        
+        return await academiesDbContext.GiasEstablishments.Where(e => e.Urn == urn)
+            .Select(e => new SchoolReferenceNumbers(e.LaCode, e.EstablishmentNumber, e.Ukprn)).SingleOrDefaultAsync();
     }
 
     public async Task<Governor[]> GetGovernanceAsync(int urn)
@@ -174,7 +166,10 @@ public class SchoolRepository(IEstablishmentsV4Client establishmentsClient,
 
     public async Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn)
     {
-        var establishment = await establishmentsClient.GetEstablishmentByUrnAsync(urn.ToString());
-        return new ReligiousCharacteristics(establishment.Diocese!.Name, establishment.ReligiousCharacter!.Name, establishment.ReligousEthos);
+        return await academiesDbContext.GiasEstablishments
+            .Where(x => x.Urn == urn)
+            .Select(g =>
+                new ReligiousCharacteristics(g.DioceseName, g.ReligiousCharacterName, g.ReligiousEthosName))
+            .SingleAsync();
     }
 }

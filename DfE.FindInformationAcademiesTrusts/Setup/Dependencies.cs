@@ -35,6 +35,9 @@ using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
+using GovUK.Dfe.CoreLibs.Http.Interfaces;
+using GovUK.Dfe.CoreLibs.Http.Middlewares.CorrelationId;
 
 namespace DfE.FindInformationAcademiesTrusts.Setup;
 
@@ -83,7 +86,7 @@ public static class Dependencies
         builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
         builder.Services.AddScoped<IStringFormattingUtilities, StringFormattingUtilities>();
-
+        builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<IAcademyRepository, AcademyRepository>();
         builder.Services.AddScoped<IOfstedRepository, OfstedRepository>();
         builder.Services.AddScoped<ITrustRepository, TrustRepository>();
@@ -126,6 +129,11 @@ public static class Dependencies
 
         builder.Services.AddAcademiesApiClient<IEstablishmentsV5Client, EstablishmentsV5Client>(builder.Configuration);
         builder.Services.AddAcademiesApiClient<IEstablishmentsV4Client, EstablishmentsV4Client>(builder.Configuration);
+        builder.Services.AddScoped<IGetEstablishments, GetEstablishments>();
+        builder.Services.AddScoped<IGetTrusts, GetTrusts>();
+        builder.Services.AddScoped<IDfeHttpClientFactory, DfeHttpClientFactory>();
+        builder.Services.AddScoped<ICorrelationContext, CorrelationContext>();
+        builder.Services.AddScoped<IHttpClientService, HttpClientService>();
         builder.Services.AddAcademiesApiClient<ITrustsV4Client, TrustsV4Client>(builder.Configuration);
         builder.Services.AddScoped<IReportCardsRepository, ReportCardsRepository>();
         builder.Services.AddScoped<IReportCardsService, ReportCardsService>();

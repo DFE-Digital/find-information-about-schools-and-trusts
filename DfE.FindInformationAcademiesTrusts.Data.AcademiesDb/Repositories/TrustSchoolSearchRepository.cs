@@ -1,16 +1,13 @@
-﻿using System.Linq.Expressions;
-using Dfe.AcademiesApi.Client.Contracts;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
-using DfE.FindInformationAcademiesTrusts.Data.Repositories.Search;
-using Microsoft.EntityFrameworkCore;
+﻿using DfE.FindInformationAcademiesTrusts.Data.Repositories.Search;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
+
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
 public class TrustSchoolSearchRepository(
-    IEstablishmentsV4Client establishmentsClient,
-    ITrustsV4Client trustsClient,
+    IGetEstablishments getEstablishments,
+    IGetTrusts getTrusts,
     IStringFormattingUtilities stringFormattingUtilities)
     : ITrustSchoolSearchRepository
 {
@@ -23,38 +20,41 @@ public class TrustSchoolSearchRepository(
         }
 
         // Run API calls in parallel
-        var establishmentsTask =
-            establishmentsClient.SearchEstablishments2Async(text, null, text, true, true);
+        var trustsTask = getTrusts.SearchTrusts(text);
 
-        var trustsTask =
-            trustsClient.SearchTrusts3Async(text, null, null, 1, 10, null);
-
-        
-        var trustByTrn = trustsClient.GetTrustByTrustReferenceNumberAsync(text).Result;
+        var establishmentsTask = getEstablishments.SearchEstablishments(text);
         
         await Task.WhenAll(establishmentsTask, trustsTask);
-
-        var establishments = establishmentsTask.Result;
-        var trusts = trustsTask.Result?.Data ?? [];
-        trusts.Add(trustByTrn);
-
-        // Filter (STARTS WITH ONLY)
-        var filteredEstablishments = establishments
-                .OrderBy(x => x.Name!.StartsWith(text, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
-                .ToList();
         
+        var establishments = establishmentsTask.Result;
+        
+        var trusts = trustsTask.Result?.Data?.ToList() ?? [];
+
+        if (establishments.Count == 0)
+        {
+            var trustByTrn = getTrusts.GetTrustByReferenceNumber(text);
+            if (trustByTrn.Result != null)
+            { 
+                trusts.Add(trustByTrn.Result);
+            }
+        }
+
+        var filteredEstablishments = establishments
+            .Where(x => int.TryParse(x.EstablishmentGroupType?.Code, out var code) &&
+                        Enum.IsDefined(typeof(NameAndCodeEnums.AllowedEstablishmentGroupTypeCodes), code))
+            .OrderBy(x => x.Name!.StartsWith(text, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+            .ToList();
 
         var filteredTrusts = trusts
             .OrderBy(t =>
                 !string.IsNullOrWhiteSpace(t.Name) &&
                 t.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase))
             .ToList();
-
-        // Map to SearchResult
-        var schoolResults = filteredEstablishments.Select(MapSchool);
+        
         var trustResults = filteredTrusts.Select(MapTrust);
+        var establishmentsResults = filteredEstablishments.Select(MapSchool);
 
-        var allResults = schoolResults
+        var allResults = establishmentsResults
             .Concat(trustResults)
             .OrderBy(x => x.Name)
             .ToArray();
@@ -93,7 +93,7 @@ public class TrustSchoolSearchRepository(
         SearchResult MapTrust(TrustDto t)
         {
             return new SearchResult(
-                t.Ukprn!.ToString(),
+                t.GroupUid!.ToString(),
                 t.Name!,
                 t.Type!.Name!,
                 stringFormattingUtilities.BuildAddressString(
