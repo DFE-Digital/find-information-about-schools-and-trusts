@@ -1,7 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
 using ICorrelationContext = GovUK.Dfe.CoreLibs.Http.Interfaces.ICorrelationContext;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
-
+[ExcludeFromCodeCoverage]
 /// <summary>
 /// Creates an http client, with correlation context headers configured. You MUST register this as a scoped dependency
 /// </summary>

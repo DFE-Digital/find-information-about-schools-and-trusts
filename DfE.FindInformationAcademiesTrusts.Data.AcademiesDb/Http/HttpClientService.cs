@@ -1,9 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
-
+[ExcludeFromCodeCoverage]
 public class HttpClientService : IHttpClientService
 {
     private readonly ILogger<HttpClientService> _logger;
