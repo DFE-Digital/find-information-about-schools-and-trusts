@@ -16,9 +16,6 @@ public class GetEstablishments(IDfeHttpClientFactory httpClientFactory,
     {
         string path = $"v4/establishments?name={searchQuery}&urn={searchQuery}&excludeClosed=true&matchAny=true";
         
-        _httpClient.DefaultRequestHeaders.Add("x-correlationId", Guid.NewGuid().ToString());
-        
-        
         ApiResponse<List<EstablishmentDto>> result = await httpClientService.Get<List<EstablishmentDto>>(_httpClient, path);
 
         if (!result.Success) throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");

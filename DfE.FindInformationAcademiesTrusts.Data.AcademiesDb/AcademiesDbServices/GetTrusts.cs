@@ -29,9 +29,6 @@ public class GetTrusts(IDfeHttpClientFactory httpClientFactory,
         
         string path = $"v4/trust/trustReferenceNumber/{referenceNumber}";
         
-   
-        _httpClient.DefaultRequestHeaders.Add("x-correlationId", Guid.NewGuid().ToString());
-        
         
         ApiResponse<TrustDto> result = await httpClientService.Get<TrustDto>(_httpClient, path);
 
