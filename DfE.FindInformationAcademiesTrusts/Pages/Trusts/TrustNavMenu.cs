@@ -41,7 +41,11 @@ public static class TrustNavMenu
             linkDisplayText,
             aspPage,
             $"{linkDisplayText}-nav".Kebabify(),
-            new Dictionary<string, string> { { "uid", activePage.Uid } });
+            new Dictionary<string, string>
+            {
+                { "uid", activePage.Uid },
+                { "ukprn", activePage.Ukprn }
+            });
     }
 
     public static NavLink[] GetTabLinksForReportCardsOfstedPage(ITrustsAreaModel activePage)
@@ -134,7 +138,11 @@ public static class TrustNavMenu
             linkDisplayText,
             aspPage,
             testIdOverride ?? $"{serviceName}-{linkDisplayText}-subnav".Kebabify(),
-            new Dictionary<string, string> { { "uid", activePage.Uid } }
+            new Dictionary<string, string>
+            {
+                { "uid", activePage.Uid },
+                { "ukprn", activePage.Ukprn }
+            }
         );
     }
 }

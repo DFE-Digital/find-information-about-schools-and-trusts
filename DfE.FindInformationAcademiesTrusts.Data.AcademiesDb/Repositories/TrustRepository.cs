@@ -1,3 +1,4 @@
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
@@ -8,12 +9,31 @@ using Microsoft.EntityFrameworkCore;
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
 public class TrustRepository(
-    IAcademiesDbContext academiesDbContext,
+    IAcademiesDbContext academiesDbContext,IGetTrusts getTrusts,
     IStringFormattingUtilities stringFormattingUtilities) : ITrustRepository
 {
     private IQueryable<GiasGroup> Trusts { get; } = academiesDbContext.Groups.Trusts();
 
-    public async Task<TrustSummary?> GetTrustSummaryAsync(string uid)
+    
+    public async Task<TrustSummary?> GetTrustSummaryByEstablishmentUrnAsync(int urn)
+    {
+        var details = await getTrusts.GetEstablishmentTrust(urn);
+        return details is null
+            ? null
+            : new TrustSummary(details.Name ?? string.Empty, details.Type.Name ?? string.Empty,details.GroupUid ?? string.Empty,details.Ukprn?.ToString() ?? string.Empty);
+
+    }
+    
+    public async Task<TrustSummary?> GetTrustSummaryByUkprnAsync(string ukprn)
+    {
+        var dets = await getTrusts.GetTrustByUkprn(ukprn);
+        return dets is null
+            ? null
+            : new TrustSummary(dets.Name ?? string.Empty, dets.Type.Name ?? string.Empty,dets.GroupUid ?? string.Empty,dets.Ukprn?.ToString() ?? string.Empty);
+
+    }
+    
+    /*public async Task<TrustSummary?> GetTrustSummaryAsync(string uid)
     {
         var details = await Trusts
             .Where(g => g.GroupUid == uid)
@@ -25,8 +45,8 @@ public class TrustRepository(
             ) //GroupName and GroupType will never be null due to EF query filters
             .SingleOrDefaultAsync();
 
-        return details is null ? null : new TrustSummary(details.Name, details.Type);
-    }
+        return details is null ? null : new TrustSummary(details.Name, details.Type,1234.ToString(),1234.ToString());//GroupName and GroupType will never be null due to EF query filters
+    }*/
 
     public async Task<TrustOverview> GetTrustOverviewAsync(string uid)
     {

@@ -7,6 +7,8 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts;
 public interface ITrustsAreaModel
 {
     string Uid { get; }
+    
+    string Ukprn { get; }
 
     TrustSummaryServiceModel TrustSummary { get; }
 

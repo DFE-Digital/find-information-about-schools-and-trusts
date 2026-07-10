@@ -2,6 +2,7 @@
 
 public record SearchResult(
     string Id,
+    string ukprn,
     string Name,
     string Type,
     string Address,

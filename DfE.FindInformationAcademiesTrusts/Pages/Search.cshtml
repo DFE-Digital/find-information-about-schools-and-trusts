@@ -31,7 +31,7 @@
 
                         @if (result.ResultType == ResultType.Trust)
                         {
-                            <a asp-page="./trusts/overview/trustdetails" asp-route-uid="@result.Id" class="govuk-!-font-weight-bold govuk-link govuk-!-font-size-24" data-testid="trust-name">@Html.DisplayFor(modelItem => result.Name)</a>
+                            <a asp-page="./trusts/overview/trustdetails" asp-route-uid="@result.Id" asp-route-ukprn="@result.ukprn" class="govuk-!-font-weight-bold govuk-link govuk-!-font-size-24" data-testid="trust-name">@Html.DisplayFor(modelItem => result.Name)</a>
                         }
                         else
                         {

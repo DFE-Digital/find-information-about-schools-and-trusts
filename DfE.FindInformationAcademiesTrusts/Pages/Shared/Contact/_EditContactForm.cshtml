@@ -1,5 +1,13 @@
 @model EditContactFormModel
 
+@{
+  var cancelRouteData = new Dictionary<string, string> { { Model.IdName, Model.Id } };
+  if (Model is DfE.FindInformationAcademiesTrusts.Pages.Trusts.ITrustsAreaModel trustModel)
+  {
+    cancelRouteData["ukprn"] = trustModel.Ukprn;
+  }
+}
+
 <div class="govuk-main-wrapper govuk-!-padding-top-6">
   <div class="dfe-width-container">
     <div class="govuk-grid-row">
@@ -47,7 +55,7 @@
                 <button type="submit" class="govuk-button" data-module="govuk-button" formnovalidate>
                   Save and continue
                 </button>
-                <a class="govuk-link" asp-page="@Model.CancelUrl" asp-all-route-data="@(new Dictionary<string, string> {{ Model.IdName, Model.Id }})">
+                <a class="govuk-link" asp-page="@Model.CancelUrl" asp-all-route-data="@cancelRouteData">
                   Cancel
                 </a>
               </div>

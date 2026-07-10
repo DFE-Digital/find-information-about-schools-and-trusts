@@ -36,9 +36,73 @@ public class GetTrusts(IDfeHttpClientFactory httpClientFactory,
         {
             return null;
         }
-        
-        if (!result.Success) throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");
+
+        if (!result.Success)
+            throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");
 
         return result.Body;
+    }
+
+   
+    
+    public async Task<TrustDto?> GetTrustByUkprn(string ukprn)
+    {
+
+        string path = $"v4/trust/{ukprn}";
+
+
+        ApiResponse<TrustDto> result = await httpClientService.Get<TrustDto>(_httpClient, path);
+
+        if (result.NotFound)
+        {
+            return null;
+        }
+
+        if (!result.Success)
+            throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");
+
+        return result.Body;
+    }
+    
+    public async Task<List<TrustDto?>> GetTrustsByUkprn(string ukprn)
+    {
+
+        string path = $"v4/establishments/trust?trustUkprn={ukprn}";
+
+
+        ApiResponse<List<TrustDto?>> result = await httpClientService.Get<List<TrustDto?>>(_httpClient, path);
+
+        if (result.NotFound)
+        {
+            return null!;
+        }
+
+        if (!result.Success)
+            throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");
+
+        return result.Body;
+    }
+
+    public async Task<TrustDto?> GetEstablishmentTrust(int urn)
+    {
+        string path = "/v4/trusts/establishments/urns";
+        var payload = new { urns = new int[] { urn } };
+
+        ApiResponse<Dictionary<int, TrustDto>> result =
+            await httpClientService.Post<object, Dictionary<int, TrustDto>>(_httpClient, path, payload);
+
+        if (!result.Success)
+        {
+            if (result.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            else
+            {
+                throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");
+            }
+        }
+
+        return result.Body.FirstOrDefault().Value;
     }
 }
