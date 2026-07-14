@@ -13,7 +13,7 @@ public class EditSfsoLeadModelTests
 
     private readonly ITrustService _mockTrustService = Substitute.For<ITrustService>();
 
-    private readonly TrustSummaryServiceModel _fakeTrust = new("1234", "My Trust", "Multi-academy trust", 3);
+    private readonly TrustSummaryServiceModel _fakeTrust = new("1234", "12","My Trust", "Multi-academy trust", 3);
 
     private readonly InternalContact _sfsoLead = new("Sfso Lead", "sfso.lead@test.com", DateTime.Today,
         "test@email.com");

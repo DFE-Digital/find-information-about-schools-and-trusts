@@ -42,7 +42,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseSchoolPageTests<T> whe
     {
         MockFeatureManager.IsEnabledAsync(FeatureFlags.ContactsInDfeForSchools).Returns(true);
         MockTrustService.GetTrustSummaryAsync(AcademyUrn)
-            .Returns(new TrustSummaryServiceModel("4321", "Some Trust", "Some trust type", 1));
+            .Returns(new TrustSummaryServiceModel("4321", "12313","Some Trust", "Some trust type", 1));
 
         Sut.Urn = AcademyUrn;
 
@@ -69,7 +69,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseSchoolPageTests<T> whe
     {
         MockFeatureManager.IsEnabledAsync(FeatureFlags.ContactsInDfeForSchools).Returns(false);
         MockTrustService.GetTrustSummaryAsync(AcademyUrn)
-            .Returns(new TrustSummaryServiceModel("4321", "Some Trust", "Some trust type", 1));
+            .Returns(new TrustSummaryServiceModel("4321", "2213321","Some Trust", "Some trust type", 1));
 
         Sut.Urn = AcademyUrn;
 

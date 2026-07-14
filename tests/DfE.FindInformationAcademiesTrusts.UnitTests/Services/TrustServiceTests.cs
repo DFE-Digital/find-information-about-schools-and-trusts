@@ -53,20 +53,20 @@ public class TrustServiceTests
     {
         var uid = "1234";
         var key = $"{nameof(TrustService)}:{uid}";
-        var cachedResult = new TrustSummaryServiceModel(uid, "My Trust", "Multi-academy trust", 3);
+        var cachedResult = new TrustSummaryServiceModel(uid,"12" ,"My Trust", "Multi-academy trust", 3);
         _mockMemoryCache.AddMockCacheEntry(key, cachedResult);
 
         var result = await _sut.GetTrustSummaryAsync(uid);
         result.Should().Be(cachedResult);
 
-        await _mockTrustRepository.DidNotReceive().GetTrustSummaryAsync(uid);
+        await _mockTrustRepository.DidNotReceive().GetTrustSummaryByUkprnAsync(uid);
         await _mockAcademyRepository.DidNotReceive().GetNumberOfAcademiesInTrustAsync(uid);
     }
 
     [Fact]
     public async Task GetTrustSummaryAsync_should_return_null_if_no_giasGroup_found()
     {
-        _mockTrustRepository.GetTrustSummaryAsync("this uid doesn't exist")
+        _mockTrustRepository.GetTrustSummaryByUkprnAsync("this uid doesn't exist")
             .ReturnsNull();
 
         var result = await _sut.GetTrustSummaryAsync("this uid doesn't exist");
@@ -74,38 +74,38 @@ public class TrustServiceTests
     }
 
     [Theory]
-    [InlineData("2806", "My Trust", "Multi-academy trust", 3)]
-    [InlineData("9008", "Another Trust", "Single-academy trust", 1)]
-    [InlineData("9008", "Trust with no academies", "Multi-academy trust", 0)]
-    public async Task GetTrustSummaryAsync_should_return_trustSummary_if_found(string uid, string name, string type,
+    [InlineData("2806", "211","My Trust", "Multi-academy trust", 3)]
+    [InlineData("9008", "222","Another Trust", "Single-academy trust", 1)]
+    [InlineData("9008","233", "Trust with no academies", "Multi-academy trust", 0)]
+    public async Task GetTrustSummaryAsync_should_return_trustSummary_if_found(string uid, string ukprn, string name, string type,
         int numAcademies)
     {
-        _mockTrustRepository.GetTrustSummaryAsync(uid)!.Returns(new TrustSummary(name, type));
+        _mockTrustRepository.GetTrustSummaryByUkprnAsync(ukprn)!.Returns(new TrustSummary(name, type,uid,ukprn));
         _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(uid).Returns(numAcademies);
 
-        var result = await _sut.GetTrustSummaryAsync(uid);
-        result.Should().BeEquivalentTo(new TrustSummaryServiceModel(uid, name, type, numAcademies));
+        var result = await _sut.GetTrustSummaryAsync(ukprn);
+        result.Should().BeEquivalentTo(new TrustSummaryServiceModel(uid, ukprn,name, type, numAcademies));
     }
 
     [Theory]
-    [InlineData("2806", "My Trust", "Multi-academy trust", 3)]
-    [InlineData("9008", "Another Trust", "Single-academy trust", 1)]
-    [InlineData("9008", "Trust with no academies", "Multi-academy trust", 0)]
-    public async Task GetTrustSummaryAsync_uncached_should_cache_result(string uid, string name, string type,
+    [InlineData("2806", "23","My Trust", "Multi-academy trust", 3)]
+    [InlineData("9008", "234","Another Trust", "Single-academy trust", 1)]
+    [InlineData("9008", "1234","Trust with no academies", "Multi-academy trust", 0)]
+    public async Task GetTrustSummaryAsync_uncached_should_cache_result(string uid,string ukprn, string name, string type,
         int numAcademies)
     {
-        var key = $"{nameof(TrustService)}:{uid}";
+        var key = $"{nameof(TrustService)}:{ukprn}";
 
-        _mockTrustRepository.GetTrustSummaryAsync(uid)!.Returns(new TrustSummary(name, type));
+        _mockTrustRepository.GetTrustSummaryByUkprnAsync(ukprn)!.Returns(new TrustSummary(name, type,uid,ukprn));
         _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(uid).Returns(numAcademies);
 
-        await _sut.GetTrustSummaryAsync(uid);
+        await _sut.GetTrustSummaryAsync(ukprn);
 
         _mockMemoryCache.Object.Received(1).CreateEntry(key);
 
         var cachedEntry = _mockMemoryCache.MockCacheEntries[key];
 
-        cachedEntry.Value.Should().BeEquivalentTo(new TrustSummaryServiceModel(uid, name, type, numAcademies));
+        cachedEntry.Value.Should().BeEquivalentTo(new TrustSummaryServiceModel(uid, ukprn,name, type, numAcademies));
         cachedEntry.SlidingExpiration.Should().Be(TimeSpan.FromMinutes(10));
     }
 
@@ -414,20 +414,19 @@ public class TrustServiceTests
         var result = await _sut.GetTrustSummaryAsync(urn);
 
         result.Should().BeNull();
-        await _mockTrustRepository.Received(0).GetTrustSummaryAsync(Arg.Any<string>());
+        await _mockTrustRepository.Received(0).GetTrustSummaryByUkprnAsync(Arg.Any<string>());
     }
 
     [Theory]
-    [InlineData(123, "2806", "My Trust", "Multi-academy trust", 3)]
-    public async Task GetTrustSummaryAsync_should_return_trust_summary_if_found(int urn, string uid, string name,
+    [InlineData(123, "2806", "2121","My Trust", "Multi-academy trust", 3)]
+    public async Task GetTrustSummaryAsync_should_return_trust_summary_if_found(int urn, string uid,string ukprn, string name,
         string type, int numAcademies)
     {
-        _mockAcademyRepository.GetTrustUidFromAcademyUrnAsync(urn).Returns(uid);
-
-        _mockTrustRepository.GetTrustSummaryAsync(uid).Returns(new TrustSummary(name, type));
+        _mockTrustRepository.GetTrustSummaryByEstablishmentUrnAsync(urn).Returns(new TrustSummary(name, type,uid,ukprn));
+        _mockTrustRepository.GetTrustSummaryByUkprnAsync(ukprn).Returns(new TrustSummary(name, type,uid,ukprn));
         _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(uid).Returns(numAcademies);
 
         var result = await _sut.GetTrustSummaryAsync(urn);
-        result.Should().BeEquivalentTo(new TrustSummaryServiceModel(uid, name, type, numAcademies));
+        result.Should().BeEquivalentTo(new TrustSummaryServiceModel(uid, ukprn,name, type, numAcademies));
     }
 }

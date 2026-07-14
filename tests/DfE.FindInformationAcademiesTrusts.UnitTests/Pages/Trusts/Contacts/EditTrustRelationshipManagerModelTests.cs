@@ -14,7 +14,7 @@ public class EditTrustRelationshipManagerModelTests
 
     private readonly ITrustService _mockTrustService = Substitute.For<ITrustService>();
 
-    private readonly TrustSummaryServiceModel _fakeTrust = new("1234", "My Trust", "Multi-academy trust", 3);
+    private readonly TrustSummaryServiceModel _fakeTrust = new("1234", "123123","My Trust", "Multi-academy trust", 3);
 
     private readonly InternalContact _trustRelationshipManager =
         new("Trust Relationship Manager", "trm@test.com", DateTime.Today, "test@email.com");

@@ -1,8 +1,13 @@
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
+using Microsoft.ApplicationInsights.AspNetCore.TelemetryInitializers;
+
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Repositories;
 
@@ -10,6 +15,7 @@ public class TrustRepositoryTests
 {
     private readonly TrustRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
+    private readonly IGetTrusts _getTrusts = Substitute.For<IGetTrusts>();
 
     private readonly IStringFormattingUtilities stringFormattingUtilities = new StringFormattingUtilities();
 
@@ -21,19 +27,25 @@ public class TrustRepositoryTests
 
     public TrustRepositoryTests()
     {
-        _sut = new TrustRepository(_mockAcademiesDbContext.Object, stringFormattingUtilities);
+        _sut = new TrustRepository(_mockAcademiesDbContext.Object, _getTrusts, stringFormattingUtilities);
     }
 
     [Theory]
-    [InlineData("2806", "My Trust", "Multi-academy trust")]
-    [InlineData("9008", "Another Trust", "Single-academy trust")]
-    [InlineData("9008", "Trust with no academies", "Multi-academy trust")]
-    public async Task GetTrustSummaryAsync_should_return_trustSummary_if_found(string uid, string name, string type)
+    [InlineData("2806", "12","My Trust", "Multi-academy trust")]
+    [InlineData("28206", "123","Some Trust", "Single-academy trust")]
+    
+    public async Task GetTrustSummaryAsync_should_return_trustSummary_if_found(string uid,string ukprn, string name, string type)
     {
-        _ = _mockAcademiesDbContext.AddGiasGroupForTrust(uid, name, groupType: type);
-
-        var result = await _sut.GetTrustSummaryAsync(uid);
-        result.Should().BeEquivalentTo(new TrustSummary(name, type));
+        _getTrusts.GetTrustByUkprn(ukprn).Returns(new TrustDto
+        {
+            GroupUid = uid,
+            Name = name,
+            Type = new NameAndCodeDto() { Name = type, Code = "1" },
+            Ukprn = ukprn
+        });
+        
+        var result = await _sut.GetTrustSummaryByUkprnAsync(ukprn);
+        result.Should().BeEquivalentTo(new TrustSummary(name, type,uid,ukprn));
     }
 
     [Fact]
@@ -41,7 +53,7 @@ public class TrustRepositoryTests
     {
         _ = _mockAcademiesDbContext.AddGiasGroupForFederation("2806");
 
-        var result = await _sut.GetTrustSummaryAsync("2806");
+        var result = await _sut.GetTrustSummaryByUkprnAsync("2806");
         result.Should().BeNull();
     }
 

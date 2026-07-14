@@ -17,18 +17,18 @@ public class SearchModelTests
     private readonly SearchModel _sut;
     private readonly ISearchService _mockSearchService;
 
-    private static readonly TrustSummaryServiceModel _fakeTrust = new("1234", "My Trust", "Multi-academy trust", 3);
-    private static readonly SchoolSummaryServiceModel _fakeSchool = new(5678, "A school", "Community school", SchoolCategory.LaMaintainedSchool);
+    private static readonly TrustSummaryServiceModel _fakeTrust = new("1234", "12122","My Trust", "Multi-academy trust", 3);
+    private static readonly SchoolSummaryServiceModel _fakeSchool = new(5678,"A school", "Community school", SchoolCategory.LaMaintainedSchool);
 
     private ITrustService _mockTrustService = Substitute.For<ITrustService>();
     private ISchoolService _mockSchoolService = Substitute.For<ISchoolService>();
 
     private readonly SearchResultServiceModel[] _fakeResults =
     [
-        new("111", "trust 1", "Dorthy Inlet, Kingston upon Hull, City of, JY36 9VC", "1033", "Multi-academy trust", ResultType.Trust),
-        new("222", "school 1", "12 Halifax road, Whitby, WH96 9WV", null, "Community school", ResultType.School),
-        new("333", "trust 2", "Grant Course, North East Lincolnshire, QH96 9WV", "1022", "Single-academy trust", ResultType.Trust),
-        new("444", "trust 3", "Abbott Turnpike, East Riding of Yorkshire, BI86 4LZ", "1011", "Multi-academy trust", ResultType.Trust)
+        new("111", "12212","trust 1", "Dorthy Inlet, Kingston upon Hull, City of, JY36 9VC", "1033", "Multi-academy trust", ResultType.Trust),
+        new("222", "12221","school 1", "12 Halifax road, Whitby, WH96 9WV", null, "Community school", ResultType.School),
+        new("333", "122121","trust 2", "Grant Course, North East Lincolnshire, QH96 9WV", "1022", "Single-academy trust", ResultType.Trust),
+        new("444", "122112","trust 3", "Abbott Turnpike, East Riding of Yorkshire, BI86 4LZ", "1011", "Multi-academy trust", ResultType.Trust)
     ];
 
     public SearchModelTests()
@@ -86,6 +86,7 @@ public class SearchModelTests
         if (resultType == ResultType.Trust)
         {
             _sut.Id = _fakeTrust.Uid;
+            _sut.Ukprn = _fakeTrust.Ukprn;
             _sut.KeyWords = _fakeTrust.Name;
         }
         else
@@ -113,7 +114,7 @@ public class SearchModelTests
     [Fact]
     public async Task OnGetAsync_should_not_redirect_to_trust_overview_if_trustId_does_not_match_query()
     {
-        var differentFakeTrust = new SearchResultServiceModel("123", "other trust", "Some address", "TR0987", "Single-academy trust", ResultType.Trust);
+        var differentFakeTrust = new SearchResultServiceModel("123", "121","other trust", "Some address", "TR0987", "Single-academy trust", ResultType.Trust);
         _mockSearchService.GetSearchResultsForPageAsync(differentFakeTrust.Name, Arg.Any<int>())
             .Returns(new PagedSearchResults(new PaginatedList<SearchResultServiceModel>([differentFakeTrust], 1, 1, 1), new SearchResultsOverview(1)));
 
@@ -137,6 +138,7 @@ public class SearchModelTests
         jsonResult.Value.Should().BeEquivalentTo(_fakeResults.Select(r =>
             new SearchModel.AutocompleteEntry(
                 r.Id,
+                r.ukprn,
                 r.Address,
                 r.Name,
                 r.ResultType
@@ -233,7 +235,7 @@ public class SearchModelTests
         _mockSearchService.GetSearchResultsForPageAsync(SearchTermThatMatchesAllFakeTrusts, 1).Returns(
                 new PagedSearchResults(new PaginatedList<SearchResultServiceModel>(_fakeResults, 4, 1, 3), new SearchResultsOverview(3, 1)));
         
-        var differentFakeResult = new SearchResultServiceModel("111", SearchTermThatMatchesAllFakeTrusts, "Some address", "TR0987", "Single-academy trust", ResultType.Trust);
+        var differentFakeResult = new SearchResultServiceModel("111", "21312213",SearchTermThatMatchesAllFakeTrusts, "Some address", "TR0987", "Single-academy trust", ResultType.Trust);
         _mockSearchService.GetSearchResultsForPageAsync(differentFakeResult.Name, 2).Returns(new PagedSearchResults(new PaginatedList<SearchResultServiceModel>([differentFakeResult], 4, 2, 3), new SearchResultsOverview(1)));
 
         _sut.KeyWords = SearchTermThatMatchesAllFakeTrusts;

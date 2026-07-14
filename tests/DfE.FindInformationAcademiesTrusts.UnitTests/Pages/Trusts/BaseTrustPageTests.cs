@@ -30,12 +30,12 @@ public abstract class BaseTrustPageTests<T> where T : TrustsAreaModel
 
     protected const string TrustUid = "1234";
     protected const string TrustReference = "TR5678";
-    protected readonly TrustSummaryServiceModel DummyTrustSummary = new(TrustUid, "My Trust", "Multi-academy trust", 3);
+    protected readonly TrustSummaryServiceModel DummyTrustSummary = new(TrustUid, "12","My Trust", "Multi-academy trust", 3);
 
     private const string EmptyTrustUid = "";
 
     protected readonly TrustSummaryServiceModel DummyTrustSummaryEmptyUid =
-        new(EmptyTrustUid, "My Trust", "Multi-academy trust", 3);
+        new(EmptyTrustUid, "12","My Trust", "Multi-academy trust", 3);
 
     protected BaseTrustPageTests()
     {

@@ -61,7 +61,7 @@ public abstract class TrustNavMenuTestsBase
 
         //Set properties applicable to all types
         mockPage.Uid = uid;
-        mockPage.TrustSummary = new TrustSummaryServiceModel(uid, "MY TRUST", "Multi-academy trust", numberOfAcademies);
+        mockPage.TrustSummary = new TrustSummaryServiceModel(uid, "12","MY TRUST", "Multi-academy trust", numberOfAcademies);
 
         //Add extra info for some pages
         switch (mockPage)
