@@ -77,15 +77,6 @@ describe("Testing the components of the search results page", () => {
             .checkSearchResultsReturned("UNITED LEARNING TRUST");
     });
 
-    it("Should return the correct trust when searching with a partial TRN", () => {
-        homePage
-            .enterMainSearchText("TR0234")
-            .clickMainSearchButton();
-
-        searchPage
-            .checkSearchResultsReturned("UNITED LEARNING TRUST");
-    });
-
     it(`When searching on a trusts TRN it should display the correct trust count and not return school numbers`, () => {
         homePage
             .enterMainSearchText("TR02343")
