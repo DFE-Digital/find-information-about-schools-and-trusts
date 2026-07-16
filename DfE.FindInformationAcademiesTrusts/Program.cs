@@ -1,6 +1,9 @@
 using System.Diagnostics.CodeAnalysis;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
 using DfE.FindInformationAcademiesTrusts.Setup;
+using GovUK.Dfe.PersonsApi.Client;
+using GovUK.Dfe.PersonsApi.Client.Contracts;
+using GovUK.Dfe.PersonsApi.Client.Extensions;
 using Serilog;
 
 namespace DfE.FindInformationAcademiesTrusts;
@@ -24,6 +27,12 @@ internal static class Program
 
             builder.Services.AddRazorPages();
             builder.Services.AddApplicationInsightsTelemetry();
+            
+            var config = builder.Configuration;
+            
+            builder.Services.AddPersonsApiClient<IEstablishmentsClient, EstablishmentsClient>(config);
+            builder.Services.AddPersonsApiClient<ITrustsClient, TrustsClient>(config);
+            
             SecurityServicesSetup.AddSecurityServices(builder);
 
             builder.Services.AddHttpClient(DfeHttpClientFactory.AcademiesClientName, (sp, client) =>

@@ -4,7 +4,9 @@ using DfE.FindInformationAcademiesTrusts.Data.FiatDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
+using GovUK.Dfe.PersonsApi.Client.Contracts;
 using Microsoft.Extensions.Caching.Memory;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Trust;
 
@@ -20,6 +22,8 @@ public interface ITrustService
         TrustContactRole role);
 
     Task<string> GetTrustReferenceNumberAsync(string uid);
+    
+    Task<TrustGovernanceServiceModel> GetTrustGovernancePersonsApiAsync(string trn);
 }
 
 public class TrustService(
@@ -29,7 +33,8 @@ public class TrustService(
     IContactRepository contactRepository,
     ITrustPupilService trustPupilService,
     IMemoryCache memoryCache,
-    IDateTimeProvider dateTimeProvider)
+    IDateTimeProvider dateTimeProvider, 
+    ITrustsClient trustsClient)
     : ITrustService
 {
     public async Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(int urn)
@@ -76,6 +81,34 @@ public class TrustService(
 
         var governors = await trustGovernanceRepository.GetTrustGovernanceAsync(urn ?? uid);
 
+        return new TrustGovernanceServiceModel(
+            governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleLeadership: true }).ToArray(),
+            governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleMember: true }).ToArray(),
+            governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleTrustee: true }).ToArray(),
+            governors.Where(g => !g.IsCurrentOrFutureGovernor).ToArray(),
+            GetGovernanceTurnoverRate(governors));
+    }
+
+    public async Task<TrustGovernanceServiceModel> GetTrustGovernancePersonsApiAsync(string trn)
+    {
+        var result = await trustsClient.GetAllPersonsAssociatedWithTrustByTrnOrUkPrnAsync(trn).ConfigureAwait(false);
+        
+        //convert result into list of Governors
+        var governors = new List<Governor>();
+
+        foreach (var person in result)
+        {
+            governors.Add(new Governor(
+                GID: trn,
+                UID: "this is a placeholder",
+                FullName: person.DisplayName,
+                Role: person.Roles.First(),
+                AppointingBody: "this is a placeholder",
+                DateOfAppointment: person.DateOfAppointment.ParseAsNullableDate(),
+                DateOfTermEnd: person.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
+                Email: person.Email));
+        }
+        
         return new TrustGovernanceServiceModel(
             governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleLeadership: true }).ToArray(),
             governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleMember: true }).ToArray(),
