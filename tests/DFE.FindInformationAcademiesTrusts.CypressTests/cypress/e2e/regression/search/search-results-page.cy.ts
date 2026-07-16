@@ -16,6 +16,7 @@ describe("Testing the components of the search results page", () => {
 
         searchPage
             .checkNoSearchResultsFound();
+            cy.url().should('include', '/search');    
     });
 
     it("Checks that the user can edit their search and search for a new trust or school from the search page", () => {
@@ -32,6 +33,7 @@ describe("Testing the components of the search results page", () => {
 
         searchPage
             .checkSearchResultsReturned("East");
+            cy.url().should('include', '/search');
     });
 
     it("Validates that it returns the amount of results stated in the search text", () => {
@@ -41,6 +43,7 @@ describe("Testing the components of the search results page", () => {
 
         searchPage
             .validateSearchResultsCountWithPagination();
+            cy.url().should('include', '/search');
     });
 
     it("Should return the correct trust when searching by TRN", () => {
@@ -50,6 +53,7 @@ describe("Testing the components of the search results page", () => {
 
         searchPage
             .checkSearchResultsReturned("UNITED LEARNING TRUST");
+            cy.url().should('include', '/search');
     });
 
     it("Should display 'no results found' when searching with a non-existent TRN", () => {
@@ -59,6 +63,7 @@ describe("Testing the components of the search results page", () => {
 
         searchPage
             .checkNoSearchResultsFound();
+            cy.url().should('include', '/search');
     });
 
     it("Should allow searching by TRN from the search results page", () => {
@@ -85,6 +90,7 @@ describe("Testing the components of the search results page", () => {
         searchPage
             .checkSearchResultsReturned("UNITED LEARNING TRUST")
             .checkSearchResultsInfoReturnsCorrectInfo("Found 1 trusts and 0 schools, including academies");
+            cy.url().should('include', '/search');
     });
 
     it('Checks that you cant go to a url for a search results page that does not exist', () => {
@@ -99,6 +105,7 @@ describe("Testing the components of the search results page", () => {
 
             commonPage
                 .checkPageNotFoundDisplayed();
+                cy.url().should('include', '/search');
         });
     });
 
@@ -122,6 +129,7 @@ describe("Testing the components of the search results page", () => {
                 .checkSearchResultsReturned(schoolName)
                 .checkEstablishmentType(typeOfSchool)
                 .checkCorrectURN(urn.toString());
+                cy.url().should('include', '/search');
         });
     });
 
