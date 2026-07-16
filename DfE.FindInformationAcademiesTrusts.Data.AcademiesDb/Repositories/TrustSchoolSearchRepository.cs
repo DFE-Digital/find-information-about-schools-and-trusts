@@ -15,11 +15,13 @@ public class TrustSchoolSearchRepository(
     public async Task<(SearchResult[] Results, SearchResultCount NumberOfResults)>
         GetSearchResultsAsync(string? text, int pageSize, int page = 1)
     {
-        if (string.IsNullOrWhiteSpace(text))
+        if (string.IsNullOrWhiteSpace(text) || (int.TryParse(text, out int number) && number < 100000))
         {
             return ([], new SearchResultCount(0, 0, 0));
         }
+        
 
+        
         // Run API calls in parallel
         var trustsTask = getTrusts.SearchTrusts(text);
 
