@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
 using DfE.FindInformationAcademiesTrusts.Setup;
 using Serilog;
 
@@ -25,6 +26,14 @@ internal static class Program
             builder.Services.AddApplicationInsightsTelemetry();
             SecurityServicesSetup.AddSecurityServices(builder);
 
+            builder.Services.AddHttpClient(DfeHttpClientFactory.AcademiesClientName, (sp, client) =>
+            { 
+                client.BaseAddress = new Uri(builder.Configuration.GetSection("AcademiesApiClient")["BaseUrl"]!);
+                client.DefaultRequestHeaders.Add("ApiKey", builder.Configuration.GetSection("AcademiesApiClient")["ApiKey"]!);
+                client.DefaultRequestHeaders.Add("User-Agent", "findinformationaboutschoolsandtrusts/1.0");
+
+            });
+            
             builder.Services.Configure<RouteOptions>(options =>
             {
                 options.LowercaseUrls = true;

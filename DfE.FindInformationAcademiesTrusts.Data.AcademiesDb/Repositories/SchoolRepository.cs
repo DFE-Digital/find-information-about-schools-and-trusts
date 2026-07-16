@@ -9,8 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
-public class SchoolRepository(
-    IAcademiesDbContext academiesDbContext,
+public class SchoolRepository(IAcademiesDbContext academiesDbContext,
     IStringFormattingUtilities stringFormattingUtilities,
     ILogger<SchoolRepository> logger) : ISchoolRepository
 {

@@ -13,6 +13,7 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Mocks;
 public class MockAcademiesDbContext
 {
     public readonly IAcademiesDbContext Object = Substitute.For<IAcademiesDbContext>();
+    
 
     //application
     public MockDbSet<ApplicationEvent> ApplicationEvents { get; } = new();

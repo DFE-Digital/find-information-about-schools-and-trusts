@@ -1,3 +1,4 @@
+using Dfe.AcademiesApi.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
@@ -435,6 +436,7 @@ public class SchoolRepositoryTests
         var result = await _sut.GetReferenceNumbersAsync(123456);
         result.Should().BeNull();
     }
+
 
     [Fact]
     public async Task GetGovernanceAsync_ShouldReturnEmpty_WithNoGovernanceSet()
