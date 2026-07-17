@@ -75,11 +75,11 @@ public class TrustService(
         return trustSummaryServiceModel;
     }
 
-    public async Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string uid)
+    public async Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string ukprn)
     {
-        var urn = await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(uid);
+        // var urn = await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(ukprn);
 
-        var governors = await trustGovernanceRepository.GetTrustGovernanceAsync(urn ?? uid);
+        var governors = await trustGovernanceRepository.GetTrustGovernanceAsync(ukprn);
 
         return new TrustGovernanceServiceModel(
             governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleLeadership: true }).ToArray(),
@@ -99,7 +99,7 @@ public class TrustService(
         foreach (var person in result)
         {
             governors.Add(new Governor(
-                GID: trn,
+                Ukprn: trn,
                 UID: "this is a placeholder",
                 FullName: person.DisplayName,
                 Role: person.Roles.First(),
