@@ -59,7 +59,7 @@ public class TrustSchoolSearchRepository(
 
         var allResults = establishmentsResults
             .Concat(trustResults)
-            .OrderBy(x => x.Name)
+            .OrderBy(x => x.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
             .ToArray();
 
         // Paging (RESTORED)
