@@ -12,6 +12,11 @@ public class TrustSchoolSearchRepository(
     IStringFormattingUtilities stringFormattingUtilities)
     : ITrustSchoolSearchRepository
 {
+    private static readonly HashSet<int> AllowedEstablishmentGroupTypeCodes =
+        Enum.GetValues<NameAndCodeEnums.AllowedEstablishmentGroupTypeCodes>()
+            .Select(static code => (int)code)
+            .ToHashSet();
+
     public async Task<(SearchResult[] Results, SearchResultCount NumberOfResults)>
         GetSearchResultsAsync(string? text, int pageSize, int page = 1)
     {
@@ -44,7 +49,7 @@ public class TrustSchoolSearchRepository(
 
         var filteredEstablishments = establishments
             .Where(x => int.TryParse(x.EstablishmentGroupType?.Code, out var code) &&
-                        Enum.IsDefined(typeof(NameAndCodeEnums.AllowedEstablishmentGroupTypeCodes), code))
+                        AllowedEstablishmentGroupTypeCodes.Contains(code))
             .OrderBy(x => x.Name!.StartsWith(text, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
             .ToList();
 
