@@ -12,7 +12,7 @@ export class Autocomplete {
       searchInput.removeAttribute('value')
     }
 
-    if (!query || !query.trim()) {
+    if (!query?.trim()) {
       populateResults([])
       return
     }
@@ -75,7 +75,7 @@ export class Autocomplete {
         clearTimeout(this.debounceTimer)
 
         // Clear suggestions immediately when input is empty
-        if (!query || !query.trim()) {
+        if (!query?.trim()) {
           if (this.abortController) {
             this.abortController.abort()
           }
