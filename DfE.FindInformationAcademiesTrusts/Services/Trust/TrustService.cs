@@ -14,7 +14,7 @@ public interface ITrustService
 {
     Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(string uid);
     Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(int urn);
-    Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string uid);
+    Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string trn, string uid);
     Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid);
     Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string uid);
 
@@ -23,7 +23,7 @@ public interface ITrustService
 
     Task<string> GetTrustReferenceNumberAsync(string uid);
     
-    Task<TrustGovernanceServiceModel> GetTrustGovernancePersonsApiAsync(string trn);
+    // Task<TrustGovernanceServiceModel> GetTrustGovernancePersonsApiAsync(string trn);
 }
 
 public class TrustService(
@@ -33,8 +33,7 @@ public class TrustService(
     IContactRepository contactRepository,
     ITrustPupilService trustPupilService,
     IMemoryCache memoryCache,
-    IDateTimeProvider dateTimeProvider, 
-    ITrustsClient trustsClient)
+    IDateTimeProvider dateTimeProvider)
     : ITrustService
 {
     public async Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(int urn)
@@ -75,40 +74,13 @@ public class TrustService(
         return trustSummaryServiceModel;
     }
 
-    public async Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string ukprn)
+    public async Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string trn, string uid)
     {
         // var urn = await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(ukprn);
+        // var trustOverview = await trustRepository.GetTrustOverviewAsync(uid);
 
-        var governors = await trustGovernanceRepository.GetTrustGovernanceAsync(ukprn);
+        var governors = await trustGovernanceRepository.GetTrustGovernanceAsync(trn, uid);
 
-        return new TrustGovernanceServiceModel(
-            governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleLeadership: true }).ToArray(),
-            governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleMember: true }).ToArray(),
-            governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleTrustee: true }).ToArray(),
-            governors.Where(g => !g.IsCurrentOrFutureGovernor).ToArray(),
-            GetGovernanceTurnoverRate(governors));
-    }
-
-    public async Task<TrustGovernanceServiceModel> GetTrustGovernancePersonsApiAsync(string trn)
-    {
-        var result = await trustsClient.GetAllPersonsAssociatedWithTrustByTrnOrUkPrnAsync(trn).ConfigureAwait(false);
-        
-        //convert result into list of Governors
-        var governors = new List<Governor>();
-
-        foreach (var person in result)
-        {
-            governors.Add(new Governor(
-                Ukprn: trn,
-                UID: "this is a placeholder",
-                FullName: person.DisplayName,
-                Role: person.Roles.First(),
-                AppointingBody: "this is a placeholder",
-                DateOfAppointment: person.DateOfAppointment.ParseAsNullableDate(),
-                DateOfTermEnd: person.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
-                Email: person.Email));
-        }
-        
         return new TrustGovernanceServiceModel(
             governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleLeadership: true }).ToArray(),
             governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleMember: true }).ToArray(),
