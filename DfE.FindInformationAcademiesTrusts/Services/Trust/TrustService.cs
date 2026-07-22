@@ -14,7 +14,7 @@ public interface ITrustService
 {
     Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(string uid);
     Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(int urn);
-    Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string trn, string uid);
+    Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string trn);
     Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid);
     Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string uid);
 
@@ -22,8 +22,6 @@ public interface ITrustService
         TrustContactRole role);
 
     Task<string> GetTrustReferenceNumberAsync(string uid);
-    
-    // Task<TrustGovernanceServiceModel> GetTrustGovernancePersonsApiAsync(string trn);
 }
 
 public class TrustService(
@@ -74,12 +72,9 @@ public class TrustService(
         return trustSummaryServiceModel;
     }
 
-    public async Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string trn, string uid)
+    public async Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string trn)
     {
-        // var urn = await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(ukprn);
-        // var trustOverview = await trustRepository.GetTrustOverviewAsync(uid);
-
-        var governors = await trustGovernanceRepository.GetTrustGovernanceAsync(trn, uid);
+        var governors = await trustGovernanceRepository.GetTrustGovernanceAsync(trn);
 
         return new TrustGovernanceServiceModel(
             governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleLeadership: true }).ToArray(),

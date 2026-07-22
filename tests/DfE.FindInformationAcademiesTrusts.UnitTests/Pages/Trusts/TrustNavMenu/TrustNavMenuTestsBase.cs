@@ -82,7 +82,7 @@ public abstract class TrustNavMenuTestsBase
     protected static TrustGovernanceServiceModel GetTrustGovernanceServiceModel(string uid, int numTrustLeadership,
         int numCurrentMembers, int numCurrentTrustees, int numHistoricMembers)
     {
-        var governor = new Governor("", uid, "", "", "", null, null, "");
+        var governor = new Governor("", "", "", null, null, "");
         var currentTrustLeadership = Enumerable.Repeat(governor, numTrustLeadership).ToArray();
         var currentMembers = Enumerable.Repeat(governor, numCurrentMembers).ToArray();
         var currentTrustees = Enumerable.Repeat(governor, numCurrentTrustees).ToArray();

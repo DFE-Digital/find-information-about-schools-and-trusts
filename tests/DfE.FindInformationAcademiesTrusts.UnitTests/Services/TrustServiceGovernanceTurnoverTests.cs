@@ -61,7 +61,7 @@ public class TrustServiceGovernanceTurnoverTests
     [InlineData("Shared Local Governor - Group")]
     public void GetGovernanceTurnoverRate_only_includes_trustees_and_the_chair_of_trustees(string role)
     {
-        var unexpectedGovernor = new Governor("1", "UID", "John Doe", role, "Appointing Body", new DateTime(2023, 9, 1), null, null);
+        var unexpectedGovernor = new Governor("John Doe", role, "Appointing Body", new DateTime(2023, 9, 1), null, null);
 
         _mockDateTimeProvider.Today.Returns(new DateTime(2023, 10, 1));
 
@@ -93,8 +93,6 @@ public class TrustServiceGovernanceTurnoverTests
             var role = i == 0 ? "Chair of Trustees" : "Trustee";
 
             return new Governor(
-                "1",
-                "UID",
                 $"Trustee {i + 1}",
                 role,
                 "Appointing Body",
@@ -122,8 +120,6 @@ public class TrustServiceGovernanceTurnoverTests
         _mockDateTimeProvider.Today.Returns(new DateTime(2023, 10, 1));
 
         var chair = new Governor(
-            "1",
-            "UID",
             "John Johnson",
             "Chair of Trustees",
             "Appointing Body",
@@ -133,8 +129,6 @@ public class TrustServiceGovernanceTurnoverTests
         );
         
         var trustee = new Governor(
-            "1",
-            "UID",
             "John Johnson",
             "Trustee",
             "Appointing Body",
@@ -144,8 +138,6 @@ public class TrustServiceGovernanceTurnoverTests
         );
         
         var resignedTrustee = new Governor(
-            "1",
-            "UID",
             "A",
             "Trustee",
             "Appointing Body",
@@ -165,8 +157,6 @@ public class TrustServiceGovernanceTurnoverTests
         _mockDateTimeProvider.Today.Returns(new DateTime(2023, 10, 1));
 
         var chair = new Governor(
-            "1",
-            "UID",
             "John Johnson",
             "Chair of Trustees",
             "Appointing Body",
@@ -176,8 +166,6 @@ public class TrustServiceGovernanceTurnoverTests
         );
         
         var member = new Governor(
-            "1",
-            "UID",
             "John Johnson",
             "Member",
             "Appointing Body",
@@ -187,8 +175,6 @@ public class TrustServiceGovernanceTurnoverTests
         );
         
         var resignedTrustee = new Governor(
-            "1",
-            "UID",
             "A",
             "Trustee",
             "Appointing Body",
@@ -208,8 +194,6 @@ public class TrustServiceGovernanceTurnoverTests
         _mockDateTimeProvider.Today.Returns(new DateTime(2023, 10, 1));
 
         var chair = new Governor(
-            "1",
-            "UID",
             "John Johnson",
             "Chair of Trustees",
             "Appointing Body",
@@ -219,8 +203,6 @@ public class TrustServiceGovernanceTurnoverTests
         );
         
         var trustee = new Governor(
-            "1",
-            "UID",
             "John Johnson",
             "Trustee",
             "Appointing Body",
@@ -230,8 +212,6 @@ public class TrustServiceGovernanceTurnoverTests
         );
         
         var activeTrustee = new Governor(
-            "1",
-            "UID",
             "A",
             "Trustee",
             "Appointing Body",
@@ -251,8 +231,6 @@ public class TrustServiceGovernanceTurnoverTests
         _mockDateTimeProvider.Today.Returns(new DateTime(2023, 10, 1));
 
         var chair = new Governor(
-            "1",
-            "UID",
             "John Johnson",
             "Chair of Trustees",
             "Appointing Body",
@@ -262,8 +240,6 @@ public class TrustServiceGovernanceTurnoverTests
         );
         
         var member = new Governor(
-            "1",
-            "UID",
             "John Johnson",
             "Member",
             "Appointing Body",
@@ -273,8 +249,6 @@ public class TrustServiceGovernanceTurnoverTests
         );
         
         var activeTrustee = new Governor(
-            "1",
-            "UID",
             "A",
             "Trustee",
             "Appointing Body",

@@ -45,6 +45,7 @@ The frontend assets must be built before the .NET project. The assets are built 
 ```bash
 cd DfE.FindInformationAcademiesTrusts
 npm install
+npm run build
 npm run dev
 ```
 

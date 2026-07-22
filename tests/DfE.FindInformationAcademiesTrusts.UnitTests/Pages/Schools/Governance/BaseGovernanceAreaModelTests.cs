@@ -66,8 +66,6 @@ public abstract class BaseGovernanceAreaModelTests<T> : BaseSchoolPageTests<T> w
     private static Governor[] GenerateGovernors(bool isCurrent, string role, int numberToGenerate)
     {
         return Enumerable.Repeat(new Governor(
-            "9999",
-            string.Empty,
             Role: role,
             FullName: "First Second Last",
             DateOfAppointment: DateTime.Today.AddYears(-3),
