@@ -15,14 +15,13 @@ public class TrustGovernanceRepository(
     {
         var result = await trustsClient.GetAllPersonsAssociatedWithTrustByTrnOrUkPrnAsync(trn).ConfigureAwait(false);
         
-        //convert result into list of Governors
         var governors = new List<Governor>();
 
         foreach (var person in result)
         {
             governors.Add(new Governor(
                 FullName: person.DisplayName,
-                Role: person.Roles.First(),
+                Role: person.Roles[0],
                 AppointingBody: person.AppointingBody,
                 DateOfAppointment: person.DateOfAppointment.ParseAsNullableDate(),
                 DateOfTermEnd: person.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
