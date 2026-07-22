@@ -8,6 +8,6 @@ public class NameAndCodeEnums
         Colleges = 1,
         Academies = 10,
         FreeSchools = 11,
-        SpecialSchools = 3
+        SpecialSchools = 5
     }
 }

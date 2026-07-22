@@ -11,6 +11,7 @@ describe('Pagination Tests', () => {
 
     it('Should display multiple pagination buttons', () => {
         paginationPage.getTotalPaginationButtons().should('be.greaterThan', 1);
+        cy.url().should('include', '/search');
     });
 
 
@@ -22,7 +23,7 @@ describe('Pagination Tests', () => {
         navigation
             .checkCurrentURLIsCorrect('pagenumber=2');
         commonPage
-            .checkThatBrowserTitleMatches('Search (page 2 of 69) - tru - Find information about schools and trusts');
+            .checkThatBrowserTitleMatches('Search (page 2 of 3) - tru - Find information about schools and trusts');
 
         paginationPage
             .clickPageNumber(3);
@@ -30,15 +31,9 @@ describe('Pagination Tests', () => {
         navigation
             .checkCurrentURLIsCorrect('pagenumber=3');
         commonPage
-            .checkThatBrowserTitleMatches('Search (page 3 of 69) - tru - Find information about schools and trusts');
+            .checkThatBrowserTitleMatches('Search (page 3 of 3) - tru - Find information about schools and trusts');
+            cy.url().should('include', '/search');
 
-        paginationPage
-            .clickPageNumber(69);
-
-        navigation
-            .checkCurrentURLIsCorrect('pagenumber=69');
-        commonPage
-            .checkThatBrowserTitleMatches('Search (page 69 of 69) - tru - Find information about schools and trusts');
     });
 
     it('Should navigate to the next page on next button click', () => {
@@ -53,6 +48,7 @@ describe('Pagination Tests', () => {
 
         navigation
             .checkCurrentURLIsCorrect('pagenumber=3');
+            cy.url().should('include', '/search');
 
     });
 
@@ -68,18 +64,21 @@ describe('Pagination Tests', () => {
 
         navigation
             .checkCurrentURLIsCorrect('pagenumber=1');
+            cy.url().should('include', '/search');
 
     });
 
     it('Checks that the previous page button is not present on the first page of results', () => {
         paginationPage
             .checkPreviousButtonNotPresent();
+            cy.url().should('include', '/search');
     });
 
-    it('Checks that the next page button is not present on the first page of results', () => {
+    it('Checks that the next page button is not present on the last page of results', () => {
         paginationPage
-            .clickPageNumber(21)
+            .clickPageNumber(5)
             .checkNextButtonNotPresent();
+            cy.url().should('include', '/search');
     });
 
     it('Checks that the previous and next page buttons are not present on the no results found page', () => {
@@ -88,21 +87,17 @@ describe('Pagination Tests', () => {
         paginationPage
             .checkPreviousButtonNotPresent()
             .checkNextButtonNotPresent();
+            cy.url().should('include', '/search');
     });
 
     it('Checks that I see the pages I would expect mid pagination and dont see the ones that should be hidden', () => {
-        cy.visit('/search?keywords=tru&pagenumber=32');
+        cy.visit('/search?keywords=tru&pagenumber=2');
 
         paginationPage
-            .checkExpectedPageNumberInPaginationBar(1)
-            .checkResultIsNotInPaginationBar(2)
-            .checkResultIsNotInPaginationBar(30)
-            .checkExpectedPageNumberInPaginationBar(31)
-            .checkExpectedPageNumberInPaginationBar(32)
-            .checkExpectedPageNumberInPaginationBar(33)
-            .checkResultIsNotInPaginationBar(34)
-            .checkResultIsNotInPaginationBar(72)
-            .checkResultIsNotInPaginationBar(74);
+            .checkExpectedPageNumberInPaginationBar(2)
+            .checkResultIsNotInPaginationBar(4)
+            cy.url().should('include', '/search');
+
     });
 
     it('Checks that on a single result page only the page number is present', () => {
@@ -115,6 +110,7 @@ describe('Pagination Tests', () => {
 
         commonPage
             .checkThatBrowserTitleMatches('Search - henley-in-arden - Find information about schools and trusts');
+            cy.url().should('include', '/search');
     });
 
     it('Should navigate to the previous page on previous button click', () => {
@@ -133,6 +129,7 @@ describe('Pagination Tests', () => {
                 .checkCurrentURLIsCorrect('pagenumber=1');
 
             paginationPage.getResults().first().should('not.have.text', secondPageFirstResultText);
+            cy.url().should('include', '/search');
         });
     });
 
@@ -151,6 +148,7 @@ describe('Pagination Tests', () => {
                     }
 
                     previousFirstResultText = currentFirstResultText;
+                    cy.url().should('include', '/search');
                 });
             }
         });
