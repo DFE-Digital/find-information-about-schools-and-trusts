@@ -22,6 +22,8 @@ public static class ConfigurationVariables
             .Bind(builder.Configuration.GetSection(NotificationBannerOptions.ConfigurationSection));
         builder.Services.AddOptions<OfstedBiReportLinksOptions>()
             .Bind(builder.Configuration.GetSection(OfstedBiReportLinksOptions.ConfigurationSection));
+        builder.Services.AddOptions<AcademiesApiOptions>()
+            .Bind(builder.Configuration.GetSection(AcademiesApiOptions.ConfigurationSection));
 
         builder.Services.AddFeatureManagement();
     }

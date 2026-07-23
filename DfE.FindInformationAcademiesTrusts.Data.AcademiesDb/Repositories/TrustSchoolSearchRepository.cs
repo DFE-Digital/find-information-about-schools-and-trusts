@@ -1,40 +1,113 @@
-﻿using System.Linq.Expressions;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
+﻿using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Search;
-using Microsoft.EntityFrameworkCore;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
+
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
 public class TrustSchoolSearchRepository(
-    IAcademiesDbContext academiesDbContext,
-    IStringFormattingUtilities stringFormattingUtilities) : ITrustSchoolSearchRepository
+    IGetEstablishments getEstablishments,
+    IGetTrusts getTrusts,
+    IStringFormattingUtilities stringFormattingUtilities)
+    : ITrustSchoolSearchRepository
 {
-    public async Task<(SearchResult[] Results, SearchResultCount NumberOfResults)> GetSearchResultsAsync(string? text,
-        int pageSize, int page = 1)
+    public async Task<(SearchResult[] Results, SearchResultCount NumberOfResults)>
+        GetSearchResultsAsync(string? text, int pageSize, int page = 1)
     {
-        if (string.IsNullOrWhiteSpace(text))
+        if (string.IsNullOrWhiteSpace(text) || (int.TryParse(text, out int number) && number < 100000))
         {
             return ([], new SearchResultCount(0, 0, 0));
         }
+        
 
-        //Count is done without the select for speed efficiency
-        var numberOfTrusts = await CreateTrustSearchQuery(text).CountAsync();
-        var numberOfSchools = await CreateSchoolSearchQuery(text).CountAsync();
-        var totalCount = numberOfTrusts + numberOfSchools;
+        
+        // Run API calls in parallel
+        var trustsTask = getTrusts.SearchTrusts(text);
 
-        //If there's no results then don't go back to the db
-        if (totalCount == 0)
-            return ([], new SearchResultCount(0, 0, 0));
+        var establishmentsTask = getEstablishments.SearchEstablishments(text);
+        
+        await Task.WhenAll(establishmentsTask, trustsTask);
+        
+        var establishments = establishmentsTask.Result;
+        
+        var trusts = trustsTask.Result?.Data?.ToList() ?? [];
 
-        //Now get all the results
-        var results = await BuildOrderedSearchResultQuery(text)
+        if (establishments.Count == 0)
+        {
+            var trustByTrn = getTrusts.GetTrustByReferenceNumber(text);
+            if (trustByTrn.Result != null)
+            { 
+                trusts.Add(trustByTrn.Result);
+            }
+        }
+
+        var filteredEstablishments = establishments
+            .Where(x => int.TryParse(x.EstablishmentGroupType?.Code, out var code) &&
+                        Enum.IsDefined(typeof(NameAndCodeEnums.AllowedEstablishmentGroupTypeCodes), code))
+            .OrderBy(x => x.Name!.StartsWith(text, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+            .ToList();
+
+        var filteredTrusts = trusts
+            .OrderBy(t =>
+                !string.IsNullOrWhiteSpace(t.Name) &&
+                t.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        
+        var trustResults = filteredTrusts.Select(MapTrust);
+        var establishmentsResults = filteredEstablishments.Select(MapSchool);
+
+        var allResults = establishmentsResults
+            .Concat(trustResults)
+            .OrderBy(x => x.Name)
+            .ToArray();
+
+        // Paging (RESTORED)
+        var paged = allResults
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToArrayAsync();
+            .ToArray();
 
-        return (results, new SearchResultCount(totalCount, numberOfTrusts, numberOfSchools));
+        return (
+            paged,
+            new SearchResultCount(
+                allResults.Length,
+                filteredTrusts.Count,
+                filteredEstablishments.Count
+            )
+        );
+        
+        SearchResult MapSchool(EstablishmentDto e)
+        {
+            return new SearchResult(
+                e.Urn!.ToString(),
+                e.Name!,
+                e.EstablishmentType!.Name!,
+                stringFormattingUtilities.BuildAddressString(
+                    e.Address!.Street,
+                    e.Address.Locality,
+                    e.Address.Town,
+                    e.Address.Postcode),
+                false,
+                e.EstablishmentNumber
+            );
+        }
+
+        SearchResult MapTrust(TrustDto t)
+        {
+            return new SearchResult(
+                t.GroupUid!.ToString(),
+                t.Name!,
+                t.Type!.Name!,
+                stringFormattingUtilities.BuildAddressString(
+                    t.Address!.Street,
+                    t.Address.Locality,
+                    t.Address.Town,
+                    t.Address.Postcode),
+                true,
+                t.ReferenceNumber
+            );
+        }
     }
 
     public async Task<SearchResult[]> GetAutoCompleteSearchResultsAsync(string? text)
@@ -44,100 +117,8 @@ public class TrustSchoolSearchRepository(
             return [];
         }
 
-        var results = await BuildOrderedSearchResultQuery(text)
-            .Take(5)
-            .ToArrayAsync();
+        var (results, _) = await GetSearchResultsAsync(text, 5, 1);
 
         return results;
-    }
-
-    private IQueryable<GiasGroup> CreateTrustSearchQuery(string searchTerm)
-    {
-        return academiesDbContext.Groups.Trusts()
-            .Where(g =>
-                    g.GroupId!.Contains(searchTerm) // GroupId cannot be null for a trust
-                    || g.GroupName!.Contains(searchTerm) // Enforced by global EF query filter
-            );
-    }
-
-    private IQueryable<GiasEstablishment> CreateSchoolSearchQuery(string searchTerm)
-    {
-        return academiesDbContext.GiasEstablishments
-            .Where(x =>
-                x.EstablishmentName!.Contains(searchTerm) // Enforced by global EF query filter
-                || x.Urn.ToString().Contains(searchTerm));
-    }
-
-
-    private IQueryable<SearchResult> BuildOrderedSearchResultQuery(string text)
-    {
-        IQueryable<TempSearchResult> searchResults = SelectTrusts(CreateTrustSearchQuery(text));
-        searchResults = searchResults.Union(SelectSchools(CreateSchoolSearchQuery(text)));
-
-        return searchResults
-            .OrderBy(x => x.Name == text || x.Id == text ? 0 : 1)
-            .ThenBy(x => x.Name.StartsWith(text) ? 1 : 2)
-            .ThenBy(x => x.Name.EndsWith(text) || x.Name.Contains(text) ? 2 : 3)
-            .ThenBy(x => x.Id)
-            .Select(BuildAutoCompleteResult());
-    }
-
-    private Expression<Func<TempSearchResult, SearchResult>> BuildAutoCompleteResult()
-    {
-        return x => new SearchResult(x.Id, x.Name, x.Type, stringFormattingUtilities.BuildAddressString(
-            x.Street,
-            x.Locality,
-            x.Town,
-            x.PostCode), x.IsTrust, x.TrustGroupId);
-    }
-
-
-    private static IQueryable<TempSearchResult> SelectTrusts(IQueryable<GiasGroup> trustsBaseQuery)
-    {
-        var query = trustsBaseQuery
-            .Select(g => new TempSearchResult
-            {
-                Street = g.GroupContactStreet,
-                Locality = g.GroupContactLocality,
-                Town = g.GroupContactTown,
-                PostCode = g.GroupContactPostcode,
-                Name = g.GroupName!,
-                Id = g.GroupUid!.ToString(),
-                TrustGroupId = g.GroupId!.ToString(),
-                Type = g.GroupType!,
-                IsTrust = true
-            });
-        return query;
-    }
-
-    private static IQueryable<TempSearchResult> SelectSchools(IQueryable<GiasEstablishment> schoolsBaseQuery)
-    {
-        var query = schoolsBaseQuery
-            .Select(e => new TempSearchResult
-            {
-                Street = e.Street,
-                Locality = e.Locality,
-                Town = e.Town,
-                PostCode = e.Postcode,
-                TrustGroupId = null,
-                Name = e.EstablishmentName!,
-                Id = e.Urn.ToString(),
-                Type = e.TypeOfEstablishmentName!,
-                IsTrust = false
-            });
-        return query;
-    }
-
-    private sealed class TempSearchResult
-    {
-        public string Id { get; init; } = null!;
-        public string Name { get; init; } = null!;
-        public string? Street { get; init; }
-        public string? Locality { get; init; }
-        public string? Town { get; init; }
-        public string? PostCode { get; init; }
-        public string? TrustGroupId { get; init; }
-        public string Type { get; init; } = null!;
-        public bool IsTrust { get; init; }
     }
 }

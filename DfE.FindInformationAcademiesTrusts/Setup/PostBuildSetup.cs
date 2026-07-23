@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using DfE.FindInformationAcademiesTrusts.Configuration;
 using DfE.FindInformationAcademiesTrusts.Extensions;
+using GovUK.Dfe.CoreLibs.Http.Middlewares.CorrelationId;
 using Microsoft.AspNetCore.CookiePolicy;
 using Serilog;
 
@@ -42,6 +43,7 @@ public static class PostBuildSetup
         app.UseAuthorization();
 
         app.MapRazorPages();
+        app.UseMiddleware<CorrelationIdMiddleware>();
         app.UseMiddleware<ResponseHeadersMiddleware>();
         app.MapHealthChecks("/health").AllowAnonymous();
     }
