@@ -1,9 +1,11 @@
 using System.Globalization;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -11,7 +13,8 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
 public class SchoolRepository(IAcademiesDbContext academiesDbContext,
     IStringFormattingUtilities stringFormattingUtilities,
-    ILogger<SchoolRepository> logger) : ISchoolRepository
+    ILogger<SchoolRepository> logger, 
+    IGetEstablishments getEstablishments) : ISchoolRepository
 {
     public async Task<SchoolSummary?> GetSchoolSummaryAsync(int urn)
     {
@@ -166,10 +169,8 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
 
     public async Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn)
     {
-        return await academiesDbContext.GiasEstablishments
-            .Where(x => x.Urn == urn)
-            .Select(g =>
-                new ReligiousCharacteristics(g.DioceseName, g.ReligiousCharacterName, g.ReligiousEthosName))
-            .SingleAsync();
+        var result = await getEstablishments.GetEstablishment(urn);
+        
+        return new ReligiousCharacteristics(result.Diocese.Name, result.ReligiousCharacter.Name, result.ReligousEthos);
     }
 }

@@ -8,4 +8,5 @@ public interface IGetEstablishments
 {
     Task<List<EstablishmentDto>> SearchEstablishments(string searchQuery);
     
+    Task<EstablishmentDto> GetEstablishment(int urn);
 }
