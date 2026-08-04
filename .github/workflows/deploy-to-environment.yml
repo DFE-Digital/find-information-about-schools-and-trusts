@@ -17,11 +17,7 @@ concurrency:
 
 env:
   IMAGE_NAME: fiat-app
-
-permissions:
-  contents: read
-  packages: read
-
+  
 jobs:
   set-env:
     name: Determine environment
@@ -61,6 +57,7 @@ jobs:
     name: Package Validation
     permissions:
       contents: read
+      packages: read
     needs: [ set-env ]
     steps:
       - name: Validate Packages
