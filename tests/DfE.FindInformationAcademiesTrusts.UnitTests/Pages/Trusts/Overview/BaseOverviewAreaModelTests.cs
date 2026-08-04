@@ -13,13 +13,13 @@ public abstract class BaseOverviewAreaModelTests<T> : BaseTrustPageTests<T>, ITe
 
     protected BaseOverviewAreaModelTests()
     {
-        MockTrustService.GetTrustOverviewAsync(Arg.Any<string>())
+        MockTrustService.GetTrustOverviewAsync(Arg.Any<string>(), Arg.Any<string>())
             .Returns(callinfo => BaseTrustOverviewServiceModel with { Uid = callinfo.Arg<string>() });
     }
 
     protected void SetupTrustOverview(TrustOverviewServiceModel trustOverviewServiceModel)
     {
-        MockTrustService.GetTrustOverviewAsync(trustOverviewServiceModel.Uid)
+        MockTrustService.GetTrustOverviewAsync(trustOverviewServiceModel.Uid, trustOverviewServiceModel.GroupId)
             .Returns(Task.FromResult(trustOverviewServiceModel));
     }
 

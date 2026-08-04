@@ -1,7 +1,7 @@
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
-using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +9,7 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
 public class TrustRepository(
     IAcademiesDbContext academiesDbContext,
+    IGetTrusts getTrusts,
     IStringFormattingUtilities stringFormattingUtilities) : ITrustRepository
 {
     private IQueryable<GiasGroup> Trusts { get; } = academiesDbContext.Groups.Trusts();
@@ -28,41 +29,25 @@ public class TrustRepository(
         return details is null ? null : new TrustSummary(details.Name, details.Type);
     }
 
-    public async Task<TrustOverview> GetTrustOverviewAsync(string uid)
+    public async Task<TrustOverview> GetTrustOverviewAsync(string trustReferenceNumber)
     {
-        var giasGroup = await Trusts
-            .Where(g => g.GroupUid == uid)
-            .Select(giasGroup => new
-            {
-                giasGroup.GroupUid,
-                giasGroup.GroupId,
-                giasGroup.Ukprn,
-                giasGroup.CompaniesHouseNumber,
-                giasGroup.GroupType,
-                giasGroup.GroupContactStreet,
-                giasGroup.GroupContactLocality,
-                giasGroup.GroupContactTown,
-                giasGroup.GroupContactPostcode,
-                giasGroup.IncorporatedOnOpenDate
-            })
-            .SingleAsync();
-
-        var regionAndTerritory = await GetRegionAndTerritoryAsync(uid);
+        var result = await getTrusts.GetTrustByReferenceNumber(trustReferenceNumber) ?? throw new InvalidOperationException(
+        $"Trust with reference number {trustReferenceNumber} was not found.");
 
         var trustOverview = new TrustOverview(
-            giasGroup.GroupUid!, //Searched by this field so it must be present
-            giasGroup.GroupId!, // GroupId cannot be null for a trust
-            giasGroup.Ukprn,
-            giasGroup.CompaniesHouseNumber,
-            giasGroup.GroupType!, //Enforced by global EF filter
+            result.GroupUid!,
+            trustReferenceNumber!,
+            result.Ukprn,
+            result.CompaniesHouseNumber,
+            result.Type.Name!, //Enforced by global EF filter
             stringFormattingUtilities.BuildAddressString(
-                giasGroup.GroupContactStreet,
-                giasGroup.GroupContactLocality,
-                giasGroup.GroupContactTown,
-                giasGroup.GroupContactPostcode
+                result.Address.Street,
+                result.Address.Locality,
+                result.Address.Locality,
+                result.Address.Postcode
             ),
-            regionAndTerritory,
-            giasGroup.IncorporatedOnOpenDate.ParseAsNullableDate()
+            result.Gor!,
+            result.OpenDate.ParseAsNullableDate()
         );
 
         return trustOverview;

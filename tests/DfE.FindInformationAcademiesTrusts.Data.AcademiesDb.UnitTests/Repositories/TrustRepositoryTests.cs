@@ -1,3 +1,4 @@
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
@@ -10,6 +11,7 @@ public class TrustRepositoryTests
 {
     private readonly TrustRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
+    private readonly IGetTrusts _mockGetTrusts;
 
     private readonly IStringFormattingUtilities stringFormattingUtilities = new StringFormattingUtilities();
 
@@ -21,7 +23,8 @@ public class TrustRepositoryTests
 
     public TrustRepositoryTests()
     {
-        _sut = new TrustRepository(_mockAcademiesDbContext.Object, stringFormattingUtilities);
+        _mockGetTrusts = Substitute.For<IGetTrusts>();
+        _sut = new TrustRepository(_mockAcademiesDbContext.Object, _mockGetTrusts, stringFormattingUtilities);
     }
 
     [Theory]
