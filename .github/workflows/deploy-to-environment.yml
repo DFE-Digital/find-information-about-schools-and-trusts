@@ -1,8 +1,6 @@
 name: Deploy to environment
 
 on:
-  pull_request:
-    branches: [ main, 'feature/**' ]
   push:
     branches: [ main ]
   workflow_dispatch:
@@ -17,7 +15,7 @@ concurrency:
 
 env:
   IMAGE_NAME: fiat-app
-
+  
 jobs:
   set-env:
     name: Determine environment
@@ -57,12 +55,14 @@ jobs:
     name: Package Validation
     permissions:
       contents: read
+      packages: read
     needs: [ set-env ]
     steps:
       - name: Validate Packages
         uses: DFE-Digital/rsd-github-actions/.github/actions/validate-packages@v1
         with:
           environment: ${{ needs.set-env.outputs.environment }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   create-tag:
     if: needs.set-env.outputs.environment == 'production'
