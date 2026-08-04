@@ -15,6 +15,8 @@ public abstract class TrustsAreaModel(
     protected readonly ITrustService TrustService = trustService;
 
     [BindProperty(SupportsGet = true)] public string Uid { get; set; } = "";
+    
+    [BindProperty(SupportsGet = true)] public string Ukprn { get; set; } = "";
     public TrustSummaryServiceModel TrustSummary { get; set; } = default!;
     public string TrustReferenceNumber { get; set; } = "";
 
@@ -23,7 +25,10 @@ public abstract class TrustsAreaModel(
 
     public virtual async Task<IActionResult> OnGetAsync()
     {
-        var trustSummary = await TrustService.GetTrustSummaryAsync(Uid);
+        var cat = Ukprn;
+        Console.WriteLine($"Ukprn: {cat}");
+        
+        var trustSummary = await TrustService.GetTrustSummaryAsync(Ukprn);
 
         if (trustSummary == null)
         {

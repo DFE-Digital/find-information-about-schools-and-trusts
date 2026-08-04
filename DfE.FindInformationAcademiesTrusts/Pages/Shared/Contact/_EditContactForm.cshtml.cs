@@ -55,8 +55,13 @@ public abstract class EditContactFormModel : BasePageModel
 
         ContactUpdatedMessage = GetContactUpdatedMessage(result);
 
-        var routeValues = new RouteValueDictionary { { IdName, Id } };
+        var routeValues = GetRouteValues();
         return RedirectToPage(ContactUpdatedUrl, routeValues);
+    }
+
+    protected virtual RouteValueDictionary GetRouteValues()
+    {
+        return new RouteValueDictionary { { IdName, Id } };
     }
 
     protected abstract Task<bool> OrganisationExistsAsync();

@@ -8,4 +8,10 @@ public interface IGetTrusts
     Task<TrustListResponse<TrustDto>> SearchTrusts(string searchQuery);
     
     Task<TrustDto?> GetTrustByReferenceNumber(string referenceNumber);
+
+    Task<TrustDto?> GetTrustByUkprn(string ukprn);
+
+    Task<List<TrustDto?>> GetTrustsByUkprn(string ukprn);
+    
+    Task<TrustDto?> GetEstablishmentTrust(int urn);
 }

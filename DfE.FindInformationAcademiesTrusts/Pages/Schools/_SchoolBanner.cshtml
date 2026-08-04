@@ -20,7 +20,7 @@
                 {
                     <p class="govuk-caption-m govuk-!-margin-top-2 govuk-!-margin-bottom-0">
                         Trust:
-                        <a data-testid="header-trust-link" class="govuk-link" asp-page="/Trusts/Overview/TrustDetails" asp-route-uid="@Model.TrustSummary.Uid">
+                        <a data-testid="header-trust-link" class="govuk-link" asp-page="/Trusts/Overview/TrustDetails" asp-route-uid="@Model.TrustSummary.Uid" asp-route-ukprn="@Model.TrustSummary.Ukprn">
                             @Model.TrustSummary.Name
                         </a>
                     </p>

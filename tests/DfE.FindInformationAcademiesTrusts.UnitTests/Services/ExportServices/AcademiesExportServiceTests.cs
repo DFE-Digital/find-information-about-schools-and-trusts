@@ -22,7 +22,7 @@ public class AcademiesExportServiceTests
         _mockTrustService = Substitute.For<ITrustService>();
         _mockAcademyService = Substitute.For<IAcademyService>();
 
-        var trustSummary = new TrustSummaryServiceModel("1", "Sample Trust", "Multi-academy trust", 1);
+        var trustSummary = new TrustSummaryServiceModel("1", "213321","Sample Trust", "Multi-academy trust", 1);
 
         _mockTrustService.GetTrustSummaryAsync(trustUid).Returns(trustSummary);
 

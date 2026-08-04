@@ -46,7 +46,7 @@ public class SearchService(ITrustSchoolSearchRepository trustSchoolSearchReposit
     private static SearchResultServiceModel[] BuildResults(SearchResult[] results)
     {
         return results.Select(x =>
-                new SearchResultServiceModel(x.Id, x.Name, x.Address, x.TrustReferenceNumber, x.Type,
+                new SearchResultServiceModel(x.Id, x.ukprn,x.Name, x.Address, x.TrustReferenceNumber, x.Type,
                     x.IsTrust ? ResultType.Trust : ResultType.School))
             .ToArray();
     }

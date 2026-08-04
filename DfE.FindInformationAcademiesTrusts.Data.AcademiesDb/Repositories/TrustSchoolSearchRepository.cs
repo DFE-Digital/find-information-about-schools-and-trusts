@@ -81,6 +81,7 @@ public class TrustSchoolSearchRepository(
         {
             return new SearchResult(
                 e.Urn!.ToString(),
+                e.Ukprn?.ToString() ?? "",
                 e.Name!,
                 e.EstablishmentType!.Name!,
                 stringFormattingUtilities.BuildAddressString(
@@ -95,8 +96,11 @@ public class TrustSchoolSearchRepository(
 
         SearchResult MapTrust(TrustDto t)
         {
+            var ukprnStr = t.Ukprn?.ToString() ?? "";
+            Console.WriteLine($"MapTrust - Name: {t.Name}, Ukprn from DTO: {t.Ukprn}, Converted: {ukprnStr}");
             return new SearchResult(
                 t.GroupUid!.ToString(),
+                ukprnStr,
                 t.Name!,
                 t.Type!.Name!,
                 stringFormattingUtilities.BuildAddressString(

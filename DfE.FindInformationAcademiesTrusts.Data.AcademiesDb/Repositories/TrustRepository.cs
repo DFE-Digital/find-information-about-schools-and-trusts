@@ -1,3 +1,4 @@
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
@@ -8,25 +9,31 @@ using Microsoft.EntityFrameworkCore;
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
 public class TrustRepository(
-    IAcademiesDbContext academiesDbContext,
+    IAcademiesDbContext academiesDbContext,IGetTrusts getTrusts,
     IStringFormattingUtilities stringFormattingUtilities) : ITrustRepository
 {
     private IQueryable<GiasGroup> Trusts { get; } = academiesDbContext.Groups.Trusts();
 
-    public async Task<TrustSummary?> GetTrustSummaryAsync(string uid)
+    
+    public async Task<TrustSummary?> GetTrustSummaryByEstablishmentUrnAsync(int urn)
     {
-        var details = await Trusts
-            .Where(g => g.GroupUid == uid)
-            .Select(g => new
-                {
-                    Name = g.GroupName!,
-                    Type = g.GroupType!
-                }
-            ) //GroupName and GroupType will never be null due to EF query filters
-            .SingleOrDefaultAsync();
+        var details = await getTrusts.GetEstablishmentTrust(urn);
+        return details is null
+            ? null
+            : new TrustSummary(details.Name ?? string.Empty, details.Type.Name ?? string.Empty,details.GroupUid ?? string.Empty,details.Ukprn?.ToString() ?? string.Empty);
 
-        return details is null ? null : new TrustSummary(details.Name, details.Type);
     }
+    
+    public async Task<TrustSummary?> GetTrustSummaryByUkprnAsync(string ukprn)
+    {
+        var details = await getTrusts.GetTrustByUkprn(ukprn);
+        return details is null
+            ? null
+            : new TrustSummary(details.Name ?? string.Empty, details.Type.Name ?? string.Empty,details.GroupUid ?? string.Empty,details.Ukprn?.ToString() ?? string.Empty);
+
+    }
+    
+    
 
     public async Task<TrustOverview> GetTrustOverviewAsync(string uid)
     {

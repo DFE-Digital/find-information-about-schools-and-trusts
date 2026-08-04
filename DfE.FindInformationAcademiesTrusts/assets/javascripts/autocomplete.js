@@ -8,6 +8,10 @@ export class Autocomplete {
     if (searchInput.hasAttribute('value')) {
       searchInput.removeAttribute('value')
     }
+    const ukprnInput = document.getElementById(`${inputId}-selected-ukprn`)
+    if (ukprnInput && ukprnInput.hasAttribute('value')) {
+      ukprnInput.removeAttribute('value')
+    }
 
     if (query) {
       const response = await fetch(`/search?handler=populateautocomplete&keywords=${query}`)
@@ -57,6 +61,8 @@ export class Autocomplete {
         if (selected) {
           document.getElementById(`${inputId}-selected-id`).value = (selected.id)
           document.getElementById(`${inputId}-selected-searchResultType`).value = (selected.resultType)
+          const ukprnEl = document.getElementById(`${inputId}-selected-ukprn`)
+          if (ukprnEl) ukprnEl.value = selected.ukprn ?? ''
         }
       }
     })
