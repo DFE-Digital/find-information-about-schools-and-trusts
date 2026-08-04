@@ -46,6 +46,8 @@ public class TrustServiceTests
 
         _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync(Arg.Any<string>())
             .ReturnsNull();
+        _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(Arg.Any<string>())
+            .Returns([]);
     }
 
     [Fact]
@@ -227,7 +229,7 @@ public class TrustServiceTests
     {
         _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync("2806")
             .Returns(singleAcademyTrustAcademyUrn);
-        _mockTrustRepository.GetTrustOverviewAsync("2806").Returns(BaseTrustOverview);
+        _mockTrustRepository.GetTrustOverviewAsync("TR0012").Returns(BaseTrustOverview);
 
         var result = await _sut.GetTrustOverviewAsync("TR0012", "2806");
 
@@ -238,7 +240,7 @@ public class TrustServiceTests
     public async Task
         GetTrustOverviewAsync_should_not_get_singleAcademyTrustAcademyUrn_when_trust_is_multi_academy_trust()
     {
-        _mockTrustRepository.GetTrustOverviewAsync("2806")
+        _mockTrustRepository.GetTrustOverviewAsync("TR0012")
             .Returns(BaseTrustOverview with { Type = "Multi-academy trust" });
 
         var result = await _sut.GetTrustOverviewAsync("TR0012", "2806");
@@ -261,7 +263,7 @@ public class TrustServiceTests
             OpenedDate = new DateTime(2015, 4, 20)
         };
 
-        _mockTrustRepository.GetTrustOverviewAsync("6798").Returns(trustOverview);
+        _mockTrustRepository.GetTrustOverviewAsync("TR0034").Returns(trustOverview);
 
         var result = await _sut.GetTrustOverviewAsync("TR0034", "6798");
 
@@ -274,7 +276,7 @@ public class TrustServiceTests
     [InlineData("Multi-academy trust", TrustType.MultiAcademyTrust)]
     public async Task GetTrustOverviewAsync_should_set_trustType(string givenType, TrustType expectedTrustType)
     {
-        _mockTrustRepository.GetTrustOverviewAsync("2806")
+        _mockTrustRepository.GetTrustOverviewAsync("TR0012")
             .Returns(BaseTrustOverview with { Type = givenType });
 
         var result = await _sut.GetTrustOverviewAsync("TR0012", "2806");
@@ -288,7 +290,7 @@ public class TrustServiceTests
     [InlineData("Not a SAT or MAT")]
     public async Task GetTrustOverviewAsync_should_throw_when_trustType_invalid(string givenType)
     {
-        _mockTrustRepository.GetTrustOverviewAsync("2806")
+        _mockTrustRepository.GetTrustOverviewAsync("TR0012")
             .Returns(BaseTrustOverview with { Type = givenType });
 
         var action = async () => await _sut.GetTrustOverviewAsync("TR0012", "2806");
@@ -310,7 +312,7 @@ public class TrustServiceTests
         };
 
         _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(uid).Returns(Task.FromResult(academiesOverview));
-        _mockTrustRepository.GetTrustOverviewAsync(uid).Returns(Task.FromResult(BaseTrustOverview with { Uid = uid, GroupId = trustReferenceNumber }));
+        _mockTrustRepository.GetTrustOverviewAsync(trustReferenceNumber).Returns(Task.FromResult(BaseTrustOverview with { Uid = uid, GroupId = trustReferenceNumber }));
         _mockTrustPupilService.GetTotalPupilCountForTrustAsync(uid).Returns(1200);
 
         // Act
@@ -337,7 +339,7 @@ public class TrustServiceTests
         var academiesOverview = Array.Empty<AcademyOverview>();
 
         _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(uid).Returns(academiesOverview);
-        _mockTrustRepository.GetTrustOverviewAsync(uid).Returns(BaseTrustOverview with { Uid = uid, GroupId = trustReferenceNumber });
+        _mockTrustRepository.GetTrustOverviewAsync(trustReferenceNumber).Returns(BaseTrustOverview with { Uid = uid, GroupId = trustReferenceNumber });
         _mockTrustPupilService.GetTotalPupilCountForTrustAsync(uid).Returns(0);
 
         // Act
@@ -365,7 +367,7 @@ public class TrustServiceTests
         };
 
         _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(uid).Returns(Task.FromResult(academiesOverview));
-        _mockTrustRepository.GetTrustOverviewAsync(uid).Returns(Task.FromResult(BaseTrustOverview with { Uid = uid, GroupId = trustReferenceNumber }));
+        _mockTrustRepository.GetTrustOverviewAsync(trustReferenceNumber).Returns(Task.FromResult(BaseTrustOverview with { Uid = uid, GroupId = trustReferenceNumber }));
         _mockTrustPupilService.GetTotalPupilCountForTrustAsync(uid).Returns(1000);
 
         // Act
