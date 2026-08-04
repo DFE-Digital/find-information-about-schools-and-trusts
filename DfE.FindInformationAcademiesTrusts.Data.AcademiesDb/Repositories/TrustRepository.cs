@@ -36,17 +36,17 @@ public class TrustRepository(
 
         var trustOverview = new TrustOverview(
             result.GroupUid!,
-            trustReferenceNumber!,
+            trustReferenceNumber,
             result.Ukprn,
             result.CompaniesHouseNumber,
-            result.Type.Name!, //Enforced by global EF filter
+            result.Type.Name,
             stringFormattingUtilities.BuildAddressString(
                 result.Address.Street,
                 result.Address.Locality,
-                result.Address.Locality,
+                result.Address.Town,
                 result.Address.Postcode
             ),
-            result.Gor!,
+            result.Gor,
             result.OpenDate.ParseAsNullableDate()
         );
 
@@ -72,15 +72,6 @@ public class TrustRepository(
             governanceContacts.GetValueOrDefault("Accounting Officer"),
             governanceContacts.GetValueOrDefault("Chair of Trustees"),
             governanceContacts.GetValueOrDefault("Chief Financial Officer"));
-    }
-
-
-    private async Task<string> GetRegionAndTerritoryAsync(string uid)
-    {
-        return await academiesDbContext.MstrTrusts
-            .Where(m => m.GroupUid == uid)
-            .Select(m => m.GORregion)
-            .SingleOrDefaultAsync() ?? string.Empty;
     }
 
     private async Task<Dictionary<string, Person>> GetGovernanceContactsAsync(string uid, string? urn = null)
