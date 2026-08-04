@@ -137,5 +137,126 @@ public class GetEstablishmentsTests
             capturedPath);
     }
 
+    [Fact]
+    public async Task GetEstablishment_ReturnsResult_WhenApiCallIsSuccessful()
+    {
+        // Arrange
+        var urn = 123456;
 
+        var expectedResponse = new EstablishmentDto
+        {
+            Urn = "123456",
+            Name = "Test School"
+        };
+
+        var apiResponse = new ApiResponse<EstablishmentDto>(HttpStatusCode.OK, expectedResponse);
+
+        var httpClientServiceMock = new Mock<IHttpClientService>();
+        httpClientServiceMock
+            .Setup(x => x.Get<EstablishmentDto>(
+                It.IsAny<HttpClient>(),
+                It.IsAny<string>()))
+            .ReturnsAsync(apiResponse);
+
+        var httpClient = new HttpClient
+        {
+            BaseAddress = new Uri("https://fakeapi.com")
+        };
+
+        var httpClientFactoryMock = new Mock<IDfeHttpClientFactory>();
+        httpClientFactoryMock
+            .Setup(x => x.CreateAcademiesClient())
+            .Returns(httpClient);
+
+        var service = new GetEstablishments(
+            httpClientFactoryMock.Object,
+            httpClientServiceMock.Object);
+
+        // Act
+        var result = await service.GetEstablishment(urn);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(expectedResponse.Urn, result.Urn);
+        Assert.Equal(expectedResponse.Name, result.Name);
+    }
+
+    [Fact]
+    public async Task GetEstablishment_ThrowsApiResponseException_WhenApiReturnsError()
+    {
+        // Arrange
+        var urn = 123456;
+
+        var apiResponse = new ApiResponse<EstablishmentDto>(
+            HttpStatusCode.InternalServerError,
+            null!);
+
+        var httpClientServiceMock = new Mock<IHttpClientService>();
+        httpClientServiceMock
+            .Setup(x => x.Get<EstablishmentDto>(
+                It.IsAny<HttpClient>(),
+                It.IsAny<string>()))
+            .ReturnsAsync(apiResponse);
+
+        var httpClient = new HttpClient
+        {
+            BaseAddress = new Uri("https://fakeapi.com")
+        };
+
+        var httpClientFactoryMock = new Mock<IDfeHttpClientFactory>();
+        httpClientFactoryMock
+            .Setup(x => x.CreateAcademiesClient())
+            .Returns(httpClient);
+
+        var service = new GetEstablishments(
+            httpClientFactoryMock.Object,
+            httpClientServiceMock.Object);
+
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<ApiResponseException>(
+            () => service.GetEstablishment(urn));
+
+        Assert.Contains("InternalServerError", exception.Message);
+    }
+
+    [Fact]
+    public async Task GetEstablishment_CallsApiWithCorrectPath()
+    {
+        // Arrange
+        var urn = 123456;
+
+        string? capturedPath = null;
+
+        var apiResponse = new ApiResponse<EstablishmentDto>(
+            HttpStatusCode.OK,
+            new EstablishmentDto());
+
+        var httpClientServiceMock = new Mock<IHttpClientService>();
+        httpClientServiceMock
+            .Setup(x => x.Get<EstablishmentDto>(
+                It.IsAny<HttpClient>(),
+                It.IsAny<string>()))
+            .Callback<HttpClient, string>((_, path) => capturedPath = path)
+            .ReturnsAsync(apiResponse);
+
+        var httpClient = new HttpClient
+        {
+            BaseAddress = new Uri("https://fakeapi.com")
+        };
+
+        var httpClientFactoryMock = new Mock<IDfeHttpClientFactory>();
+        httpClientFactoryMock
+            .Setup(x => x.CreateAcademiesClient())
+            .Returns(httpClient);
+
+        var service = new GetEstablishments(
+            httpClientFactoryMock.Object,
+            httpClientServiceMock.Object);
+
+        // Act
+        await service.GetEstablishment(urn);
+
+        // Assert
+        Assert.Equal($"v4/establishment/urn/{urn}", capturedPath);
+    }
 }

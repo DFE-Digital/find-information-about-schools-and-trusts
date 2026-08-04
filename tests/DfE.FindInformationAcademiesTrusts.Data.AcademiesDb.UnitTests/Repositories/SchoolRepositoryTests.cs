@@ -1,9 +1,10 @@
-using Dfe.AcademiesApi.Client.Contracts;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 using Microsoft.Extensions.Logging;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Repositories;
@@ -12,13 +13,15 @@ public class SchoolRepositoryTests
 {
     private readonly SchoolRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
+    private readonly IGetEstablishments _mockGetEstablishments;
 
     private readonly IStringFormattingUtilities _stringFormattingUtilities = new StringFormattingUtilities();
     private readonly ILogger<SchoolRepository> _mockLogger = MockLogger.CreateLogger<SchoolRepository>();
 
     public SchoolRepositoryTests()
     {
-        _sut = new SchoolRepository(_mockAcademiesDbContext.Object, _stringFormattingUtilities, _mockLogger);
+        _mockGetEstablishments = Substitute.For<IGetEstablishments>();
+        _sut = new SchoolRepository(_mockAcademiesDbContext.Object, _stringFormattingUtilities, _mockLogger, _mockGetEstablishments);
     }
 
     [Fact]
@@ -488,19 +491,21 @@ public class SchoolRepositoryTests
     {
         var urn = 123456;
 
-        _mockAcademiesDbContext.GiasEstablishments.AddRange(
-        [
-            new GiasEstablishment
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
             {
-                Urn = urn,
-                EstablishmentName = "cool school",
-                EstablishmentTypeGroupName = "Local authority maintained schools",
-                DioceseName = "Diocese of Nottingham",
-                ReligiousCharacterName = "Roman Catholic",
-                ReligiousEthosName = "Church of England/Roman Catholic",
-                EstablishmentStatusName = "Open"
-            }
-        ]);
+                Urn = urn.ToString(),
+                Name = "Test School",
+                Diocese = new NameAndCodeDto
+                {
+                    Name = "Diocese of Nottingham"
+                },
+                ReligiousCharacter = new NameAndCodeDto
+                {
+                    Name = "Roman Catholic"
+                },
+                ReligousEthos = "Church of England/Roman Catholic"
+            });
 
         var result = await _sut.GetReligiousCharacteristicsAsync(urn);
 

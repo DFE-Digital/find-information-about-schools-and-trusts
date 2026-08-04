@@ -22,4 +22,15 @@ public class GetEstablishments(IDfeHttpClientFactory httpClientFactory,
 
         return result.Body;
     }
+    
+    public async Task<EstablishmentDto> GetEstablishment(int urn)
+    {
+        string path = $"v4/establishment/urn/{urn}";
+
+        ApiResponse<EstablishmentDto> result = await httpClientService.Get<EstablishmentDto>(_httpClient, path);
+
+        if (!result.Success) throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");
+
+        return result.Body;
+    }
 }
