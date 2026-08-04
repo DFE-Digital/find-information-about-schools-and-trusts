@@ -64,6 +64,7 @@ jobs:
         uses: DFE-Digital/rsd-github-actions/.github/actions/validate-packages@v1
         with:
           environment: ${{ needs.set-env.outputs.environment }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
   create-tag:
     if: needs.set-env.outputs.environment == 'production'
