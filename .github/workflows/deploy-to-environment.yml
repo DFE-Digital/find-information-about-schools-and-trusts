@@ -158,6 +158,7 @@ jobs:
           azure-acr-name: ${{ secrets.ACR_NAME }}
           annotate-release: true
           image-name: ${{ needs.set-env.outputs.image-name }}
+          timeout-seconds: 600
         env:
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID || '' }}
           AZURE_SUBSCRIPTION: ${{ secrets.AZURE_SUBSCRIPTION_ID || '' }}
