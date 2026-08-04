@@ -139,7 +139,7 @@ public class TrustService(
 
         var overviewModel = new TrustOverviewServiceModel(
             trustOverview.Uid,
-            trustOverview.GroupId,
+            trustOverview.TrustReferenceNumber,
             trustOverview.Ukprn,
             trustOverview.CompaniesHouseNumber,
             trustType,
