@@ -9,6 +9,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
 
+## [Release-66][release-66] - 2026-08-05
+
+- 286852 : Migrate search for trusts and schools to API
+- 292401 : Migrate religious characteristics to academies api
+- 290621 : Removing content from management letter section of FAST
+
+---
+
 ## [Release-65][release-65] - 2026-05-27
 
 ### Fixed
