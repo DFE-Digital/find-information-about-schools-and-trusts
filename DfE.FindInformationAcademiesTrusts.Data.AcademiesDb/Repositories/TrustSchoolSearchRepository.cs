@@ -105,7 +105,7 @@ public class TrustSchoolSearchRepository(
                 t.GroupUid!.ToString(),
                 t.ReferenceNumber.ToString(),
                 t.Name!,
-                t.Type!.Name,
+                t.Type.Name,
                 stringFormattingUtilities.BuildAddressString(
                     t.Address!.Street,
                     t.Address.Locality,
