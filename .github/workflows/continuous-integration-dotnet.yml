@@ -46,4 +46,4 @@ jobs:
       run: dotnet ef migrations has-pending-model-changes --context FiatDbContext --project DfE.FindInformationAcademiesTrusts.Data.FiatDb --startup-project DfE.FindInformationAcademiesTrusts
 
     - name: Run tests
-      run: dotnet test DfE.FindInformationAcademiesTrusts.sln -c Release --no-build
+      run: dotnet test DfE.FindInformationAcademiesTrusts.sln
