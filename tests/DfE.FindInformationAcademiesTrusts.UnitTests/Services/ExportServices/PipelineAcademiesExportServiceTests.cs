@@ -23,7 +23,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
             _mockTrustService = Substitute.For<ITrustService>();
             _mockAcademyService = Substitute.For<IAcademyService>();
 
-            var trustSummary = new TrustSummaryServiceModel("1", "Sample Trust", "Multi-academy trust", 1);
+            var trustSummary = new TrustSummaryServiceModel("1", "TR1234","Sample Trust", "Multi-academy trust", 1);
 
             _mockTrustService.GetTrustSummaryAsync(trustUid).Returns(trustSummary);
 

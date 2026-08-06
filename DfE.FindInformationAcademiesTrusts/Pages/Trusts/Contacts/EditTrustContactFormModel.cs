@@ -16,6 +16,8 @@ public abstract class EditTrustContactFormModel(ITrustService trustService, Trus
     public List<DataSourcePageListEntry> DataSourcesPerPage { get; } = [];
 
     [BindProperty(SupportsGet = true)] public string Uid { get; set; } = "";
+    
+    [BindProperty(SupportsGet = true)] public string ReferenceNumber { get; set; } = "";
 
     public override PageMetadata PageMetadata => new(TrustSummary.Name, ModelState.IsValid, ContactsAreaModel.PageName,
         $"Edit {role.MapRoleToViewString()} details");
@@ -25,6 +27,8 @@ public abstract class EditTrustContactFormModel(ITrustService trustService, Trus
     public override string IdName => "Uid";
     public override string ContactUpdatedUrl => "/Trusts/Contacts/InDfe";
     public override string CancelUrl => "/Trusts/Contacts/InDfe";
+    
+    
 
     protected abstract InternalContact? GetContactFromServiceModel(TrustContactsServiceModel contacts);
 

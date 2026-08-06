@@ -57,7 +57,7 @@ public abstract class BasePipelineAcademiesAreaModelTests<T> : BaseAcademiesArea
     public override async Task OnGetExportAsync_ShouldSanitizeTrustName_WhenTrustNameContainsIllegalCharacters()
     {
         // Arrange
-        var trustSummary = new TrustSummaryServiceModel(TrustUid, "Sample/Trust:Name?", "Multi-academy trust", 0);
+        var trustSummary = new TrustSummaryServiceModel(TrustUid, "TR1234","Sample/Trust:Name?", "Multi-academy trust", 0);
         var expectedBytes = new byte[] { 1, 2, 3 };
 
         MockTrustService.GetTrustSummaryAsync(TrustUid).Returns(trustSummary);

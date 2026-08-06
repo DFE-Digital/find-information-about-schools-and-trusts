@@ -115,7 +115,7 @@ public class DetailsModelTests : BaseOverviewAreaModelTests<DetailsModel>
         _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(AcademyUrn, SchoolCategory.Academy)
             .Returns(_dummySchoolDetails with { DateJoinedTrust = DateOnly.Parse("2025-01-01") });
         MockTrustService.GetTrustSummaryAsync(AcademyUrn)
-            .Returns(new TrustSummaryServiceModel("1234", "Some Trust", "Some Type", 9001));
+            .Returns(new TrustSummaryServiceModel("1234", "TR1234","Some Trust", "Some Type", 9001));
 
         await Sut.OnGetAsync();
 
@@ -129,7 +129,7 @@ public class DetailsModelTests : BaseOverviewAreaModelTests<DetailsModel>
         _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(AcademyUrn, SchoolCategory.Academy)
             .Returns(_dummySchoolDetails with { DateJoinedTrust = null });
         MockTrustService.GetTrustSummaryAsync(AcademyUrn)
-            .Returns(new TrustSummaryServiceModel("1234", "Some Trust", "Some Type", 9001));
+            .Returns(new TrustSummaryServiceModel("1234", "TR1234","Some Trust", "Some Type", 9001));
 
         await Sut.OnGetAsync();
 
@@ -159,7 +159,7 @@ public class DetailsModelTests : BaseOverviewAreaModelTests<DetailsModel>
             .Returns(_dummySchoolDetails);
 
         MockTrustService.GetTrustSummaryAsync(SchoolUrn)
-            .Returns(new TrustSummaryServiceModel("1234", "Some Trust", "Some Type", 1));
+            .Returns(new TrustSummaryServiceModel("1234", "TR1234","Some Trust", "Some Type", 1));
 
         await Sut.OnGetAsync();
 

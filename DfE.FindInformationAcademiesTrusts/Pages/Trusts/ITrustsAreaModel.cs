@@ -8,6 +8,8 @@ public interface ITrustsAreaModel
 {
     string Uid { get; }
 
+    string ReferenceNumber { get; }
+    
     TrustSummaryServiceModel TrustSummary { get; }
 
     List<DataSourcePageListEntry> DataSourcesPerPage { get; }

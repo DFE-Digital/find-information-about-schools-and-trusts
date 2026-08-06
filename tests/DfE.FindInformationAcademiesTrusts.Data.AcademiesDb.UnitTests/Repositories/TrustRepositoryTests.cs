@@ -1,8 +1,13 @@
+using Dfe.AcademiesApi.Client.Contracts;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4;
+using NameAndCodeDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.NameAndCodeDto;
+using TrustDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts.TrustDto;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Repositories;
 
@@ -10,6 +15,7 @@ public class TrustRepositoryTests
 {
     private readonly TrustRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
+    private readonly IGetTrusts _mockGetTrusts = Substitute.For<IGetTrusts>();
 
     private readonly IStringFormattingUtilities stringFormattingUtilities = new StringFormattingUtilities();
 
@@ -21,27 +27,35 @@ public class TrustRepositoryTests
 
     public TrustRepositoryTests()
     {
-        _sut = new TrustRepository(_mockAcademiesDbContext.Object, stringFormattingUtilities);
+        _sut = new TrustRepository(_mockAcademiesDbContext.Object,_mockGetTrusts, stringFormattingUtilities);
     }
 
     [Theory]
-    [InlineData("2806", "My Trust", "Multi-academy trust")]
-    [InlineData("9008", "Another Trust", "Single-academy trust")]
-    [InlineData("9008", "Trust with no academies", "Multi-academy trust")]
-    public async Task GetTrustSummaryAsync_should_return_trustSummary_if_found(string uid, string name, string type)
+    [InlineData("TR2806", "2806", "My Trust", "Multi-academy trust")]
+    [InlineData("TR9008", "9008", "Another Trust", "Single-academy trust")]
+    [InlineData("TR9010", "9010", "Trust with no academies", "Multi-academy trust")]
+    public async Task GetTrustSummaryAsync_should_return_trustSummary_if_found(string referenceNumber, string uid,
+        string name, string type)
     {
-        _ = _mockAcademiesDbContext.AddGiasGroupForTrust(uid, name, groupType: type);
+        _mockGetTrusts.GetTrustByReferenceNumber(referenceNumber).Returns(new TrustDto
+        {
+            GroupUid = uid,
+            Name = name,
+            ReferenceNumber = referenceNumber,
+            Type = new NameAndCodeDto { Name = type }
+        });
 
-        var result = await _sut.GetTrustSummaryAsync(uid);
-        result.Should().BeEquivalentTo(new TrustSummary(name, type));
+        var result = await _sut.GetTrustSummaryAsync(referenceNumber);
+        result.Should().BeEquivalentTo(new TrustSummary(name, type, uid, referenceNumber));
     }
 
     [Fact]
-    public async Task GetTrustSummaryAsync_should_return_null_if_not_sat_or_mat()
+    public async Task GetTrustSummaryAsync_should_return_null_if_reference_number_not_found()
     {
-        _ = _mockAcademiesDbContext.AddGiasGroupForFederation("2806");
+        const string referenceNumber = "TR0000";
+        _mockGetTrusts.GetTrustByReferenceNumber(referenceNumber).Returns((TrustDto?)null);
 
-        var result = await _sut.GetTrustSummaryAsync("2806");
+        var result = await _sut.GetTrustSummaryAsync(referenceNumber);
         result.Should().BeNull();
     }
 

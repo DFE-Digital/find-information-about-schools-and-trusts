@@ -8,8 +8,18 @@ export class Autocomplete {
     // Clear selected trust if we then search for new trust
     // Avoids the uid turning up in the url
     const searchInput = document.getElementById(`${inputId}-selected-id`)
-    if (searchInput.hasAttribute('value')) {
-      searchInput.removeAttribute('value')
+    if (searchInput) {
+      searchInput.value = ''
+    }
+
+    const referenceNumberInput = document.getElementById(`${inputId}-selected-referencenumber`)
+    if (referenceNumberInput) {
+      referenceNumberInput.value = ''
+    }
+
+    const searchResultTypeInput = document.getElementById(`${inputId}-selected-searchResultType`)
+    if (searchResultTypeInput) {
+      searchResultTypeInput.value = ''
     }
 
     if (!query?.trim()) {
@@ -101,6 +111,7 @@ export class Autocomplete {
       onConfirm: (selected) => {
         if (selected) {
           document.getElementById(`${inputId}-selected-id`).value = selected.id
+          document.getElementById(`${inputId}-selected-referencenumber`).value = selected.referenceNumber || ''
           document.getElementById(`${inputId}-selected-searchResultType`).value = selected.resultType
         }
       }

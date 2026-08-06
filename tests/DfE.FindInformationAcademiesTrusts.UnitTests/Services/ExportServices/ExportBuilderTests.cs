@@ -36,7 +36,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
         [Fact]
         public void WhenWritingTrustInformation_ShouldSetFontStyleToBold()
         {
-            _sut.WriteTrustInformation(new TrustSummaryServiceModel("123", "test trust", "something", 2));
+            _sut.WriteTrustInformation(new TrustSummaryServiceModel("123", "TR1234","test trust", "something", 2));
 
             _sut.Worksheet.Row(1).Style.Font.Bold.Should().BeTrue();
         }

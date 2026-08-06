@@ -22,6 +22,7 @@ public class PreviousRatingsModelTests : BaseOfstedAreaModelTests<PreviousRating
 
     private readonly TrustSummaryServiceModel _dummyTrustSummaryServiceModel = new(
         "1234",
+        "TR1234",
         "Some Trust",
         "Some Trust Type",
         23
