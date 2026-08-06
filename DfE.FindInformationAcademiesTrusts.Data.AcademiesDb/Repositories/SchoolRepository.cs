@@ -147,8 +147,9 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
 
     public async Task<SchoolReferenceNumbers?> GetReferenceNumbersAsync(int urn)
     {
-        return await academiesDbContext.GiasEstablishments.Where(e => e.Urn == urn)
-            .Select(e => new SchoolReferenceNumbers(e.LaCode, e.EstablishmentNumber, e.Ukprn)).SingleOrDefaultAsync();
+        var result = await getEstablishments.GetEstablishment(urn);
+
+        return new SchoolReferenceNumbers(result.LocalAuthorityCode, result.EstablishmentNumber, result.Ukprn);
     }
 
     public async Task<Governor[]> GetGovernanceAsync(int urn)
