@@ -9,6 +9,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
 
+## [Release-67][release-67] - 2026-08-06
+
+### Fixed
+
+- 295563 : Trust SharePoint links directing to wrong page
+
+### Changed
+- 292400 : Migrate school reference numbers to academies api
+
+---
+
 ## [Release-66][release-66] - 2026-08-05
 
 - 286852 : Migrate search for trusts and schools to API
