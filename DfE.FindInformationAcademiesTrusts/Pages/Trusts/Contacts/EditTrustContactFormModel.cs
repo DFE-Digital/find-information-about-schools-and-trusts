@@ -27,14 +27,18 @@ public abstract class EditTrustContactFormModel(ITrustService trustService, Trus
     public override string IdName => "Uid";
     public override string ContactUpdatedUrl => "/Trusts/Contacts/InDfe";
     public override string CancelUrl => "/Trusts/Contacts/InDfe";
-    
-    
+
+    protected override RouteValueDictionary RedirectRouteValues =>
+        new(base.RedirectRouteValues) { { nameof(ReferenceNumber), ReferenceNumber } };
+
+    public override Dictionary<string, string> CancelRouteValues =>
+        new(base.CancelRouteValues) { { nameof(ReferenceNumber), ReferenceNumber } };
 
     protected abstract InternalContact? GetContactFromServiceModel(TrustContactsServiceModel contacts);
 
     protected override async Task<bool> OrganisationExistsAsync()
     {
-        var summary = await trustService.GetTrustSummaryAsync(Id);
+        var summary = await trustService.GetTrustSummaryAsync(ReferenceNumber);
 
         if (summary is null)
         {

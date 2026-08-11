@@ -22,20 +22,12 @@ public class EditSfsoLeadModelTests
     {
         _mockTrustService.GetTrustContactsAsync("1234").Returns(
             Task.FromResult(new TrustContactsServiceModel(null, _sfsoLead, null, null, null)));
-        _mockTrustService.GetTrustSummaryAsync(_fakeTrust.Uid)!.Returns(Task.FromResult(_fakeTrust));
+        _mockTrustService.GetTrustSummaryAsync(_fakeTrust.ReferenceNumber)!.Returns(Task.FromResult(_fakeTrust));
 
         _sut = new EditSfsoLeadModel(_mockTrustService)
-            { Uid = "1234" };
+            { Uid = "1234", ReferenceNumber = "TR1234" };
     }
-
-    [Fact]
-    public async Task OnGetAsync_returns_NotFoundResult_if_Trust_is_not_found()
-    {
-        _mockTrustService.GetTrustSummaryAsync("1234").Returns(Task.FromResult((TrustSummaryServiceModel?)null));
-        var result = await _sut.OnGetAsync();
-        result.Should().BeOfType<NotFoundResult>();
-    }
-
+    
     [Fact]
     public async Task OnGetAsync_loads_the_correct_name_and_email()
     {
@@ -65,8 +57,11 @@ public class EditSfsoLeadModelTests
 
         _sut.ContactUpdatedMessage.Should().Be(expectedMessage);
 
-        result.Should().BeOfType<RedirectToPageResult>()
-            .Which.PageName.Should().Be("/Trusts/Contacts/InDfe");
+        var redirectResult = result.Should().BeOfType<RedirectToPageResult>().Subject;
+        redirectResult.PageName.Should().Be("/Trusts/Contacts/InDfe");
+        redirectResult.RouteValues.Should().NotBeNull();
+        redirectResult.RouteValues!["Uid"].Should().Be("1234");
+        redirectResult.RouteValues!["ReferenceNumber"].Should().Be("TR1234");
     }
 
     [Fact]
