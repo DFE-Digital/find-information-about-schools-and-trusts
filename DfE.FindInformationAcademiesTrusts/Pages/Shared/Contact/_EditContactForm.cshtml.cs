@@ -32,7 +32,7 @@ public abstract class EditContactFormModel : BasePageModel
     /// Defaults to just the identifying route value (<see cref="IdName"/>/<see cref="Id"/>); override to
     /// carry additional context (e.g. ReferenceNumber) through the redirect.
     /// </summary>
-    protected virtual RouteValueDictionary RedirectRouteValues => new() { { IdName, Id } };
+    protected virtual RouteValueDictionary GetRedirectRouteValues() => new() { { IdName, Id } };
 
     /// <summary>
     /// Route values used for the Cancel link back to <see cref="CancelUrl"/>. Bound to the anchor tag helper's
@@ -40,7 +40,7 @@ public abstract class EditContactFormModel : BasePageModel
     /// to just the identifying route value (<see cref="IdName"/>/<see cref="Id"/>); override to carry additional
     /// context (e.g. ReferenceNumber) through the link.
     /// </summary>
-    public virtual Dictionary<string, string> CancelRouteValues => new() { { IdName, Id } };
+    public virtual Dictionary<string, string> GetCancelRouteValues() => new() { { IdName, Id } };
 
     [TempData] public string ContactUpdatedMessage { get; set; } = string.Empty;
 
@@ -70,7 +70,7 @@ public abstract class EditContactFormModel : BasePageModel
 
         ContactUpdatedMessage = GetContactUpdatedMessage(result);
 
-        return RedirectToPage(ContactUpdatedUrl, RedirectRouteValues);
+        return RedirectToPage(ContactUpdatedUrl, GetRedirectRouteValues());
     }
 
     protected abstract Task<bool> OrganisationExistsAsync();

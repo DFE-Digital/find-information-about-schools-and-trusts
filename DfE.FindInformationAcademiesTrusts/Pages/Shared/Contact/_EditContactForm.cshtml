@@ -47,7 +47,7 @@
                 <button type="submit" class="govuk-button" data-module="govuk-button" formnovalidate>
                   Save and continue
                 </button>
-                <a class="govuk-link" asp-page="@Model.CancelUrl" asp-all-route-data="@Model.CancelRouteValues">
+                <a class="govuk-link" asp-page="@Model.CancelUrl" asp-all-route-data="@Model.GetCancelRouteValues()">
                   Cancel
                 </a>
               </div>
