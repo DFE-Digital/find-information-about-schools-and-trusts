@@ -52,7 +52,7 @@ describe('Pagination Accessibility', () => {
     describe('Trust Data Tables Pagination Accessibility', () => {
         it('should have accessible pagination on trust academies tables', () => {
             // Test pagination accessibility on academies data table
-            cy.visit(`/trusts/academies/in-trust/details?uid=${testPaginationData.academiesInTrustUid}`);
+            cy.visit(`/trusts/academies/in-trust/details?uid=${testPaginationData.academiesInTrustUid}&referencenumber=${testPaginationData.academiesInTrustTrn}`);
 
             // Wait for page to load
             cy.get('#main-content').should('be.visible');
@@ -70,7 +70,7 @@ describe('Pagination Accessibility', () => {
 
         it('should have accessible pagination on ofsted tables', () => {
             // Test pagination accessibility on Ofsted ratings data table
-            cy.visit(`/trusts/ofsted/reportcards/currentreportcards?uid=${testPaginationData.ofstedRatingsUid}`);
+            cy.visit(`/trusts/ofsted/reportcards/currentreportcards?uid=${testPaginationData.ofstedRatingsUid}&referencenumber=${testPaginationData.academiesInTrustTrn}`);
 
             // Wait for page to load
             cy.get('#main-content').should('be.visible');

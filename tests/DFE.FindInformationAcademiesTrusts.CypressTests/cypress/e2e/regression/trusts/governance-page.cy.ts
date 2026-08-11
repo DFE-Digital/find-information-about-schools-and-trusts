@@ -9,7 +9,7 @@ describe("Testing the components of the Governance page", () => {
         describe(`On the Governance pages for a ${typeOfTrust}`, () => {
 
             it("The trust leadership page loads with the correct headings and data", () => {
-                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}`);
+                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}&referencenumber=tr04032`);
 
                 commonPage
                     .checkThatBrowserTitleForTrustPageMatches('Trust leadership - Governance - {trustName} - Find information about schools and trusts');
@@ -30,7 +30,7 @@ describe("Testing the components of the Governance page", () => {
             });
 
             it("The trustees page loads with the correct headings and data", () => {
-                cy.visit(`/trusts/governance/trustees?uid=${uid}`);
+                cy.visit(`/trusts/governance/trustees?uid=${uid}&referencenumber=tr04032`);
 
                 commonPage
                     .checkThatBrowserTitleForTrustPageMatches('Trustees - Governance - {trustName} - Find information about schools and trusts');
@@ -50,7 +50,7 @@ describe("Testing the components of the Governance page", () => {
             });
 
             it("The members page loads with the correct headings and data", () => {
-                cy.visit(`/trusts/governance/members?uid=${uid}`);
+                cy.visit(`/trusts/governance/members?uid=${uid}&referencenumber=tr04032`);
 
                 commonPage
                     .checkThatBrowserTitleForTrustPageMatches('Members - Governance - {trustName} - Find information about schools and trusts');
@@ -70,7 +70,7 @@ describe("Testing the components of the Governance page", () => {
             });
 
             it("The historic members page loads with the correct headings and data", () => {
-                cy.visit(`/trusts/governance/historic-members?uid=${uid}`);
+                cy.visit(`/trusts/governance/historic-members?uid=${uid}&referencenumber=tr04032`);
 
                 commonPage
                     .checkThatBrowserTitleForTrustPageMatches('Historic members - Governance - {trustName} - Find information about schools and trusts');
@@ -90,56 +90,56 @@ describe("Testing the components of the Governance page", () => {
             });
 
             it("Table sorting is working", () => {
-                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}`);
+                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkTrustLeadershipColumnsSortCorrectly();
 
-                cy.visit(`/trusts/governance/trustees?uid=${uid}`);
+                cy.visit(`/trusts/governance/trustees?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkTrusteesColumnsSortCorrectly();
 
-                cy.visit(`/trusts/governance/members?uid=${uid}`);
+                cy.visit(`/trusts/governance/members?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkMembersColumnsSortCorrectly();
 
-                cy.visit(`/trusts/governance/historic-members?uid=${uid}`);
+                cy.visit(`/trusts/governance/historic-members?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkHistoricMembersColumnsSortCorrectly();
             });
 
             it("Sub navigation links contain correct number of governors", () => {
-                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}`);
+                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkTrustLeadershipLinkValueMatchesNumberOfTrustLeaders();
 
-                cy.visit(`/trusts/governance/trustees?uid=${uid}`);
+                cy.visit(`/trusts/governance/trustees?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkTrusteesLinkValueMatchesNumberOfTrustees();
 
-                cy.visit(`/trusts/governance/members?uid=${uid}`);
+                cy.visit(`/trusts/governance/members?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkMembersLinkValueMatchesNumberOfMembers();
 
-                cy.visit(`/trusts/governance/historic-members?uid=${uid}`);
+                cy.visit(`/trusts/governance/historic-members?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkHistoricMembersLinkValueMatchesNumberOfHistoricMembers();
             });
             
             it("Governor turnover rate information is displayed", () => {
-                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}`);
+                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}&referencenumber=tr04032`);
                 governancePage
                     .checkTurnoverRateIsPresent()
                     .checkTurnoverRateSummaryIsPresent()
                     .checkTurnoverCalculationExplanationIsPresent()
                     .checkTurnoverCalculationExplanationDetails();
 
-                cy.visit(`/trusts/governance/trustees?uid=${uid}`);
+                cy.visit(`/trusts/governance/trustees?uid=${uid}&referencenumber=tr04032`);
                 governancePage
                     .checkTurnoverRateIsPresent()
                     .checkTurnoverRateSummaryIsPresent()
                     .checkTurnoverCalculationExplanationIsPresent()
                     .checkTurnoverCalculationExplanationDetails();
 
-                cy.visit(`/trusts/governance/members?uid=${uid}`);
+                cy.visit(`/trusts/governance/members?uid=${uid}&referencenumber=tr04032`);
                 governancePage
                     .checkTurnoverRateIsPresent()
                     .checkTurnoverRateSummaryIsPresent()
                     .checkTurnoverCalculationExplanationIsPresent()
                     .checkTurnoverCalculationExplanationDetails();
 
-                cy.visit(`/trusts/governance/historic-members?uid=${uid}`);
+                cy.visit(`/trusts/governance/historic-members?uid=${uid}&referencenumber=tr04032`);
                 governancePage
                     .checkTurnoverRateIsPresent()
                     .checkTurnoverRateSummaryIsPresent()
@@ -154,59 +154,59 @@ describe("Testing the components of the Governance page", () => {
         describe(`On the Governance pages for a ${typeOfTrust}`, () => {
 
             it("The tables should be replaced with no data messages", () => {
-                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}`);
+                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkNoTrustLeadershipMessageIsVisible();
 
-                cy.visit(`/trusts/governance/trustees?uid=${uid}`);
+                cy.visit(`/trusts/governance/trustees?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkNoTrusteesMessageIsVisible();
 
-                cy.visit(`/trusts/governance/members?uid=${uid}`);
+                cy.visit(`/trusts/governance/members?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkNotMembersMessageIsVisible();
             });
 
             //Skipping below test case until no data governance page issue sorted (Bug raised 179544)
             it.skip("The historic members table should be replaced with no data message", () => {
-                cy.visit(`/trusts/governance/historic-members?uid=${uid}`);
+                cy.visit(`/trusts/governance/historic-members?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkNoHistoricMembersMessageIsVisible();
             });
 
             it("The number of governors in each sub nav title should be 0", () => {
-                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}`);
+                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkTrustLeadershipSubnavButtonHasZeroInBrackets();
 
-                cy.visit(`/trusts/governance/trustees?uid=${uid}`);
+                cy.visit(`/trusts/governance/trustees?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkTrusteesSubnavButtonHasZeroInBrackets();
 
-                cy.visit(`/trusts/governance/members?uid=${uid}`);
+                cy.visit(`/trusts/governance/members?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkMembersSubnavButtonHasZeroInBrackets();
 
-                cy.visit(`/trusts/governance/historic-members?uid=${uid}`);
+                cy.visit(`/trusts/governance/historic-members?uid=${uid}&referencenumber=tr04032`);
                 governancePage.checkHistoricMembersSubnavButtonHasZeroInBrackets();
             });
 
             it("Governor turnover rate information is displayed", () => {
-                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}`);
+                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}&referencenumber=tr04032`);
                 governancePage
                     .checkTurnoverRateIsPresent()
                     .checkTurnoverRateSummaryIsPresent()
                     .checkTurnoverCalculationExplanationIsPresent()
                     .checkTurnoverCalculationExplanationDetails();
 
-                cy.visit(`/trusts/governance/trustees?uid=${uid}`);
+                cy.visit(`/trusts/governance/trustees?uid=${uid}&referencenumber=tr04032`);
                 governancePage
                     .checkTurnoverRateIsPresent()
                     .checkTurnoverRateSummaryIsPresent()
                     .checkTurnoverCalculationExplanationIsPresent()
                     .checkTurnoverCalculationExplanationDetails();
 
-                cy.visit(`/trusts/governance/members?uid=${uid}`);
+                cy.visit(`/trusts/governance/members?uid=${uid}&referencenumber=tr04032`);
                 governancePage
                     .checkTurnoverRateIsPresent()
                     .checkTurnoverRateSummaryIsPresent()
                     .checkTurnoverCalculationExplanationIsPresent()
                     .checkTurnoverCalculationExplanationDetails();
 
-                cy.visit(`/trusts/governance/historic-members?uid=${uid}`);
+                cy.visit(`/trusts/governance/historic-members?uid=${uid}&referencenumber=tr04032`);
                 governancePage
                     .checkTurnoverRateIsPresent()
                     .checkTurnoverRateSummaryIsPresent()
@@ -219,7 +219,7 @@ describe("Testing the components of the Governance page", () => {
     describe("Testing the governance sub navigation", () => {
 
         it('Should check that the trust leadership navigation button takes me to the correct page', () => {
-            cy.visit('/trusts/governance/historic-members?uid=5527');
+            cy.visit('/trusts/governance/historic-members?uid=5527&referencenumber=tr04032');
 
             governancePage
                 .clickTrustLeadershipSubnavButton();
@@ -233,7 +233,7 @@ describe("Testing the components of the Governance page", () => {
         });
 
         it('Should check that the trustees navigation button takes me to the correct page', () => {
-            cy.visit('/trusts/governance/trust-leadership?uid=5527');
+            cy.visit('/trusts/governance/trust-leadership?uid=5527&referencenumber=tr04032');
 
             governancePage
                 .clickTrusteesSubnavButton();
@@ -247,13 +247,13 @@ describe("Testing the components of the Governance page", () => {
         });
 
         it('Should check that the members navigation button takes me to the correct page', () => {
-            cy.visit('/trusts/governance/trustees?uid=5527');
+            cy.visit('/trusts/governance/trustees?uid=5527&referencenumber=tr04032');
 
             governancePage
                 .clickMembersSubnavButton();
 
             navigation
-                .checkCurrentURLIsCorrect('/trusts/governance/members?uid=5527');
+                .checkCurrentURLIsCorrect('/trusts/governance/members?uid=5527&referencenumber=tr04032');
 
             governancePage
                 .checkAllSubNavItemsPresent()
@@ -261,13 +261,13 @@ describe("Testing the components of the Governance page", () => {
         });
 
         it('Should check that the historic members navigation button takes me to the correct page', () => {
-            cy.visit('/trusts/governance/members?uid=5527');
+            cy.visit('/trusts/governance/members?uid=5527&referencenumber=tr04032');
 
             governancePage
                 .clickHistoricMembersSubnavButton();
 
             navigation
-                .checkCurrentURLIsCorrect('/trusts/governance/historic-members?uid=5527');
+                .checkCurrentURLIsCorrect('/trusts/governance/historic-members?uid=5527&referencenumber=tr04032');
 
             governancePage
                 .checkAllSubNavItemsPresent()
@@ -275,7 +275,7 @@ describe("Testing the components of the Governance page", () => {
         });
 
         it('Should check that the governance sub nav items are not present when I am not on the governance page', () => {
-            cy.visit('/trusts/overview/trust-details?uid=5527');
+            cy.visit('/trusts/overview/trust-details?uid=5527&referencenumber=tr04032');
             governancePage
                 .checkSubNavNotPresent();
         });
@@ -283,7 +283,7 @@ describe("Testing the components of the Governance page", () => {
         describe("Testing that no unknown entries are found for an academies governance tables/pages", () => {
             trustsWithGovernanceData.forEach(({ typeOfTrust, uid }) => {
 
-                [`/trusts/governance/trust-leadership?uid=${uid}`, `/trusts/governance/trustees?uid=${uid}`, `/trusts/governance/members?uid=${uid}`, `/trusts/governance/historic-members?uid=${uid}`].forEach((url) => {
+                [`/trusts/governance/trust-leadership?uid=${uid}&referencenumber=tr04032`, `/trusts/governance/trustees?uid=${uid}&referencenumber=tr04032`, `/trusts/governance/members?uid=${uid}&referencenumber=tr04032`, `/trusts/governance/historic-members?uid=${uid}&referencenumber=tr04032`].forEach((url) => {
                     it(`Should have no unknown entries on ${url} for a ${typeOfTrust}`, () => {
                         cy.visit(url);
                         commonPage

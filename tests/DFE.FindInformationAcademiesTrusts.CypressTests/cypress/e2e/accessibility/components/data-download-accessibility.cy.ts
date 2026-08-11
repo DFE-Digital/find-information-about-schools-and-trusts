@@ -4,7 +4,7 @@ describe('Trust Data Download Accessibility', () => {
 
     describe('Academies Data Download Accessibility', () => {
         it('should have accessible academies download page', () => {
-            cy.visit('/trusts/academies/in-trust/details?uid=5712');
+            cy.visit('/trusts/academies/in-trust/details?uid=5712&referencenumber=tr04032');
 
             // Wait for page to load
             cy.get('main, #main-content').should('be.visible');
@@ -46,7 +46,7 @@ describe('Trust Data Download Accessibility', () => {
 
     describe('Ofsted Data Download Accessibility', () => {
         it('should have accessible ofsted download controls', () => {
-            cy.visit('/trusts/overview/trust-details?uid=5527');
+            cy.visit('/trusts/overview/trust-details?uid=5527&referencenumber=tr04032');
 
             // Wait for page to load
             cy.get('main, #main-content').should('be.visible');
@@ -65,7 +65,7 @@ describe('Trust Data Download Accessibility', () => {
 
     describe('Pipeline Academies Data Download Accessibility', () => {
         it('should have accessible pipeline academies download controls', () => {
-            cy.visit('/trusts/academies/pipeline/pre-decision?uid=5527');
+            cy.visit('/trusts/academies/pipeline/pre-decision?uid=5527&referencenumber=tr04032');
 
             // Wait for page to load
             cy.get('main, #main-content').should('be.visible');
@@ -84,7 +84,7 @@ describe('Trust Data Download Accessibility', () => {
 
     describe('Download Form Elements Accessibility', () => {
         it('should have accessible export form controls', () => {
-            cy.visit('/trusts/academies/in-trust/details?uid=5712');
+            cy.visit('/trusts/academies/in-trust/details?uid=5712&referencenumber=tr04032');
 
             // Check form accessibility for any export options
             cy.get('body').then($body => {
@@ -104,7 +104,7 @@ describe('Trust Data Download Accessibility', () => {
         });
 
         it('should have accessible download status messages', () => {
-            cy.visit('/trusts/academies/in-trust/details?uid=5712');
+            cy.visit('/trusts/academies/in-trust/details?uid=5712&referencenumber=tr04032');
 
             // Check accessibility of any download status or error messages
             cy.get('body').then($body => {

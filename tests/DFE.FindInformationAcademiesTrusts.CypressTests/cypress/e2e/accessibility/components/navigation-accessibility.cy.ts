@@ -65,9 +65,9 @@ describe('Navigation Accessibility', () => {
         });
 
         describe("Trust page breadcrumb accessibility", () => {
-            testTrustData.forEach(({ uid, trustName }) => {
+            testTrustData.forEach(({ uid, trustName, trn}) => {
                 it(`Should have accessible trust breadcrumb for ${trustName}`, () => {
-                    cy.visit(`/trusts/overview/trust-details?uid=${uid}`);
+                    cy.visit(`/trusts/overview/trust-details?uid=${uid}&referencenumber='${trn}'`);
 
                     navigation
                         .checkTrustNameBreadcrumbPresent(`${trustName}`)
@@ -84,7 +84,7 @@ describe('Navigation Accessibility', () => {
         });
 
         describe("Pipeline academies breadcrumb accessibility", () => {
-            [`/trusts/academies/pipeline/pre-decision?uid=16002`, `/trusts/academies/pipeline/post-decision?uid=17584`, `/trusts/academies/pipeline/free-schools?uid=17584`].forEach((url) => {
+            [`/trusts/academies/pipeline/pre-decision?uid=16002&referencenumber=tr04032`, `/trusts/academies/pipeline/post-decision?uid=17584&referencenumber=tr04032`, `/trusts/academies/pipeline/free-schools?uid=17584&referencenumber=tr04032`].forEach((url) => {
                 it(`Should have accessible "Academies" page breadcrumb on ${url}`, () => {
                     cy.visit(url);
 
@@ -170,7 +170,7 @@ describe('Navigation Accessibility', () => {
 
     it('should have accessible breadcrumbs using navigation POM', () => {
         const trustData = testTrustData[0]; // Ashton West End Primary Academy
-        cy.visit(`/trusts/overview/trust-details?uid=${trustData.uid}`);
+        cy.visit(`/trusts/overview/trust-details?uid=${trustData.uid}&referencenumber=tr02323`);
 
         // Use navigation POM to verify breadcrumbs
         navigation
@@ -187,7 +187,7 @@ describe('Navigation Accessibility', () => {
 
     it('should have accessible service navigation', () => {
         const trustData = testTrustData[1]; // Aspire North East Multi Academy Trust
-        cy.visit(`/trusts/overview/trust-details?uid=${trustData.uid}`);
+        cy.visit(`/trusts/overview/trust-details?uid=${trustData.uid}&referencenumber=tr02323`);
 
         // Use navigation POM to check service navigation
         navigation.checkAllServiceNavItemsPresent();

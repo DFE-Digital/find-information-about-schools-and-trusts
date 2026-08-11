@@ -32,9 +32,9 @@ describe('Testing breadcrumb functionality across FAST', () => {
         describe("Testing the breadcrumb links on the trust academy details page", () => {
 
             describe("Testing the breadcrumb links on the trust page", () => {
-                testTrustData.forEach(({ uid, trustName }) => {
+                testTrustData.forEach(({ uid, trustName, trn }) => {
                     it('Should check that a trusts name breadcrumb is displayed on the trusts page', () => {
-                        cy.visit(`/trusts/overview/trust-details?uid=${uid}`);
+                        cy.visit(`/trusts/overview/trust-details?uid=${uid}&referencenumber=${trn}`);
                         navigation
                             .checkTrustNameBreadcrumbPresent(`${trustName}`)
                             .clickHomeBreadcrumbButton()
@@ -44,7 +44,7 @@ describe('Testing breadcrumb functionality across FAST', () => {
             });
 
             describe("Testing the breadcrumb links on the pipeline academies pages", () => {
-                [`/trusts/academies/pipeline/pre-decision?uid=16002`, `/trusts/academies/pipeline/post-decision?uid=17584`, `/trusts/academies/pipeline/free-schools?uid=17584`].forEach((url) => {
+                [`/trusts/academies/pipeline/pre-decision?uid=16002&referencenumber=tr04032`, `/trusts/academies/pipeline/post-decision?uid=5527&referencenumber=tr04032`, `/trusts/academies/pipeline/free-schools?uid=17584&referencenumber=tr04032`].forEach((url) => {
                     it("Checks the breadcrumb shows the correct page name", () => {
                         cy.visit(url);
                         navigation
@@ -59,16 +59,16 @@ describe('Testing breadcrumb functionality across FAST', () => {
         const schoolBreadcrumbTestData = [
             {
                 ...testBreadcrumbSchoolData.communitySchool,
-                getSubpages: (urn: number) => TestDataStore.GetAllSchoolSubpagesForUrn(urn)
+                getSubpages: (urn: number, trn: string) => TestDataStore.GetAllSchoolSubpagesForUrn(urn, trn)
             },
             {
                 ...testBreadcrumbSchoolData.academyConverter,
-                getSubpages: (urn: number) => TestDataStore.GetAllAcademySubpagesForUrn(urn)
+                getSubpages: (urn: number, trn: string) => TestDataStore.GetAllAcademySubpagesForUrn(urn, trn)
             }
         ];
 
-        schoolBreadcrumbTestData.forEach(({ urn, type, getSubpages }) => {
-            getSubpages(urn).forEach(({ pageName, subpages }) => {
+        schoolBreadcrumbTestData.forEach(({ urn, type, trn, getSubpages }) => {
+            getSubpages(urn, trn).forEach(({ pageName, subpages }) => {
                 describe(`Testing breadcrumb links on ${pageName} pages for ${type}`, () => {
                     subpages.forEach(({ subpageName, url }) => {
                         it(`Checks the breadcrumb shows the correct page name for ${type} on ${pageName} > ${subpageName}`, () => {

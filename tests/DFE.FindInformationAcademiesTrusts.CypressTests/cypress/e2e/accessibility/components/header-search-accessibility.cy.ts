@@ -3,7 +3,7 @@ import 'wick-a11y';
 describe('Header Search Accessibility', () => {
 
     // Test header search on the same pages as UI tests - header search only appears on non-home pages
-    [`/schools/overview/details?urn=123452`, `/trusts/overview/trust-details?uid=5527`].forEach((url) => {
+    [`/schools/overview/details?urn=123452`, `/trusts/overview/trust-details?uid=5527&referencenumber=tr04032`].forEach((url) => {
         describe(`Header search accessibility on ${url}`, () => {
             beforeEach(() => {
                 cy.visit(url);
@@ -63,7 +63,7 @@ describe('Header Search Accessibility', () => {
 
     describe('Header Search Component Interactions', () => {
         it('should maintain accessibility during search interactions', () => {
-            cy.visit('/trusts/overview/trust-details?uid=5527');
+            cy.visit('/trusts/overview/trust-details?uid=5527&referencenumber=tr04032');
 
             // Wait for page to load
             cy.get('main, #main-content').should('be.visible');
