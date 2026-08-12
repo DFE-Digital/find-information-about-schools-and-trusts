@@ -16,6 +16,7 @@ public class AcademiesExportServiceTests
     private readonly AcademiesExportService _sut;
 
     private readonly string trustUid = "1";
+    private readonly string trustReferenceNumber = "TR1234";
 
     public AcademiesExportServiceTests()
     {
@@ -24,7 +25,7 @@ public class AcademiesExportServiceTests
 
         var trustSummary = new TrustSummaryServiceModel("1", "TR1234","Sample Trust", "Multi-academy trust", 1);
 
-        _mockTrustService.GetTrustSummaryAsync(trustUid).Returns(trustSummary);
+        _mockTrustService.GetTrustSummaryAsync(trustReferenceNumber).Returns(trustSummary);
 
         _sut = new AcademiesExportService(_mockTrustService, _mockAcademyService);
     }
@@ -32,7 +33,7 @@ public class AcademiesExportServiceTests
     [Fact]
     public async Task ExportAcademiesToSpreadsheet_ShouldGenerateCorrectHeadersAsync()
     {
-        var result = await _sut.BuildAsync(trustUid);
+        var result = await _sut.BuildAsync(trustUid,trustReferenceNumber);
         using var workbook = new XLWorkbook(new MemoryStream(result));
         var worksheet = workbook.Worksheet("Academies");
 
@@ -53,11 +54,12 @@ public class AcademiesExportServiceTests
     public async Task IfTrustDetailsDontExist_ShouldThrow()
     {
         var unknownTrustId = "Unknown";
+        var unknownTrustReferenceNumber = "TRUnknown";
 
-        var result = async () => { await _sut.BuildAsync(unknownTrustId); };
+        var result = async () => { await _sut.BuildAsync(unknownTrustId,unknownTrustReferenceNumber); };
 
         await result.Should().ThrowAsync<DataIntegrityException>()
-            .WithMessage($"Trust summary not found for UID {unknownTrustId}");
+            .WithMessage($"Trust summary not found for trust reference number {unknownTrustReferenceNumber}");
     }
 
     [Fact]
@@ -79,7 +81,7 @@ public class AcademiesExportServiceTests
         _mockAcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(trustUid)
             .Returns([new AcademyFreeSchoolMealsServiceModel("123456", "Academy 1", 20, 25, 15)]);
 
-        var result = await _sut.BuildAsync(trustUid);
+        var result = await _sut.BuildAsync(trustUid,trustReferenceNumber);
         using var workbook = new XLWorkbook(new MemoryStream(result));
         var worksheet = workbook.Worksheet("Academies");
 
@@ -126,7 +128,7 @@ public class AcademiesExportServiceTests
     [Fact]
     public async Task ExportAcademiesToSpreadsheet_ShouldHandleEmptyAcademiesAsync()
     {
-        var result = await _sut.BuildAsync(trustUid);
+        var result = await _sut.BuildAsync(trustUid,trustReferenceNumber);
         using var workbook = new XLWorkbook(new MemoryStream(result));
         var worksheet = workbook.Worksheet("Academies");
 
@@ -154,7 +156,7 @@ public class AcademiesExportServiceTests
         _mockAcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(trustUid)
             .Returns([new AcademyFreeSchoolMealsServiceModel("123456", null, null, 0, 0)]);
 
-        var result = await _sut.BuildAsync(trustUid);
+        var result = await _sut.BuildAsync(trustUid,trustReferenceNumber);
         using var workbook = new XLWorkbook(new MemoryStream(result));
         var worksheet = workbook.Worksheet("Academies");
 
@@ -200,7 +202,7 @@ public class AcademiesExportServiceTests
         _mockAcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(trustUid)
             .Returns([new AcademyFreeSchoolMealsServiceModel("123456", "Academy 1", 20, 25, 15)]);
 
-        var result = await _sut.BuildAsync(trustUid);
+        var result = await _sut.BuildAsync(trustUid,trustReferenceNumber);
         using var workbook = new XLWorkbook(new MemoryStream(result));
         var worksheet = workbook.Worksheet("Academies");
 
@@ -233,7 +235,7 @@ public class AcademiesExportServiceTests
         _mockAcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(trustUid)
             .Returns([new AcademyFreeSchoolMealsServiceModel("123456", "Academy 1", 20, 25, 15)]);
 
-        var result = await _sut.BuildAsync(trustUid);
+        var result = await _sut.BuildAsync(trustUid,trustReferenceNumber);
         using var workbook = new XLWorkbook(new MemoryStream(result));
         var worksheet = workbook.Worksheet("Academies");
 
@@ -272,7 +274,7 @@ public class AcademiesExportServiceTests
 
         _mockAcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(trustUid).Returns([]);
 
-        var result = await _sut.BuildAsync(trustUid);
+        var result = await _sut.BuildAsync(trustUid,trustReferenceNumber);
         using var workbook = new XLWorkbook(new MemoryStream(result));
         var worksheet = workbook.Worksheet("Academies");
 
