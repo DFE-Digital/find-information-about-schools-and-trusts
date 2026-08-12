@@ -27,6 +27,21 @@ public abstract class EditContactFormModel : BasePageModel
     public abstract string CancelUrl { get; }
     public abstract string ContactUpdatedUrl { get; }
 
+    /// <summary>
+    /// Route values used when redirecting back to <see cref="ContactUpdatedUrl"/> after a successful save.
+    /// Defaults to just the identifying route value (<see cref="IdName"/>/<see cref="Id"/>); override to
+    /// carry additional context (e.g. ReferenceNumber) through the redirect.
+    /// </summary>
+    protected virtual RouteValueDictionary GetRedirectRouteValues() => new() { { IdName, Id } };
+
+    /// <summary>
+    /// Route values used for the Cancel link back to <see cref="CancelUrl"/>. Bound to the anchor tag helper's
+    /// asp-all-route-data, which requires string values (unlike RedirectToPage's RouteValueDictionary). Defaults
+    /// to just the identifying route value (<see cref="IdName"/>/<see cref="Id"/>); override to carry additional
+    /// context (e.g. ReferenceNumber) through the link.
+    /// </summary>
+    public virtual Dictionary<string, string> GetCancelRouteValues() => new() { { IdName, Id } };
+
     [TempData] public string ContactUpdatedMessage { get; set; } = string.Empty;
 
     public async Task<IActionResult> OnGetAsync()
@@ -55,8 +70,7 @@ public abstract class EditContactFormModel : BasePageModel
 
         ContactUpdatedMessage = GetContactUpdatedMessage(result);
 
-        var routeValues = new RouteValueDictionary { { IdName, Id } };
-        return RedirectToPage(ContactUpdatedUrl, routeValues);
+        return RedirectToPage(ContactUpdatedUrl, GetRedirectRouteValues());
     }
 
     protected abstract Task<bool> OrganisationExistsAsync();

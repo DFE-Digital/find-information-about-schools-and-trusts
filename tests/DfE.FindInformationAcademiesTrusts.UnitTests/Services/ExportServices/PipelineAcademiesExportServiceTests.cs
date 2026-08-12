@@ -16,16 +16,16 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
         private readonly PipelineAcademiesExportService _sut;
 
         private readonly string trustUid = "1";
-        private readonly string trustReferenceNumber = "TRN1111";
+        private readonly string trustReferenceNumber = "TR1234";
 
         public PipelineAcademiesExportServiceTests()
         {
             _mockTrustService = Substitute.For<ITrustService>();
             _mockAcademyService = Substitute.For<IAcademyService>();
 
-            var trustSummary = new TrustSummaryServiceModel("1", "Sample Trust", "Multi-academy trust", 1);
+            var trustSummary = new TrustSummaryServiceModel("1", "TR1234","Sample Trust", "Multi-academy trust", 1);
 
-            _mockTrustService.GetTrustSummaryAsync(trustUid).Returns(trustSummary);
+            _mockTrustService.GetTrustSummaryAsync(trustReferenceNumber).Returns(trustSummary);
 
             _sut = new PipelineAcademiesExportService(_mockTrustService, _mockAcademyService);
         }
@@ -34,11 +34,13 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
         public async Task IfTrustDetailsDontExist_ShouldThrow()
         {
             string unknownTrustId = "Unknown";
+            string unknownTrustReferenceNumber = "TRUnknown";
+            
 
-            var result = async () => { await _sut.BuildAsync(unknownTrustId); };
+            var result = async () => { await _sut.BuildAsync(unknownTrustId,unknownTrustReferenceNumber); };
 
             await result.Should().ThrowAsync<DataIntegrityException>()
-                .WithMessage($"Trust summary not found for UID {unknownTrustId}");
+                .WithMessage($"Trust summary not found for trust reference number {unknownTrustReferenceNumber}");
         }
 
         [Fact]
@@ -64,7 +66,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
                         "Free school", new DateTime(2025, 6, 21))
                 ]);
 
-            var result = await _sut.BuildAsync(trustUid);
+            var result = await _sut.BuildAsync(trustUid,trustReferenceNumber);
 
             using var workbook = new XLWorkbook(new MemoryStream(result));
             var worksheet = workbook.Worksheet("Pipeline Academies");
@@ -137,7 +139,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
                         "Free school", new DateTime(2026, 5, 4))
                 ]);
 
-            var result = await _sut.BuildAsync(trustUid);
+            var result = await _sut.BuildAsync(trustUid,trustReferenceNumber);
 
             using var workbook = new XLWorkbook(new MemoryStream(result));
             var worksheet = workbook.Worksheet("Pipeline Academies");
@@ -188,7 +190,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
                 ]);
 
 
-            var result = await _sut.BuildAsync(trustUid);
+            var result = await _sut.BuildAsync(trustUid,trustReferenceNumber);
 
             using var workbook = new XLWorkbook(new MemoryStream(result));
             var worksheet = workbook.Worksheet("Pipeline Academies");

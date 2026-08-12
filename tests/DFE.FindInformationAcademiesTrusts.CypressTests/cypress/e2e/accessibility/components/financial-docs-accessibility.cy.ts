@@ -8,7 +8,7 @@ describe('Trust Financial Documents Pages Accessibility', () => {
 
             describe('Financial Statements Page Accessibility', () => {
                 beforeEach(() => {
-                    cy.visit(`/trusts/financial-documents/financial-statements?uid=${uid}`);
+                    cy.visit(`/trusts/financial-documents/financial-statements?uid=${uid}&referencenumber=tr04032`);
                 });
 
                 it('should have accessible financial statements page', () => {
@@ -44,7 +44,7 @@ describe('Trust Financial Documents Pages Accessibility', () => {
 
             describe('Management Letters Page Accessibility', () => {
                 beforeEach(() => {
-                    cy.visit(`/trusts/financial-documents/management-letters?uid=${uid}`);
+                    cy.visit(`/trusts/financial-documents/management-letters?uid=${uid}&referencenumber=tr04032`);
                 });
 
                 it('should have accessible management letters page', () => {
@@ -78,7 +78,7 @@ describe('Trust Financial Documents Pages Accessibility', () => {
 
             describe('Internal Scrutiny Reports Page Accessibility', () => {
                 beforeEach(() => {
-                    cy.visit(`/trusts/financial-documents/internal-scrutiny-reports?uid=${uid}`);
+                    cy.visit(`/trusts/financial-documents/internal-scrutiny-reports?uid=${uid}&referencenumber=tr04032`);
                 });
 
                 it('should have accessible internal scrutiny reports page', () => {
@@ -96,7 +96,7 @@ describe('Trust Financial Documents Pages Accessibility', () => {
 
             describe('Self-Assessment Checklists Page Accessibility', () => {
                 beforeEach(() => {
-                    cy.visit(`/trusts/financial-documents/self-assessment-checklists?uid=${uid}`);
+                    cy.visit(`/trusts/financial-documents/self-assessment-checklists?uid=${uid}&referencenumber=tr04032`);
                 });
 
                 it('should have accessible self-assessment checklists page', () => {
@@ -115,10 +115,12 @@ describe('Trust Financial Documents Pages Accessibility', () => {
 
         describe(`Common Financial Documents Components Accessibility for Trust UID ${uid}`, () => {
             // Test common components across all financial document pages
-            [`/trusts/financial-documents/financial-statements?uid=${uid}`,
-            `/trusts/financial-documents/management-letters?uid=${uid}`,
-            `/trusts/financial-documents/internal-scrutiny-reports?uid=${uid}`,
-            `/trusts/financial-documents/self-assessment-checklists?uid=${uid}`].forEach((url) => {
+            [
+                `/trusts/financial-documents/financial-statements?uid=${uid}&referencenumber=tr04032`,
+                `/trusts/financial-documents/management-letters?uid=${uid}&referencenumber=tr04032`,
+                `/trusts/financial-documents/internal-scrutiny-reports?uid=${uid}&referencenumber=tr04032`,
+                `/trusts/financial-documents/self-assessment-checklists?uid=${uid}&referencenumber=tr04032`
+            ].forEach((url) => {
 
                 it(`should have accessible common components on ${url}`, () => {
                     cy.visit(url);
@@ -172,7 +174,7 @@ describe('Trust Financial Documents Pages Accessibility', () => {
 
     describe('Financial Documents Navigation Accessibility', () => {
         it('should have accessible financial documents sub-navigation', () => {
-            cy.visit('/trusts/financial-documents/financial-statements?uid=5527');
+            cy.visit('/trusts/financial-documents/financial-statements?uid=5527&referencenumber=tr04032');
 
             // Wait for page to load
             cy.get('main, #main-content').should('be.visible');
@@ -192,7 +194,7 @@ describe('Trust Financial Documents Pages Accessibility', () => {
         });
 
         it('should have accessible financial documents service navigation', () => {
-            cy.visit('/trusts/financial-documents/financial-statements?uid=5527');
+            cy.visit('/trusts/financial-documents/financial-statements?uid=5527&referencenumber=tr04032');
 
             // Check service navigation accessibility - disable reports for sensitive financial data
             cy.get('body').then($body => {

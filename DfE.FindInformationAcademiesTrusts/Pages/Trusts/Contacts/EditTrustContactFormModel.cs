@@ -16,6 +16,8 @@ public abstract class EditTrustContactFormModel(ITrustService trustService, Trus
     public List<DataSourcePageListEntry> DataSourcesPerPage { get; } = [];
 
     [BindProperty(SupportsGet = true)] public string Uid { get; set; } = "";
+    
+    [BindProperty(SupportsGet = true)] public string ReferenceNumber { get; set; } = "";
 
     public override PageMetadata PageMetadata => new(TrustSummary.Name, ModelState.IsValid, ContactsAreaModel.PageName,
         $"Edit {role.MapRoleToViewString()} details");
@@ -26,11 +28,17 @@ public abstract class EditTrustContactFormModel(ITrustService trustService, Trus
     public override string ContactUpdatedUrl => "/Trusts/Contacts/InDfe";
     public override string CancelUrl => "/Trusts/Contacts/InDfe";
 
+    protected override RouteValueDictionary GetRedirectRouteValues() =>
+        new(base.GetRedirectRouteValues()) { { nameof(ReferenceNumber), ReferenceNumber } };
+
+    public override Dictionary<string, string> GetCancelRouteValues() =>
+        new(base.GetCancelRouteValues()) { { nameof(ReferenceNumber), ReferenceNumber } };
+
     protected abstract InternalContact? GetContactFromServiceModel(TrustContactsServiceModel contacts);
 
     protected override async Task<bool> OrganisationExistsAsync()
     {
-        var summary = await trustService.GetTrustSummaryAsync(Id);
+        var summary = await trustService.GetTrustSummaryAsync(ReferenceNumber);
 
         if (summary is null)
         {

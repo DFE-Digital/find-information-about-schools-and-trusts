@@ -2,12 +2,12 @@ import commonPage from "../../../pages/commonPage";
 import navigation from "../../../pages/navigation";
 import financialDocumentsPage from "../../../pages/trusts/financialDocumentsPage";
 import { testFinanceData } from "../../../support/test-data-store";
-testFinanceData.forEach(({ uid }) => {
+testFinanceData.forEach(({ uid, trn }) => {
     describe("Testing the Financial documents pages", () => {
         describe(`On the Finance statements page for a trust`, () => {
 
             beforeEach(() => {
-                cy.visit(`/trusts/financial-documents/financial-statements?uid=${uid}`);
+                cy.visit(`/trusts/financial-documents/financial-statements?uid=${uid}&referencenumber=${trn}`);
             });
 
             it("Checks the browser title is correct", () => {
@@ -36,7 +36,7 @@ testFinanceData.forEach(({ uid }) => {
         describe(`On the Management letters page for a trust`, () => {
 
             beforeEach(() => {
-                cy.visit(`/trusts/financial-documents/management-letters?uid=${uid}`);
+                cy.visit(`/trusts/financial-documents/management-letters?uid=${uid}&referencenumber=${trn}`);
             });
 
             it("Checks the browser title is correct", () => {
@@ -65,7 +65,7 @@ testFinanceData.forEach(({ uid }) => {
         describe(`On the Internal scrutiny reports page for a trust`, () => {
 
             beforeEach(() => {
-                cy.visit(`/trusts/financial-documents/internal-scrutiny-reports?uid=${uid}`);
+                cy.visit(`/trusts/financial-documents/internal-scrutiny-reports?uid=${uid}&referencenumber=${trn}`);
             });
 
             it("Checks the browser title is correct", () => {
@@ -94,7 +94,7 @@ testFinanceData.forEach(({ uid }) => {
         describe(`On the Self-assessment checklist page for a trust`, () => {
 
             beforeEach(() => {
-                cy.visit(`/trusts/financial-documents/self-assessment-checklists?uid=${uid}`);
+                cy.visit(`/trusts/financial-documents/self-assessment-checklists?uid=${uid}&referencenumber=${trn}`);
             });
 
             it("Checks the browser title is correct", () => {
@@ -121,7 +121,7 @@ testFinanceData.forEach(({ uid }) => {
         });
 
         describe(`On every financial documents page`, () => {
-            [`/trusts/financial-documents/financial-statements?uid=${uid}`, `/trusts/financial-documents/management-letters?uid=${uid}`, `/trusts/financial-documents/internal-scrutiny-reports?uid=${uid}`, `/trusts/financial-documents/self-assessment-checklists?uid=${uid}`].forEach((url) => {
+            [`/trusts/financial-documents/financial-statements?uid=${uid}&referencenumber=${trn}`, `/trusts/financial-documents/management-letters?uid=${uid}&referencenumber=${trn}`, `/trusts/financial-documents/internal-scrutiny-reports?uid=${uid}&referencenumber=${trn}`, `/trusts/financial-documents/self-assessment-checklists?uid=${uid}&referencenumber=${trn}`].forEach((url) => {
                 beforeEach(() => {
                     cy.visit(url);
                 });

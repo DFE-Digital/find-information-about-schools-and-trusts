@@ -14,10 +14,10 @@ function generateNameAndEmail() {
 const incorrectEmailFormatMessage = 'Enter a DfE email address in the correct format, e.g. joe.bloggs@education.gov.uk';
 
 describe("Testing the components of the Trust contacts page", () => {
-    testTrustData.forEach(({ typeOfTrust, uid }) => {
+    testTrustData.forEach(({ typeOfTrust, uid, trn }) => {
         describe(`On the contacts in DfE page for a ${typeOfTrust}`, () => {
             beforeEach(() => {
-                cy.visit(`/trusts/contacts/in-dfe?uid=${uid}`);
+                cy.visit(`/trusts/contacts/in-dfe?uid=${uid}&referencenumber=${trn}`);
             });
 
             it("Checks the browser title is correct", () => {
@@ -63,7 +63,7 @@ describe("Testing the components of the Trust contacts page", () => {
                     .checkTrustRelationshipManagerIsNotUpdated("Should Notbe Seen", "exittest@education.gov.uk");
 
                 navigation
-                    .checkCurrentURLIsCorrect(`/trusts/contacts/in-dfe?uid=${uid}`);
+                    .checkCurrentURLIsCorrect(`/trusts/contacts/in-dfe?uid=${uid}&referencenumber=${trn}`);
             });
 
             it(`Checks that when cancelling the edit of a SFSO contact that I am taken back to the previous page and that entered data is not saved`, () => {
@@ -73,13 +73,13 @@ describe("Testing the components of the Trust contacts page", () => {
                     .checkSfsoLeadIsNotUpdated("Should Notbe Seen", "exittest@education.gov.uk");
 
                 navigation
-                    .checkCurrentURLIsCorrect(`/trusts/contacts/in-dfe?uid=${uid}`);
+                    .checkCurrentURLIsCorrect(`/trusts/contacts/in-dfe?uid=${uid}&referencenumber=${trn}`);
             });
         });
 
         describe(`On the edit Trust relationship manager contact details page for a ${typeOfTrust}`, () => {
             beforeEach(() => {
-                cy.visit(`/trusts/contacts/edittrustrelationshipmanager?uid=${uid}`);
+                cy.visit(`/trusts/contacts/edittrustrelationshipmanager?uid=${uid}&referencenumber=${trn}`);
             });
 
             it("Checks the browser title is correct", () => {
@@ -90,7 +90,7 @@ describe("Testing the components of the Trust contacts page", () => {
 
         describe(`On the edit SFSO lead contact details page for a ${typeOfTrust}`, () => {
             beforeEach(() => {
-                cy.visit(`/trusts/contacts/editsfsolead?uid=${uid}`);
+                cy.visit(`/trusts/contacts/editsfsolead?uid=${uid}&referencenumber=${trn}`);
             });
 
             it("Checks the browser title is correct", () => {
@@ -101,7 +101,7 @@ describe("Testing the components of the Trust contacts page", () => {
 
         describe(`On the contacts in the trust page for a ${typeOfTrust}`, () => {
             beforeEach(() => {
-                cy.visit(`/trusts/contacts/in-the-trust?uid=${uid}`);
+                cy.visit(`/trusts/contacts/in-the-trust?uid=${uid}&referencenumber=tr02343`);
             });
 
             it("Checks the browser title is correct", () => {
@@ -219,7 +219,7 @@ describe("Testing the components of the Trust contacts page", () => {
                 .checkContactsInDfeSubHeaderPresent();
 
             navigation
-                .checkCurrentURLIsCorrect('/trusts/contacts/in-dfe?uid=5527');
+                .checkCurrentURLIsCorrect('/trusts/contacts/in-dfe?uid=5527&referencenumber=tr02343');
 
             trustContactsPage
                 .checkAllSubNavItemsPresent()
@@ -228,14 +228,14 @@ describe("Testing the components of the Trust contacts page", () => {
         });
 
         it('Should check that the contacts in this trust navigation button takes me to the correct page', () => {
-            cy.visit('/trusts/contacts/in-dfe?uid=5527');
+            cy.visit('/trusts/contacts/in-dfe?uid=5527&referencenumber=tr02343');
 
             trustContactsPage
                 .clickContactsInTheTrustSubnavButton()
                 .checkContactsInTheTrustSubHeaderPresent();
 
             navigation
-                .checkCurrentURLIsCorrect('/trusts/contacts/in-the-trust?uid=5527');
+                .checkCurrentURLIsCorrect('/trusts/contacts/in-the-trust?uid=5527&referencenumber=tr02343');
 
             trustContactsPage
                 .checkAllSubNavItemsPresent()
@@ -245,7 +245,7 @@ describe("Testing the components of the Trust contacts page", () => {
         });
 
         it('Should check that the contacts sub nav items are not present when I am not on the contacts page', () => {
-            cy.visit('/trusts/overview/trust-details?uid=5527');
+            cy.visit('/trusts/overview/trust-details?uid=5527&referencenumber=tr02343');
 
             trustContactsPage
                 .checkSubNavNotPresent();
@@ -256,7 +256,7 @@ describe("Testing the components of the Trust contacts page", () => {
                 commonPage.interceptAndVerifyNo500Errors();
             });
 
-            ['/trusts/contacts/in-dfe?uid=17728', '/trusts/contacts/in-the-trust?uid=17728'].forEach((url) => {
+            ['/trusts/contacts/in-dfe?uid=17728&referencenumber=tr02343', '/trusts/contacts/in-the-trust?uid=17728&referencenumber=tr02343'].forEach((url) => {
                 it(`Should have no 500 error on ${url}`, () => {
                     cy.visit(url);
                 });

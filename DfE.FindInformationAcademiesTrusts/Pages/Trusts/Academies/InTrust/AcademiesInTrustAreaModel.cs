@@ -60,9 +60,9 @@ public abstract class AcademiesInTrustAreaModel(
         return pageResult;
     }
 
-    public virtual async Task<IActionResult> OnGetExportAsync(string uid)
+    public virtual async Task<IActionResult> OnGetExportAsync(string uid,string referenceNumber)
     {
-        var trustSummary = await TrustService.GetTrustSummaryAsync(uid);
+        var trustSummary = await TrustService.GetTrustSummaryAsync(referenceNumber);
 
         if (trustSummary == null)
         {
@@ -73,7 +73,7 @@ public abstract class AcademiesInTrustAreaModel(
         var sanitizedTrustName =
             string.Concat(trustSummary.Name.Where(c => !Path.GetInvalidFileNameChars().Contains(c)));
 
-        var fileContents = await academiesExportService.BuildAsync(uid);
+        var fileContents = await academiesExportService.BuildAsync(uid,referenceNumber);
         var fileName = $"{sanitizedTrustName}-{DateTimeProvider.Now:yyyy-MM-dd}.xlsx";
         var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 

@@ -12,19 +12,21 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.TrustNavMenu
 public class ServiceNav : TrustNavMenuTestsBase
 {
     [Theory]
-    [InlineData("1234")]
-    [InlineData("5678")]
-    public void GetServiceNavLinks_should_set_route_data_to_uid(string expectedUid)
+    [InlineData("1234", "TR1234")]
+    [InlineData("5678", "TR5678")]
+    public void GetServiceNavLinks_should_set_route_data_to_uid(string expectedUid, string expectedReferenceNumber)
     {
-        var activePage = GetMockTrustPage(typeof(TrustDetailsModel), expectedUid);
+        var activePage = GetMockTrustPage(typeof(TrustDetailsModel), expectedUid, expectedReferenceNumber);
 
         var results = Sut.GetServiceNavLinks(activePage);
 
         results.Should().AllSatisfy(link =>
         {
-            var route = link.AspAllRouteData.Should().ContainSingle().Subject;
-            route.Key.Should().Be("uid");
-            route.Value.Should().Be(expectedUid);
+            link.AspAllRouteData.Should().BeEquivalentTo(new Dictionary<string, string>
+            {
+                { "uid", expectedUid },
+                { "referenceNumber", expectedReferenceNumber }
+            });
         });
     }
 
@@ -90,7 +92,7 @@ public class ServiceNav : TrustNavMenuTestsBase
     [InlineData(25)]
     public void GetServiceNavLinks_should_show_number_of_academies_in_display_text(int numberOfAcademies)
     {
-        var activePage = GetMockTrustPage(typeof(TrustDetailsModel), "1234", numberOfAcademies);
+        var activePage = GetMockTrustPage(typeof(TrustDetailsModel), "1234", "TR1234",numberOfAcademies);
 
         var results = Sut.GetServiceNavLinks(activePage);
 

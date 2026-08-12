@@ -45,7 +45,7 @@ public abstract class TrustNavMenuTestsBase
         typeof(HistoricMembersModel)
     ];
 
-    protected static TrustsAreaModel GetMockTrustPage(Type pageType, string uid = "1234", int numberOfAcademies = 3,
+    protected static TrustsAreaModel GetMockTrustPage(Type pageType, string uid = "1234", string referenceNumber= "TR1234", int numberOfAcademies = 3,
         AcademyPipelineSummaryServiceModel? academyPipelineSummarySummaryServiceModel = null,
         TrustGovernanceServiceModel? trustGovernanceServiceModel = null)
     {
@@ -61,7 +61,8 @@ public abstract class TrustNavMenuTestsBase
 
         //Set properties applicable to all types
         mockPage.Uid = uid;
-        mockPage.TrustSummary = new TrustSummaryServiceModel(uid, "MY TRUST", "Multi-academy trust", numberOfAcademies);
+        mockPage.ReferenceNumber = referenceNumber;
+        mockPage.TrustSummary = new TrustSummaryServiceModel(uid, referenceNumber,"MY TRUST", "Multi-academy trust", numberOfAcademies);
 
         //Add extra info for some pages
         switch (mockPage)
