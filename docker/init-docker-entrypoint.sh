@@ -16,8 +16,7 @@ do
 done
 
 echo "Running FIAT database migrations ..."
-# until /opt/mssql-tools18/bin/sqlcmd -S "${mssqlconn[Server]}" -U "${mssqlconn[UserId]}" -P "${mssqlconn[Password]}" -d "${mssqlconn[Database]}" -C -I -i /app/sql/FiatDbMigrationScript.sql -o /app/sql/FiatDbMigrationScriptOutput.txt
-until /opt/mssql-tools18/bin/sqlcmd -S "${mssqlconn[Database]}.${mssqlconn[Server]}" -G -C -I -i /app/sql/FiatDbMigrationScript.sql -o /app/sql/FiatDbMigrationScriptOutput.txt
+until /opt/mssql-tools18/bin/sqlcmd -S "${mssqlconn[Server]}" -U "${mssqlconn[UserId]}" -P "${mssqlconn[Password]}" -d "${mssqlconn[Database]}" -C -I -i /app/sql/FiatDbMigrationScript.sql -o /app/sql/FiatDbMigrationScriptOutput.txt
 do
   cat /app/sql/FiatDbMigrationScriptOutput.txt
   echo "Retrying FIAT database migrations ..."
