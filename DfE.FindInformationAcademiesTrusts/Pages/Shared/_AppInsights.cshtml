@@ -46,4 +46,16 @@
 
 
    window.appInsights.setAuthenticatedUserContext("@authenticatedUserId", null, true);
+
+   const engagedVisitThresholdInMilliseconds = 10000; // 10 seconds
+
+   window.setTimeout(function () {
+      window.appInsights.trackEvent({
+         name: "FIAST engaged page visit",
+         properties: {
+            engagementThresholdInSeconds: engagedVisitThresholdInMilliseconds / 1000, // convert ms to seconds
+            pagePath: window.location.pathname
+         }
+      });
+   }, engagedVisitThresholdInMilliseconds);
 </script>
