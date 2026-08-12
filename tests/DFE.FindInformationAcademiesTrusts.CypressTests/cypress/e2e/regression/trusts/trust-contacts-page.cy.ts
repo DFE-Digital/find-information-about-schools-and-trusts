@@ -63,7 +63,7 @@ describe("Testing the components of the Trust contacts page", () => {
                     .checkTrustRelationshipManagerIsNotUpdated("Should Notbe Seen", "exittest@education.gov.uk");
 
                 navigation
-                    .checkCurrentURLIsCorrect(`/trusts/contacts/in-dfe?uid=${uid}&referencenumber=${trn}`);
+                    .checkCurrentURLIsCorrect(`/trusts/contacts/in-dfe?uid=${uid}`);
             });
 
             it(`Checks that when cancelling the edit of a SFSO contact that I am taken back to the previous page and that entered data is not saved`, () => {
@@ -73,7 +73,7 @@ describe("Testing the components of the Trust contacts page", () => {
                     .checkSfsoLeadIsNotUpdated("Should Notbe Seen", "exittest@education.gov.uk");
 
                 navigation
-                    .checkCurrentURLIsCorrect(`/trusts/contacts/in-dfe?uid=${uid}&referencenumber=${trn}`);
+                    .checkCurrentURLIsCorrect(`/trusts/contacts/in-dfe?uid=${uid}`);
             });
         });
 
@@ -219,7 +219,7 @@ describe("Testing the components of the Trust contacts page", () => {
                 .checkContactsInDfeSubHeaderPresent();
 
             navigation
-                .checkCurrentURLIsCorrect('/trusts/contacts/in-dfe?uid=5527&referencenumber=tr02343');
+                .checkCurrentURLIsCorrect('/trusts/contacts/in-dfe?uid=5527');
 
             trustContactsPage
                 .checkAllSubNavItemsPresent()
@@ -235,7 +235,7 @@ describe("Testing the components of the Trust contacts page", () => {
                 .checkContactsInTheTrustSubHeaderPresent();
 
             navigation
-                .checkCurrentURLIsCorrect('/trusts/contacts/in-the-trust?uid=5527&referencenumber=tr02343');
+                .checkCurrentURLIsCorrect('/trusts/contacts/in-the-trust?uid=5527');
 
             trustContactsPage
                 .checkAllSubNavItemsPresent()
