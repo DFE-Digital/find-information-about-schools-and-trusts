@@ -68,7 +68,35 @@ public class TrustRepository(
             giasGroup.IncorporatedOnOpenDate.ParseAsNullableDate()
         );
 
+        var ge = await GetTrustOverviewByTrnAsync(giasGroup.GroupId!);
+        
         return trustOverview;
+    }
+    
+    public async Task<TrustOverview?> GetTrustOverviewByTrnAsync(string referenceNumber)
+    {
+        var details = await getTrusts.GetTrustByReferenceNumber(referenceNumber);
+
+        if (details is null)
+        {
+            return null;
+        }
+        
+        return new TrustOverview(
+            details.GroupUid!,
+            details.ReferenceNumber!,
+            details.Ukprn,
+            details.CompaniesHouseNumber,
+            details.Type.Name!,
+            stringFormattingUtilities.BuildAddressString(
+                details.Address.Street,
+                details.Address.Locality,
+                details.Address.Town,
+                details.Address.Postcode
+            ),
+            details.Gor!,
+            details.OpenDate.ParseAsNullableDate()
+        );
     }
 
     public static IQueryable<GiasGovernance> FilterBySatOrMat(string uid, string? urn, IQueryable<GiasGovernance> query)
