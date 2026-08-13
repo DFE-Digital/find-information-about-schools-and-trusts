@@ -23,10 +23,10 @@ describe("Testing the components of the home page", () => {
       .checkWhatYouCanFindPresent()
       .checkWhatYouCanFindListCollapsed();
 
-    cy.visit("/trusts/contacts/in-dfe?uid=5712");
+    cy.visit("/trusts/overview/trust-details?uid=5527&referencenumber=tr04032");
 
     navigation
-      .checkCurrentURLIsCorrect("/trusts/contacts/in-dfe?uid=5712");
+      .checkCurrentURLIsCorrect("/trusts/overview/trust-details?uid=5527&referencenumber=tr04032");
 
     cy.visit("/");
 

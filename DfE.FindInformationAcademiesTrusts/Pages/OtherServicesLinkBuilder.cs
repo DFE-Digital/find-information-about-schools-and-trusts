@@ -81,7 +81,7 @@ public class OtherServicesLinkBuilder : IOtherServicesLinkBuilder
     public string SharepointFolderLink(string groupId)
     {
         return
-            $"{SharepointBaseUrl}/_layouts/15/sharepoint.aspx?oobRefiners=%7B%22FileType%22%3A%5B%22other%22%5D%7D&q={groupId}&v=%2Fsearch";
+            $"{SharepointBaseUrl}/_layouts/15/sharepoint.aspx/search?q={groupId}";
     }
 
     public string OfstedReportLinkForSchool(int urn)

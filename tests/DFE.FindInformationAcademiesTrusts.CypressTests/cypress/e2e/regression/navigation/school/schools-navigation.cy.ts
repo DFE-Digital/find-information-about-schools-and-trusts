@@ -9,13 +9,15 @@ describe('Schools Navigation Tests', () => {
         {
             academyURN: 140214,
             trustAcademyName: "ABBEY ACADEMIES TRUST",
-            trustUID: 2044
+            trustUID: 2044,
+            trn: "tr00261"
         },
 
         {
             academyURN: 140884,
             trustAcademyName: "UNITED LEARNING TRUST", //school in SAT
-            trustUID: 5143
+            trustUID: 5143,
+            trn: "tr02343"
         }];
 
     const navTestSchool = {
@@ -29,14 +31,14 @@ describe('Schools Navigation Tests', () => {
     describe("Functional navigation tests", () => {
 
         context("Academy trust link navigation", () => {
-            navTestAcademies.forEach(({ academyURN, trustAcademyName, trustUID }) => {
+            navTestAcademies.forEach(({ academyURN, trustAcademyName, trustUID, trn }) => {
                 it('Should check that an academy has the link to the trust in the header and it takes me to the correct trust', () => {
                     cy.visit(`/schools/overview/details?urn=${academyURN}`);
                     schoolsPage
                         .checkAcademyLinkPresentAndCorrect(`${trustAcademyName}`)
                         .clickAcademyTrustLink();
                     navigation
-                        .checkCurrentURLIsCorrect(`/trusts/overview/trust-details?uid=${trustUID}`);
+                        .checkCurrentURLIsCorrect(`/trusts/overview/trust-details?uid=${trustUID}&referencenumber=${trn}`);
                     overviewPage
                         .checkTrustDetailsSubHeaderPresent();
 
@@ -470,7 +472,7 @@ describe('Schools Navigation Tests', () => {
         context('School Ofsted subnav navigation tests -- (Academy)', () => {
             it('Should navigate from Overview → current ratings → previous ratings and back', () => {
                 // Start at academy overview (Ofsted overview)
-                cy.visit(`/trusts/ofsted/overview?uid=${navTestAcademies[0].trustUID}`);
+                cy.visit(`/trusts/ofsted/overview?uid=${navTestAcademies[0].trustUID}&referencenumber=tr04032`);
                 navigation
                     .checkSchoolsOfstedSubNavItemsPresent()
                     .checkSchoolsOverviewSubnavButtonIsHighlighted();
@@ -481,7 +483,7 @@ describe('Schools Navigation Tests', () => {
                 // Navigate to "Current ratings"
                 navigation
                     .clickSchoolsReportCardSubnavButton()
-                    .checkCurrentURLIsCorrect(`/trusts/ofsted/reportcards/currentreportcards?uid=${navTestAcademies[0].trustUID}`)
+                    .checkCurrentURLIsCorrect(`/trusts/ofsted/reportcards/currentreportcards?uid=${navTestAcademies[0].trustUID}&referencenumber=tr04032`)
                     .checkSchoolsOfstedReportCardIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent()
@@ -491,7 +493,7 @@ describe('Schools Navigation Tests', () => {
                 // Navigate to "Previous ratings"
                 navigation
                     .clickSchoolsReportCardPreviousButton()
-                    .checkCurrentURLIsCorrect(`/trusts/ofsted/reportcards/previousreportcards?uid=${navTestAcademies[0].trustUID}`)
+                    .checkCurrentURLIsCorrect(`/trusts/ofsted/reportcards/previousreportcards?uid=${navTestAcademies[0].trustUID}&referencenumber=tr04032`)
                     .checkSchoolsOfstedReportCardIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent()
@@ -503,7 +505,7 @@ describe('Schools Navigation Tests', () => {
                 // Navigate back to Overview
                 navigation
                     .clickSchoolsOfstedOverviewSubnavButton()
-                    .checkCurrentURLIsCorrect(`/trusts/ofsted/overview?uid=${navTestAcademies[0].trustUID}`)
+                    .checkCurrentURLIsCorrect(`/trusts/ofsted/overview?uid=${navTestAcademies[0].trustUID}&referencenumber=tr04032`)
                     .checkSchoolsOverviewSubnavButtonIsHighlighted();
                 schoolsPage
                     .checkOfstedPageNamePresent();

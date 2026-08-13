@@ -20,10 +20,10 @@ public abstract class AcademiesInTrustAreaModelTests<T> : BaseAcademiesAreaModel
         // Arrange
         byte[] expectedBytes = [1, 2, 3];
 
-        MockAcademiesExportService.BuildAsync(TrustUid).Returns(expectedBytes);
+        MockAcademiesExportService.BuildAsync(TrustUid,TrustReference).Returns(expectedBytes);
 
         // Act
-        var result = await Sut.OnGetExportAsync(TrustUid);
+        var result = await Sut.OnGetExportAsync(TrustUid,TrustReference);
 
         // Assert
         result.Should().BeOfType<FileContentResult>();
@@ -37,11 +37,12 @@ public abstract class AcademiesInTrustAreaModelTests<T> : BaseAcademiesAreaModel
     {
         // Arrange
         var uid = "invalid-uid";
+        var trustReference = "invalid-uid";
 
-        MockTrustService.GetTrustSummaryAsync(uid).ReturnsNull();
+        MockTrustService.GetTrustSummaryAsync(trustReference).ReturnsNull();
 
         // Act
-        var result = await Sut.OnGetExportAsync(uid);
+        var result = await Sut.OnGetExportAsync(uid,trustReference);
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
@@ -52,13 +53,14 @@ public abstract class AcademiesInTrustAreaModelTests<T> : BaseAcademiesAreaModel
     {
         // Arrange
         var uid = TrustUid;
+        var referenceNumber = TrustUid;
         var expectedBytes = new byte[] { 1, 2, 3 };
 
-        MockTrustService.GetTrustSummaryAsync(uid).Returns(DummyTrustSummary with { Name = "Sample/Trust:Name?" });
-        MockAcademiesExportService.BuildAsync(uid).Returns(expectedBytes);
+        MockTrustService.GetTrustSummaryAsync(referenceNumber).Returns(DummyTrustSummary with { Name = "Sample/Trust:Name?" });
+        MockAcademiesExportService.BuildAsync(uid,referenceNumber).Returns(expectedBytes);
 
         // Act
-        var result = await Sut.OnGetExportAsync(uid);
+        var result = await Sut.OnGetExportAsync(uid,referenceNumber);
 
         // Assert
         result.Should().BeOfType<FileContentResult>();

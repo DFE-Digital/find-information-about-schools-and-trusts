@@ -10,7 +10,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Trust;
 
 public interface ITrustService
 {
-    Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(string uid);
+    Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(string referenceNumber);
     Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(int urn);
     Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string uid);
     Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid);
@@ -34,35 +34,35 @@ public class TrustService(
 {
     public async Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(int urn)
     {
-        var uid = await academyRepository.GetTrustUidFromAcademyUrnAsync(urn);
-
-        if (uid is null)
-        {
-            return null;
-        }
-
-        return await GetTrustSummaryAsync(uid);
-    }
-
-    public async Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(string uid)
-    {
-        var cacheKey = $"{nameof(TrustService)}:{uid}";
-
-        if (memoryCache.TryGetValue(cacheKey, out TrustSummaryServiceModel? cachedTrustSummary))
-        {
-            return cachedTrustSummary!;
-        }
-
-        var summary = await trustRepository.GetTrustSummaryAsync(uid);
+        var summary =  await trustRepository.GetTrustSummaryByEstablishmentUrnAsync(urn);
 
         if (summary is null)
         {
             return null;
         }
 
-        var count = await academyRepository.GetNumberOfAcademiesInTrustAsync(uid);
+        return await GetTrustSummaryAsync(summary.ReferenceNumber);
+    }
 
-        var trustSummaryServiceModel = new TrustSummaryServiceModel(uid, summary.Name, summary.Type, count);
+    public async Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(string referenceNumber)
+    {
+        var cacheKey = $"{nameof(TrustService)}:{referenceNumber}";
+
+        if (memoryCache.TryGetValue(cacheKey, out TrustSummaryServiceModel? cachedTrustSummary))
+        {
+            return cachedTrustSummary!;
+        }
+
+        var summary = await trustRepository.GetTrustSummaryAsync(referenceNumber);
+
+        if (summary is null)
+        {
+            return null;
+        }
+
+        var count = await academyRepository.GetNumberOfAcademiesInTrustAsync(summary.Uid);
+
+        var trustSummaryServiceModel = new TrustSummaryServiceModel(summary.Uid,summary.ReferenceNumber, summary.Name, summary.Type, count);
 
         memoryCache.Set(cacheKey, trustSummaryServiceModel,
             new MemoryCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(10) });

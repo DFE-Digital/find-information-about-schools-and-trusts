@@ -23,7 +23,7 @@ describe('Cookie page and consent tests', () => {
         commonPage
             .checkSuccessPopup('You’ve set your cookie preferences');
 
-        cy.visit('/trusts/overview/trust-details?uid=5712');
+        cy.visit('/trusts/overview/trust-details?uid=5712&referencenumber=tr01375');
 
         //check optional cookies exist
         cy.getCookie('ai_user').should('exist');
@@ -47,7 +47,7 @@ describe('Cookie page and consent tests', () => {
         commonPage
             .checkSuccessPopup('You’ve set your cookie preferences');
 
-        cy.visit('/trusts/overview/trust-details?uid=5712');
+        cy.visit('/trusts/overview/trust-details?uid=5712&referencenumber=tr01375');
 
         //check optional cookies do not  exist
         cy.getCookie('ai_user').should('not.exist');
@@ -79,7 +79,7 @@ describe('Cookie page and consent tests', () => {
     });
 
     it('should check that the return to previous page button actually takes me to my previous page after reject cookies', () => {
-        cy.visit('/trusts/contacts/in-dfe?uid=5712');
+        cy.visit('/trusts/contacts/in-dfe?uid=5712&referencenumber=tr01375');
 
         navigation
             .clickCookiesLink()
@@ -91,7 +91,7 @@ describe('Cookie page and consent tests', () => {
             .clickReturnToPreviousPageButton();
 
         navigation
-            .checkCurrentURLIsCorrect('/trusts/contacts/in-dfe?uid=5712');
+            .checkCurrentURLIsCorrect('/trusts/contacts/in-dfe?uid=5712&referencenumber=tr01375');
     });
 
     it('should check that both cookie accept and reject radio buttons are in their empty state when coming in from scratch', () => {
@@ -108,7 +108,7 @@ describe('Cookie page and consent tests', () => {
         commonPage
             .checkSuccessPopup('You’ve set your cookie preferences');
 
-        cy.visit('/trusts/overview/trust-details?uid=5712');
+        cy.visit('/trusts/overview/trust-details?uid=5712&referencenumber=tr01375');
 
         navigation
             .clickCookiesLink()
@@ -126,7 +126,7 @@ describe('Cookie page and consent tests', () => {
         commonPage
             .checkSuccessPopup('You’ve set your cookie preferences');
 
-        cy.visit('/trusts/overview/trust-details?uid=5712');
+        cy.visit('/trusts/overview/trust-details?uid=5712&referencenumber=tr01375');
 
         navigation
             .clickCookiesLink()

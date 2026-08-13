@@ -25,7 +25,7 @@ describe("Testing the data sources component", () => {
     });
 
     describe("Trust pages", () => {
-        TestDataStore.GetAllTrustSubpagesForUid(5712).forEach(({ pageName, subpages }) => {
+        TestDataStore.GetAllTrustSubpagesForUid(5712, 'tr01375').forEach(({ pageName, subpages }) => {
             const subpageNames = subpages.map(s => s.subpageName);
 
             describe(pageName, () => {
@@ -51,7 +51,7 @@ describe("Testing the data sources component", () => {
 
 
     describe("School pages (Academy)", () => {
-        TestDataStore.GetAllAcademySubpagesForUrn(137083).forEach(({ pageName, subpages }) => {
+        TestDataStore.GetAllAcademySubpagesForUrn(137083, 'tr01375').forEach(({ pageName, subpages }) => {
             describe(pageName, () => {
                 subpages.forEach(({ subpageName, url }) => {
                     it(`Should have a data sources component on ${pageName} > ${subpageName}`, () => {
@@ -76,7 +76,7 @@ describe("Testing the data sources component", () => {
     });
 
     describe("School pages (LA Maintained School)", () => {
-        TestDataStore.GetAllSchoolSubpagesForUrn(107188).forEach(({ pageName, subpages }) => {
+        TestDataStore.GetAllSchoolSubpagesForUrn(107188, 'tr01375').forEach(({ pageName, subpages }) => {
             describe(pageName, () => {
                 subpages.forEach(({ subpageName, url }) => {
                     it(`Should have a data sources component on ${pageName} > ${subpageName}`, () => {

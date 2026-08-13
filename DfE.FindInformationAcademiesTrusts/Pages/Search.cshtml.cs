@@ -11,7 +11,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages;
 
 public class SearchModel : ContentPageModel, IPageSearchFormModel, IPaginationModel
 {
-    public record AutocompleteEntry(string Id, string Address, string Name, ResultType ResultType);
+    public record AutocompleteEntry(string Id,string? ReferenceNumber, string Address, string Name, ResultType ResultType);
 
     private readonly ITrustService _trustService;
     private readonly ISearchService _searchService;
@@ -22,6 +22,8 @@ public class SearchModel : ContentPageModel, IPageSearchFormModel, IPaginationMo
     public Dictionary<string, string> PaginationRouteData { get; set; } = new();
     public string PageSearchFormInputId => "search";
     [BindProperty(SupportsGet = true)] public string Id { get; set; } = string.Empty;
+    
+    [BindProperty(SupportsGet = true)] public string ReferenceNumber { get; set; } = string.Empty;
     [BindProperty(SupportsGet = true)] public ResultType? SearchResultType { get; set; }
     [BindProperty(SupportsGet = true)] public int PageNumber { get; set; } = 1;
 
@@ -38,7 +40,7 @@ public class SearchModel : ContentPageModel, IPageSearchFormModel, IPaginationMo
 
     public IActionResult OnPost()
     {
-        return RedirectToPage("/Search", new { KeyWords, Id, SearchResultType });
+        return RedirectToPage("/Search", new { KeyWords, Id, ReferenceNumber, SearchResultType });
     }
 
     public async Task<IActionResult> OnGetAsync()
@@ -76,11 +78,11 @@ public class SearchModel : ContentPageModel, IPageSearchFormModel, IPaginationMo
     {
         if (SearchResultType is ResultType.Trust)
         {
-            var trust = await _trustService.GetTrustSummaryAsync(Id);
+            var trust = await _trustService.GetTrustSummaryAsync(ReferenceNumber);
 
             if (trust != null && string.Equals(trust.Name, KeyWords, StringComparison.CurrentCultureIgnoreCase))
             {
-                return RedirectToPage("/trusts/overview/trustdetails", new { Uid = Id });
+                return RedirectToPage("/trusts/overview/trustdetails", new { Uid = Id, ReferenceNumber });
             }
         }
 
@@ -99,7 +101,7 @@ public class SearchModel : ContentPageModel, IPageSearchFormModel, IPaginationMo
     public async Task<IActionResult> OnGetPopulateAutocompleteAsync()
     {
         var result = (await _searchService.GetSearchResultsForAutocompleteAsync(KeyWords!))
-            .Select(result => new AutocompleteEntry(result.Id, result.Address, result.Name, result.ResultType));
+            .Select(result => new AutocompleteEntry(result.Id,result.referencenumber,result.Address, result.Name, result.ResultType));
         
         return new JsonResult(result);
     }

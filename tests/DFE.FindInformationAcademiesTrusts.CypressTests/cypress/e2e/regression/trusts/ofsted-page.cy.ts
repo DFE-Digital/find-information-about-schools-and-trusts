@@ -12,7 +12,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
                     cy.task('clearDownloads', 'cypress/downloads');
                 }
             });
-            cy.visit(`/trusts/ofsted/overview?uid=5527`);
+            cy.visit(`/trusts/ofsted/overview?uid=5527&referencenumber=tr04032`);
         });
 
         it("Checks the correct Ofsted overview grades subpage header is present", () => {
@@ -74,7 +74,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
     describe("Testing the Ofsted current ratings page ", () => {
         beforeEach(() => {
-            cy.visit(`/trusts/ofsted/reportcards/currentreportcards?uid=${testOfstedWithDataUid}`);
+            cy.visit(`/trusts/ofsted/reportcards/currentreportcards?uid=${testOfstedWithDataUid}&referencenumber=tr04032`);
 
             cy.task('checkForFiles', 'cypress/downloads').then((files) => {
                 if (files) {
@@ -119,7 +119,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
         });
 
         it("Checks that a different trusts current ratings correct judgement types are present", () => {
-            cy.visit('/trusts/ofsted/reportcards/currentreportcards?uid=5712');
+            cy.visit('/trusts/ofsted/reportcards/currentreportcards?uid=5712&referencenumber=tr04032');
             ofstedPage
                 .checkCurrentRatingsInclusionJudgementsPresent()
                 .checkCurrentRatingsCurriculumAndTeachingJudgementsPresent()
@@ -133,7 +133,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
     describe("Testing the Ofsted previous ratings page ", () => {
         beforeEach(() => {
-            cy.visit('/trusts/ofsted/reportcards/previousreportcards?uid=5143');
+            cy.visit('/trusts/ofsted/reportcards/previousreportcards?uid=5143&referencenumber=tr04032');
 
             cy.task('checkForFiles', 'cypress/downloads').then((files) => {
                 if (files) {
@@ -178,7 +178,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
         });
 
         it("Checks that a different trusts previous ratings correct judgement types are present", () => {
-            cy.visit('/trusts/ofsted/reportcards/previousreportcards?uid=5712');
+            cy.visit('/trusts/ofsted/reportcards/previousreportcards?uid=5712&referencenumber=tr04032');
             ofstedPage
                 .checkPreviousRatingsInclusionJudgementsPresent()
                 .checkPreviousRatingsCurriculumAndTeachingJudgementsPresent()
@@ -192,7 +192,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
     describe("Testing the Ofsted Safeguarding and concerns page", () => {
         beforeEach(() => {
-            cy.visit('/trusts/ofsted/safeguarding-and-concerns?uid=5143');
+            cy.visit('/trusts/ofsted/safeguarding-and-concerns?uid=5143&referencenumber=tr04032');
 
             cy.task('checkForFiles', 'cypress/downloads').then((files) => {
                 if (files) {
@@ -234,7 +234,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
         });
 
         it("Checks that a different trusts safeguarding and concerns correct judgement types are present", () => {
-            cy.visit('/trusts/ofsted/safeguarding-and-concerns?uid=5712');
+            cy.visit('/trusts/ofsted/safeguarding-and-concerns?uid=5712&referencenumber=tr04032');
             ofstedPage
                 .checkSafeguardingConcernsEffectiveSafeguardingJudgementsPresent()
                 .checkSafeguardingConcernsCategoryOfConcernJudgementsPresent()
@@ -249,7 +249,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
                 .interceptAndVerifyNo500Errors();
         });
 
-        TestDataStore.GetTrustSubpagesFor(17728, "Ofsted").forEach(({ subpageName, url }) => {
+        TestDataStore.GetTrustSubpagesFor(17728, "Ofsted", "tr04032").forEach(({ subpageName, url }) => {
             it(`Should have no 500 error on ${subpageName}`, () => {
                 cy.visit(url);
             });
@@ -259,7 +259,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
     describe("Testing that no unknown entries are found for ofsteds various tables/pages", () => {
         testTrustOfstedData.forEach(({ typeOfTrust, uid }) => {
 
-            [`/trusts/ofsted/overview?uid=${uid}`, `/trusts/ofsted/reportcards/currentreportcards?uid=${uid}`, `/trusts/ofsted/reportcards/previousreportcards?uid=${uid}`, `/trusts/ofsted/safeguarding-and-concerns?uid=${uid}`].forEach((url) => {
+            [`/trusts/ofsted/overview?uid=${uid}&referencenumber=tr04032`, `/trusts/ofsted/reportcards/currentreportcards?uid=${uid}&referencenumber=tr04032`, `/trusts/ofsted/reportcards/previousreportcards?uid=${uid}&referencenumber=tr04032`, `/trusts/ofsted/safeguarding-and-concerns?uid=${uid}&referencenumber=tr04032`].forEach((url) => {
                 it(`Should have no unknown entries on ${url} for a ${typeOfTrust}`, () => {
                     cy.visit(url);
                     commonPage
@@ -271,7 +271,7 @@ describe("Testing the Ofsted page and its subpages ", () => {
 
     describe("Testing the Ofsted page for a trust with a further education provider", () => {
         beforeEach(() => {
-            cy.visit(`/trusts/ofsted/overview?uid=${testTrustWithFurtherEducationEstablishments}`);
+            cy.visit(`/trusts/ofsted/overview?uid=${testTrustWithFurtherEducationEstablishments}&referencenumber=tr04032`);
         });
 
         it("Checks the has recent short inspections data is correct", () => {

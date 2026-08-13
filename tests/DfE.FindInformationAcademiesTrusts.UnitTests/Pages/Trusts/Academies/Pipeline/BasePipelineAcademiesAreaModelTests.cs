@@ -26,10 +26,10 @@ public abstract class BasePipelineAcademiesAreaModelTests<T> : BaseAcademiesArea
         // Arrange
         byte[] expectedBytes = [1, 2, 3];
 
-        MockPipelineAcademiesExportService.BuildAsync(TrustUid).Returns(expectedBytes);
+        MockPipelineAcademiesExportService.BuildAsync(TrustUid,TrustReference).Returns(expectedBytes);
 
         // Act
-        var result = await Sut.OnGetExportAsync(TrustUid);
+        var result = await Sut.OnGetExportAsync(TrustUid,TrustReference);
 
         // Assert
         result.Should().BeOfType<FileContentResult>();
@@ -43,11 +43,12 @@ public abstract class BasePipelineAcademiesAreaModelTests<T> : BaseAcademiesArea
     {
         // Arrange
         var uid = "invalid-uid";
+        var referenceNumber = "invalid-uid";
 
-        MockTrustService.GetTrustSummaryAsync(uid).ReturnsNull();
+        MockTrustService.GetTrustSummaryAsync(referenceNumber).ReturnsNull();
 
         // Act
-        var result = await Sut.OnGetExportAsync(uid);
+        var result = await Sut.OnGetExportAsync(uid,referenceNumber);
 
         // Assert
         result.Should().BeOfType<NotFoundResult>();
@@ -57,14 +58,14 @@ public abstract class BasePipelineAcademiesAreaModelTests<T> : BaseAcademiesArea
     public override async Task OnGetExportAsync_ShouldSanitizeTrustName_WhenTrustNameContainsIllegalCharacters()
     {
         // Arrange
-        var trustSummary = new TrustSummaryServiceModel(TrustUid, "Sample/Trust:Name?", "Multi-academy trust", 0);
+        var trustSummary = new TrustSummaryServiceModel(TrustUid, TrustReference,"Sample/Trust:Name?", "Multi-academy trust", 0);
         var expectedBytes = new byte[] { 1, 2, 3 };
 
-        MockTrustService.GetTrustSummaryAsync(TrustUid).Returns(trustSummary);
-        MockPipelineAcademiesExportService.BuildAsync(TrustUid).Returns(expectedBytes);
+        MockTrustService.GetTrustSummaryAsync(TrustReference).Returns(trustSummary);
+        MockPipelineAcademiesExportService.BuildAsync(TrustUid,TrustReference).Returns(expectedBytes);
 
         // Act
-        var result = await Sut.OnGetExportAsync(TrustUid);
+        var result = await Sut.OnGetExportAsync(TrustUid,TrustReference);
 
         // Assert
         result.Should().BeOfType<FileContentResult>();

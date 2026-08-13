@@ -9,7 +9,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Export;
 
 public interface IAcademiesExportService
 {
-    Task<byte[]> BuildAsync(string uid);
+    Task<byte[]> BuildAsync(string uid, string referenceNumber);
 }
 
 public class AcademiesExportService(ITrustService trustService, IAcademyService academyService)
@@ -39,13 +39,13 @@ public class AcademiesExportService(ITrustService trustService, IAcademyService 
         "National average pupils eligible for Free School Meals"
     ];
 
-    public async Task<byte[]> BuildAsync(string uid)
+    public async Task<byte[]> BuildAsync(string uid,string referenceNumber)
     {
-        var trustSummary = await trustService.GetTrustSummaryAsync(uid);
+        var trustSummary = await trustService.GetTrustSummaryAsync(referenceNumber);
 
         if (trustSummary is null)
         {
-            throw new DataIntegrityException($"Trust summary not found for UID {uid}");
+            throw new DataIntegrityException($"Trust summary not found for trust reference number {referenceNumber}");
         }
 
         var academiesDetails = await academyService.GetAcademiesInTrustDetailsAsync(uid);
