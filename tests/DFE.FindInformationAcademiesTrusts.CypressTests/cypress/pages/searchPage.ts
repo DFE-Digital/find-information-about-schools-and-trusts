@@ -15,10 +15,17 @@ class SearchPage {
         urn: () => cy.get('[data-testid="urn"]')
     };
 
-    public checkSearchResultsReturned(searchText: string): this {
+
+    public waitForSearchResultsToLoad(searchText: string): this {
+        cy.url({ timeout: 10000 }).should('include', '/search');
         cy.url().should('include', `/search?keywords=${searchText}`);
+
+      return this;
+    }
+    
+    public checkSearchResultsReturned(searchText: string): this {
         this.elements.searchResults().each(($el) => {
-            cy.wrap($el).should('include.text', searchText);
+           cy.wrap($el).should('include.text', searchText);
         });
         return this;
     }
