@@ -5,19 +5,19 @@ describe('Trust Routing and 404 Tests', () => {
 
     describe("Routing tests", () => {
         const groupsNotToShow = [
-            { uid: 86042, scenario: "Open Children's Centres Collaboration" },
-            { uid: 86074, scenario: "Open Children's Centres Group" },
-            { uid: 5701, scenario: "Open Federation" },
-            { uid: 5702, scenario: "Closed Multi-academy trust" },
-            { uid: 5717, scenario: "Open School sponsor" },
-            { uid: 5707, scenario: "Closed Single-academy trust" },
-            { uid: 5672, scenario: "Open Trust (old-style trust, not SAT or MAT)" },
-            { uid: 5440, scenario: "Open Umbrella trust" }
+            { uid: 86042, trn: "tr0403", scenario: "Open Children's Centres Collaboration" },
+            { uid: 86074, trn: "tr0402", scenario: "Open Children's Centres Group" },
+            { uid: 5701, trn: "tr0432", scenario: "Open Federation" },
+            { uid: 5702, trn: "tr0402", scenario: "Closed Multi-academy trust" },
+            { uid: 5717, trn: "tr0403", scenario: "Open School sponsor" },
+            { uid: 5707, trn: "tr0403", scenario: "Closed Single-academy trust" },
+            { uid: 5672, trn: "tr0403", scenario: "Open Trust (old-style trust, not SAT or MAT)" },
+            { uid: 5440, trn: "tr0402", scenario: "Open Umbrella trust" }
         ];
 
-        groupsNotToShow.forEach(({ uid, scenario }) => {
+        groupsNotToShow.forEach(({ uid, trn, scenario }) => {
             describe(`${scenario}`, () => {
-                TestDataStore.GetAllTrustSubpagesForUid(uid).forEach(({ pageName, subpages }) => {
+                TestDataStore.GetAllTrustSubpagesForUid(uid, trn).forEach(({ pageName, subpages }) => {
                     describe(`${pageName}`, () => {
                         subpages.forEach(({ subpageName, url }) => {
                             it(`Should check that navigating to subpages for ${scenario} displays the 404 not found page - ${pageName} > ${subpageName}`, () => {
@@ -47,7 +47,7 @@ describe('Trust Routing and 404 Tests', () => {
             });
 
             it(`Should have no 500 error on the pupils population page for a school with no pupils`, () => {
-                cy.visit('/trusts/overview/trust-details?uid=15776');
+                cy.visit('/trusts/overview/trust-details?uid=15776&referencenumber=tr04032');
 
                 // Verify page loads successfully without 500 errors
                 cy.get('body').should('be.visible');

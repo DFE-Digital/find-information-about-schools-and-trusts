@@ -73,7 +73,7 @@
 @section Export
 {
     @{
-        var exportModel = new ExportButtonModel("uid", Model.TrustSummary.Uid, "Download all pipeline academy data", "download-all-pipeline-data-button");
+        var exportModel = new ExportButtonModel("uid", Model.TrustSummary.Uid, "Download all pipeline academy data", "download-all-pipeline-data-button", Model.TrustSummary.ReferenceNumber);
     }
     <partial name="Shared/_ExportButton" model="exportModel" />
 }

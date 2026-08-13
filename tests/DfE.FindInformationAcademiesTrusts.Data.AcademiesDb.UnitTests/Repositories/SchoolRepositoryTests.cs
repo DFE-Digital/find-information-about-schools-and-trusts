@@ -1,10 +1,13 @@
-using Dfe.AcademiesApi.Client.Contracts;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 using Microsoft.Extensions.Logging;
+using NSubstitute.ExceptionExtensions;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Repositories;
 
@@ -12,13 +15,15 @@ public class SchoolRepositoryTests
 {
     private readonly SchoolRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
+    private readonly IGetEstablishments _mockGetEstablishments;
 
     private readonly IStringFormattingUtilities _stringFormattingUtilities = new StringFormattingUtilities();
     private readonly ILogger<SchoolRepository> _mockLogger = MockLogger.CreateLogger<SchoolRepository>();
 
     public SchoolRepositoryTests()
     {
-        _sut = new SchoolRepository(_mockAcademiesDbContext.Object, _stringFormattingUtilities, _mockLogger);
+        _mockGetEstablishments = Substitute.For<IGetEstablishments>();
+        _sut = new SchoolRepository(_mockAcademiesDbContext.Object, _stringFormattingUtilities, _mockLogger, _mockGetEstablishments);
     }
 
     [Fact]
@@ -371,39 +376,39 @@ public class SchoolRepositoryTests
     }
 
     [Fact]
-    public async Task GetReferenceNumbersAsync_should_return_null_if_not_found()
+    public async Task GetReferenceNumbersAsync_should_throw_if_not_found()
     {
         var urn = 123456;
 
-        var result = await _sut.GetReferenceNumbersAsync(urn);
+        _mockGetEstablishments.GetEstablishment(urn)
+            .ThrowsAsync(new ApiResponseException("Request to Api failed | StatusCode - 401"));
 
-        result.Should().BeNull();
+        var action = () => _sut.GetReferenceNumbersAsync(urn);
+
+        await action.Should().ThrowAsync<ApiResponseException>()
+            .WithMessage("Request to Api failed | StatusCode - 401");
     }
 
     [Theory]
-    [InlineData(123456, "123", "4567", "10012345", "Academy converter", "Academies")]
-    [InlineData(234567, "234", "5678", "10023456", "Sixth form centres", "Colleges")]
-    [InlineData(345678, "345", "6789", "10034567", "Free schools special", "Free Schools")]
-    [InlineData(456789, "456", "7890", "10045678", "Foundation school", "Local authority maintained schools")]
-    [InlineData(567890, "567", "8901", "10056789", "Non-maintained special school", "Special schools")]
+    [InlineData(123456, "123", "4567", "10012345")]
+    [InlineData(234567, "234", "5678", "10023456")]
+    [InlineData(345678, "345", "6789", "10034567")]
+    [InlineData(456789, "456", "7890", "10045678")]
+    [InlineData(567890, "567", "8901", "10056789")]
     public async Task GetReferenceNumbersAsync_should_return_reference_numbers_if_found(int urn, string laCode,
-        string establishmentNumber, string ukprn, string type, string typeGroup)
+        string establishmentNumber, string ukprn)
     {
         var name = $"School {urn}";
-
-        _mockAcademiesDbContext.GiasEstablishments.AddRange([
-            new GiasEstablishment
+        
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
             {
-                Urn = urn,
-                LaCode = laCode,
+                Urn = urn.ToString(),
+                Name = name,
+                LocalAuthorityCode = laCode,
                 EstablishmentNumber = establishmentNumber,
-                Ukprn = ukprn,
-                EstablishmentName = name,
-                TypeOfEstablishmentName = type,
-                EstablishmentTypeGroupName = typeGroup,
-                EstablishmentStatusName = "Open"
-            }
-        ]);
+                Ukprn = ukprn
+            });
 
         var result = await _sut.GetReferenceNumbersAsync(urn);
 
@@ -412,32 +417,8 @@ public class SchoolRepositoryTests
         result.EstablishmentNumber.Should().Be(establishmentNumber);
         result.Ukprn.Should().Be(ukprn);
     }
-
-    [Theory]
-    [InlineData("City technology college", "Independent schools")]
-    [InlineData("Online provider", "Online provider")]
-    [InlineData("Miscellaneous", "Other types")]
-    [InlineData("Higher education institutions", "Universities")]
-    public async Task GetReferenceNumbersAsync_should_not_return_reference_numbers_for_unsupported_establishment_types(
-        string type, string typeGroup)
-    {
-        _mockAcademiesDbContext.GiasEstablishments.Add(new GiasEstablishment
-        {
-            Urn = 123456,
-            LaCode = "123",
-            EstablishmentNumber = "4567",
-            Ukprn = "10012345",
-            EstablishmentName = "Unsupported Establishment",
-            TypeOfEstablishmentName = type,
-            EstablishmentTypeGroupName = typeGroup,
-            EstablishmentStatusName = "Open"
-        });
-
-        var result = await _sut.GetReferenceNumbersAsync(123456);
-        result.Should().BeNull();
-    }
-
-
+    
+    
     [Fact]
     public async Task GetGovernanceAsync_ShouldReturnEmpty_WithNoGovernanceSet()
     {
@@ -488,19 +469,21 @@ public class SchoolRepositoryTests
     {
         var urn = 123456;
 
-        _mockAcademiesDbContext.GiasEstablishments.AddRange(
-        [
-            new GiasEstablishment
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
             {
-                Urn = urn,
-                EstablishmentName = "cool school",
-                EstablishmentTypeGroupName = "Local authority maintained schools",
-                DioceseName = "Diocese of Nottingham",
-                ReligiousCharacterName = "Roman Catholic",
-                ReligiousEthosName = "Church of England/Roman Catholic",
-                EstablishmentStatusName = "Open"
-            }
-        ]);
+                Urn = urn.ToString(),
+                Name = "Test School",
+                Diocese = new NameAndCodeDto
+                {
+                    Name = "Diocese of Nottingham"
+                },
+                ReligiousCharacter = new NameAndCodeDto
+                {
+                    Name = "Roman Catholic"
+                },
+                ReligousEthos = "Church of England/Roman Catholic"
+            });
 
         var result = await _sut.GetReligiousCharacteristicsAsync(urn);
 

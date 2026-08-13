@@ -1,52 +1,52 @@
 export class TestDataStore {
-    public static readonly GetTrustSubpagesFor = (uid: number, pageName: string) => {
+    public static readonly GetTrustSubpagesFor = (uid: number, pageName: string, trn: string) => {
 
-        const page = TestDataStore.GetAllTrustSubpagesForUid(uid).find(p => p.pageName == pageName);
-
+        const page = TestDataStore.GetAllTrustSubpagesForUid(uid, trn).find(p => p.pageName == pageName);
+        
         if (page === undefined)
             throw new Error(`Page ${pageName} is not in the Cypress test data. Is this a new page that needs adding to TestDataStore?`);
 
         return page.subpages;
     };
 
-    public static readonly GetAllTrustSubpagesForUid = (uid: number) =>
+    public static readonly GetAllTrustSubpagesForUid = (uid: number, trn: string) =>
         [
             {
                 pageName: "Overview",
                 subpages: [
-                    { subpageName: "Trust details", url: `/trusts/overview/trust-details?uid=${uid}` },
-                    { subpageName: "Trust summary", url: `/trusts/overview/trust-summary?uid=${uid}` },
-                    { subpageName: "Reference numbers", url: `/trusts/overview/reference-numbers?uid=${uid}` },
+                    { subpageName: "Trust details", url: `/trusts/overview/trust-details?uid=${uid}&referencenumber=${trn}` },
+                    { subpageName: "Trust summary", url: `/trusts/overview/trust-summary?uid=${uid}&referencenumber=${trn}` },
+                    { subpageName: "Reference numbers", url: `/trusts/overview/reference-numbers?uid=${uid}&referencenumber=${trn}` },
                 ]
             },
             {
                 pageName: "Contacts",
                 subpages: [
-                    { subpageName: "In DfE", url: `/trusts/contacts/in-dfe?uid=${uid}` },
-                    { subpageName: "In this trust", url: `/trusts/contacts/in-the-trust?uid=${uid}` },
+                    { subpageName: "In DfE", url: `/trusts/contacts/in-dfe?uid=${uid}&referencenumber=${trn}` },
+                    { subpageName: "In this trust", url: `/trusts/contacts/in-the-trust?uid=${uid}&referencenumber=${trn}` },
                 ]
             },
             {
                 pageName: "Ofsted",
                 subpages: [
-                    { subpageName: "Overview", url: `/trusts/ofsted/overview?uid=${uid}` },
-                    { subpageName: "Report cards", url: `/trusts/ofsted/reportcards/currentreportcards?uid=${uid}` },
-                    { subpageName: "Older inspections (before November 2025)", url: `/trusts/ofsted/olderinspections?uid=${uid}` },
-                    { subpageName: "Safeguarding and concerns", url: `/trusts/ofsted/safeguarding-and-concerns?uid=${uid}` }
+                    { subpageName: "Overview", url: `/trusts/ofsted/overview?uid=${uid}&referencenumber=${trn}` },
+                    { subpageName: "Report cards", url: `/trusts/ofsted/reportcards/currentreportcards?uid=${uid}&referencenumber=${trn}` },
+                    { subpageName: "Older inspections (before November 2025)", url: `/trusts/ofsted/olderinspections?uid=${uid}&referencenumber=${trn}` },
+                    { subpageName: "Safeguarding and concerns", url: `/trusts/ofsted/safeguarding-and-concerns?uid=${uid}&referencenumber=${trn}` }
                 ]
             },
             {
                 pageName: "Governance",
                 subpages: [
-                    { subpageName: `Trust leadership`, url: `/trusts/governance/trust-leadership?uid=${uid}` },
-                    { subpageName: "Trustees", url: `/trusts/governance/trustees?uid=${uid}` },
-                    { subpageName: "Members", url: `/trusts/governance/members?uid=${uid}` },
-                    { subpageName: "Historic members", url: `/trusts/governance/historic-members?uid=${uid}` }
+                    { subpageName: `Trust leadership`, url: `/trusts/governance/trust-leadership?uid=${uid}&referencenumber=${trn}` },
+                    { subpageName: "Trustees", url: `/trusts/governance/trustees?uid=${uid}&referencenumber=${trn}` },
+                    { subpageName: "Members", url: `/trusts/governance/members?uid=${uid}&referencenumber=${trn}` },
+                    { subpageName: "Historic members", url: `/trusts/governance/historic-members?uid=${uid}&referencenumber=${trn}` }
                 ]
             },
         ];
 
-    public static readonly GetAllSchoolSubpagesForUrn = (urn: number) =>
+    public static readonly GetAllSchoolSubpagesForUrn = (urn: number, trn: string) =>
         [
             {
                 pageName: "Overview",
@@ -89,7 +89,7 @@ export class TestDataStore {
             },
         ];
 
-    public static readonly GetAllAcademySubpagesForUrn = (urn: number) =>
+    public static readonly GetAllAcademySubpagesForUrn = (urn: number, trn: string) =>
         [
             {
                 pageName: "Overview",
@@ -149,10 +149,10 @@ export const testSchoolData = [
 
 export const testPreAdvisoryData = [
     {
-        uid: 16002
+        uid: 5143
     },
     {
-        uid: 4921
+        uid: 15712
     }
 ];
 
@@ -178,12 +178,14 @@ export const testTrustData = [
     {
         trustName: "Ashton West End Primary Academy",
         typeOfTrust: "single academy trust with contacts",
-        uid: 5527
+        uid: 5527,
+        trn: 'tr02323'
     },
     {
         trustName: "Aspire North East Multi Academy Trust",
         typeOfTrust: "multi academy trust with contacts",
-        uid: 5712
+        uid: 5712,
+        trn: 'tr04033'
     }
 ];
 
@@ -201,10 +203,12 @@ export const trustsWithGovernanceData = [
 // Trust UIDs for financial documents testing across multiple test suites
 export const testFinanceData = [
     {
-        uid: 5143
+        uid: 5143,
+        trn: 'tr04032'
     },
     {
-        uid: 4921
+        uid: 4921,
+        trn: 'tr04032'
     }
 ];
 
@@ -357,7 +361,8 @@ export const testOfstedWithDataUid = 5143;
 // Trust UIDs with sufficient data volume for pagination component testing
 export const testPaginationData = {
     academiesInTrustUid: 5143,
-    ofstedRatingsUid: 5143
+    ofstedRatingsUid: 5143,
+    academiesInTrustTrn: 'tr04032'
 };
 
 export const referenceNumbersTestData = [

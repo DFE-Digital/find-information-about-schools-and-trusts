@@ -10,7 +10,7 @@
           <a class="govuk-breadcrumbs__link" asp-page="/Index">Home</a>
         </li>
         <li class="govuk-breadcrumbs__list-item" data-testid="breadcrumb-trust-name">
-          <a class="govuk-breadcrumbs__link" asp-page="/Trusts/Overview/TrustDetails" asp-route-uid="@Model.TrustSummary.Uid">
+          <a class="govuk-breadcrumbs__link" asp-page="/Trusts/Overview/TrustDetails" asp-route-uid="@Model.TrustSummary.Uid" asp-route-referencenumber="@Model.TrustSummary.ReferenceNumber">
             @Model.TrustSummary.Name.ToTitleCase()
           </a>
         </li>

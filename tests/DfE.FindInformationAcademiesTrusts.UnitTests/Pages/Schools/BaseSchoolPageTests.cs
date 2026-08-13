@@ -92,7 +92,7 @@ public abstract class BaseSchoolPageTests<T> where T : SchoolAreaModel
     public async Task OnGetAsync_if_school_is_an_academy_should_get_trust_summary()
     {
         MockTrustService.GetTrustSummaryAsync(DummyAcademySummary.Urn)
-            .Returns(new TrustSummaryServiceModel("TRUST", "Cool trust", "Multi-academy trust", 1));
+            .Returns(new TrustSummaryServiceModel("TRUST", "TR1234","Cool trust", "Multi-academy trust", 1));
 
         Sut.Urn = DummyAcademySummary.Urn;
 

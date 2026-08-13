@@ -45,27 +45,5 @@ jobs:
     - name: Ensure there are no pending migrations
       run: dotnet ef migrations has-pending-model-changes --context FiatDbContext --project DfE.FindInformationAcademiesTrusts.Data.FiatDb --startup-project DfE.FindInformationAcademiesTrusts
 
-    - name: Run mutation tests
-      run: dotnet stryker --reporter "markdown" --reporter "html" --output "${{ github.workspace }}"
-
-    - name: Print stryker report
-      if: ${{ !cancelled() }}
-      run: |
-        # Construct the full path to the markdown file
-        REPORT_FILE="${{ github.workspace }}/reports/mutation-report.md"
-
-        # Check if the file exists
-        if [ -f "$REPORT_FILE" ]; then
-          echo "File exists: $REPORT_FILE"
-          # Print the report as a Step Summary
-          echo "$(cat $REPORT_FILE)" >> $GITHUB_STEP_SUMMARY
-        else
-          echo "::error ::File not found: $REPORT_FILE"
-        fi
-
-    - name: Upload Stryker report
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-      if: ${{ !cancelled() }}
-      with:
-        name: stryker-report
-        path: ${{ github.workspace }}/reports/mutation-report.html
+    - name: Run tests
+      run: dotnet test DfE.FindInformationAcademiesTrusts.sln

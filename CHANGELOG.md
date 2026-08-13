@@ -4,10 +4,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-05-27.7479...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-08-06.7682...HEAD)
 
 
 --- 
+
+## [Release-67][release-67] - 2026-08-06
+
+### Fixed
+
+- 295563 : Trust SharePoint links directing to wrong page
+
+### Changed
+- 292400 : Migrate school reference numbers to academies api
+
+---
+
+## [Release-66][release-66] - 2026-08-05
+
+- 286852 : Migrate search for trusts and schools to API
+- 292401 : Migrate religious characteristics to academies api
+- 290621 : Removing content from management letter section of FAST
+
+---
 
 ## [Release-65][release-65] - 2026-05-27
 

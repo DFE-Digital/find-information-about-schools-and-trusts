@@ -17,19 +17,21 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.TrustNavMenu
 public class SubNav : TrustNavMenuTestsBase
 {
     [Theory]
-    [InlineData("1234")]
-    [InlineData("5678")]
-    public void GetSubNavLinks_should_set_route_data_to_uid(string expectedUid)
+    [InlineData("1234", "TR1234")]
+    [InlineData("5678", "TR5678")]
+    public void GetSubNavLinks_should_set_route_data_to_uid(string expectedUid, string expectedReferenceNumber)
     {
-        var activePage = GetMockTrustPage(typeof(TrustDetailsModel), expectedUid);
+        var activePage = GetMockTrustPage(typeof(TrustDetailsModel), expectedUid, expectedReferenceNumber);
 
         var results = Sut.GetSubNavLinks(activePage);
 
         results.Should().AllSatisfy(link =>
         {
-            var route = link.AspAllRouteData.Should().ContainSingle().Subject;
-            route.Key.Should().Be("uid");
-            route.Value.Should().Be(expectedUid);
+            link.AspAllRouteData.Should().BeEquivalentTo(new Dictionary<string, string>
+            {
+                { "uid", expectedUid },
+                { "referenceNumber", expectedReferenceNumber }
+            });
         });
     }
 

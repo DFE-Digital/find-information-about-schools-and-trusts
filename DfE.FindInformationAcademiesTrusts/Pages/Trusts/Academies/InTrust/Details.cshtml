@@ -44,7 +44,7 @@
 @section Export
 {
     @{
-        var exportModel = new ExportButtonModel("uid", Model.TrustSummary.Uid, "Download all academy data", "export-academy-data");
+        var exportModel = new ExportButtonModel("uid", Model.TrustSummary.Uid, "Download all academy data", "export-academy-data", Model.TrustSummary.ReferenceNumber);
     }
     <partial name="Shared/_ExportButton" model="exportModel"/>
 }
