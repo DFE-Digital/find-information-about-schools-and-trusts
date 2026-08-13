@@ -125,7 +125,7 @@ describe("Testing the components of the Trust contacts page", () => {
 
     describe('Checks the update error handling', () => {
         beforeEach(() => {
-            cy.visit('/trusts/contacts/in-dfe?uid=5527');
+            cy.visit('/trusts/contacts/in-dfe?uid=5527&referencenumber=tr02343');
         });
 
         it("Checks that a full non DFE email entered returns the correct error message on a TRM ", () => {
@@ -212,7 +212,7 @@ describe("Testing the components of the Trust contacts page", () => {
     describe("Testing the contacts sub navigation", () => {
 
         it('Should check that the contacts in dfe navigation button takes me to the correct page', () => {
-            cy.visit('/trusts/contacts/in-the-trust?uid=5527');
+            cy.visit('/trusts/contacts/in-the-trust?uid=5527&referencenumber=tr02343');
 
             trustContactsPage
                 .clickContactsInDfeSubnavButton()
