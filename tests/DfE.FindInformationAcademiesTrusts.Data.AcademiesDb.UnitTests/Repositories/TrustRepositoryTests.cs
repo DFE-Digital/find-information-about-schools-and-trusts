@@ -1,17 +1,12 @@
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
-using Dfe.AcademiesApi.Client.Contracts;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
-using GovUK.Dfe.CoreLibs.Contracts.Academies.V4;
-using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
-using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
-using GovUK.Dfe.CoreLibs.Contracts.Academies.V4;
 using NameAndCodeDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.NameAndCodeDto;
 using TrustDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts.TrustDto;
+using AddressDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.AddressDto;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Repositories;
 
@@ -132,94 +127,6 @@ public class TrustRepositoryTests
 
         var result = await _sut.GetTrustSummaryByEstablishmentUrnAsync(urn);
         result.Should().BeEquivalentTo(new TrustSummary(name, type, uid, referenceNumber));
-    }
-
-    [Fact]
-    public async Task GetTrustOverviewAsync_should_get_regionAndTerritory_from_mstrTrusts()
-    {
-        _ = _mockAcademiesDbContext.AddGiasGroupForTrust("2806");
-        _ = _mockAcademiesDbContext.AddMstrTrust("2806", "My Region");
-
-        var result = await _sut.GetTrustOverviewAsync("2806");
-
-        result.RegionAndTerritory.Should().Be("My Region");
-    }
-
-    [Fact]
-    public async Task GetTrustOverviewAsync_should_set_regionAndTerritory_to_empty_string_when_mstrTrust_not_available()
-    {
-        _ = _mockAcademiesDbContext.AddGiasGroupForTrust("2806");
-
-        var result = await _sut.GetTrustOverviewAsync("2806");
-
-        result.RegionAndTerritory.Should().BeEmpty();
-    }
-
-    [Fact]
-    public async Task
-        GetTrustOverviewAsync_should_set_regionAndTerritory_to_empty_string_when_GORregion_in_mstrTrust_null()
-    {
-        _ = _mockAcademiesDbContext.AddGiasGroupForTrust("2806");
-        _ = _mockAcademiesDbContext.AddMstrTrust("2806", null);
-
-        var result = await _sut.GetTrustOverviewAsync("2806");
-
-        result.RegionAndTerritory.Should().BeEmpty();
-    }
-
-    [Fact]
-    public async Task GetTrustOverviewAsync_should_build_address_from_giasGroup()
-    {
-        const string street = "a street";
-        const string locality = "a locality";
-        const string town = "a town";
-        const string postcode = "a postcode";
-        const string expectedAddress = $"{street}, {locality}, {town}, {postcode}";
-
-        _mockAcademiesDbContext.GiasGroups.Add(new GiasGroup
-        {
-            GroupUid = "2806",
-            GroupId = "TR0012",
-            GroupType = "Multi-academy trust",
-            GroupContactStreet = street,
-            GroupContactLocality = locality,
-            GroupContactTown = town,
-            GroupContactPostcode = postcode,
-            GroupStatusCode = "OPEN",
-            GroupName = "SOME TRUST"
-        });
-
-        var result = await _sut.GetTrustOverviewAsync("2806");
-
-        result.Address.Should().Be(expectedAddress);
-    }
-
-    [Fact]
-    public async Task GetTrustOverviewAsync_should_set_properties_from_giasGroup()
-    {
-        _mockAcademiesDbContext.GiasGroups.Add(new GiasGroup
-        {
-            GroupUid = "2806",
-            GroupId = "TR0012",
-            Ukprn = "10012345",
-            GroupType = "Multi-academy trust",
-            CompaniesHouseNumber = "123456",
-            IncorporatedOnOpenDate = "28/06/2007",
-            GroupStatusCode = "OPEN",
-            GroupName = "SOME TRUST"
-        });
-
-        var result = await _sut.GetTrustOverviewAsync("2806");
-
-        result.Should().BeEquivalentTo(new TrustOverview("2806",
-            "TR0012",
-            "10012345",
-            "123456",
-            "Multi-academy trust",
-            "",
-            "",
-            new DateTime(2007, 6, 28, 0, 0, 0, DateTimeKind.Utc)
-        ));
     }
 
     [Fact]
