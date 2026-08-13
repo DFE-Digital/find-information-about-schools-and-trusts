@@ -16,6 +16,7 @@ class SearchPage {
     };
 
     public checkSearchResultsReturned(searchText: string): this {
+        cy.url().should('include', `/search?keywords=${searchText}`);
         this.elements.searchResults().each(($el) => {
             cy.wrap($el).should('include.text', searchText);
         });
