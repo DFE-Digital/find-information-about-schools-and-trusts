@@ -67,7 +67,7 @@ describe('Navigation Accessibility', () => {
         describe("Trust page breadcrumb accessibility", () => {
             testTrustData.forEach(({ uid, trustName, trn}) => {
                 it(`Should have accessible trust breadcrumb for ${trustName}`, () => {
-                    cy.visit(`/trusts/overview/trust-details?uid=${uid}&referencenumber='${trn}'`);
+                    cy.visit(`/trusts/overview/trust-details?uid=${uid}&referencenumber=${trn}`);
 
                     navigation
                         .checkTrustNameBreadcrumbPresent(`${trustName}`)
@@ -170,7 +170,7 @@ describe('Navigation Accessibility', () => {
 
     it('should have accessible breadcrumbs using navigation POM', () => {
         const trustData = testTrustData[0]; // Ashton West End Primary Academy
-        cy.visit(`/trusts/overview/trust-details?uid=${trustData.uid}&referencenumber=tr02323`);
+        cy.visit(`/trusts/overview/trust-details?uid=${trustData.uid}&referencenumber=tr04032`);
 
         // Use navigation POM to verify breadcrumbs
         navigation
@@ -187,7 +187,7 @@ describe('Navigation Accessibility', () => {
 
     it('should have accessible service navigation', () => {
         const trustData = testTrustData[1]; // Aspire North East Multi Academy Trust
-        cy.visit(`/trusts/overview/trust-details?uid=${trustData.uid}&referencenumber=tr02323`);
+        cy.visit(`/trusts/overview/trust-details?uid=${trustData.uid}&referencenumber=${trustData.trn}`);
 
         // Use navigation POM to check service navigation
         navigation.checkAllServiceNavItemsPresent();

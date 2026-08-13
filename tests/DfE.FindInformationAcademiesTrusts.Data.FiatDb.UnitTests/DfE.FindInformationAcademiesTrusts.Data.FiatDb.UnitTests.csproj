@@ -25,10 +25,11 @@
         <PackageReference Include="FluentAssertions" Version="7.0.0" />
         <PackageReference Include="Testcontainers" Version="4.1.0" />
         <PackageReference Include="Testcontainers.MsSql" Version="4.1.0" />
+        <PackageReference Include="SSH.NET" Version="2026.0.0" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\DfE.FindInformationAcademiesTrusts.Data.FiatDb\DfE.FindInformationAcademiesTrusts.Data.FiatDb.csproj" />
     </ItemGroup>
-
+    
 </Project>
