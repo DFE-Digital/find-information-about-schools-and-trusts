@@ -16,8 +16,6 @@ public abstract class BaseAcademiesAreaModelTests<T> : BaseTrustPageTests<T>, IT
 
     public BaseAcademiesAreaModelTests()
     {
-        MockTrustService.GetTrustReferenceNumberAsync(TrustUid).Returns(Task.FromResult(TrustReferenceNumber));
-
         //Set default GetAcademiesPipelineSummaryAsync to enable base tests with different UIDs
         MockAcademyService
             .GetAcademiesPipelineSummaryAsync(Arg.Any<string>())
@@ -56,7 +54,6 @@ public abstract class BaseAcademiesAreaModelTests<T> : BaseTrustPageTests<T>, IT
     {
         MockTrustService.GetTrustSummaryAsync(expectedReferenceNumber)
             .Returns(DummyTrustSummary with { Uid = expectedUid, ReferenceNumber = expectedReferenceNumber });
-        MockTrustService.GetTrustReferenceNumberAsync(expectedUid).Returns(TrustReferenceNumber);
         Sut.Uid = expectedUid;
         Sut.ReferenceNumber = expectedReferenceNumber;
 

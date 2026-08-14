@@ -47,7 +47,8 @@ describe('Testing the main/home page search functionality', () => {
         .clickMainSearchButton();
 
       searchPage
-        .checkSearchResultsReturned('west');
+        .waitForSearchResultsToLoad('west')
+        .checkSearchResultsReturned('west', );
 
       paginationPage
         .returnToHome();

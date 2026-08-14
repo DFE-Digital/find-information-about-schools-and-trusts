@@ -16,12 +16,11 @@ public interface ITrustService
     Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(int urn);
     Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string trn);
     Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid);
-    Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string uid);
+    Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string uid,string referenceNumber);
 
     Task<InternalContactUpdatedServiceModel> UpdateContactAsync(int uid, string? name, string? email,
         TrustContactRole role);
-
-    Task<string> GetTrustReferenceNumberAsync(string uid);
+    
 }
 
 public class TrustService(
@@ -110,10 +109,10 @@ public class TrustService(
         return new InternalContactUpdatedServiceModel(emailChanged, nameChanged);
     }
 
-    public async Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string uid)
+    public async Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string uid,string referenceNumber)
     {
-        var trustOverview = await trustRepository.GetTrustOverviewAsync(uid);
-        var trustType = trustOverview.Type switch
+        var trustOverview = await trustRepository.GetTrustOverviewByTrnAsync(referenceNumber);
+        var trustType = trustOverview!.Type switch
         {
             "Single-academy trust" => TrustType.SingleAcademyTrust,
             "Multi-academy trust" => TrustType.MultiAcademyTrust,
@@ -208,12 +207,7 @@ public class TrustService(
 
         return result;
     }
-
-    public async Task<string> GetTrustReferenceNumberAsync(string uid)
-    {
-        return await trustRepository.GetTrustReferenceNumberAsync(uid);
-    }
-
+    
     private static int CountEventsWithinDateRange<T>(
         IEnumerable<T> items,
         Func<T, DateTime?> dateSelector,
