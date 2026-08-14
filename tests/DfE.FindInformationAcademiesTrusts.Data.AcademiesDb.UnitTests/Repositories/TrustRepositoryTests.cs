@@ -4,9 +4,9 @@ using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
+using AddressDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.AddressDto;
 using NameAndCodeDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.NameAndCodeDto;
 using TrustDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts.TrustDto;
-using AddressDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.AddressDto;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Repositories;
 
@@ -16,7 +16,7 @@ public class TrustRepositoryTests
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
     private readonly IGetTrusts _mockGetTrusts;
 
-    private readonly IStringFormattingUtilities stringFormattingUtilities = new StringFormattingUtilities();
+    private readonly StringFormattingUtilities stringFormattingUtilities = new StringFormattingUtilities();
 
     private readonly DateTime _lastYear = DateTime.Today.AddYears(-1);
     private readonly DateTime _nextYear = DateTime.Today.AddYears(1);
@@ -106,8 +106,6 @@ public class TrustRepositoryTests
         result.Should().BeNull();
     }
     
-    
-    
     [Fact]
     public async Task GetTrustSummaryByEstablishmentByUrnAsync_should_return_trustSummary_if_found()
     {
@@ -128,7 +126,7 @@ public class TrustRepositoryTests
         var result = await _sut.GetTrustSummaryByEstablishmentUrnAsync(urn);
         result.Should().BeEquivalentTo(new TrustSummary(name, type, uid, referenceNumber));
     }
-
+    
     [Fact]
     public async Task GetTrustContactsAsync_Should_Return_Valid_ChairOfTrustees_WhenOneIsPresentForTheTrust()
     {
@@ -304,16 +302,7 @@ public class TrustRepositoryTests
         // Assert
         Assert.All(result, g => Assert.Equal("some-uid", g.Uid));
     }
-
-    [Fact]
-    public async Task GetTrustReferenceNumberAsync_should_return_trustReferenceNumber_for_uid()
-    {
-        _ = _mockAcademiesDbContext.AddGiasGroupForTrust("2806", trustReferenceNumber: "My trust reference number");
-
-        var result = await _sut.GetTrustReferenceNumberAsync("2806");
-        result.Should().BeEquivalentTo("My trust reference number");
-    }
-
+    
     [Fact]
     public async Task GetTrustContactsAsync_ShouldOnlyReturnCurrentChairOfTrusteesWhenOneStartsInFuture()
     {

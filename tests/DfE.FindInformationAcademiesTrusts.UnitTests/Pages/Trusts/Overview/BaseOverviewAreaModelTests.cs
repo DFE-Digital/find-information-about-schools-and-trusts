@@ -8,7 +8,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.Overview;
 public abstract class BaseOverviewAreaModelTests<T> : BaseTrustPageTests<T>, ITestSubpages where T : OverviewAreaModel
 {
     protected readonly TrustOverviewServiceModel BaseTrustOverviewServiceModel =
-        new(TrustUid, "", "", "", TrustType.MultiAcademyTrust, "", "", null, null, 0, new Dictionary<string, int>(), 0,
+        new(TrustUid, TrustReference, "", "", TrustType.MultiAcademyTrust, "", "", null, null, 0, new Dictionary<string, int>(), 0,
             0, true);
 
     protected BaseOverviewAreaModelTests()

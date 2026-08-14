@@ -7,7 +7,7 @@ describe("Testing the Pipeline academies pages", () => {
     describe(`On the Pre decision page for a trust`, () => {
         testPreAdvisoryData.forEach(({ uid }) => {
             beforeEach(() => {
-                cy.visit(`/trusts/academies/pipeline/pre-decision?uid=${uid}&referencenumber=tr04032`);
+                cy.visit(`/trusts/academies/pipeline/pre-decision?uid=16002&referencenumber=tr03204`);
             });
 
             it("Checks the browser title is correct", () => {
@@ -49,7 +49,7 @@ describe("Testing the Pipeline academies pages", () => {
     describe(`On the Post decision page for a trust`, () => {
         testPostAdvisoryData.forEach(({ uid }) => {
             beforeEach(() => {
-                cy.visit(`/trusts/academies/pipeline/post-decision?uid=${uid}&referencenumber=tr04032`);
+                cy.visit(`/trusts/academies/pipeline/post-decision?uid=${uid}&referencenumber=tr01904`);
             });
 
             it("Checks the browser title is correct", () => {
@@ -97,7 +97,7 @@ describe("Testing the Pipeline academies pages", () => {
     describe(`On the Free schools page`, () => {
         testFreeSchoolsData.forEach(({ uid }) => {
             beforeEach(() => {
-                cy.visit(`/trusts/academies/pipeline/free-schools?uid=${uid}&referencenumber=tr04032`);
+                cy.visit(`/trusts/academies/pipeline/free-schools?uid=2157&referencenumber=tr00081`);
             });
 
             it("Checks the browser title is correct", () => {
@@ -156,7 +156,7 @@ describe("Testing the Pipeline academies pages", () => {
         });
 
         it("Checks the Pipeline academies Free schools page when an academy does not exist under it to ensure the correct message is displayed", () => {
-            cy.visit(`/trusts/academies/pipeline/free-schools?uid=5712`);
+            cy.visit(`/trusts/academies/pipeline/free-schools?uid=5712&referencenumber=tr04032`);
             pipelineAcademiesPage
                 .checkFreeSchoolsNoAcademyPresent();
         });

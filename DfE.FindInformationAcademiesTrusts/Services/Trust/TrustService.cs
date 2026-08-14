@@ -18,8 +18,7 @@ public interface ITrustService
 
     Task<InternalContactUpdatedServiceModel> UpdateContactAsync(int uid, string? name, string? email,
         TrustContactRole role);
-
-    Task<string> GetTrustReferenceNumberAsync(string uid);
+    
 }
 
 public class TrustService(
@@ -208,12 +207,7 @@ public class TrustService(
 
         return result;
     }
-
-    public async Task<string> GetTrustReferenceNumberAsync(string uid)
-    {
-        return await trustRepository.GetTrustReferenceNumberAsync(uid);
-    }
-
+    
     private static int CountEventsWithinDateRange<T>(
         IEnumerable<T> items,
         Func<T, DateTime?> dateSelector,

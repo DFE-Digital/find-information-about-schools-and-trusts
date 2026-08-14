@@ -170,7 +170,7 @@ describe('Navigation Accessibility', () => {
 
     it('should have accessible breadcrumbs using navigation POM', () => {
         const trustData = testTrustData[0]; // Ashton West End Primary Academy
-        cy.visit(`/trusts/overview/trust-details?uid=${trustData.uid}&referencenumber=tr04032`);
+        cy.visit(`/trusts/overview/trust-details?uid=${trustData.uid}&referencenumber=${trustData.trn}`);
 
         // Use navigation POM to verify breadcrumbs
         navigation

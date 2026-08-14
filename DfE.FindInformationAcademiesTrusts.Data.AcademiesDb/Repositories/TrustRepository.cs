@@ -75,7 +75,7 @@ public class TrustRepository(
             governanceContacts.GetValueOrDefault("Chair of Trustees"),
             governanceContacts.GetValueOrDefault("Chief Financial Officer"));
     }
-
+    
     private async Task<Dictionary<string, Person>> GetGovernanceContactsAsync(string uid, string? urn = null)
     {
         string[] roles = { "Chair of Trustees", "Accounting Officer", "Chief Financial Officer" };
@@ -111,14 +111,5 @@ public class TrustRepository(
                 governorEmails.SingleOrDefault(governorEmail => governorEmail.Gid == governor.Gid)?.Email)
         );
     }
-
-    public async Task<string> GetTrustReferenceNumberAsync(string uid)
-    {
-        var trustReferenceNumber = await Trusts
-            .Where(gl => gl.GroupUid == uid)
-            .Select(gl => gl.GroupId!) // GroupId cannot be null for a trust
-            .SingleAsync();
-
-        return trustReferenceNumber;
-    }
+    
 }
