@@ -33,7 +33,7 @@ public abstract class TrustsAreaModel(
         }
 
         TrustSummary = trustSummary;
-        TrustReferenceNumber = await TrustService.GetTrustReferenceNumberAsync(TrustSummary.Uid);
+        TrustReferenceNumber = ReferenceNumber;
 
         return Page();
     }

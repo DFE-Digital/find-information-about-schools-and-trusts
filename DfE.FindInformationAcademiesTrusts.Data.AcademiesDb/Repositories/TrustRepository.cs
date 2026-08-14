@@ -30,48 +30,6 @@ public class TrustRepository(
             : new TrustSummary(details.Name ?? string.Empty, details.Type.Name ?? string.Empty,details.GroupUid ?? string.Empty,details.ReferenceNumber?.ToString() ?? string.Empty);
 
     }
-
-    public async Task<TrustOverview> GetTrustOverviewAsync(string uid)
-    {
-        var giasGroup = await Trusts
-            .Where(g => g.GroupUid == uid)
-            .Select(giasGroup => new
-            {
-                giasGroup.GroupUid,
-                giasGroup.GroupId,
-                giasGroup.Ukprn,
-                giasGroup.CompaniesHouseNumber,
-                giasGroup.GroupType,
-                giasGroup.GroupContactStreet,
-                giasGroup.GroupContactLocality,
-                giasGroup.GroupContactTown,
-                giasGroup.GroupContactPostcode,
-                giasGroup.IncorporatedOnOpenDate
-            })
-            .SingleAsync();
-
-        var regionAndTerritory = await GetRegionAndTerritoryAsync(uid);
-
-        var trustOverview = new TrustOverview(
-            giasGroup.GroupUid!, //Searched by this field so it must be present
-            giasGroup.GroupId!, // GroupId cannot be null for a trust
-            giasGroup.Ukprn,
-            giasGroup.CompaniesHouseNumber,
-            giasGroup.GroupType!, //Enforced by global EF filter
-            stringFormattingUtilities.BuildAddressString(
-                giasGroup.GroupContactStreet,
-                giasGroup.GroupContactLocality,
-                giasGroup.GroupContactTown,
-                giasGroup.GroupContactPostcode
-            ),
-            regionAndTerritory,
-            giasGroup.IncorporatedOnOpenDate.ParseAsNullableDate()
-        );
-
-        var ge = await GetTrustOverviewByTrnAsync(giasGroup.GroupId!);
-        
-        return trustOverview;
-    }
     
     public async Task<TrustOverview?> GetTrustOverviewByTrnAsync(string referenceNumber)
     {
@@ -90,7 +48,7 @@ public class TrustRepository(
             details.Type.Name!,
             stringFormattingUtilities.BuildAddressString(
                 details.Address.Street,
-                details.Address.Locality,
+                details.Address.Additional,
                 details.Address.Town,
                 details.Address.Postcode
             ),
@@ -164,14 +122,5 @@ public class TrustRepository(
                 governorEmails.SingleOrDefault(governorEmail => governorEmail.Gid == governor.Gid)?.Email)
         );
     }
-
-    public async Task<string> GetTrustReferenceNumberAsync(string uid)
-    {
-        var trustReferenceNumber = await Trusts
-            .Where(gl => gl.GroupUid == uid)
-            .Select(gl => gl.GroupId!) // GroupId cannot be null for a trust
-            .SingleAsync();
-
-        return trustReferenceNumber;
-    }
+    
 }
