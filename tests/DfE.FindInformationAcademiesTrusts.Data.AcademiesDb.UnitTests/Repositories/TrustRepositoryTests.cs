@@ -18,7 +18,7 @@ public class TrustRepositoryTests
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
     private readonly IGetTrusts _mockGetTrusts = Substitute.For<IGetTrusts>();
 
-    private readonly IStringFormattingUtilities stringFormattingUtilities = new StringFormattingUtilities();
+    private readonly StringFormattingUtilities stringFormattingUtilities = new StringFormattingUtilities();
 
     private readonly DateTime _lastYear = DateTime.Today.AddYears(-1);
     private readonly DateTime _nextYear = DateTime.Today.AddYears(1);

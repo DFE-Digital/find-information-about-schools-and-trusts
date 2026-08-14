@@ -45,14 +45,14 @@ public class TrustRepository(
             details.ReferenceNumber!,
             details.Ukprn,
             details.CompaniesHouseNumber,
-            details.Type.Name!,
+            details.Type.Name,
             stringFormattingUtilities.BuildAddressString(
                 details.Address.Street,
                 details.Address.Additional,
                 details.Address.Town,
                 details.Address.Postcode
             ),
-            details.Gor!,
+            details.Gor,
             details.OpenDate.ParseAsNullableDate()
         );
     }
@@ -77,16 +77,7 @@ public class TrustRepository(
             governanceContacts.GetValueOrDefault("Chair of Trustees"),
             governanceContacts.GetValueOrDefault("Chief Financial Officer"));
     }
-
-
-    private async Task<string> GetRegionAndTerritoryAsync(string uid)
-    {
-        return await academiesDbContext.MstrTrusts
-            .Where(m => m.GroupUid == uid)
-            .Select(m => m.GORregion)
-            .SingleOrDefaultAsync() ?? string.Empty;
-    }
-
+    
     private async Task<Dictionary<string, Person>> GetGovernanceContactsAsync(string uid, string? urn = null)
     {
         string[] roles = { "Chair of Trustees", "Accounting Officer", "Chief Financial Officer" };
