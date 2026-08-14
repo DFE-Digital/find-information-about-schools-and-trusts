@@ -86,6 +86,7 @@ public class TrustSchoolSearchRepository(
         {
             return new SearchResult(
                 e.Urn!.ToString(),
+               null ,
                 e.Name!,
                 e.EstablishmentType!.Name!,
                 stringFormattingUtilities.BuildAddressString(
@@ -102,8 +103,9 @@ public class TrustSchoolSearchRepository(
         {
             return new SearchResult(
                 t.GroupUid!.ToString(),
+                t.ReferenceNumber.ToString(),
                 t.Name!,
-                t.Type!.Name!,
+                t.Type.Name,
                 stringFormattingUtilities.BuildAddressString(
                     t.Address!.Street,
                     t.Address.Locality,

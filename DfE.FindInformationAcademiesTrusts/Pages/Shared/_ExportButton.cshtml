@@ -5,10 +5,19 @@
     {
         { Model.ParameterName, Model.ParameterValue.ToString() ?? string.Empty }
     };
+
+    if (!string.IsNullOrEmpty(Model.ReferenceNumber))
+    {
+        exportRouteParameters[nameof(Model.ReferenceNumber)] = Model.ReferenceNumber;
+    }
 }
 
 <section class="govuk-!-margin-top-2 govuk-!-margin-bottom-2 export-container">
     <input type="hidden" name="@Model.ParameterName" value="@Model.ParameterValue" />
+    @if (!string.IsNullOrEmpty(Model.ReferenceNumber))
+    {
+        <input type="hidden" name="@nameof(Model.ReferenceNumber)" value="@Model.ReferenceNumber" />
+    }
     <a asp-page-handler="Export" asp-all-route-data="exportRouteParameters"
        class="govuk-button govuk-button--secondary export-button--with-icon" data-testid="@Model.DataTestId">
         <svg class="export-button__icon" width="20" height="20" viewBox="0 0 29 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">

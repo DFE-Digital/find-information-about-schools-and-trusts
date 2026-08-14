@@ -9,7 +9,22 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts;
 
 public abstract class BaseTrustPageTests<T> where T : TrustsAreaModel
 {
-    protected T Sut = default!;
+    private T _sut = default!;
+    protected T Sut
+    {
+        get => _sut;
+        set
+        {
+            _sut = value;
+
+
+            if (string.IsNullOrWhiteSpace(_sut.ReferenceNumber))
+            {
+                _sut.ReferenceNumber = TrustReference;
+            }
+        }
+    }
+
     protected readonly ITrustService MockTrustService = Substitute.For<ITrustService>();
     protected readonly IDataSourceService MockDataSourceService = Mocks.MockDataSourceService.CreateSubstitute();
 
@@ -30,16 +45,17 @@ public abstract class BaseTrustPageTests<T> where T : TrustsAreaModel
 
     protected const string TrustUid = "1234";
     protected const string TrustReference = "TR5678";
-    protected readonly TrustSummaryServiceModel DummyTrustSummary = new(TrustUid, "My Trust", "Multi-academy trust", 3);
+    protected readonly TrustSummaryServiceModel DummyTrustSummary = new(TrustUid, TrustReference,"My Trust", "Multi-academy trust", 3);
 
     private const string EmptyTrustUid = "";
 
     protected readonly TrustSummaryServiceModel DummyTrustSummaryEmptyUid =
-        new(EmptyTrustUid, "My Trust", "Multi-academy trust", 3);
+        new(EmptyTrustUid, TrustReference,"My Trust", "Multi-academy trust", 3);
 
     protected BaseTrustPageTests()
     {
         MockTrustService.GetTrustSummaryAsync(TrustUid).Returns(DummyTrustSummary);
+        MockTrustService.GetTrustSummaryAsync(TrustReference).Returns(DummyTrustSummary);
         MockTrustService.GetTrustReferenceNumberAsync(TrustUid).Returns(TrustReference);
     }
 
@@ -53,6 +69,7 @@ public abstract class BaseTrustPageTests<T> where T : TrustsAreaModel
     public async Task OnGetAsync_should_fetch_a_trustsummary_by_uid()
     {
         Sut.Uid = DummyTrustSummary.Uid;
+        Sut.ReferenceNumber = DummyTrustSummary.ReferenceNumber;
 
         await Sut.OnGetAsync();
         Sut.TrustSummary.Should().Be(DummyTrustSummary);
@@ -64,6 +81,7 @@ public abstract class BaseTrustPageTests<T> where T : TrustsAreaModel
         MockTrustService.GetTrustSummaryAsync("1111").Returns(Task.FromResult<TrustSummaryServiceModel?>(null));
 
         Sut.Uid = "1111";
+        Sut.ReferenceNumber = "1111";
         var result = await Sut.OnGetAsync();
         result.Should().BeOfType<NotFoundResult>();
     }
@@ -74,6 +92,7 @@ public abstract class BaseTrustPageTests<T> where T : TrustsAreaModel
         MockTrustService.GetTrustSummaryAsync("").Returns(Task.FromResult((TrustSummaryServiceModel?)null));
 
         Sut.Uid = "";
+        Sut.ReferenceNumber = "";
         var result = await Sut.OnGetAsync();
         result.Should().BeOfType<NotFoundResult>();
     }

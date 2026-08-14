@@ -8,8 +8,9 @@ describe('Header Search Tests', () => {
 
         describe('School Pages', () => {
             const schoolUrn = 107188;
+            const schoolTrn = 'tr01585';
 
-            TestDataStore.GetAllSchoolSubpagesForUrn(schoolUrn).forEach(({ pageName, subpages }) => {
+            TestDataStore.GetAllSchoolSubpagesForUrn(schoolUrn, schoolTrn).forEach(({ pageName, subpages }) => {
                 describe(`${pageName}`, () => {
                     subpages.forEach(({ subpageName, url }) => {
                         it(`Should have header search present - ${pageName} > ${subpageName}`, () => {
@@ -23,8 +24,9 @@ describe('Header Search Tests', () => {
 
         describe('Trust Pages', () => {
             const trustUid = 5527;
+            const trustTrn = 'tr04032';
 
-            TestDataStore.GetAllTrustSubpagesForUid(trustUid).forEach(({ pageName, subpages }) => {
+            TestDataStore.GetAllTrustSubpagesForUid(trustUid, trustTrn).forEach(({ pageName, subpages }) => {
                 describe(`${pageName}`, () => {
                     subpages.forEach(({ subpageName, url }) => {
                         it(`Should have header search present - ${pageName} > ${subpageName}`, () => {
@@ -47,7 +49,7 @@ describe('Header Search Tests', () => {
             },
             {
                 type: 'trust',
-                url: '/trusts/overview/trust-details?uid=5527',
+                url: '/trusts/overview/trust-details?uid=5527&referencenumber=tr04032',
                 urnTest: { urn: 123452, name: 'The Meadows Primary School' }
             }
         ];

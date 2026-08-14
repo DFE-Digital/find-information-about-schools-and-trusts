@@ -8,7 +8,7 @@ describe('Trust Contacts Pages Accessibility', () => {
 
             describe('In DfE Contacts Page Accessibility', () => {
                 beforeEach(() => {
-                    cy.visit(`/trusts/contacts/in-dfe?uid=${uid}`);
+                    cy.visit(`/trusts/contacts/in-dfe?uid=5143&referencenumber=tr04032`);
                 });
 
                 it('should have accessible in DfE contacts page', () => {
@@ -63,7 +63,7 @@ describe('Trust Contacts Pages Accessibility', () => {
 
             describe('In Trust Contacts Page Accessibility', () => {
                 beforeEach(() => {
-                    cy.visit(`/trusts/contacts/in-the-trust?uid=${uid}`);
+                    cy.visit(`/trusts/contacts/in-the-trust?uid=${uid}&referencenumber=tr04032`);
                 });
 
                 it('should have accessible in trust contacts page', () => {
@@ -101,7 +101,7 @@ describe('Trust Contacts Pages Accessibility', () => {
         describe(`Contact Edit Pages Accessibility for ${typeOfTrust}`, () => {
 
             it('should have accessible Trust relationship manager edit page', () => {
-                cy.visit(`/trusts/contacts/edittrustrelationshipmanager?uid=${uid}`);
+                cy.visit(`/trusts/contacts/edittrustrelationshipmanager?uid=5143&referencenumber=tr04032`);
 
                 // Wait for page to load
                 cy.get('main, #main-content').should('be.visible');
@@ -131,7 +131,7 @@ describe('Trust Contacts Pages Accessibility', () => {
             });
 
             it('should have accessible SFSO lead edit page', () => {
-                cy.visit(`/trusts/contacts/editsfsolead?uid=${uid}`);
+                cy.visit(`/trusts/contacts/editsfsolead?uid=5143&referencenumber=tr04032`);
 
                 // Wait for page to load
                 cy.get('main, #main-content').should('be.visible');
@@ -164,7 +164,7 @@ describe('Trust Contacts Pages Accessibility', () => {
 
     describe('Common Contacts Components Accessibility', () => {
         it('should have accessible navigation and breadcrumbs', () => {
-            cy.visit('/trusts/contacts/in-dfe?uid=5527');
+            cy.visit('/trusts/contacts/in-dfe?uid=5527&referencenumber=tr04032');
 
             // Wait for page to load
             cy.get('main, #main-content').should('be.visible');
@@ -187,7 +187,7 @@ describe('Trust Contacts Pages Accessibility', () => {
         });
 
         it('should have accessible success and error messages', () => {
-            cy.visit('/trusts/contacts/in-dfe?uid=5527');
+            cy.visit('/trusts/contacts/in-dfe?uid=5527&referencenumber=tr04032');
 
             // Check message accessibility (if they appear) - disable reports for sensitive personal data
             cy.get('body').then($body => {
@@ -207,7 +207,7 @@ describe('Trust Contacts Pages Accessibility', () => {
         });
 
         it('should have accessible page headers and structure', () => {
-            cy.visit('/trusts/contacts/in-the-trust?uid=5527');
+            cy.visit('/trusts/contacts/in-the-trust?uid=5527&referencenumber=tr04032');
 
             // Check page structure accessibility - disable reports for sensitive personal data
             cy.get('body').then($body => {

@@ -40,12 +40,22 @@ class PaginationPage {
     }
 
     public clickPageNumber(pageNumber: number): this {
-        this.getPaginationButton(pageNumber).click();
+        cy.url().then((currentUrl) => {
+            this.getPaginationButton(pageNumber).click();
+            cy.url().should('not.eq', currentUrl);
+            this.getResults().should('be.visible');
+        });
+        
         return this;
     }
 
     public clickNext(): this {
-        this.elements.nextButton().click();
+        cy.url().then((currentUrl) => {
+            this.elements.nextButton().click();
+            cy.url().should('not.eq', currentUrl);
+            this.getResults().should('be.visible');
+        });
+        
         return this;
     }
 

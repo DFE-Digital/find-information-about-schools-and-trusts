@@ -6,7 +6,7 @@ describe("Testing the components of the Trust overview page", () => {
 
     describe("Trust details", () => {
         beforeEach(() => {
-            cy.visit('/trusts/overview/trust-details?uid=5712');
+            cy.visit('/trusts/overview/trust-details?uid=5712&referencenumber=tr04032');
         });
 
         it("The page loads with the correct headings and data", () => {
@@ -26,7 +26,7 @@ describe("Testing the components of the Trust overview page", () => {
 
     describe("Trust summary", () => {
         beforeEach(() => {
-            cy.visit('/trusts/overview/trust-summary?uid=5712');
+            cy.visit('/trusts/overview/trust-summary?uid=5712&referencenumber=tr04032');
         });
 
         it("The page loads with the correct headings and data", () => {
@@ -46,7 +46,7 @@ describe("Testing the components of the Trust overview page", () => {
 
     describe("Reference numbers", () => {
         beforeEach(() => {
-            cy.visit('/trusts/overview/reference-numbers?uid=5712');
+            cy.visit('/trusts/overview/reference-numbers?uid=5712&referencenumber=tr04032');
         });
 
         it("The page loads with the correct headings and data", () => {
@@ -66,13 +66,13 @@ describe("Testing the components of the Trust overview page", () => {
     describe("Testing the Overview sub navigation", () => {
 
         it('Should check that the trust details navigation button takes me to the correct page', () => {
-            cy.visit('/trusts/overview/trust-summary?uid=5527');
+            cy.visit('/trusts/overview/trust-summary?uid=5527&referencenumber=tr04032');
 
             overviewPage
                 .clickTrustDetailsSubnavButton();
 
             navigation
-                .checkCurrentURLIsCorrect('/trusts/overview/trust-details?uid=5527');
+                .checkCurrentURLIsCorrect('/trusts/overview/trust-details?uid=5527&referencenumber=tr04032');
 
             overviewPage
                 .checkAllSubNavItemsPresent()
@@ -80,13 +80,13 @@ describe("Testing the components of the Trust overview page", () => {
         });
 
         it('Should check that the trust summary navigation button takes me to the correct page', () => {
-            cy.visit('/trusts/overview/reference-numbers?uid=5527');
+            cy.visit('/trusts/overview/reference-numbers?uid=5527&referencenumber=tr04032');
 
             overviewPage
                 .clickTrustSummarySubnavButton();
 
             navigation
-                .checkCurrentURLIsCorrect('/trusts/overview/trust-summary?uid=5527');
+                .checkCurrentURLIsCorrect('/trusts/overview/trust-summary?uid=5527&referencenumber=tr04032');
 
             overviewPage
                 .checkAllSubNavItemsPresent()
@@ -94,13 +94,13 @@ describe("Testing the components of the Trust overview page", () => {
         });
 
         it('Should check that the reference numbers navigation button takes me to the correct page', () => {
-            cy.visit('/trusts/overview/trust-details?uid=5527');
+            cy.visit('/trusts/overview/trust-details?uid=5527&referencenumber=tr04032');
 
             overviewPage
                 .clickReferenceNumbersSubnavButton();
 
             navigation
-                .checkCurrentURLIsCorrect('/trusts/overview/reference-numbers?uid=5527');
+                .checkCurrentURLIsCorrect('/trusts/overview/reference-numbers?uid=5527&referencenumber=tr04032');
 
             overviewPage
                 .checkAllSubNavItemsPresent()
@@ -108,7 +108,7 @@ describe("Testing the components of the Trust overview page", () => {
         });
 
         it('Should check that the overview sub nav items are not present when I am not on the overview page', () => {
-            cy.visit('/trusts/contacts/in-dfe?uid=5527');
+            cy.visit('/trusts/contacts/in-dfe?uid=5527&referencenumber=tr04032');
 
             overviewPage
                 .checkSubNavNotPresent();

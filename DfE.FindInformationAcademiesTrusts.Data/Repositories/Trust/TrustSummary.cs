@@ -2,4 +2,6 @@ namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 
 public record TrustSummary(
     string Name,
-    string Type);
+    string Type,
+    string Uid,
+    string ReferenceNumber);

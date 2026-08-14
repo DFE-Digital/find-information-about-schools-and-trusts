@@ -41,4 +41,27 @@ public class GetTrusts(IDfeHttpClientFactory httpClientFactory,
 
         return result.Body;
     }
+    
+    public async Task<TrustDto?> GetEstablishmentTrust(int urn)
+    {
+        string path = "/v4/trusts/establishments/urns";
+        var payload = new { urns = new int[] { urn } };
+
+        ApiResponse<Dictionary<int, TrustDto>> result =
+            await httpClientService.Post<object, Dictionary<int, TrustDto>>(_httpClient, path, payload);
+
+        if (!result.Success)
+        {
+            if (result.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                return null;
+            }
+            else
+            {
+                throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");
+            }
+        }
+
+        return result.Body.FirstOrDefault().Value;
+    }
 }

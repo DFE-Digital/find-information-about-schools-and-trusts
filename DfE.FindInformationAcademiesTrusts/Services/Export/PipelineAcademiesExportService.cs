@@ -8,26 +8,25 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Export;
 
 public interface IPipelineAcademiesExportService
 {
-    Task<byte[]> BuildAsync(string uid);
+    Task<byte[]> BuildAsync(string uid,string referenceNumber);
 }
 
 public class PipelineAcademiesExportService(
     ITrustService trustService,
     IAcademyService academyService) : ExportBuilder("Pipeline Academies"), IPipelineAcademiesExportService
 {
-    public async Task<byte[]> BuildAsync(string uid)
+    public async Task<byte[]> BuildAsync(string uid,string referenceNumber)
     {
-        var trustSummary = await trustService.GetTrustSummaryAsync(uid);
+        var trustSummary = await trustService.GetTrustSummaryAsync(referenceNumber);
 
         if (trustSummary is null)
         {
-            throw new DataIntegrityException($"Trust summary not found for UID {uid}");
+            throw new DataIntegrityException($"Trust summary not found for trust reference number {referenceNumber}");
         }
-
-        var trustReferenceNumber = await trustService.GetTrustReferenceNumberAsync(uid);
-        var preAdvisoryAcademies = await academyService.GetAcademiesPipelinePreAdvisoryAsync(trustReferenceNumber);
-        var postAdvisoryAcademies = await academyService.GetAcademiesPipelinePostAdvisoryAsync(trustReferenceNumber);
-        var freeSchools = await academyService.GetAcademiesPipelineFreeSchoolsAsync(trustReferenceNumber);
+        
+        var preAdvisoryAcademies = await academyService.GetAcademiesPipelinePreAdvisoryAsync(referenceNumber);
+        var postAdvisoryAcademies = await academyService.GetAcademiesPipelinePostAdvisoryAsync(referenceNumber);
+        var freeSchools = await academyService.GetAcademiesPipelineFreeSchoolsAsync(referenceNumber);
 
         return WriteTrustInformation(trustSummary)
             .WriteRows(WriteHeadersForPreAdvisory)

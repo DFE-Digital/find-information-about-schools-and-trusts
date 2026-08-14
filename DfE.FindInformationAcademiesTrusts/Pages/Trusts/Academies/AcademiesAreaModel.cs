@@ -40,6 +40,10 @@ public abstract class AcademiesAreaModel(
     {
         return new NavLink(this is T, "Academies", linkDisplayText, aspPage,
             $"{subPageName}-{linkDisplayText}-tab".Kebabify(),
-            new Dictionary<string, string> { { "uid", Uid } });
+            new Dictionary<string, string>
+            {
+                { "uid", Uid },
+                { "referenceNumber", ReferenceNumber }
+            });
     }
 }

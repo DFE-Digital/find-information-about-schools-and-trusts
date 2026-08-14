@@ -15,6 +15,7 @@ public class SchoolContactsServiceTests
 {
     private readonly int _urn = 100123;
     private readonly string _uid = "1234";
+    private readonly string _referenceNumber = "TR1234";
     private readonly SchoolContactsService _sut;
     private readonly ITrustService _mockTrustService = Substitute.For<ITrustService>();
     private readonly ISchoolRepository _mockSchoolRepository = Substitute.For<ISchoolRepository>();
@@ -101,7 +102,7 @@ public class SchoolContactsServiceTests
 
         _mockContactsRepository.GetSchoolInternalContactsAsync(_urn).Returns(_dummyInternalContacts);
         _mockTrustService.GetTrustSummaryAsync(_urn)
-            .Returns(new TrustSummaryServiceModel(_uid, "Some Trust", "Some Trust Type", 1));
+            .Returns(new TrustSummaryServiceModel(_uid, _referenceNumber,"Some Trust", "Some Trust Type", 1));
         _mockContactsRepository.GetTrustInternalContactsAsync(_uid)
             .Returns(new TrustInternalContacts(trmContact, sfsoLeadContact));
 
@@ -123,7 +124,7 @@ public class SchoolContactsServiceTests
 
         _mockContactsRepository.GetSchoolInternalContactsAsync(_urn).Returns(_dummyInternalContacts);
         _mockTrustService.GetTrustSummaryAsync(_urn)
-            .Returns(new TrustSummaryServiceModel(_uid, "Some Trust", "Some Trust Type", 1));
+            .Returns(new TrustSummaryServiceModel(_uid,_referenceNumber ,"Some Trust", "Some Trust Type", 1));
         _mockContactsRepository.GetTrustInternalContactsAsync(_uid)
             .Returns(new TrustInternalContacts(null, sfsoLeadContact));
 
@@ -145,7 +146,7 @@ public class SchoolContactsServiceTests
 
         _mockContactsRepository.GetSchoolInternalContactsAsync(_urn).Returns(_dummyInternalContacts);
         _mockTrustService.GetTrustSummaryAsync(_urn)
-            .Returns(new TrustSummaryServiceModel(_uid, "Some Trust", "Some Trust Type", 1));
+            .Returns(new TrustSummaryServiceModel(_uid, _referenceNumber,"Some Trust", "Some Trust Type", 1));
         _mockContactsRepository.GetTrustInternalContactsAsync(_uid)
             .Returns(new TrustInternalContacts(trmContact, null));
 

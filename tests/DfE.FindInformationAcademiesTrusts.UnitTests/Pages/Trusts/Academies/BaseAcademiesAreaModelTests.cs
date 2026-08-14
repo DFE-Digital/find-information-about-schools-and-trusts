@@ -12,7 +12,7 @@ public abstract class BaseAcademiesAreaModelTests<T> : BaseTrustPageTests<T>, IT
     protected readonly IPipelineAcademiesExportService MockPipelineAcademiesExportService =
         Substitute.For<IPipelineAcademiesExportService>();
 
-    protected const string TrustReferenceNumber = "TRN00123";
+    protected const string TrustReferenceNumber = TrustReference;
 
     public BaseAcademiesAreaModelTests()
     {
@@ -49,21 +49,26 @@ public abstract class BaseAcademiesAreaModelTests<T> : BaseTrustPageTests<T>, IT
     public abstract Task OnGetAsync_should_populate_TabList_to_tabs();
 
     [Theory]
-    [InlineData("1234")]
-    [InlineData("5678")]
-    public async Task OnGetAsync_should_populate_TabList_route_data_with_uid(string expectedUid)
+    [InlineData("1234", "TR1234")]
+    [InlineData("5678", "TR5678")]
+    public async Task OnGetAsync_should_populate_TabList_route_data_with_uid(string expectedUid,
+        string expectedReferenceNumber)
     {
-        MockTrustService.GetTrustSummaryAsync(expectedUid).Returns(DummyTrustSummary);
+        MockTrustService.GetTrustSummaryAsync(expectedReferenceNumber)
+            .Returns(DummyTrustSummary with { Uid = expectedUid, ReferenceNumber = expectedReferenceNumber });
         MockTrustService.GetTrustReferenceNumberAsync(expectedUid).Returns(TrustReferenceNumber);
         Sut.Uid = expectedUid;
+        Sut.ReferenceNumber = expectedReferenceNumber;
 
         _ = await Sut.OnGetAsync();
 
         Sut.TabList.Should().AllSatisfy(link =>
         {
-            var route = link.AspAllRouteData.Should().ContainSingle().Subject;
-            route.Key.Should().Be("uid");
-            route.Value.Should().Be(expectedUid);
+            link.AspAllRouteData.Should().BeEquivalentTo(new Dictionary<string, string>
+            {
+                { "uid", expectedUid },
+                { "referenceNumber", expectedReferenceNumber }
+            });
         });
     }
 

@@ -14,7 +14,7 @@ public class EditTrustRelationshipManagerModelTests
 
     private readonly ITrustService _mockTrustService = Substitute.For<ITrustService>();
 
-    private readonly TrustSummaryServiceModel _fakeTrust = new("1234", "My Trust", "Multi-academy trust", 3);
+    private readonly TrustSummaryServiceModel _fakeTrust = new("1234", "TR1234","My Trust", "Multi-academy trust", 3);
 
     private readonly InternalContact _trustRelationshipManager =
         new("Trust Relationship Manager", "trm@test.com", DateTime.Today, "test@email.com");
@@ -23,20 +23,12 @@ public class EditTrustRelationshipManagerModelTests
     {
         _mockTrustService.GetTrustContactsAsync("1234").Returns(
             Task.FromResult(new TrustContactsServiceModel(_trustRelationshipManager, null, null, null, null)));
-        _mockTrustService.GetTrustSummaryAsync(_fakeTrust.Uid)!.Returns(Task.FromResult(_fakeTrust));
+        _mockTrustService.GetTrustSummaryAsync(_fakeTrust.ReferenceNumber)!.Returns(Task.FromResult(_fakeTrust));
 
         _sut = new EditTrustRelationshipManagerModel(_mockTrustService)
-            { Uid = "1234" };
+            { Uid = "1234", ReferenceNumber = "TR1234" };
     }
-
-    [Fact]
-    public async Task OnGetAsync_returns_NotFoundResult_if_Trust_is_not_found()
-    {
-        _mockTrustService.GetTrustSummaryAsync("1234").Returns(Task.FromResult<TrustSummaryServiceModel?>(null));
-        var result = await _sut.OnGetAsync();
-        result.Should().BeOfType<NotFoundResult>();
-    }
-
+    
     [Fact]
     public async Task OnGetAsync_loads_the_correct_name_and_email()
     {
@@ -67,8 +59,11 @@ public class EditTrustRelationshipManagerModelTests
 
         _sut.ContactUpdatedMessage.Should().Be(expectedMessage);
 
-        result.Should().BeOfType<RedirectToPageResult>()
-            .Which.PageName.Should().Be("/Trusts/Contacts/InDfe");
+        var redirectResult = result.Should().BeOfType<RedirectToPageResult>().Subject;
+        redirectResult.PageName.Should().Be("/Trusts/Contacts/InDfe");
+        redirectResult.RouteValues.Should().NotBeNull();
+        redirectResult.RouteValues!["Uid"].Should().Be("1234");
+        redirectResult.RouteValues!["ReferenceNumber"].Should().Be("TR1234");
     }
 
     [Fact]

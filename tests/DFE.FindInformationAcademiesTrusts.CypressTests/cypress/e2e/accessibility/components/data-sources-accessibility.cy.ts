@@ -4,7 +4,7 @@ import { TestDataStore } from '../../../support/test-data-store';
 describe('Data Sources Component Accessibility', () => {
 
     describe('Trust Pages Data Sources Accessibility', () => {
-        TestDataStore.GetAllTrustSubpagesForUid(5712).forEach(({ pageName, subpages }) => {
+        TestDataStore.GetAllTrustSubpagesForUid(5712, 'tr04032').forEach(({ pageName, subpages }) => {
             describe(`${pageName} pages`, () => {
                 subpages.forEach(({ subpageName, url }) => {
                     it(`should have accessible data sources component on ${pageName} > ${subpageName}`, () => {
@@ -38,7 +38,7 @@ describe('Data Sources Component Accessibility', () => {
             { type: 'LA Maintained School', urn: 107188, getSubpages: TestDataStore.GetAllSchoolSubpagesForUrn }
         ].forEach(({ type, urn, getSubpages }) => {
             describe(`${type} data sources accessibility`, () => {
-                getSubpages(urn).forEach(({ pageName, subpages }) => {
+                getSubpages(urn, 'tr04032').forEach(({ pageName, subpages }) => {
                     describe(`${pageName} pages`, () => {
                         subpages.forEach(({ subpageName, url }) => {
                             it(`should have accessible data sources component on ${pageName} > ${subpageName}`, () => {
@@ -70,7 +70,7 @@ describe('Data Sources Component Accessibility', () => {
     describe('Data Sources Component Elements Accessibility', () => {
         it('should have accessible data sources headings and lists', () => {
             // Test on a representative trust page
-            cy.visit('/trusts/overview/trust-details?uid=5712');
+            cy.visit('/trusts/overview/trust-details?uid=5712&referencenumber=tr04032');
 
             // Wait for page to load
             cy.get('main, #main-content').should('be.visible');
