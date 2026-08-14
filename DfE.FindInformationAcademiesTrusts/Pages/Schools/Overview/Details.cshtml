@@ -2,7 +2,6 @@
 @using DfE.FindInformationAcademiesTrusts.Data.Enums
 @using DfE.FindInformationAcademiesTrusts.Extensions
 @using DfE.FindInformationAcademiesTrusts.Services.School
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model DetailsModel
 
 @{
@@ -49,7 +48,7 @@
                     <dd class="govuk-summary-list__value">
                         @if (Model.TrustInformationIsAvailable)
                         {
-                            @Model.SchoolOverviewModel.DateJoinedTrust?.ToString(StringFormatConstants.DisplayFullDateFormat)
+                            @Model.SchoolOverviewModel.DateJoinedTrust
                         }
                         else
                         {
@@ -67,7 +66,7 @@
                         {
                             <a data-testid="academy-trust-link" class="govuk-link" asp-page="/Trusts/Overview/TrustDetails"
                                 asp-route-uid="@Model.TrustSummary?.Uid" asp-route-referencenumber="@Model.TrustSummary?.ReferenceNumber">
-                                @Model.TrustSummary?.Name
+                                @Model.SchoolOverviewModel.TrustName
                             </a>
                         }
                         else

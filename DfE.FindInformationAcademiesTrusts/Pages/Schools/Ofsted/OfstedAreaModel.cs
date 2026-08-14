@@ -1,3 +1,4 @@
+using System.Globalization;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.Older;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.ReportCards;
@@ -36,10 +37,10 @@ public class OfstedAreaModel(
         var pageResult = await base.OnGetAsync();
         if (pageResult is NotFoundResult) return pageResult;
 
-        var schoolOverview = await schoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(Urn, SchoolCategory);
+        var schoolOverview = await schoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(Urn);
         if (schoolOverview.DateJoinedTrust is not null)
         {
-            DateJoinedTrust = schoolOverview.DateJoinedTrust.Value.ToDateTime(new TimeOnly());
+            DateJoinedTrust = DateTime.Parse(schoolOverview.DateJoinedTrust, CultureInfo.InvariantCulture);
         }
 
         OfstedReportUrl = otherServicesLinkBuilder.OfstedReportLinkForSchool(Urn);

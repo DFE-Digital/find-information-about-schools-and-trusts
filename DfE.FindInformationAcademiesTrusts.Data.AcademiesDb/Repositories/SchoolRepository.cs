@@ -5,7 +5,7 @@ using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
-using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
+using GovUK.Dfe.CoreLibs.Contracts.ExternalApplications.Models.Response;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -31,21 +31,23 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
 
     public async Task<SchoolDetails> GetSchoolDetailsAsync(int urn)
     {
-        return await academiesDbContext.GiasEstablishments
-            .Where(e => e.Urn == urn)
-            .Select(establishment => new SchoolDetails(establishment.EstablishmentName!,
-                stringFormattingUtilities.BuildAddressString(
-                    establishment.Street,
-                    null,
-                    establishment.Town,
-                    establishment.Postcode
+        var result = await getEstablishments.GetEstablishment(urn);
+
+        return new SchoolDetails(
+            Name:  result.Name,
+                Address: stringFormattingUtilities.BuildAddressString(
+                    result.Address.Street,
+                    result.Address.Locality,
+                    result.Address.Town,
+                    result.Address.Postcode
                 ),
-                establishment.GorName!,
-                establishment.LaName!,
-                establishment.PhaseOfEducationName!,
-                new AgeRange(establishment.StatutoryLowAge, establishment.StatutoryHighAge),
-                establishment.NurseryProvisionName))
-            .SingleAsync();
+                Region: result.Gor.Name,
+                LocalAuthority: result.LocalAuthorityName,
+                PhaseOfEducationName: result.PhaseOfEducation.Name,
+                AgeRange: new AgeRange(result.StatutoryLowAge, result.StatutoryHighAge),
+                NurseryProvision: result.NurseryProvision,
+                TrustName: result.TrustName,
+                DateJoinedTrust: result.DateJoinedTrust);
     }
 
     public async Task<DateOnly?> GetDateJoinedTrustAsync(int urn)

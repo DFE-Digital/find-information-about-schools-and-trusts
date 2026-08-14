@@ -9,7 +9,8 @@ public record SchoolOverviewServiceModel(
     string LocalAuthority,
     string PhaseOfEducationName,
     AgeRange AgeRange,
-    NurseryProvision NurseryProvision)
+    NurseryProvision NurseryProvision,
+    string? TrustName,
+    string? DateJoinedTrust)
 {
-    public DateOnly? DateJoinedTrust { get; set; }
 }

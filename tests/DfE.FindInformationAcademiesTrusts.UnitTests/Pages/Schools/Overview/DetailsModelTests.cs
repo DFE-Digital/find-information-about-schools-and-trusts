@@ -1,4 +1,5 @@
-﻿using DfE.FindInformationAcademiesTrusts.Data;
+﻿using System.Globalization;
+using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Overview;
@@ -18,11 +19,11 @@ public class DetailsModelTests : BaseOverviewAreaModelTests<DetailsModel>
 
     private readonly SchoolOverviewServiceModel _dummySchoolDetails =
         new("Cool school", "some street, in a town", "Yorkshire", "Leeds", "Secondary", new AgeRange(11, 18),
-            NurseryProvision.NotRecorded);
+            NurseryProvision.NotRecorded, null, null);
 
     public DetailsModelTests()
     {
-        _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(Arg.Any<int>(), Arg.Any<SchoolCategory>())
+        _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(Arg.Any<int>())
             .Returns(_dummySchoolDetails);
 
         Sut = new DetailsModel(MockSchoolService, MockTrustService, _mockSchoolOverviewDetailsService,
@@ -112,10 +113,12 @@ public class DetailsModelTests : BaseOverviewAreaModelTests<DetailsModel>
     public async Task OnGetAsync_should_set_TrustInformationIsAvailable_to_true_when_trust_information_is_available()
     {
         Sut.Urn = AcademyUrn;
-        _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(AcademyUrn, SchoolCategory.Academy)
-            .Returns(_dummySchoolDetails with { DateJoinedTrust = DateOnly.Parse("2025-01-01") });
-        MockTrustService.GetTrustSummaryAsync(AcademyUrn)
-            .Returns(new TrustSummaryServiceModel("1234", "TR1234","Some Trust", "Some Type", 9001));
+        _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(AcademyUrn)
+            .Returns(_dummySchoolDetails with
+            {
+                DateJoinedTrust = DateTime.Parse("2011-04-03", CultureInfo.InvariantCulture).ToString("dd MMMM yyyy"),
+                TrustName = "Some Trust"
+            });
 
         await Sut.OnGetAsync();
 
@@ -126,7 +129,7 @@ public class DetailsModelTests : BaseOverviewAreaModelTests<DetailsModel>
     public async Task OnGetAsync_should_set_TrustInformationIsAvailable_to_false_when_DateJoinedTrust_is_null()
     {
         Sut.Urn = AcademyUrn;
-        _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(AcademyUrn, SchoolCategory.Academy)
+        _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(AcademyUrn)
             .Returns(_dummySchoolDetails with { DateJoinedTrust = null });
         MockTrustService.GetTrustSummaryAsync(AcademyUrn)
             .Returns(new TrustSummaryServiceModel("1234", "TR1234","Some Trust", "Some Type", 9001));
@@ -141,8 +144,8 @@ public class DetailsModelTests : BaseOverviewAreaModelTests<DetailsModel>
         OnGetAsync_should_set_TrustInformationIsAvailable_to_false_when_GetTrustSummaryAsync_returns_null()
     {
         Sut.Urn = AcademyUrn;
-        _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(AcademyUrn, SchoolCategory.Academy)
-            .Returns(_dummySchoolDetails with { DateJoinedTrust = DateOnly.Parse("2025-01-01") });
+        _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(AcademyUrn)
+            .Returns(_dummySchoolDetails with { DateJoinedTrust = DateTime.Parse("2011-04-03", CultureInfo.InvariantCulture).ToString("dd MMMM yyyy") });
         MockTrustService.GetTrustSummaryAsync(AcademyUrn)
             .ReturnsNull();
 
@@ -152,25 +155,10 @@ public class DetailsModelTests : BaseOverviewAreaModelTests<DetailsModel>
     }
 
     [Fact]
-    public async Task OnGetAsync_should_set_TrustSummaryIsAvailable_to_true_when_trust_summary_is_available()
-    {
-        Sut.Urn = SchoolUrn;
-        _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(SchoolUrn, SchoolCategory.LaMaintainedSchool)
-            .Returns(_dummySchoolDetails);
-
-        MockTrustService.GetTrustSummaryAsync(SchoolUrn)
-            .Returns(new TrustSummaryServiceModel("1234", "TR1234","Some Trust", "Some Type", 1));
-
-        await Sut.OnGetAsync();
-
-        Sut.TrustSummaryIsAvailable.Should().Be(true);
-    }
-
-    [Fact]
     public async Task OnGetAsync_should_set_TrustSummaryIsAvailable_to_false_when_GetTrustSummaryAsync_returns_null()
     {
         Sut.Urn = SchoolUrn;
-        _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(SchoolUrn, SchoolCategory.LaMaintainedSchool)
+        _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(SchoolUrn)
             .Returns(_dummySchoolDetails);
 
         MockTrustService.GetTrustSummaryAsync(SchoolUrn)
