@@ -42,7 +42,7 @@ public class TrustRepository(
         
         return new TrustOverview(
             details.GroupUid!,
-            details.ReferenceNumber!,
+            details.ReferenceNumber,
             details.Ukprn,
             details.CompaniesHouseNumber,
             details.Type.Name,
