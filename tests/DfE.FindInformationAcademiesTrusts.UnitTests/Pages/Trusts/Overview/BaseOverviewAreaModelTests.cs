@@ -8,18 +8,21 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.Overview;
 public abstract class BaseOverviewAreaModelTests<T> : BaseTrustPageTests<T>, ITestSubpages where T : OverviewAreaModel
 {
     protected readonly TrustOverviewServiceModel BaseTrustOverviewServiceModel =
-        new(TrustUid, "", "", "", TrustType.MultiAcademyTrust, "", "", null, null, 0, new Dictionary<string, int>(), 0,
+        new(TrustUid, TrustReference, "", "", TrustType.MultiAcademyTrust, "", "", null, null, 0, new Dictionary<string, int>(), 0,
             0, true);
 
     protected BaseOverviewAreaModelTests()
     {
-        MockTrustService.GetTrustOverviewAsync(Arg.Any<string>())
-            .Returns(callinfo => BaseTrustOverviewServiceModel with { Uid = callinfo.Arg<string>() });
+        MockTrustService.GetTrustOverviewAsync(Arg.Any<string>(), Arg.Any<string>())
+            .Returns(callinfo => BaseTrustOverviewServiceModel with
+            {
+                Uid = callinfo.ArgAt<string>(0)
+            });
     }
 
     protected void SetupTrustOverview(TrustOverviewServiceModel trustOverviewServiceModel)
     {
-        MockTrustService.GetTrustOverviewAsync(trustOverviewServiceModel.Uid)
+        MockTrustService.GetTrustOverviewAsync(trustOverviewServiceModel.Uid,trustOverviewServiceModel.GroupId)
             .Returns(Task.FromResult(trustOverviewServiceModel));
     }
 

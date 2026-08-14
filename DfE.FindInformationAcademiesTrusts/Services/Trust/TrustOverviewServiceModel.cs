@@ -9,7 +9,7 @@ public record TrustOverviewServiceModel(
     string? CompaniesHouseNumber,
     TrustType Type,
     string Address,
-    string RegionAndTerritory,
+    string? RegionAndTerritory,
     string? SingleAcademyTrustAcademyUrn,
     DateTime? OpenedDate,
     int TotalAcademies,

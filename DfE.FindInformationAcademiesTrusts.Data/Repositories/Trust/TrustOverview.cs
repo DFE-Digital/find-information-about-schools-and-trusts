@@ -7,5 +7,5 @@ public record TrustOverview(
     string? CompaniesHouseNumber,
     string Type,
     string Address,
-    string RegionAndTerritory,
+    string? RegionAndTerritory,
     DateTime? OpenedDate);

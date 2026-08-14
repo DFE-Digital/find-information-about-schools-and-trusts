@@ -30,45 +30,31 @@ public class TrustRepository(
             : new TrustSummary(details.Name ?? string.Empty, details.Type.Name ?? string.Empty,details.GroupUid ?? string.Empty,details.ReferenceNumber?.ToString() ?? string.Empty);
 
     }
-
-    public async Task<TrustOverview> GetTrustOverviewAsync(string uid)
+    
+    public async Task<TrustOverview?> GetTrustOverviewByTrnAsync(string referenceNumber)
     {
-        var giasGroup = await Trusts
-            .Where(g => g.GroupUid == uid)
-            .Select(giasGroup => new
-            {
-                giasGroup.GroupUid,
-                giasGroup.GroupId,
-                giasGroup.Ukprn,
-                giasGroup.CompaniesHouseNumber,
-                giasGroup.GroupType,
-                giasGroup.GroupContactStreet,
-                giasGroup.GroupContactLocality,
-                giasGroup.GroupContactTown,
-                giasGroup.GroupContactPostcode,
-                giasGroup.IncorporatedOnOpenDate
-            })
-            .SingleAsync();
+        var details = await getTrusts.GetTrustByReferenceNumber(referenceNumber);
 
-        var regionAndTerritory = await GetRegionAndTerritoryAsync(uid);
-
-        var trustOverview = new TrustOverview(
-            giasGroup.GroupUid!, //Searched by this field so it must be present
-            giasGroup.GroupId!, // GroupId cannot be null for a trust
-            giasGroup.Ukprn,
-            giasGroup.CompaniesHouseNumber,
-            giasGroup.GroupType!, //Enforced by global EF filter
+        if (details is null)
+        {
+            return null;
+        }
+        
+        return new TrustOverview(
+            details.GroupUid!,
+            details.ReferenceNumber,
+            details.Ukprn,
+            details.CompaniesHouseNumber,
+            details.Type.Name,
             stringFormattingUtilities.BuildAddressString(
-                giasGroup.GroupContactStreet,
-                giasGroup.GroupContactLocality,
-                giasGroup.GroupContactTown,
-                giasGroup.GroupContactPostcode
+                details.Address.Street,
+                details.Address.Additional,
+                details.Address.Town,
+                details.Address.Postcode
             ),
-            regionAndTerritory,
-            giasGroup.IncorporatedOnOpenDate.ParseAsNullableDate()
+            details.Gor,
+            details.OpenDate.ParseAsNullableDate()
         );
-
-        return trustOverview;
     }
 
     public static IQueryable<GiasGovernance> FilterBySatOrMat(string uid, string? urn, IQueryable<GiasGovernance> query)
@@ -91,16 +77,7 @@ public class TrustRepository(
             governanceContacts.GetValueOrDefault("Chair of Trustees"),
             governanceContacts.GetValueOrDefault("Chief Financial Officer"));
     }
-
-
-    private async Task<string> GetRegionAndTerritoryAsync(string uid)
-    {
-        return await academiesDbContext.MstrTrusts
-            .Where(m => m.GroupUid == uid)
-            .Select(m => m.GORregion)
-            .SingleOrDefaultAsync() ?? string.Empty;
-    }
-
+    
     private async Task<Dictionary<string, Person>> GetGovernanceContactsAsync(string uid, string? urn = null)
     {
         string[] roles = { "Chair of Trustees", "Accounting Officer", "Chief Financial Officer" };
@@ -136,14 +113,5 @@ public class TrustRepository(
                 governorEmails.SingleOrDefault(governorEmail => governorEmail.Gid == governor.Gid)?.Email)
         );
     }
-
-    public async Task<string> GetTrustReferenceNumberAsync(string uid)
-    {
-        var trustReferenceNumber = await Trusts
-            .Where(gl => gl.GroupUid == uid)
-            .Select(gl => gl.GroupId!) // GroupId cannot be null for a trust
-            .SingleAsync();
-
-        return trustReferenceNumber;
-    }
+    
 }
