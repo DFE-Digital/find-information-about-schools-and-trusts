@@ -14,7 +14,7 @@ public interface ITrustService
     Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(int urn);
     Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string uid);
     Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid);
-    Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string uid,string referenceNumber);
+    Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string trustReferenceNumber, string uid);
 
     Task<InternalContactUpdatedServiceModel> UpdateContactAsync(int uid, string? name, string? email,
         TrustContactRole role);
@@ -109,10 +109,10 @@ public class TrustService(
         return new InternalContactUpdatedServiceModel(emailChanged, nameChanged);
     }
 
-    public async Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string uid,string referenceNumber)
+    public async Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string trustReferenceNumber, string uid)
     {
-        var trustOverview = await trustRepository.GetTrustOverviewByTrnAsync(referenceNumber);
-        var trustType = trustOverview!.Type switch
+        var trustOverview = await trustRepository.GetTrustOverviewAsync(trustReferenceNumber);
+        var trustType = trustOverview.Type switch
         {
             "Single-academy trust" => TrustType.SingleAcademyTrust,
             "Multi-academy trust" => TrustType.MultiAcademyTrust,
@@ -138,7 +138,7 @@ public class TrustService(
 
         var overviewModel = new TrustOverviewServiceModel(
             trustOverview.Uid,
-            trustOverview.GroupId,
+            trustOverview.TrustReferenceNumber,
             trustOverview.Ukprn,
             trustOverview.CompaniesHouseNumber,
             trustType,

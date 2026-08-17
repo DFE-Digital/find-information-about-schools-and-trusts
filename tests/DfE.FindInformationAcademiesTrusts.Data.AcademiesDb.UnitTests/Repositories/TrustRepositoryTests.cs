@@ -1,11 +1,9 @@
-using Dfe.AcademiesApi.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
-using GovUK.Dfe.CoreLibs.Contracts.Academies.V4;
 using AddressDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.AddressDto;
 using NameAndCodeDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.NameAndCodeDto;
 using TrustDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts.TrustDto;
@@ -16,7 +14,7 @@ public class TrustRepositoryTests
 {
     private readonly TrustRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
-    private readonly IGetTrusts _mockGetTrusts = Substitute.For<IGetTrusts>();
+    private readonly IGetTrusts _mockGetTrusts;
 
     private readonly StringFormattingUtilities stringFormattingUtilities = new StringFormattingUtilities();
 
@@ -28,7 +26,8 @@ public class TrustRepositoryTests
 
     public TrustRepositoryTests()
     {
-        _sut = new TrustRepository(_mockAcademiesDbContext.Object,_mockGetTrusts, stringFormattingUtilities);
+        _mockGetTrusts = Substitute.For<IGetTrusts>();
+        _sut = new TrustRepository(_mockAcademiesDbContext.Object, _mockGetTrusts, stringFormattingUtilities);
     }
 
     [Theory]
@@ -49,63 +48,53 @@ public class TrustRepositoryTests
         var result = await _sut.GetTrustSummaryAsync(referenceNumber);
         result.Should().BeEquivalentTo(new TrustSummary(name, type, uid, referenceNumber));
     }
-    
-    
-    [Fact]
-    public async Task GetTrustOverviewByTrnAsync_should_return_trust_overview_if_found()
+
+    [Theory]
+    [InlineData("Multi-academy trust")]
+    [InlineData("Single-academy trust")]
+    public async Task GetTrustOverviewAsync_should_return_trustOverview_when_trust_found(string trustType)
     {
-        const string referenceNumber = "TR0000";
+        const string trustReferenceNumber = "TR0012";
         const string uid = "2806";
-        const string name = "My Trust";
-        const string type = "Multi-academy trust";
-        const string ukprn = "10000000";
+        const string ukprn = "10012345";
         const string companiesHouseNumber = "01234567";
-        const string gor = "London";
+        const string street = "12 Academy Way";
+        const string locality = "District";
+        const string town = "Townville";
+        const string postcode = "AB1 2CD";
+        const string region = "North West";
+        const string openDate = "20/04/2015";
 
-        _mockGetTrusts.GetTrustByReferenceNumber(referenceNumber).Returns(new TrustDto
-        {
-            GroupUid = uid,
-            Name = name,
-            ReferenceNumber = referenceNumber,
-            Type = new NameAndCodeDto { Name = type },
-            Ukprn = ukprn,
-            CompaniesHouseNumber = companiesHouseNumber,
-            Gor = gor,
-            OpenDate = "01/09/2020",
-            Address = new AddressDto
+        _mockGetTrusts.GetTrustByReferenceNumber(trustReferenceNumber)
+            .Returns(new TrustDto
             {
-                Street = "1 Test Street",
-                Additional = "Testville",
-                Town = "Testington",
-                Postcode = "TE1 1ST"
-            }
-        });
+                GroupUid = uid,
+                Ukprn = ukprn,
+                CompaniesHouseNumber = companiesHouseNumber,
+                Type = new NameAndCodeDto { Name = trustType },
+                Address = new AddressDto
+                {
+                    Street = street,
+                    Locality = locality,
+                    Town = town,
+                    Postcode = postcode
+                },
+                Gor = region,
+                OpenDate = openDate
+            });
 
-        var result = await _sut.GetTrustOverviewByTrnAsync(referenceNumber);
+        var result = await _sut.GetTrustOverviewAsync(trustReferenceNumber);
 
         result.Should().BeEquivalentTo(new TrustOverview(
             uid,
-            referenceNumber,
+            trustReferenceNumber,
             ukprn,
             companiesHouseNumber,
-            type,
-            stringFormattingUtilities.BuildAddressString("1 Test Street", "Testville", "Testington", "TE1 1ST"),
-            gor,
-            new DateTime(2020, 9, 1)));
+            trustType,
+            "12 Academy Way, District, Townville, AB1 2CD",
+            region,
+            new DateTime(2015, 4, 20)));
     }
-    
-    [Fact]
-    public async Task GetTrustOverviewByTrnAsync_should_return_null_if_trust_not_found()
-    {
-        const string referenceNumber = "TR0000";
-
-        _mockGetTrusts.GetTrustByReferenceNumber(referenceNumber).Returns((TrustDto?)null);
-
-        var result = await _sut.GetTrustOverviewByTrnAsync(referenceNumber);
-
-        result.Should().BeNull();
-    }
-    
 
     [Fact]
     public async Task GetTrustSummaryAsync_should_return_null_if_reference_number_not_found()
@@ -116,7 +105,6 @@ public class TrustRepositoryTests
         var result = await _sut.GetTrustSummaryAsync(referenceNumber);
         result.Should().BeNull();
     }
-    
     
     [Fact]
     public async Task GetTrustSummaryByEstablishmentByUrnAsync_should_return_trustSummary_if_found()
@@ -139,7 +127,6 @@ public class TrustRepositoryTests
         result.Should().BeEquivalentTo(new TrustSummary(name, type, uid, referenceNumber));
     }
     
-
     [Fact]
     public async Task GetTrustContactsAsync_Should_Return_Valid_ChairOfTrustees_WhenOneIsPresentForTheTrust()
     {
