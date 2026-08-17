@@ -62,7 +62,7 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
     [Fact]
     public async Task OnGetAsync_sets_correct_DateJoinedTrust_for_academy()
     {
-        DummySchoolDetails = DummySchoolDetails with { DateJoinedTrust = DateTime.Parse("2011-04-03", CultureInfo.InvariantCulture).ToString("dd MMMM yyyy")};
+        DummySchoolDetails = DummySchoolDetails with { DateJoinedTrust =  DateTime.Parse("2011-04-03", CultureInfo.InvariantCulture)};
         Sut.Urn = AcademyUrn;
         MockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(Arg.Any<int>()).Returns(DummySchoolDetails);
 

@@ -116,7 +116,7 @@ public class DetailsModelTests : BaseOverviewAreaModelTests<DetailsModel>
         _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(AcademyUrn)
             .Returns(_dummySchoolDetails with
             {
-                DateJoinedTrust = DateTime.Parse("2011-04-03", CultureInfo.InvariantCulture).ToString("dd MMMM yyyy"),
+                DateJoinedTrust = DateTime.Parse("2011-04-03", CultureInfo.InvariantCulture),
                 TrustName = "Some Trust"
             });
 
@@ -145,7 +145,7 @@ public class DetailsModelTests : BaseOverviewAreaModelTests<DetailsModel>
     {
         Sut.Urn = AcademyUrn;
         _mockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(AcademyUrn)
-            .Returns(_dummySchoolDetails with { DateJoinedTrust = DateTime.Parse("2011-04-03", CultureInfo.InvariantCulture).ToString("dd MMMM yyyy") });
+            .Returns(_dummySchoolDetails with { DateJoinedTrust = DateTime.Parse("2011-04-03", CultureInfo.InvariantCulture) });
         MockTrustService.GetTrustSummaryAsync(AcademyUrn)
             .ReturnsNull();
 
