@@ -5,7 +5,7 @@ using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
-using GovUK.Dfe.CoreLibs.Contracts.ExternalApplications.Models.Response;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -32,6 +32,9 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
     public async Task<SchoolDetails> GetSchoolDetailsAsync(int urn)
     {
         var result = await getEstablishments.GetEstablishment(urn);
+        
+        var dateJoinedTrust = !string.IsNullOrEmpty(result.DateJoinedTrust) ? DateTime.Parse(result.DateJoinedTrust, CultureInfo.InvariantCulture) : (DateTime?)null;
+
 
         return new SchoolDetails(
             Name:  result.Name,
@@ -47,7 +50,7 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
                 AgeRange: new AgeRange(result.StatutoryLowAge, result.StatutoryHighAge),
                 NurseryProvision: result.NurseryProvision,
                 TrustName: result.TrustName,
-                DateJoinedTrust: result.DateJoinedTrust);
+                DateJoinedTrust: dateJoinedTrust);
     }
 
     public async Task<DateOnly?> GetDateJoinedTrustAsync(int urn)

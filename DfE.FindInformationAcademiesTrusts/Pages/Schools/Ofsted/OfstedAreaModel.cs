@@ -40,7 +40,7 @@ public class OfstedAreaModel(
         var schoolOverview = await schoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(Urn);
         if (schoolOverview.DateJoinedTrust is not null)
         {
-            DateJoinedTrust = DateTime.Parse(schoolOverview.DateJoinedTrust, CultureInfo.InvariantCulture);
+            DateJoinedTrust = schoolOverview.DateJoinedTrust;
         }
 
         OfstedReportUrl = otherServicesLinkBuilder.OfstedReportLinkForSchool(Urn);

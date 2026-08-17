@@ -48,7 +48,7 @@
                     <dd class="govuk-summary-list__value">
                         @if (Model.TrustInformationIsAvailable)
                         {
-                            @Model.SchoolOverviewModel.DateJoinedTrust
+                            @Model.SchoolOverviewModel.DateJoinedTrust?.ToString(StringFormatConstants.DisplayFullDateFormat)
                         }
                         else
                         {

@@ -9,4 +9,4 @@ public record SchoolDetails(
     AgeRange AgeRange,
     string? NurseryProvision,
     string? TrustName,
-    string? DateJoinedTrust);
+    DateTime? DateJoinedTrust);

@@ -11,6 +11,6 @@ public record SchoolOverviewServiceModel(
     AgeRange AgeRange,
     NurseryProvision NurseryProvision,
     string? TrustName,
-    string? DateJoinedTrust)
+    DateTime? DateJoinedTrust)
 {
 }
