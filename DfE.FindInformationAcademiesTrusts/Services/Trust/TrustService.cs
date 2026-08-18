@@ -73,7 +73,7 @@ public class TrustService(
 
     public async Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string trn)
     {
-        var governors = await trustGovernanceRepository.GetTrustGovernanceAsync(trn);
+        var governors = await trustGovernanceRepository.GetTrustGovernanceAsync(trn.ToUpper());
 
         return new TrustGovernanceServiceModel(
             governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleLeadership: true }).ToArray(),
