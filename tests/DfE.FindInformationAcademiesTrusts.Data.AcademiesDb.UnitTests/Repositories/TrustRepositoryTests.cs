@@ -243,8 +243,6 @@ public class TrustRepositoryTests
         };
 
         var governor = new Governor(
-            gid,
-            uid,
             Role: role,
             FullName: fullName,
             DateOfAppointment: startDate,

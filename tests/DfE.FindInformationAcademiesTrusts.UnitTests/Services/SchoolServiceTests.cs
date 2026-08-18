@@ -197,8 +197,6 @@ public class SchoolServiceTests
         var historicEndDate = DateTime.Today.AddYears(-1);
 
         var governor = new Governor(
-            "9999",
-            "1234",
             Role: "Governor",
             FullName: "First Second Last",
             DateOfAppointment: startDate,
@@ -207,8 +205,6 @@ public class SchoolServiceTests
             Email: null
         );
         var chair = new Governor(
-            "9998",
-            "1234",
             Role: "Chair",
             FullName: "First Second Last",
             DateOfAppointment: startDate,
@@ -218,8 +214,6 @@ public class SchoolServiceTests
         );
 
         var historic = new Governor(
-            "9999",
-            "1234",
             Role: "Chair",
             FullName: "First Second Last",
             DateOfAppointment: startDate,

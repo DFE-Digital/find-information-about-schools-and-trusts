@@ -4,7 +4,9 @@ using DfE.FindInformationAcademiesTrusts.Data.FiatDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
+using GovUK.Dfe.PersonsApi.Client.Contracts;
 using Microsoft.Extensions.Caching.Memory;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Trust;
 
@@ -12,7 +14,7 @@ public interface ITrustService
 {
     Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(string referenceNumber);
     Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(int urn);
-    Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string uid);
+    Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string trn);
     Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid);
     Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string trustReferenceNumber, string uid);
 
@@ -69,11 +71,9 @@ public class TrustService(
         return trustSummaryServiceModel;
     }
 
-    public async Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string uid)
+    public async Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string trn)
     {
-        var urn = await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(uid);
-
-        var governors = await trustGovernanceRepository.GetTrustGovernanceAsync(urn ?? uid);
+        var governors = await trustGovernanceRepository.GetTrustGovernanceAsync(trn);
 
         return new TrustGovernanceServiceModel(
             governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleLeadership: true }).ToArray(),

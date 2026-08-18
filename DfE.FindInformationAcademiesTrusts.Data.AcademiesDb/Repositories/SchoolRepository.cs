@@ -156,8 +156,6 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
     {
         return await academiesDbContext.GiasGovernances.Where(e => e.Urn == urn.ToString())
             .Select(governance => new Governor(
-                governance.Gid!,
-                governance.Uid!,
                 stringFormattingUtilities.GetFullName(governance.Forename1!, governance.Forename2!,
                     governance.Surname!),
                 governance.Role!,

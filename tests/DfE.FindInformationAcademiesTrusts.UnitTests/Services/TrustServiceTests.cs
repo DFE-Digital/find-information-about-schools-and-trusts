@@ -122,10 +122,10 @@ public class TrustServiceTests
         var futureEndDate = DateTime.Today.AddYears(1);
         var historicEndDate = DateTime.Today.AddYears(-1);
         var today = new DateTime(2023, 10, 1);
+        const string trn = "1234";
+        
         _mockDateTimeProvider.Today.Returns(today);
         var member = new Governor(
-            "9999",
-            "1234",
             Role: "Member",
             FullName: "First Second Last",
             DateOfAppointment: startDate,
@@ -134,8 +134,6 @@ public class TrustServiceTests
             Email: null
         );
         var trustee = new Governor(
-            "9998",
-            "1234",
             Role: "Trustee",
             FullName: "First Second Last",
             DateOfAppointment: startDate,
@@ -144,8 +142,6 @@ public class TrustServiceTests
             Email: null
         );
         var leader = new Governor(
-            "9999",
-            "1234",
             Role: "Chair of Trustees",
             FullName: "First Second Last",
             DateOfAppointment: startDate,
@@ -154,8 +150,6 @@ public class TrustServiceTests
             Email: null
         );
         var historic = new Governor(
-            "9999",
-            "1234",
             Role: "Trustee",
             FullName: "First Second Last",
             DateOfAppointment: startDate,
@@ -163,48 +157,14 @@ public class TrustServiceTests
             AppointingBody: "Nick Warms",
             Email: null
         );
-        _mockTrustGovernanceRepository.GetTrustGovernanceAsync("1234").Returns([leader, member, trustee, historic]);
+        _mockTrustGovernanceRepository.GetTrustGovernanceAsync(trn).Returns([leader, member, trustee, historic]);
 
-        var result = await _sut.GetTrustGovernanceAsync("1234");
+        var result = await _sut.GetTrustGovernanceAsync(trn);
 
         result.HistoricMembers.Should().ContainSingle().Which.Should().BeEquivalentTo(historic);
         result.CurrentMembers.Should().ContainSingle().Which.Should().BeEquivalentTo(member);
         result.CurrentTrustees.Should().ContainSingle().Which.Should().BeEquivalentTo(trustee);
         result.CurrentTrustLeadership.Should().ContainSingle().Which.Should().BeEquivalentTo(leader);
-    }
-
-    [Fact]
-    public async Task GetTrustGovernanceAsync_should_use_urn_instead_of_uid_for_single_academy_trust()
-    {
-        var urn = "5678";
-        var uid = "1234";
-
-        var startDate = DateTime.Today.AddYears(-3);
-        var futureEndDate = DateTime.Today.AddYears(1);
-
-        var member = new Governor(
-            "9999",
-            uid,
-            Role: "Member",
-            FullName: "First Second Last",
-            DateOfAppointment: startDate,
-            DateOfTermEnd: futureEndDate,
-            AppointingBody: "Nick Warms",
-            Email: null
-        );
-
-        var today = new DateTime(2023, 10, 1);
-        _mockDateTimeProvider.Today.Returns(today);
-
-        _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync(uid).Returns(urn);
-
-        var receivedValue = string.Empty;
-        _mockTrustGovernanceRepository.GetTrustGovernanceAsync(Arg.Do<string>(x => receivedValue = x))
-            .Returns([member]);
-
-        await _sut.GetTrustGovernanceAsync(uid);
-
-        receivedValue.Should().Be(urn);
     }
 
     [Fact]
