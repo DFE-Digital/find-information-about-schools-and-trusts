@@ -137,39 +137,6 @@ public class SchoolRepositoryTests
     }
 
     [Fact]
-    public async Task GetDateJoinedTrust_should_return_correct_date()
-    {
-        var urn = 45678;
-        var joinedDate = "24/05/2024";
-        var expectedJoinedDate = new DateOnly(2024, 05, 24);
-
-        _mockAcademiesDbContext.GiasGroupLinks.AddRange(
-        [
-            new GiasGroupLink
-            {
-                Urn = urn.ToString(),
-                GroupUid = "TR123",
-                GroupStatusCode = "OPEN",
-                JoinedDate = joinedDate
-            }
-        ]);
-
-        var result = await _sut.GetDateJoinedTrustAsync(urn);
-
-        result.Should().Be(expectedJoinedDate);
-    }
-
-    [Fact]
-    public async Task GetDateJoinedTrust_should_return_null_when_no_trust_data_exists()
-    {
-        var urn = 45678;
-
-        var result = await _sut.GetDateJoinedTrustAsync(urn);
-
-        result.Should().BeNull();
-    }
-
-    [Fact]
     public async Task GetSchoolContactsAsync_should_return_headteacher_from_tad()
     {
         var urn = 45678;

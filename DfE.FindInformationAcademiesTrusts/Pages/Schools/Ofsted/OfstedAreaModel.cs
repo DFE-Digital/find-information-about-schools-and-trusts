@@ -1,4 +1,3 @@
-using System.Globalization;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.Older;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Ofsted.ReportCards;

@@ -53,15 +53,6 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
                 DateJoinedTrust: dateJoinedTrust);
     }
 
-    public async Task<DateOnly?> GetDateJoinedTrustAsync(int urn)
-    {
-        return await academiesDbContext.GiasGroupLinks.Where(gl => gl.Urn == urn.ToString())
-            .Select(gl =>
-                DateOnly.ParseExact(gl.JoinedDate!, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None))
-            .Cast<DateOnly?>()
-            .FirstOrDefaultAsync();
-    }
-
     public async Task<SchoolContact?> GetSchoolContactsAsync(int urn)
     {
         var headteacher = await academiesDbContext.TadHeadTeacherContacts
