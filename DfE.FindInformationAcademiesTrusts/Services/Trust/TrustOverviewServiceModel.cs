@@ -4,12 +4,12 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Trust;
 
 public record TrustOverviewServiceModel(
     string Uid,
-    string GroupId,
+    string TrustReferenceNumber,
     string? Ukprn,
     string? CompaniesHouseNumber,
     TrustType Type,
     string Address,
-    string RegionAndTerritory,
+    string? RegionAndTerritory,
     string? SingleAcademyTrustAcademyUrn,
     DateTime? OpenedDate,
     int TotalAcademies,

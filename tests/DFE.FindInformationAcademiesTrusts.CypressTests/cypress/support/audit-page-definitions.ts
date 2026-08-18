@@ -25,43 +25,43 @@ export class AuditPageDefinitions {
         const contactsTrustUid = testTrustData[0].uid;
 
         // Trust Overview subpages
-        this.auditHelper.auditPage('Trust Overview - Details', 'Trusts', `/trusts/overview/trust-details?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Overview - Summary', 'Trusts', `/trusts/overview/trust-summary?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Overview - Reference Numbers', 'Trusts', `/trusts/overview/reference-numbers?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Overview - Details', 'Trusts', `/trusts/overview/trust-details?uid=${trustUid}&referencenumber=${testTrustData[1].trn}    `);
+        this.auditHelper.auditPage('Trust Overview - Summary', 'Trusts', `/trusts/overview/trust-summary?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
+        this.auditHelper.auditPage('Trust Overview - Reference Numbers', 'Trusts', `/trusts/overview/reference-numbers?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
 
         // Trust Contacts (sensitive data - no screenshots)
-        this.auditHelper.auditPageWithoutScreenshots('Trust Contacts - In DfE', 'Trusts', `/trusts/contacts/in-dfe?uid=${contactsTrustUid}`);
-        this.auditHelper.auditPageWithoutScreenshots('Trust Contacts - In Trust', 'Trusts', `/trusts/contacts/in-the-trust?uid=${contactsTrustUid}`);
-        this.auditHelper.auditPageWithoutScreenshots('Edit Trust Relationship Manager', 'Trusts', `/trusts/contacts/edittrustrelationshipmanager?uid=${contactsTrustUid}`);
-        this.auditHelper.auditPageWithoutScreenshots('Edit SFSO Lead', 'Trusts', `/trusts/contacts/editsfsolead?uid=${contactsTrustUid}`);
+        this.auditHelper.auditPageWithoutScreenshots('Trust Contacts - In DfE', 'Trusts', `/trusts/contacts/in-dfe?uid=${contactsTrustUid}&referencenumber=${testTrustData[0].trn}`);
+        this.auditHelper.auditPageWithoutScreenshots('Trust Contacts - In Trust', 'Trusts', `/trusts/contacts/in-the-trust?uid=${contactsTrustUid}&referencenumber=${testTrustData[0].trn}`);
+        this.auditHelper.auditPageWithoutScreenshots('Edit Trust Relationship Manager', 'Trusts', `/trusts/contacts/edittrustrelationshipmanager?uid=${contactsTrustUid}&referencenumber=${testTrustData[0].trn}`);
+        this.auditHelper.auditPageWithoutScreenshots('Edit SFSO Lead', 'Trusts', `/trusts/contacts/editsfsolead?uid=${contactsTrustUid}&referencenumber=${testTrustData[0].trn}`);
 
         // Trust Governance subpages
-        this.auditHelper.auditPage('Trust Governance - Leadership', 'Trusts', `/trusts/governance/trust-leadership?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Governance - Trustees', 'Trusts', `/trusts/governance/trustees?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Governance - Members', 'Trusts', `/trusts/governance/members?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Governance - Historic Members', 'Trusts', `/trusts/governance/historic-members?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Governance - Leadership', 'Trusts', `/trusts/governance/trust-leadership?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
+        this.auditHelper.auditPage('Trust Governance - Trustees', 'Trusts', `/trusts/governance/trustees?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
+        this.auditHelper.auditPage('Trust Governance - Members', 'Trusts', `/trusts/governance/members?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
+        this.auditHelper.auditPage('Trust Governance - Historic Members', 'Trusts', `/trusts/governance/historic-members?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
 
         // Trust Ofsted subpages
-        this.auditHelper.auditPage('Trust Ofsted - Single Headline Grades', 'Trusts', `/trusts/ofsted/overview?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Ofsted - Current Ratings', 'Trusts', `/trusts/ofsted/reportcards/currentreportcards?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Ofsted - Previous Ratings', 'Trusts', `/trusts/ofsted/reportcards/previousreportcards?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Ofsted - Safeguarding and Concerns', 'Trusts', `/trusts/ofsted/reportcards/currentreportcards?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Ofsted - Single Headline Grades', 'Trusts', `/trusts/ofsted/overview?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
+        this.auditHelper.auditPage('Trust Ofsted - Current Ratings', 'Trusts', `/trusts/ofsted/reportcards/currentreportcards?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
+        this.auditHelper.auditPage('Trust Ofsted - Previous Ratings', 'Trusts', `/trusts/ofsted/reportcards/previousreportcards?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
+        this.auditHelper.auditPage('Trust Ofsted - Safeguarding and Concerns', 'Trusts', `/trusts/ofsted/reportcards/currentreportcards?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
 
         // Trust Academies In-Trust subpages
-        this.auditHelper.auditPage('Trust Academies - In Trust Details', 'Trusts', `/trusts/academies/in-trust/details?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Academies - In Trust Pupil Numbers', 'Trusts', `/trusts/academies/in-trust/pupil-numbers?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Academies - In Trust Free School Meals', 'Trusts', `/trusts/academies/in-trust/free-school-meals?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Academies - In Trust Details', 'Trusts', `/trusts/academies/in-trust/details?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
+        this.auditHelper.auditPage('Trust Academies - In Trust Pupil Numbers', 'Trusts', `/trusts/academies/in-trust/pupil-numbers?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
+        this.auditHelper.auditPage('Trust Academies - In Trust Free School Meals', 'Trusts', `/trusts/academies/in-trust/free-school-meals?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
 
         // Trust Pipeline Academies subpages
-        this.auditHelper.auditPage('Trust Pipeline Academies - Pre Decision', 'Trusts', `/trusts/academies/pipeline/pre-decision?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Pipeline Academies - Post Decision', 'Trusts', `/trusts/academies/pipeline/post-decision?uid=${trustUid}`);
-        this.auditHelper.auditPage('Trust Pipeline Academies - Free Schools', 'Trusts', `/trusts/academies/pipeline/free-schools?uid=${trustUid}`);
+        this.auditHelper.auditPage('Trust Pipeline Academies - Pre Decision', 'Trusts', `/trusts/academies/pipeline/pre-decision?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
+        this.auditHelper.auditPage('Trust Pipeline Academies - Post Decision', 'Trusts', `/trusts/academies/pipeline/post-decision?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
+        this.auditHelper.auditPage('Trust Pipeline Academies - Free Schools', 'Trusts', `/trusts/academies/pipeline/free-schools?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
 
         // Trust Financial Documents (sensitive data - no screenshots)
-        this.auditHelper.auditPageWithoutScreenshots('Trust Financial Documents - Statements', 'Trusts', `/trusts/financial-documents/financial-statements?uid=${trustUid}`);
-        this.auditHelper.auditPageWithoutScreenshots('Trust Financial Documents - Management Letters', 'Trusts', `/trusts/financial-documents/management-letters?uid=${trustUid}`);
-        this.auditHelper.auditPageWithoutScreenshots('Trust Financial Documents - Internal Scrutiny Reports', 'Trusts', `/trusts/financial-documents/internal-scrutiny-reports?uid=${trustUid}`);
-        this.auditHelper.auditPageWithoutScreenshots('Trust Financial Documents - Self Assessment Checklists', 'Trusts', `/trusts/financial-documents/self-assessment-checklists?uid=${trustUid}`);
+        this.auditHelper.auditPageWithoutScreenshots('Trust Financial Documents - Statements', 'Trusts', `/trusts/financial-documents/financial-statements?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
+        this.auditHelper.auditPageWithoutScreenshots('Trust Financial Documents - Management Letters', 'Trusts', `/trusts/financial-documents/management-letters?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
+        this.auditHelper.auditPageWithoutScreenshots('Trust Financial Documents - Internal Scrutiny Reports', 'Trusts', `/trusts/financial-documents/internal-scrutiny-reports?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
+        this.auditHelper.auditPageWithoutScreenshots('Trust Financial Documents - Self Assessment Checklists', 'Trusts', `/trusts/financial-documents/self-assessment-checklists?uid=${trustUid}&referencenumber=${testTrustData[1].trn}`);
     }
 
     /**

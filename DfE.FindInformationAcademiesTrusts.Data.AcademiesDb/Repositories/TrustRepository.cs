@@ -1,15 +1,15 @@
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
-using DfE.FindInformationAcademiesTrusts.Data.Repositories;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 using Microsoft.EntityFrameworkCore;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
 public class TrustRepository(
-    IAcademiesDbContext academiesDbContext,IGetTrusts getTrusts,
+    IAcademiesDbContext academiesDbContext,
+    IGetTrusts getTrusts,
     IStringFormattingUtilities stringFormattingUtilities) : ITrustRepository
 {
     private IQueryable<GiasGroup> Trusts { get; } = academiesDbContext.Groups.Trusts();
@@ -31,41 +31,25 @@ public class TrustRepository(
 
     }
 
-    public async Task<TrustOverview> GetTrustOverviewAsync(string uid)
+    public async Task<TrustOverview> GetTrustOverviewAsync(string trustReferenceNumber)
     {
-        var giasGroup = await Trusts
-            .Where(g => g.GroupUid == uid)
-            .Select(giasGroup => new
-            {
-                giasGroup.GroupUid,
-                giasGroup.GroupId,
-                giasGroup.Ukprn,
-                giasGroup.CompaniesHouseNumber,
-                giasGroup.GroupType,
-                giasGroup.GroupContactStreet,
-                giasGroup.GroupContactLocality,
-                giasGroup.GroupContactTown,
-                giasGroup.GroupContactPostcode,
-                giasGroup.IncorporatedOnOpenDate
-            })
-            .SingleAsync();
-
-        var regionAndTerritory = await GetRegionAndTerritoryAsync(uid);
+        var result = await getTrusts.GetTrustByReferenceNumber(trustReferenceNumber) ?? throw new InvalidOperationException(
+        $"Trust with reference number {trustReferenceNumber} was not found.");
 
         var trustOverview = new TrustOverview(
-            giasGroup.GroupUid!, //Searched by this field so it must be present
-            giasGroup.GroupId!, // GroupId cannot be null for a trust
-            giasGroup.Ukprn,
-            giasGroup.CompaniesHouseNumber,
-            giasGroup.GroupType!, //Enforced by global EF filter
+            result.GroupUid!,
+            trustReferenceNumber,
+            result.Ukprn,
+            result.CompaniesHouseNumber,
+            result.Type.Name,
             stringFormattingUtilities.BuildAddressString(
-                giasGroup.GroupContactStreet,
-                giasGroup.GroupContactLocality,
-                giasGroup.GroupContactTown,
-                giasGroup.GroupContactPostcode
+                result.Address.Street,
+                result.Address.Locality,
+                result.Address.Town,
+                result.Address.Postcode
             ),
-            regionAndTerritory,
-            giasGroup.IncorporatedOnOpenDate.ParseAsNullableDate()
+            result.Gor,
+            result.OpenDate.ParseAsNullableDate()
         );
 
         return trustOverview;
@@ -91,16 +75,7 @@ public class TrustRepository(
             governanceContacts.GetValueOrDefault("Chair of Trustees"),
             governanceContacts.GetValueOrDefault("Chief Financial Officer"));
     }
-
-
-    private async Task<string> GetRegionAndTerritoryAsync(string uid)
-    {
-        return await academiesDbContext.MstrTrusts
-            .Where(m => m.GroupUid == uid)
-            .Select(m => m.GORregion)
-            .SingleOrDefaultAsync() ?? string.Empty;
-    }
-
+    
     private async Task<Dictionary<string, Person>> GetGovernanceContactsAsync(string uid, string? urn = null)
     {
         string[] roles = { "Chair of Trustees", "Accounting Officer", "Chief Financial Officer" };
@@ -136,14 +111,5 @@ public class TrustRepository(
                 governorEmails.SingleOrDefault(governorEmail => governorEmail.Gid == governor.Gid)?.Email)
         );
     }
-
-    public async Task<string> GetTrustReferenceNumberAsync(string uid)
-    {
-        var trustReferenceNumber = await Trusts
-            .Where(gl => gl.GroupUid == uid)
-            .Select(gl => gl.GroupId!) // GroupId cannot be null for a trust
-            .SingleAsync();
-
-        return trustReferenceNumber;
-    }
+    
 }
