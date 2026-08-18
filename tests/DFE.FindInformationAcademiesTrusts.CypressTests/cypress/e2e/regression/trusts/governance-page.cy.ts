@@ -154,33 +154,33 @@ describe("Testing the components of the Governance page", () => {
         describe(`On the Governance pages for a ${typeOfTrust}`, () => {
 
             it("The tables should be replaced with no data messages", () => {
-                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}&referencenumber=tr04032`);
+                cy.visit(`/trusts/governance/trust-leadership?uid=2101&referencenumber=tr00040`);
                 governancePage.checkNoTrustLeadershipMessageIsVisible();
 
-                cy.visit(`/trusts/governance/trustees?uid=${uid}&referencenumber=tr04032`);
+                cy.visit(`/trusts/governance/trustees?uid=2101&referencenumber=tr00040`);
                 governancePage.checkNoTrusteesMessageIsVisible();
 
-                cy.visit(`/trusts/governance/members?uid=${uid}&referencenumber=tr04032`);
+                cy.visit(`/trusts/governance/members?uid=2101&referencenumber=tr00040`);
                 governancePage.checkNotMembersMessageIsVisible();
             });
 
             //Skipping below test case until no data governance page issue sorted (Bug raised 179544)
             it.skip("The historic members table should be replaced with no data message", () => {
-                cy.visit(`/trusts/governance/historic-members?uid=${uid}&referencenumber=tr04032`);
+                cy.visit(`/trusts/governance/historic-members?uid=2101&referencenumber=tr00040`);
                 governancePage.checkNoHistoricMembersMessageIsVisible();
             });
 
             it("The number of governors in each sub nav title should be 0", () => {
-                cy.visit(`/trusts/governance/trust-leadership?uid=${uid}&referencenumber=tr04032`);
+                cy.visit(`/trusts/governance/trust-leadership?uid=2101&referencenumber=tr00040`);
                 governancePage.checkTrustLeadershipSubnavButtonHasZeroInBrackets();
 
-                cy.visit(`/trusts/governance/trustees?uid=${uid}&referencenumber=tr04032`);
+                cy.visit(`/trusts/governance/trustees?uid=2101&referencenumber=tr00040`);
                 governancePage.checkTrusteesSubnavButtonHasZeroInBrackets();
 
-                cy.visit(`/trusts/governance/members?uid=${uid}&referencenumber=tr04032`);
+                cy.visit(`/trusts/governance/members?uid=2101&referencenumber=tr00040`);
                 governancePage.checkMembersSubnavButtonHasZeroInBrackets();
 
-                cy.visit(`/trusts/governance/historic-members?uid=${uid}&referencenumber=tr04032`);
+                cy.visit(`/trusts/governance/historic-members?uid=2101&referencenumber=tr00040`);
                 governancePage.checkHistoricMembersSubnavButtonHasZeroInBrackets();
             });
 
