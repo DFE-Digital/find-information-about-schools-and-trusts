@@ -1,15 +1,15 @@
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
-using DfE.FindInformationAcademiesTrusts.Data.Repositories;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 using Microsoft.EntityFrameworkCore;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
 public class TrustRepository(
-    IAcademiesDbContext academiesDbContext,IGetTrusts getTrusts,
+    IAcademiesDbContext academiesDbContext,
+    IGetTrusts getTrusts,
     IStringFormattingUtilities stringFormattingUtilities) : ITrustRepository
 {
     private IQueryable<GiasGroup> Trusts { get; } = academiesDbContext.Groups.Trusts();
@@ -30,31 +30,29 @@ public class TrustRepository(
             : new TrustSummary(details.Name ?? string.Empty, details.Type.Name ?? string.Empty,details.GroupUid ?? string.Empty,details.ReferenceNumber?.ToString() ?? string.Empty);
 
     }
-    
-    public async Task<TrustOverview?> GetTrustOverviewByTrnAsync(string referenceNumber)
-    {
-        var details = await getTrusts.GetTrustByReferenceNumber(referenceNumber);
 
-        if (details is null)
-        {
-            return null;
-        }
-        
-        return new TrustOverview(
-            details.GroupUid!,
-            details.ReferenceNumber,
-            details.Ukprn,
-            details.CompaniesHouseNumber,
-            details.Type.Name,
+    public async Task<TrustOverview> GetTrustOverviewAsync(string trustReferenceNumber)
+    {
+        var result = await getTrusts.GetTrustByReferenceNumber(trustReferenceNumber) ?? throw new InvalidOperationException(
+        $"Trust with reference number {trustReferenceNumber} was not found.");
+
+        var trustOverview = new TrustOverview(
+            result.GroupUid!,
+            trustReferenceNumber,
+            result.Ukprn,
+            result.CompaniesHouseNumber,
+            result.Type.Name,
             stringFormattingUtilities.BuildAddressString(
-                details.Address.Street,
-                details.Address.Additional,
-                details.Address.Town,
-                details.Address.Postcode
+                result.Address.Street,
+                result.Address.Locality,
+                result.Address.Town,
+                result.Address.Postcode
             ),
-            details.Gor,
-            details.OpenDate.ParseAsNullableDate()
+            result.Gor,
+            result.OpenDate.ParseAsNullableDate()
         );
+
+        return trustOverview;
     }
 
     public static IQueryable<GiasGovernance> FilterBySatOrMat(string uid, string? urn, IQueryable<GiasGovernance> query)
