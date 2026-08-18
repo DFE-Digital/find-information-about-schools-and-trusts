@@ -24,7 +24,7 @@ public class OverviewAreaModel(
         if (pageResult is NotFoundResult) return pageResult;
 
         // Fetch the trust overview data
-        TrustOverview = await TrustService.GetTrustOverviewAsync(Uid,ReferenceNumber);
+        TrustOverview = await TrustService.GetTrustOverviewAsync(TrustReferenceNumber, Uid);
 
         // Add data sources
         var giasDataSource = await DataSourceService.GetAsync(Source.Gias);

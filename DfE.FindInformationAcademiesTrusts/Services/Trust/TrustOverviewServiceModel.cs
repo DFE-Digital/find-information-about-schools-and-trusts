@@ -4,7 +4,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Trust;
 
 public record TrustOverviewServiceModel(
     string Uid,
-    string GroupId,
+    string TrustReferenceNumber,
     string? Ukprn,
     string? CompaniesHouseNumber,
     TrustType Type,
