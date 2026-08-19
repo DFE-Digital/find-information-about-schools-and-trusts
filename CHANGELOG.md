@@ -9,6 +9,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 --- 
 
+## [Release-68][release-68] - 2026-08-19
+
+- 286578 : Trust overview: Trust details page API migration
+- 294791 : Migrate Trusts: Overview: Trust summary to api
+- 291705 : Migrate trust governance to API
+- 292402 : Migrate trust references to academies api
+
+--
+
 ## [Release-67][release-67] - 2026-08-06
 
 ### Fixed
