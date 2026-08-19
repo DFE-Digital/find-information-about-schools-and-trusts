@@ -75,18 +75,8 @@ class HomePage {
         return this;
     }
 
-    public checkIfManageProjectsAndCasesHeaderLinkPresent(): this {
-        this.elements.header.manageProjectsAndCasesLink().should('be.visible');
-        return this;
-    }
-
     public checkIfManageProjectsAndCasesNotPresent(): this {
         this.elements.usefulToolsCards.manageProjectsAndCases().should('not.exist');
-        return this;
-    }
-    
-    public checkIfManageProjectsAndCasesHeaderLinkNotPresent(): this {
-        this.elements.header.manageProjectsAndCasesLink().should('not.exist');
         return this;
     }
 
