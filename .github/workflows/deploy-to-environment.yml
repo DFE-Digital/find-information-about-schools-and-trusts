@@ -67,6 +67,9 @@ jobs:
   create-tag:
     if: needs.set-env.outputs.environment == 'production'
     name: Tag and release
+    permissions:
+      id-token: write
+      contents: write
     needs: [ set-env, validate-packages ]
     runs-on: ubuntu-24.04
     steps:
