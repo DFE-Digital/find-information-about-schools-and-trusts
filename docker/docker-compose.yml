@@ -8,7 +8,7 @@ services:
         - github_token
     command: /bin/bash -c "./docker-entrypoint.sh dotnet DfE.FindInformationAcademiesTrusts.dll"
     develop:
-      watch:
+      watch: 
         - path: ..
           action: rebuild
     ports:
@@ -17,5 +17,4 @@ services:
       - .env
 secrets:
   github_token:
-    file: ./github_token_secret
-  
+    environment: GITHUB_TOKEN
