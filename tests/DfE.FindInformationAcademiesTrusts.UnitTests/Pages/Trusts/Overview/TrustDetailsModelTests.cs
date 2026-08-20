@@ -101,7 +101,7 @@ public class TrustDetailsModelTests : BaseOverviewAreaModelTests<TrustDetailsMod
     [Fact]
     public async Task OnGetAsync_should_Set_correct_SharepointLink()
     {
-        _mockLinksToOtherServices.SharepointFolderLink(BaseTrustOverviewServiceModel.GroupId).Returns("url/groupID");
+        _mockLinksToOtherServices.SharepointFolderLink(BaseTrustOverviewServiceModel.TrustReferenceNumber).Returns("url/groupID");
         await Sut.OnGetAsync();
 
         Sut.SharepointLink.Should().Be("url/groupID");

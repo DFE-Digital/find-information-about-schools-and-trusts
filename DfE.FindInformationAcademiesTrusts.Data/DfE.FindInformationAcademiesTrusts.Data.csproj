@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <PackageReference Include="Dfe.AcademiesApi.Client" Version="1.0.15" />
+      <PackageReference Include="GovUK.Dfe.PersonsApi.Client" Version="0.1.4" />
     </ItemGroup>
 
 </Project>

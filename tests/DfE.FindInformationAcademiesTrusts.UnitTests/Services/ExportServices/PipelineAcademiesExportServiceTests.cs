@@ -46,7 +46,6 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
         [Fact]
         public async Task ExportPipelineAcademiesToSpreadsheet_ShouldCorrectlyExtractPipelineAcademyDataAsync()
         {
-            _mockTrustService.GetTrustReferenceNumberAsync(trustUid).Returns(trustReferenceNumber);
 
             _mockAcademyService.GetAcademiesPipelinePreAdvisoryAsync(trustReferenceNumber)
                 .Returns([
@@ -98,8 +97,6 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
         [Fact]
         public async Task ExportPipelineAcademiesToSpreadsheetAsync_ShouldArrangeAcademiesByNameAlphabetically()
         {
-            _mockTrustService.GetTrustReferenceNumberAsync(trustUid).Returns(trustReferenceNumber);
-
             _mockAcademyService.GetAcademiesPipelinePreAdvisoryAsync(trustReferenceNumber)
                 .Returns(
                 [
@@ -180,8 +177,6 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services.ExportServices
         [Fact]
         public async Task Export_ShouldCorrectlyHandleNullValuesAsync()
         {
-            _mockTrustService.GetTrustReferenceNumberAsync(trustUid).Returns(trustReferenceNumber);
-
             _mockAcademyService.GetAcademiesPipelinePreAdvisoryAsync(trustReferenceNumber)
                 .Returns(
                 [

@@ -56,7 +56,7 @@ public abstract class BaseTrustPageTests<T> where T : TrustsAreaModel
     {
         MockTrustService.GetTrustSummaryAsync(TrustUid).Returns(DummyTrustSummary);
         MockTrustService.GetTrustSummaryAsync(TrustReference).Returns(DummyTrustSummary);
-        MockTrustService.GetTrustReferenceNumberAsync(TrustUid).Returns(TrustReference);
+        
     }
 
     [Fact]

@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="GovUK.Dfe.PersonsApi.Client" Version="0.1.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

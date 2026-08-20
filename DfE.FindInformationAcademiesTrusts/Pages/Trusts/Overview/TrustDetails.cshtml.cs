@@ -35,7 +35,7 @@ public class TrustDetailsModel(
         FindSchoolPerformanceLink =
             otherServicesLinkBuilder.FindSchoolPerformanceDataListingLink(TrustOverview.Uid, TrustOverview.Type,
                 TrustOverview.SingleAcademyTrustAcademyUrn);
-        SharepointLink = otherServicesLinkBuilder.SharepointFolderLink(TrustOverview.GroupId);
+        SharepointLink = otherServicesLinkBuilder.SharepointFolderLink(TrustOverview.TrustReferenceNumber);
 
         return Page();
     }

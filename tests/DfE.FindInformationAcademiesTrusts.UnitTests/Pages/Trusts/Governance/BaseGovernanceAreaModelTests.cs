@@ -18,8 +18,6 @@ public abstract class BaseGovernanceAreaModelTests<T> : BaseTrustPageTests<T>, I
     private static Governor[] GenerateGovernors(bool isCurrent, string role, int numberToGenerate)
     {
         return Enumerable.Repeat(new Governor(
-            "9999",
-            TrustUid,
             Role: role,
             FullName: "First Second Last",
             DateOfAppointment: DateTime.Today.AddYears(-3),
@@ -54,12 +52,12 @@ public abstract class BaseGovernanceAreaModelTests<T> : BaseTrustPageTests<T>, I
             GenerateGovernors(false, "Trustee", 1),
             10);
 
-        MockTrustService.GetTrustGovernanceAsync(TrustUid)
+        MockTrustService.GetTrustGovernanceAsync(TrustReference)
             .Returns(Task.FromResult(trustGovernanceServiceModelWithData));
 
         await Sut.OnGetAsync();
 
-        await MockTrustService.Received(1).GetTrustGovernanceAsync(TrustUid);
+        await MockTrustService.Received(1).GetTrustGovernanceAsync(TrustReference);
         Sut.TrustGovernance.Should().BeEquivalentTo(trustGovernanceServiceModelWithData);
     }
 

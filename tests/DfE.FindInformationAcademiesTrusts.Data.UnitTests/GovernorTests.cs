@@ -12,7 +12,7 @@ public class GovernorTests
     [InlineData("Trustee", false)]
     public void HasRoleLeadership_should_be_calculated_with_given_role(string role, bool hasLeadership)
     {
-        var governor = new Governor(string.Empty, string.Empty, "test name", role, string.Empty, null, null, null);
+        var governor = new Governor("test name", role, string.Empty, null, null, null);
 
         governor.HasRoleLeadership.Should().Be(hasLeadership);
     }
@@ -26,7 +26,7 @@ public class GovernorTests
     {
         var dateOfTermEnd = daysToAdd.HasValue ? DateTime.Today.AddDays(daysToAdd.Value) : (DateTime?)null;
 
-        var governor = new Governor(string.Empty, string.Empty, "test name", "Member", string.Empty, null,
+        var governor = new Governor("test name", "Member", string.Empty, null,
             dateOfTermEnd, null);
 
         governor.IsCurrentOrFutureGovernor.Should().Be(expected);

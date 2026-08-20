@@ -24,7 +24,7 @@ public class GovernanceAreaModel(
 
         if (pageResult.GetType() == typeof(NotFoundResult)) return pageResult;
 
-        TrustGovernance = await TrustService.GetTrustGovernanceAsync(Uid);
+        TrustGovernance = await TrustService.GetTrustGovernanceAsync(TrustReferenceNumber);
 
         // Add data sources
         var giasDataSource = await DataSourceService.GetAsync(Source.Gias);
