@@ -22,6 +22,9 @@ lib/
 
 ### Docker
 .env
+github_token_secret
+docker-compose-local.yml
+DockerfileLocal
 
 ### Node
 node_modules/
