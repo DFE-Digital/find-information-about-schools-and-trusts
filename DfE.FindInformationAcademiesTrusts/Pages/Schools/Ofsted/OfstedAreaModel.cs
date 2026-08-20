@@ -36,10 +36,10 @@ public class OfstedAreaModel(
         var pageResult = await base.OnGetAsync();
         if (pageResult is NotFoundResult) return pageResult;
 
-        var schoolOverview = await schoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(Urn, SchoolCategory);
+        var schoolOverview = await schoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(Urn);
         if (schoolOverview.DateJoinedTrust is not null)
         {
-            DateJoinedTrust = schoolOverview.DateJoinedTrust.Value.ToDateTime(new TimeOnly());
+            DateJoinedTrust = schoolOverview.DateJoinedTrust;
         }
 
         OfstedReportUrl = otherServicesLinkBuilder.OfstedReportLinkForSchool(Urn);
