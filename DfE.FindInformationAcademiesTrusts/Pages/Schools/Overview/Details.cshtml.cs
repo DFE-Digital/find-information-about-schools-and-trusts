@@ -44,15 +44,15 @@ public class DetailsModel(
         var pageResult = await base.OnGetAsync();
         if (pageResult is NotFoundResult) return pageResult;
 
-        SchoolOverviewModel = await schoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(Urn, SchoolCategory);
+        SchoolOverviewModel = await schoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(Urn);
 
         GetInformationAboutSchoolsLink =
             otherServicesLinkBuilder.GetInformationAboutSchoolsListingLinkForSchool(Urn.ToString());
         FinancialBenchmarkingInsightsToolLink = otherServicesLinkBuilder.FinancialBenchmarkingLinkForSchool(Urn);
         FindSchoolPerformanceLink = otherServicesLinkBuilder.FindSchoolPerformanceDataListingLink(Urn);
 
-        TrustSummaryIsAvailable = TrustSummary is not null;
-        TrustInformationIsAvailable = SchoolOverviewModel.DateJoinedTrust is not null && TrustSummary is not null;
+        TrustSummaryIsAvailable = SchoolOverviewModel.TrustName is not null;
+        TrustInformationIsAvailable = SchoolOverviewModel.DateJoinedTrust is not null && SchoolOverviewModel.TrustName is not null;
 
         return pageResult;
     }

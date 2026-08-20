@@ -1,16 +1,15 @@
-﻿using DfE.FindInformationAcademiesTrusts.Data.Enums;
-using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+﻿using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.School;
 
 public interface ISchoolOverviewDetailsService
 {
-    Task<SchoolOverviewServiceModel> GetSchoolOverviewDetailsAsync(int urn, SchoolCategory schoolCategory);
+    Task<SchoolOverviewServiceModel> GetSchoolOverviewDetailsAsync(int urn);
 }
 
 public class SchoolOverviewDetailsService(ISchoolRepository schoolRepository) : ISchoolOverviewDetailsService
 {
-    public async Task<SchoolOverviewServiceModel> GetSchoolOverviewDetailsAsync(int urn, SchoolCategory schoolCategory)
+    public async Task<SchoolOverviewServiceModel> GetSchoolOverviewDetailsAsync(int urn)
     {
         var schoolDetails = await schoolRepository.GetSchoolDetailsAsync(urn);
 
@@ -18,16 +17,9 @@ public class SchoolOverviewDetailsService(ISchoolRepository schoolRepository) : 
 
         var overviewModel = new SchoolOverviewServiceModel(schoolDetails.Name, schoolDetails.Address,
             schoolDetails.Region, schoolDetails.LocalAuthority, schoolDetails.PhaseOfEducationName,
-            schoolDetails.AgeRange, nurseryProvision);
+            schoolDetails.AgeRange, nurseryProvision, schoolDetails.TrustName, schoolDetails.DateJoinedTrust);
 
-        if (schoolCategory is SchoolCategory.LaMaintainedSchool)
-        {
-            return overviewModel;
-        }
-
-        var dateJoinedTrust = await schoolRepository.GetDateJoinedTrustAsync(urn);
-
-        return overviewModel with { DateJoinedTrust = dateJoinedTrust };
+        return overviewModel;
     }
 
     public static NurseryProvision GetNurseryProvision(string? nurseryProvisionString)
