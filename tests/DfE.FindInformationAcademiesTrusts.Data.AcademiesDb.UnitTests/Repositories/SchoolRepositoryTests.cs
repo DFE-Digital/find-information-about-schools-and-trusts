@@ -1,3 +1,4 @@
+using Dfe.AcademiesApi.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
@@ -5,9 +6,10 @@ using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
-using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 using Microsoft.Extensions.Logging;
 using NSubstitute.ExceptionExtensions;
+using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.EstablishmentDto;
+using NameAndCodeDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.NameAndCodeDto;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Repositories;
 
@@ -193,34 +195,30 @@ public class SchoolRepositoryTests
     {
         var urn = 123456;
 
-        _mockAcademiesDbContext.GiasEstablishments.AddRange(
-        [
-            new GiasEstablishment
+        _mockGetEstablishments.GetEstablishmentWithSenData(urn)
+            .Returns(new EstablishmentResponse
             {
-                Urn = urn,
+                Urn = urn.ToString(),
                 EstablishmentName = "cool school",
-                EstablishmentTypeGroupName = "Local authority maintained schools",
-                EstablishmentStatusName = "Open",
                 ResourcedProvisionOnRoll = "2",
-                ResourcedProvisionCapacity = "3",
+                ResourcedProvisionOnCapacity = "3",
                 SenUnitOnRoll = "22",
                 SenUnitCapacity = "4",
-                TypeOfResourcedProvisionName = "Resourced",
-                Sen1Name = "Sen1",
-                Sen2Name = "Sen2",
-                Sen3Name = "Sen3",
-                Sen4Name = "Sen4",
-                Sen5Name = "Sen5",
-                Sen6Name = "Sen6",
-                Sen7Name = "Sen7",
-                Sen8Name = "Sen8",
-                Sen9Name = "Sen9",
-                Sen10Name = "Sen10",
-                Sen11Name = "Sen11",
-                Sen12Name = "Sen12",
-                Sen13Name = "Sen13"
-            }
-        ]);
+                TypeOfResourcedProvision = "Resourced",
+                SeN1 = "Sen1",
+                SeN2 = "Sen2",
+                SeN3 = "Sen3",
+                SeN4 = "Sen4",
+                SeN5 = "Sen5",
+                SeN6 = "Sen6",
+                SeN7 = "Sen7",
+                SeN8 = "Sen8",
+                SeN9 = "Sen9",
+                SeN10 = "Sen10",
+                SeN11 = "Sen11",
+                SeN12 = "Sen12",
+                SeN13 = "Sen13"
+            });
 
         var result = await _sut.GetSchoolSenProvisionAsync(urn);
 

@@ -75,32 +75,33 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
 
     public async Task<SenProvision> GetSchoolSenProvisionAsync(int urn)
     {
-        return await academiesDbContext.GiasEstablishments
-            .Where(e => e.Urn == urn)
-            .Select(establishment => new SenProvision(
-                establishment.ResourcedProvisionOnRoll!,
-                establishment.ResourcedProvisionCapacity!,
-                establishment.SenUnitOnRoll!,
-                establishment.SenUnitCapacity!,
-                establishment.TypeOfResourcedProvisionName!,
-                new List<string>
-                {
-                    establishment.Sen1Name!,
-                    establishment.Sen2Name!,
-                    establishment.Sen3Name!,
-                    establishment.Sen4Name!,
-                    establishment.Sen5Name!,
-                    establishment.Sen6Name!,
-                    establishment.Sen7Name!,
-                    establishment.Sen8Name!,
-                    establishment.Sen9Name!,
-                    establishment.Sen10Name!,
-                    establishment.Sen11Name!,
-                    establishment.Sen12Name!,
-                    establishment.Sen13Name!
-                }
-            ))
-            .SingleAsync();
+        var result = await getEstablishments.GetEstablishmentWithSenData(urn);
+        
+        var senProvision = new SenProvision(
+            result.ResourcedProvisionOnRoll,
+            result.ResourcedProvisionOnCapacity,
+            result.SenUnitOnRoll,
+            result.SenUnitCapacity,
+            result.TypeOfResourcedProvision,
+            new List<string>
+            {
+                result.SeN1!,
+                result.SeN2!,
+                result.SeN3!,
+                result.SeN4!,
+                result.SeN5!,
+                result.SeN6!,
+                result.SeN7!,
+                result.SeN8!,
+                result.SeN9!,
+                result.SeN10!,
+                result.SeN11!,
+                result.SeN12!,
+                result.SeN13!
+            }
+        );
+        
+        return senProvision;
     }
 
     public async Task<bool> IsPartOfFederationAsync(int urn)
