@@ -3,10 +3,6 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Home page";
-
-    var usefulToolsLinks = User.IsInRole("User.Role.MPCViewer")
-        ? ViewConstants.MpcLink.Concat(ViewConstants.ExternalServiceLinks).ToList()
-        : ViewConstants.ExternalServiceLinks;
 }
 
 <main id="main-content">
@@ -45,22 +41,11 @@
         Useful tools (links open in a new tab)
       </h2>
         <div class="dfe-grid-container dfe-grid-container__fit">
-        @foreach (var serviceLink in usefulToolsLinks)
+        @foreach (var serviceLink in ViewConstants.ServiceLinks)
         {
             DisplayLinkInCard(serviceLink);
         }
       </div>
-    </div>
-  </div>
-  <div class="dfe-width-container govuk-!-padding-top-8 govuk-!-padding-bottom-6">
-    <h2 class="govuk-heading-l">
-        Regional Services Divisions systems (open in a new tab)
-    </h2>
-    <div class="dfe-grid-container dfe-grid-container__fit">
-    @foreach (var serviceLink in ViewConstants.RsdServiceLinks)
-    {
-        DisplayLinkInCard(serviceLink);
-    }
     </div>
   </div>
 </main>

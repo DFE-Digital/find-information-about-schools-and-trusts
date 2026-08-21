@@ -69,21 +69,6 @@ class HomePage {
         this.elements.whatYouCanFindList.trusts().should('be.visible');
         return this;
     }
-
-    public checkIfManageProjectsAndCasesPresent(): this {
-        this.elements.usefulToolsCards.manageProjectsAndCases().should('be.visible');;
-        return this;
-    }
-
-    public checkIfManageProjectsAndCasesNotPresent(): this {
-        this.elements.usefulToolsCards.manageProjectsAndCases().should('not.exist');
-        return this;
-    }
-
-    public clickManageProjectsAndCases(): this {
-        this.elements.usefulToolsCards.manageProjectsAndCases().click();
-        return this;
-    }
 }
 
 const homePage = new HomePage();
