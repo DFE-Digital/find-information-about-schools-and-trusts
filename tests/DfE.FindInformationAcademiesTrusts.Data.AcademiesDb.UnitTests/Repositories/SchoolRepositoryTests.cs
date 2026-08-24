@@ -1,3 +1,4 @@
+using Dfe.AcademiesApi.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
@@ -5,9 +6,10 @@ using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
-using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 using Microsoft.Extensions.Logging;
 using NSubstitute.ExceptionExtensions;
+using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.EstablishmentDto;
+using NameAndCodeDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.NameAndCodeDto;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Repositories;
 
@@ -23,7 +25,8 @@ public class SchoolRepositoryTests
     public SchoolRepositoryTests()
     {
         _mockGetEstablishments = Substitute.For<IGetEstablishments>();
-        _sut = new SchoolRepository(_mockAcademiesDbContext.Object, _stringFormattingUtilities, _mockLogger, _mockGetEstablishments);
+        _sut = new SchoolRepository(_mockAcademiesDbContext.Object, _stringFormattingUtilities, _mockLogger,
+            _mockGetEstablishments);
     }
 
     [Fact]
@@ -94,64 +97,45 @@ public class SchoolRepositoryTests
     {
         var urn = 123456;
 
-        _mockAcademiesDbContext.GiasEstablishments.AddRange(
-        [
-            new GiasEstablishment
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
             {
-                Urn = urn,
-                TypeOfEstablishmentName = "Foundation school",
-                EstablishmentTypeGroupName = "Local authority maintained schools",
-                EstablishmentName = "cool school",
-                Street = "1st line",
-                Town = "Funky Town",
-                Postcode = "BBL 123",
-                GorName = "Yorkshire",
-                LaName = "Leeds",
-                PhaseOfEducationName = "Secondary",
+                Urn = urn.ToString(),
+                EstablishmentType = new()
+                {
+                    Name = "Foundation school"
+                },
+                EstablishmentGroupType = new()
+                {
+                    Name = "Local authority maintained schools"
+                },
+                Name = "cool school",
+                Address = new()
+                {
+                    Street = "1st line",
+                    Town = "Funky Town",
+                    Postcode = "BBL 123",
+                },
+                Gor = new()
+                {
+                    Name = "Yorkshire"
+                },
+                LocalAuthorityName = "Leeds",
+                PhaseOfEducation = new()
+                {
+                    Name = "Secondary"
+                },
                 StatutoryLowAge = "5",
                 StatutoryHighAge = "16",
-                NurseryProvisionName = "None",
-                EstablishmentStatusName = "Open"
-            }
-        ]);
+                NurseryProvision = "None",
+                TrustName = null,
+                DateJoinedTrust = null
+            });
 
         var result = await _sut.GetSchoolDetailsAsync(urn);
 
         result.Should().BeEquivalentTo(new SchoolDetails("cool school", "1st line, Funky Town, BBL 123", "Yorkshire",
-            "Leeds", "Secondary", new AgeRange(5, 16), "None"));
-    }
-
-    [Fact]
-    public async Task GetDateJoinedTrust_should_return_correct_date()
-    {
-        var urn = 45678;
-        var joinedDate = "24/05/2024";
-        var expectedJoinedDate = new DateOnly(2024, 05, 24);
-
-        _mockAcademiesDbContext.GiasGroupLinks.AddRange(
-        [
-            new GiasGroupLink
-            {
-                Urn = urn.ToString(),
-                GroupUid = "TR123",
-                GroupStatusCode = "OPEN",
-                JoinedDate = joinedDate
-            }
-        ]);
-
-        var result = await _sut.GetDateJoinedTrustAsync(urn);
-
-        result.Should().Be(expectedJoinedDate);
-    }
-
-    [Fact]
-    public async Task GetDateJoinedTrust_should_return_null_when_no_trust_data_exists()
-    {
-        var urn = 45678;
-
-        var result = await _sut.GetDateJoinedTrustAsync(urn);
-
-        result.Should().BeNull();
+            "Leeds", "Secondary", new AgeRange(5, 16), "None", null, null));
     }
 
     [Fact]
@@ -211,34 +195,30 @@ public class SchoolRepositoryTests
     {
         var urn = 123456;
 
-        _mockAcademiesDbContext.GiasEstablishments.AddRange(
-        [
-            new GiasEstablishment
+        _mockGetEstablishments.GetEstablishmentWithSenData(urn)
+            .Returns(new EstablishmentResponse
             {
-                Urn = urn,
+                Urn = urn.ToString(),
                 EstablishmentName = "cool school",
-                EstablishmentTypeGroupName = "Local authority maintained schools",
-                EstablishmentStatusName = "Open",
                 ResourcedProvisionOnRoll = "2",
-                ResourcedProvisionCapacity = "3",
+                ResourcedProvisionOnCapacity = "3",
                 SenUnitOnRoll = "22",
                 SenUnitCapacity = "4",
-                TypeOfResourcedProvisionName = "Resourced",
-                Sen1Name = "Sen1",
-                Sen2Name = "Sen2",
-                Sen3Name = "Sen3",
-                Sen4Name = "Sen4",
-                Sen5Name = "Sen5",
-                Sen6Name = "Sen6",
-                Sen7Name = "Sen7",
-                Sen8Name = "Sen8",
-                Sen9Name = "Sen9",
-                Sen10Name = "Sen10",
-                Sen11Name = "Sen11",
-                Sen12Name = "Sen12",
-                Sen13Name = "Sen13"
-            }
-        ]);
+                TypeOfResourcedProvision = "Resourced",
+                SeN1 = "Sen1",
+                SeN2 = "Sen2",
+                SeN3 = "Sen3",
+                SeN4 = "Sen4",
+                SeN5 = "Sen5",
+                SeN6 = "Sen6",
+                SeN7 = "Sen7",
+                SeN8 = "Sen8",
+                SeN9 = "Sen9",
+                SeN10 = "Sen10",
+                SeN11 = "Sen11",
+                SeN12 = "Sen12",
+                SeN13 = "Sen13"
+            });
 
         var result = await _sut.GetSchoolSenProvisionAsync(urn);
 
@@ -399,7 +379,7 @@ public class SchoolRepositoryTests
         string establishmentNumber, string ukprn)
     {
         var name = $"School {urn}";
-        
+
         _mockGetEstablishments.GetEstablishment(urn)
             .Returns(new EstablishmentDto
             {
@@ -417,8 +397,8 @@ public class SchoolRepositoryTests
         result.EstablishmentNumber.Should().Be(establishmentNumber);
         result.Ukprn.Should().Be(ukprn);
     }
-    
-    
+
+
     [Fact]
     public async Task GetGovernanceAsync_ShouldReturnEmpty_WithNoGovernanceSet()
     {

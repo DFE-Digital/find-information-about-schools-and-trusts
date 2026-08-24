@@ -1,3 +1,4 @@
+using System.Globalization;
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages;
@@ -20,13 +21,13 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
 
     protected readonly IPowerBiLinkBuilderService MockPowerBiLinkBuilderService = Substitute.For<IPowerBiLinkBuilderService>();
 
-    protected readonly SchoolOverviewServiceModel DummySchoolDetails =
+    protected SchoolOverviewServiceModel DummySchoolDetails =
         new("Cool school", "some street, in a town", "Yorkshire", "Leeds", "Secondary", new AgeRange(11, 18),
-            NurseryProvision.NotRecorded);
+            NurseryProvision.NotRecorded, null, null);
 
     protected BaseOfstedAreaModelTests()
     {
-        MockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(Arg.Any<int>(), Arg.Any<SchoolCategory>())
+        MockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(Arg.Any<int>())
             .Returns(DummySchoolDetails);
 
         MockOtherServicesLinkBuilder.OfstedReportLinkForSchool(Arg.Any<int>())
@@ -61,13 +62,14 @@ public abstract class BaseOfstedAreaModelTests<T> : BaseSchoolPageTests<T> where
     [Fact]
     public async Task OnGetAsync_sets_correct_DateJoinedTrust_for_academy()
     {
-        DummySchoolDetails.DateJoinedTrust = DateOnly.Parse("2011-04-03");
+        DummySchoolDetails = DummySchoolDetails with { DateJoinedTrust =  DateTime.Parse("2011-04-03", CultureInfo.InvariantCulture)};
         Sut.Urn = AcademyUrn;
+        MockSchoolOverviewDetailsService.GetSchoolOverviewDetailsAsync(Arg.Any<int>()).Returns(DummySchoolDetails);
 
         _ = await Sut.OnGetAsync();
 
         Sut.DateJoinedTrust.Should().NotBeNull();
-        Sut.DateJoinedTrust.Should().Be(DateTime.Parse("2011-04-03"));
+        Sut.DateJoinedTrust.Should().Be(DateTime.Parse("2011-04-03", CultureInfo.InvariantCulture));
     }
 
     [Fact]

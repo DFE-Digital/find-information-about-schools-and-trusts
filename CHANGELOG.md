@@ -4,10 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-08-06.7682...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-08-20.7730...HEAD)
 
 
 --- 
+
+## [Release-69][release-69] - 2026-08-20
+
+294793 : Migrate Schools: Overview: Academy/School details to api
+296136 : Remove “Manage projects and cases” link from headers
+
+--
+
+## [Release-68][release-68] - 2026-08-19
+
+- 286578 : Trust overview: Trust details page API migration
+- 294791 : Migrate Trusts: Overview: Trust summary to api
+- 291705 : Migrate trust governance to API
+- 292402 : Migrate trust references to academies api
+
+--
 
 ## [Release-67][release-67] - 2026-08-06
 

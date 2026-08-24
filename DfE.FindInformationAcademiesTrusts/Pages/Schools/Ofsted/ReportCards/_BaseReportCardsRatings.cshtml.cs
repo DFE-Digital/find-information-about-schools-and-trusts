@@ -33,7 +33,7 @@ public abstract class BaseReportCardsRatingsModel(
         var reportCards = await reportCardsService.GetReportCardsAsync(Urn);
         ReportCard = GetReportCard(reportCards);
 
-        var dateJoined = await SchoolService.GetDateJoinedTrustAsync(Urn);
+        var dateJoined = DateJoinedTrust;
 
         WhenDidCurrentInspectionHappen = GetWhenInspectionHappened(ReportCard, dateJoined);
 
@@ -46,5 +46,5 @@ public abstract class BaseReportCardsRatingsModel(
 
     protected abstract ReportCardDetails? GetReportCard(ReportCardServiceModel reportCardServiceModel);
 
-    protected abstract BeforeOrAfterJoining GetWhenInspectionHappened(ReportCardDetails? reportCardDetails, DateOnly? dateJoinedTrust);
+    protected abstract BeforeOrAfterJoining GetWhenInspectionHappened(ReportCardDetails? reportCardDetails, DateTime? dateJoinedTrust);
 }
