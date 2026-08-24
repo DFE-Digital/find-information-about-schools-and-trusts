@@ -4,10 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-08-20.7730...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-08-24.7741...HEAD)
 
 
 --- 
+
+## [Release-71][release-71] - 2026-08-24
+
+### Changed
+- 297809 : Establishments By TRN in academies db
+- 296145 : Update Home Page Useful Tools and Product Links
+- 297911 : SEN data through api
+
+--
+
+## [Release-70][release-70] - 2026-08-21
+
+### Fixed
+
+- 298733 : Header search establishments not clickable
+
+--
 
 ## [Release-69][release-69] - 2026-08-20
 
