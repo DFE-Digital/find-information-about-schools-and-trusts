@@ -34,7 +34,7 @@ public class PupilNumbersModel(
         var pageResult = await base.OnGetAsync();
         if (pageResult is NotFoundResult) return pageResult;
 
-        Academies = await AcademyService.GetAcademiesInTrustPupilNumbersAsync(Uid);
+        Academies = await AcademyService.GetAcademiesInTrustPupilNumbersAsync(Uid,ReferenceNumber);
 
         return pageResult;
     }
