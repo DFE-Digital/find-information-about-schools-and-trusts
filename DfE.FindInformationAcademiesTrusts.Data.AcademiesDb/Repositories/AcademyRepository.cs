@@ -25,22 +25,6 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext, IGetEstab
                         DateOnly.ParseExact(gl.JoinedDate!, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None)))
             .ToArrayAsync();
     }
-
-    public async Task<AcademyPupilNumbers[]> GetAcademiesInTrustPupilNumbersAsync(string uid)
-    {
-        return await academiesDbContext.GiasGroupLinks
-            .Where(gl => gl.GroupUid == uid)
-            .Join(academiesDbContext.GiasEstablishments,
-                gl => gl.Urn!, e => e.Urn.ToString(),
-                (_, e) =>
-                    new AcademyPupilNumbers(e.Urn.ToString(),
-                        e.EstablishmentName,
-                        e.PhaseOfEducationName,
-                        new AgeRange(e.StatutoryLowAge, e.StatutoryHighAge),
-                        e.NumberOfPupils.ParseAsNullableInt(),
-                        e.SchoolCapacity.ParseAsNullableInt()))
-            .ToArrayAsync();
-    }
     
     public async Task<AcademyPupilNumbers[]> GetAcademiesInTrustPupilNumbersByTrnAsync(string referenceNumber)
     {
