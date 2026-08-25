@@ -395,4 +395,84 @@ public class GetEstablishmentsTests
         // Assert
         Assert.Equal($"establishment/urn/{urn}", capturedPath);
     }
+    
+    
+    [Fact]
+    public async Task GetEstablishmentsByTrustReferenceNumber_ThrowsApiResponseException_WhenApiReturnsError()
+    {
+        // Arrange
+        var referenceNumber = "TRN123456";
+
+        var apiResponse = new ApiResponse<EstablishmentDto[]>(
+            HttpStatusCode.InternalServerError,
+            null!);
+
+        var httpClientServiceMock = new Mock<IHttpClientService>();
+        httpClientServiceMock
+            .Setup(x => x.Get<EstablishmentDto[]>(
+                It.IsAny<HttpClient>(),
+                It.IsAny<string>()))
+            .ReturnsAsync(apiResponse);
+
+        var httpClient = new HttpClient
+        {
+            BaseAddress = new Uri("https://fakeapi.com")
+        };
+
+        var httpClientFactoryMock = new Mock<IDfeHttpClientFactory>();
+        httpClientFactoryMock
+            .Setup(x => x.CreateAcademiesClient())
+            .Returns(httpClient);
+
+        var service = new GetEstablishments(
+            httpClientFactoryMock.Object,
+            httpClientServiceMock.Object);
+
+        // Act & Assert
+        var exception = await Assert.ThrowsAsync<ApiResponseException>(
+            () => service.GetEstablishmentsByTrustReferenceNumber(referenceNumber));
+
+        Assert.Contains("InternalServerError", exception.Message);
+    }
+
+    [Fact]
+    public async Task GetEstablishmentsByTrustReferenceNumber_CallsApiWithCorrectPath()
+    {
+        // Arrange
+        var referenceNumber = "TR123456";
+
+        string? capturedPath = null;
+
+        var apiResponse = new ApiResponse<EstablishmentDto[]>(
+            HttpStatusCode.OK,
+            []);
+
+        var httpClientServiceMock = new Mock<IHttpClientService>();
+        httpClientServiceMock
+            .Setup(x => x.Get<EstablishmentDto[]>(
+                It.IsAny<HttpClient>(),
+                It.IsAny<string>()))
+            .Callback<HttpClient, string>((_, path) => capturedPath = path)
+            .ReturnsAsync(apiResponse);
+
+        var httpClient = new HttpClient
+        {
+            BaseAddress = new Uri("https://fakeapi.com")
+        };
+
+        var httpClientFactoryMock = new Mock<IDfeHttpClientFactory>();
+        httpClientFactoryMock
+            .Setup(x => x.CreateAcademiesClient())
+            .Returns(httpClient);
+
+        var service = new GetEstablishments(
+            httpClientFactoryMock.Object,
+            httpClientServiceMock.Object);
+
+        // Act
+        await service.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
+
+        // Assert
+        Assert.Equal($"/v4/establishments/trustReferenceNumber?trustReferenceNumber={referenceNumber}", capturedPath);
+    }
 }
