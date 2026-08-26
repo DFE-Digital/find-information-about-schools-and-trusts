@@ -4,10 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-08-24.7741...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-08-26.7747...HEAD)
 
 
 --- 
+
+## [Release-72][release-72] - 2026-08-26
+
+### Fixed
+
+- 299516 : Date time error in school search
+
+### Changed
+- 299099 : Get Academies In Trust Pupil Numbers Refactor
+
+--
 
 ## [Release-71][release-71] - 2026-08-24
 
@@ -23,6 +34,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 
 - 298733 : Header search establishments not clickable
+
+### Changed
+- 292400 : Migrate school reference numbers to academies api
 
 --
 
