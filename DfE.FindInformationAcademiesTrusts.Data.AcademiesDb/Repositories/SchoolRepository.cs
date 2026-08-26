@@ -33,7 +33,18 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
     {
         var result = await getEstablishments.GetEstablishment(urn);
         
-        var dateJoinedTrust = !string.IsNullOrEmpty(result.DateJoinedTrust) ? DateTime.Parse(result.DateJoinedTrust, CultureInfo.InvariantCulture) : (DateTime?)null;
+        DateTime? dateJoinedTrust = null;
+
+        if (!string.IsNullOrEmpty(result.DateJoinedTrust) &&
+            DateTime.TryParseExact(
+                result.DateJoinedTrust,
+                "dd/MM/yyyy",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out var parsedDate))
+        {
+            dateJoinedTrust = parsedDate;
+        }
 
 
         return new SchoolDetails(
