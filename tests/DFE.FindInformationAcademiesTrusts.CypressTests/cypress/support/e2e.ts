@@ -6,6 +6,7 @@ import 'wick-a11y';
 //Cypress.expose('URL', Cypress.config("baseUrl"));
 Cypress.config('baseUrl')
 
+
 declare global {
     namespace Cypress {
         interface Chainable {
