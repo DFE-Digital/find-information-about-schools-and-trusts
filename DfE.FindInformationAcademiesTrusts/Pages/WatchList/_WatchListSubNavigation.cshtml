@@ -1,0 +1,16 @@
+@model DfE.FindInformationAcademiesTrusts.Pages.WatchList.WatchListSubNavigationModel
+
+<nav class="moj-sub-navigation" aria-label="Sub navigation">
+    <ul class="moj-sub-navigation__list">
+        <li class="moj-sub-navigation__item">
+            <a class="moj-sub-navigation__link" asp-page="./Schools" aria-current="@(Model.ActiveTab == "Schools" ? "page" : null)">
+                Schools (@Model.SchoolsCount)
+            </a>
+        </li>
+        <li class="moj-sub-navigation__item">
+            <a class="moj-sub-navigation__link" asp-page="./Trusts" aria-current="@(Model.ActiveTab == "Trusts" ? "page" : null)">
+                Trusts (@Model.TrustsCount)
+            </a>
+        </li>
+    </ul>
+</nav>

@@ -50,6 +50,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Application\DfE.FindInformationAcademiesTrusts.Application.csproj" />
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data.AcademiesDb\DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.csproj" />
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data.FiatDb\DfE.FindInformationAcademiesTrusts.Data.FiatDb.csproj" />
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data.Hardcoded\DfE.FindInformationAcademiesTrusts.Data.Hardcoded.csproj" />

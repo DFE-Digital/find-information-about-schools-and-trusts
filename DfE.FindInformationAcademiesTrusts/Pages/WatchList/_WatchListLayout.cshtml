@@ -1,0 +1,17 @@
+@{
+    Layout = "_ContentLayout";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <h1 class="govuk-heading-xl">Your watchlist</h1>
+        <p class="govuk-body">
+            You can use your watchlist to quickly navigate to your favoured school and trust pages.
+        </p>
+        <a asp-page="/" class="govuk-button">Add school to watchlist</a>
+    </div>
+</div>
+
+<partial name="_WatchListSubNavigation" model="@(new WatchListSubNavigationModel(ViewData["ActiveWatchListTab"] as string, WatchListDummyData.Schools.Count, WatchListDummyData.Trusts.Count))" />
+
+@RenderBody()

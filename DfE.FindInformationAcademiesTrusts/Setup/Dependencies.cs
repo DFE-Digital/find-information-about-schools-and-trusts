@@ -35,6 +35,7 @@ using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
+using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Queries;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
 using GovUK.Dfe.CoreLibs.Http.Interfaces;
@@ -107,7 +108,7 @@ public static class Dependencies
         builder.Services.AddScoped<ISchoolService, SchoolService>();
         builder.Services.AddScoped<ISchoolPupilService, SchoolPupilService>();
         builder.Services.AddScoped<ITrustPupilService, TrustPupilService>();
-
+        builder.Services.AddScoped<IWatchlistQueryService, WatchlistQueryService>();
         builder.Services.AddScoped<IPipelineAcademiesExportService, PipelineAcademiesExportService>();
         builder.Services.AddScoped<IAcademiesExportService, AcademiesExportService>();
         builder.Services.AddScoped<ISchoolPupilsExportService, SchoolPupilsExportService>();

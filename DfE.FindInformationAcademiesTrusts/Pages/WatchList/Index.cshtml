@@ -1,0 +1,10 @@
+@page
+@model DfE.FindInformationAcademiesTrusts.Pages.WatchList.Index
+
+@{
+    Layout = "_WatchListLayout";
+    ViewData["Title"] = "Watchlist";
+    ViewData["ActiveWatchListTab"] = "Schools";
+}
+
+<partial name="_SchoolsWatchListTable" model="Model.Items" />
