@@ -61,9 +61,7 @@ class SearchPage {
     }
 
     public searchResultsPageAppears(): this {
-
         this.clickSearchPageSearchButton();
-
         cy.request({ url: window.location.href, failOnStatusCode: false }).then((response) => {
             expect(response.status).not.to.equal(404);
         });

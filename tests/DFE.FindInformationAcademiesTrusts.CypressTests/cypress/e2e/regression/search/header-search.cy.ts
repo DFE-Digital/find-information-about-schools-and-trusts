@@ -94,8 +94,7 @@ describe('Header Search Tests', () => {
                     headerPage
                         .clickHeaderSearchToggle()
                         .enterHeaderSearchText(searchTerm)
-                        .clickHeaderSearchButton();
-                        
+                        .clickHeaderSearchButton();      
 
                     searchPage
                         .waitForSearchResultsToLoad(searchTerm)

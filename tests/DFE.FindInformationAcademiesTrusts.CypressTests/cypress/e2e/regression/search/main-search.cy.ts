@@ -40,7 +40,6 @@ describe('Testing the main/home page search functionality', () => {
         .selectTheFisrtOptionInDropdown()
         .clickSearchPageSearchButton()
         .searchResultsPageAppears();
-
     });
   });
 
