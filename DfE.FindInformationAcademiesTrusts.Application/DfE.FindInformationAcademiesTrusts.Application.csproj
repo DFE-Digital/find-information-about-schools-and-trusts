@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data.AcademiesDb\DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.csproj" />
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Domain\DfE.FindInformationAcademiesTrusts.Domain.csproj" />
     </ItemGroup>
 

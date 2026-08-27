@@ -1,10 +1,11 @@
+using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Models;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.WatchList;
 
 public class Trusts : ContentPageModel
 {
-    public IReadOnlyList<WatchListEntry> Items { get; } = WatchListDummyData.Trusts;
+    public IReadOnlyList<TrustWatchlistDto> Items { get; } = WatchListDummyData.Trusts;
 
     public string? CurrentUser { get; set; }
 

@@ -1,14 +1,20 @@
 using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Models;
+using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Queries;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.WatchList;
 
-public class Schools : ContentPageModel
+public class Schools (IWatchlistQueryService watchlistQueryService): ContentPageModel
 {
-    public IReadOnlyList<EstablishmentWatchlistDto> Items { get; } = WatchListDummyData.Schools;
+    public IEnumerable<EstablishmentWatchlistDto> Items { get; set; } = Array.Empty<EstablishmentWatchlistDto>();
+    
+    public string? CurrentUser { get; set; }
 
-    public void OnGet()
+    public async Task OnGetAsync(CancellationToken cancellationToken)
     {
+        CurrentUser = User.Identity?.Name;
+        var items = await watchlistQueryService.GetAllEstablishmentsForUser(CurrentUser ?? string.Empty, cancellationToken);
 
+        Items = items.Value ?? Array.Empty<EstablishmentWatchlistDto>();
     }
 }

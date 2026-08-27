@@ -1,20 +1,23 @@
 using DfE.FindInformationAcademiesTrusts.Application.Common.Models;
+using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Models;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Domain.Entities;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 
 namespace DfE.FindInformationAcademiesTrusts.Application.Watchlist.Queries;
 
-public class WatchlistQueryService : IWatchlistQueryService
+public class WatchlistQueryService(IGetEstablishments getEstablishments) : IWatchlistQueryService
 {
     private static readonly IReadOnlyList<Domain.Entities.Watchlist> Watchlists =
     [
         new()
         {
             Id = Guid.NewGuid(),
-            EstablishmentId = "100001",
+            EstablishmentId = "135963",
             IsTrust = false,
             User = "Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 12),
-            CreatedBy = "Sarah Thompson"
+            CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
         new()
         {
@@ -99,14 +102,31 @@ public class WatchlistQueryService : IWatchlistQueryService
         }
     ];
 
-    public async Task<Result<IEnumerable<Domain.Entities.Watchlist>>> GetAllEstablishmentsForUser(
+    public async Task<Result<IEnumerable<EstablishmentWatchlistDto>>> GetAllEstablishmentsForUser(
         string user,
         CancellationToken cancellationToken)
     {
         var establishments = Watchlists
             .Where(x => x.User == user && !x.IsTrust);
 
-        return Result<IEnumerable<Domain.Entities.Watchlist>>.Success(establishments);
+        List<int> urns = establishments
+            .Where(x => x.EstablishmentId != null)
+            .Select(x => int.Parse(x.EstablishmentId))
+            .ToList();
+
+        IEnumerable<EstablishmentDto> watchlistEstablishments =
+            await getEstablishments.GetEstablishmentsByUrns(urns);
+        
+        IEnumerable<EstablishmentWatchlistDto> result = watchlistEstablishments
+            .Select(x => new EstablishmentWatchlistDto(
+                x.Name,
+                x.Urn,
+                x.TrustName ?? "",
+                x.LocalAuthorityName));
+
+
+
+        return Result<IEnumerable<EstablishmentWatchlistDto>>.Success(result);
     }
 
     public async Task<Result<IEnumerable<Domain.Entities.Watchlist>>> GetAllTrustsForUser(

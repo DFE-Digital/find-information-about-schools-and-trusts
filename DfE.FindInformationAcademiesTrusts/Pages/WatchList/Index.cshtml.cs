@@ -7,13 +7,15 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.WatchList;
 
 public class Index(IWatchlistQueryService watchlistQueryService) : ContentPageModel
 {
-    public IReadOnlyList<EstablishmentWatchlistDto> Items { get; } = WatchListDummyData.Schools;
+    public IEnumerable<EstablishmentWatchlistDto> Items { get; set; } = Array.Empty<EstablishmentWatchlistDto>();
     
     public string? CurrentUser { get; set; }
 
     public async Task OnGetAsync(CancellationToken cancellationToken)
     {
         CurrentUser = User.Identity?.Name;
-        var cat = await watchlistQueryService.GetAllEstablishmentsForUser(CurrentUser ?? string.Empty, cancellationToken);
+        var items = await watchlistQueryService.GetAllEstablishmentsForUser(CurrentUser ?? string.Empty, cancellationToken);
+
+        Items = items.Value ?? Array.Empty<EstablishmentWatchlistDto>();
     }
 }

@@ -16,22 +16,16 @@
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th scope="col" class="govuk-table__header govuk-!-width-one-quarter" aria-sort="none">
-                        Trust
+                        Trust Name
                     </th>
                     <th scope="col" class="govuk-table__header" aria-sort="none">
-                        Date added to MSI
+                        TRN
                     </th>
                     <th scope="col" class="govuk-table__header" aria-sort="none">
-                        Assigned to
+                        Region
                     </th>
                     <th scope="col" class="govuk-table__header" aria-sort="none">
-                        Supporting organisation
-                    </th>
-                    <th scope="col" class="govuk-table__header" aria-sort="none">
-                        Milestone
-                    </th>
-                    <th scope="col" class="govuk-table__header" aria-sort="none">
-                        Status
+                        Companies House Number
                     </th>
                 </tr>
             </thead>
@@ -44,21 +38,13 @@
                             @item.Name
                         </td>
                         <td class="govuk-table__cell">
-                            @item.DateAddedToMsi
+                            @item.TrustReferenceNumber
                         </td>
                         <td class="govuk-table__cell">
-                            @item.AssignedTo
+                            @item.Region
                         </td>
                         <td class="govuk-table__cell">
-                            @item.SupportingOrganisation
-                        </td>
-                        <td class="govuk-table__cell">
-                            @item.Milestone
-                        </td>
-                        <td class="govuk-table__cell">
-                            <strong class="govuk-tag govuk-tag--@item.StatusTagColour">
-                                @item.Status
-                            </strong>
+                            @item.CompaniesHouseNumber
                         </td>
                     </tr>
                 }

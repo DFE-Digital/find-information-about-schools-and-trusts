@@ -4,7 +4,7 @@ public class Watchlist
 {
     public Guid Id { get; set; }
     public int ReadableId { get; }
-    public String? EstablishmentId { get; set; }
+    public string? EstablishmentId { get; set; }
     public String? TrustId { get; set; }
     public bool IsTrust{ get; set; }
     public string? User { get; set; }
