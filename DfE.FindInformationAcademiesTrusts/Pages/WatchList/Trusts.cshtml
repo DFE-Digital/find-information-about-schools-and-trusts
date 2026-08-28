@@ -10,6 +10,8 @@
 <div class="govuk-grid-row">
         <div class="govuk-grid-column-full app-table-container">
         <table class="govuk-table si-row-colours-table" data-module="moj-sortable-table">
+        @if (Model.Items.Any())
+        {
             <caption class="govuk-table__caption govuk-!-margin-bottom-4">
                 Trusts
             </caption>
@@ -55,6 +57,13 @@
                 </tr>
             }
             </tbody>
+        }
+        else
+        {
+            <caption class="govuk-table__caption govuk-!-margin-bottom-4">
+                Your trusts watchlist is currently empty
+            </caption>
+        }
         </table>
     </div>
 </div>

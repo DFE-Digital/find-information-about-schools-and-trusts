@@ -15,36 +15,36 @@ public class WatchlistQueryService(IGetEstablishments getEstablishments) : IWatc
             Id = Guid.NewGuid(),
             EstablishmentId = "135963",
             IsTrust = false,
-            User = "Dan.RYAN@EDUCATION.GOV.UK",
+            User = "1Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 12),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
         new()
         {
             Id = Guid.NewGuid(),
-            EstablishmentId = "100002",
+            EstablishmentId = "101314",
             IsTrust = false,
-            User = "James Wilson",
+            User = "1Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 8),
-            CreatedBy = "James Wilson"
+            CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
         new()
         {
             Id = Guid.NewGuid(),
-            EstablishmentId = "100003",
+            EstablishmentId = "139041",
             IsTrust = false,
-            User = "Emily Carter",
+            User = "1Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 3),
-            CreatedBy = "Emily Carter"
+            CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
         new()
         {
             Id = Guid.NewGuid(),
-            EstablishmentId = "100004",
+            EstablishmentId = "136394",
             IsTrust = false,
-            User = "David Brown",
+            User = "Richika.DOGRA@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 7, 28),
-            CreatedBy = "David Brown"
+            CreatedBy = "Richika.DOGRA@EDUCATION.GOV.UK"
         },
         new()
         {
@@ -113,6 +113,11 @@ public class WatchlistQueryService(IGetEstablishments getEstablishments) : IWatc
             .Where(x => x.EstablishmentId != null)
             .Select(x => int.Parse(x.EstablishmentId))
             .ToList();
+        
+        if (urns.Count == 0)
+        {
+            return Result<IEnumerable<EstablishmentWatchlistDto>>.Success([]);
+        }
 
         IEnumerable<EstablishmentDto> watchlistEstablishments =
             await getEstablishments.GetEstablishmentsByUrns(urns);
