@@ -11,8 +11,8 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["DfE.FindInformationAcademiesTrusts/DfE.FindInformationAcademiesTrusts.csproj", "DfE.FindInformationAcademiesTrusts/"]
-COPY ["DfE.FindInformationAcademiesTrusts/DfE.FindInformationAcademiesTrusts.Domain.csproj", "DfE.FindInformationAcademiesTrusts.Domain/"]
-COPY ["DfE.FindInformationAcademiesTrusts/DfE.FindInformationAcademiesTrusts.Application.csproj", "DfE.FindInformationAcademiesTrusts.Application/"]
+COPY ["DfE.FindInformationAcademiesTrusts.Domain/DfE.FindInformationAcademiesTrusts.Domain.csproj", "DfE.FindInformationAcademiesTrusts.Domain/"]
+COPY ["DfE.FindInformationAcademiesTrusts.Application/DfE.FindInformationAcademiesTrusts.Application.csproj", "DfE.FindInformationAcademiesTrusts.Application/"]
 COPY ["DfE.FindInformationAcademiesTrusts.Data.AcademiesDb/DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.csproj", "DfE.FindInformationAcademiesTrusts.Data.AcademiesDb/"]
 COPY ["DfE.FindInformationAcademiesTrusts.Data/DfE.FindInformationAcademiesTrusts.Data.csproj", "DfE.FindInformationAcademiesTrusts.Data/"]
 COPY ["DfE.FindInformationAcademiesTrusts.Data.FiatDb/DfE.FindInformationAcademiesTrusts.Data.FiatDb.csproj", "DfE.FindInformationAcademiesTrusts.Data.FiatDb/"]
