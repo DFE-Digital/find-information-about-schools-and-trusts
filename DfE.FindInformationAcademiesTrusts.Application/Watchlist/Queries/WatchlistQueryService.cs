@@ -15,7 +15,7 @@ public class WatchlistQueryService(IGetEstablishments getEstablishments) : IWatc
             Id = Guid.NewGuid(),
             EstablishmentId = "135963",
             IsTrust = false,
-            User = "1Dan.RYAN@EDUCATION.GOV.UK",
+            User = "Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 12),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
@@ -24,7 +24,7 @@ public class WatchlistQueryService(IGetEstablishments getEstablishments) : IWatc
             Id = Guid.NewGuid(),
             EstablishmentId = "101314",
             IsTrust = false,
-            User = "1Dan.RYAN@EDUCATION.GOV.UK",
+            User = "Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 8),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
@@ -33,7 +33,7 @@ public class WatchlistQueryService(IGetEstablishments getEstablishments) : IWatc
             Id = Guid.NewGuid(),
             EstablishmentId = "139041",
             IsTrust = false,
-            User = "1Dan.RYAN@EDUCATION.GOV.UK",
+            User = "Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 3),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
