@@ -51,7 +51,7 @@ describe('Testing the main/home page search functionality', () => {
 
       searchPage
         .waitForSearchResultsToLoad('west')
-        .checkSearchResultsReturned('west', );
+        .checkSearchResultsReturned('west');
 
       paginationPage
         .returnToHome();
