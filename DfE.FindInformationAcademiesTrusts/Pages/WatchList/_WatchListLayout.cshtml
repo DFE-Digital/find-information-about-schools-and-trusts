@@ -12,6 +12,6 @@
     </div>
 </div>
 
-<partial name="_WatchListSubNavigation" model="@(new WatchListSubNavigationModel(ViewData["ActiveWatchListTab"] as string, WatchListDummyData.Schools.Count, WatchListDummyData.Trusts.Count))" />
+<partial name="_WatchListSubNavigation" model="@(new WatchListSubNavigationModel(ViewData["ActiveWatchListTab"] as string, Model.SchoolsCount, Model.TrustsCount))" />
 
 @RenderBody()

@@ -9,7 +9,7 @@ public interface IWatchlistQueryService
         string user,
         CancellationToken cancellationToken);
 
-    Task<Result<IEnumerable<Domain.Entities.Watchlist>>> GetAllTrustsForUser(
+    Task<Result<IEnumerable<TrustWatchlistDto>>> GetAllTrustsForUser(
         string user,
         CancellationToken cancellationToken);
 }

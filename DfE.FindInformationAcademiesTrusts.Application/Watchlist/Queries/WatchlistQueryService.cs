@@ -58,11 +58,11 @@ public class WatchlistQueryService(IGetEstablishments getEstablishments) : IWatc
         new()
         {
             Id = Guid.NewGuid(),
-            TrustId = "200001",
+            TrustId = "tr01585",
             IsTrust = true,
-            User = "Rebecca Hughes",
+            User = "Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 14),
-            CreatedBy = "Rebecca Hughes"
+            CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
         new()
         {
@@ -129,13 +129,23 @@ public class WatchlistQueryService(IGetEstablishments getEstablishments) : IWatc
         return Result<IEnumerable<EstablishmentWatchlistDto>>.Success(result);
     }
 
-    public async Task<Result<IEnumerable<Domain.Entities.Watchlist>>> GetAllTrustsForUser(
+    public async Task<Result<IEnumerable<TrustWatchlistDto>>> GetAllTrustsForUser(
         string user,
         CancellationToken cancellationToken)
     {
-        var trusts = Watchlists
-            .Where(x => x.User == user && x.IsTrust);
+        //var trusts = Watchlists
+        //    .Where(x => x.User == user && x.IsTrust);
+        
+        var trusts = new List<TrustWatchlistDto>
+        {
+            new(
+                "OUTWOOD GRANGE ACADEMIES TRUST",
+                "tr01585",
+                "",
+                "06995649"
+            )
+        };
 
-        return Result<IEnumerable<Domain.Entities.Watchlist>>.Success(trusts);
+        return Result<IEnumerable<TrustWatchlistDto>>.Success(trusts);
     }
 }
