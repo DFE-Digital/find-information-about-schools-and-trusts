@@ -6,6 +6,7 @@ using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
+using GovUK.Dfe.PersonsApi.Client.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -14,7 +15,8 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 public class SchoolRepository(IAcademiesDbContext academiesDbContext,
     IStringFormattingUtilities stringFormattingUtilities,
     ILogger<SchoolRepository> logger, 
-    IGetEstablishments getEstablishments) : ISchoolRepository
+    IGetEstablishments getEstablishments,
+    IEstablishmentsClient establishmentsClient) : ISchoolRepository
 {
     public async Task<SchoolSummary?> GetSchoolSummaryAsync(int urn)
     {
@@ -149,18 +151,24 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
         return new SchoolReferenceNumbers(result.LocalAuthorityCode, result.EstablishmentNumber, result.Ukprn);
     }
 
-    public async Task<Governor[]> GetGovernanceAsync(int urn)
+    public async Task<List<Governor>> GetGovernanceAsync(int urn)
     {
-        return await academiesDbContext.GiasGovernances.Where(e => e.Urn == urn.ToString())
-            .Select(governance => new Governor(
-                stringFormattingUtilities.GetFullName(governance.Forename1!, governance.Forename2!,
-                    governance.Surname!),
-                governance.Role!,
-                governance.AppointingBody!,
-                governance.DateOfAppointment.ParseAsNullableDate(),
-                governance.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
-                null))
-            .ToArrayAsync();
+        var result = await establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(urn);
+        
+        var governors = new List<Governor>();
+
+        foreach (var person in result)
+        {
+            governors.Add(new Governor(
+                FullName: person.DisplayName,
+                Role: person.Roles[0],
+                AppointingBody: person.AppointingBody,
+                DateOfAppointment: person.DateOfAppointment.ParseAsNullableDate(),
+                DateOfTermEnd: person.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
+                Email: person.Email));
+        }
+        
+        return governors;
     }
 
     public async Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn)
