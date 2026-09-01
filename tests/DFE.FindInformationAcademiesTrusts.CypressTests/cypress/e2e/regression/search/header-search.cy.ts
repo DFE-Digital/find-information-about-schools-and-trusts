@@ -83,19 +83,21 @@ describe('Header Search Tests', () => {
                         .clickHeaderSearchToggle()
                         .enterHeaderSearchText(urnTest.urn.toString())
                         .checkHeaderAutocompleteIsPresent()
-                        .checkAutocompleteContainsTypedText(urnTest.name);
+                        .checkAutocompleteContainsTypedText(urnTest.name)
+                        .selectTheFisrtOptionInDropdown();
                 });
 
                 it(`Should check that search results are returned with a valid name entered - ${type}`, () => {
-                    const searchTerm = type === 'trust' ? 'TR02343' : 'west';
+                    const searchTerm = type === 'trust' ? 'tr02343' : 'west';
                     const expectedResult = type === 'trust' ? 'UNITED LEARNING TRUST' : 'west';
 
                     headerPage
                         .clickHeaderSearchToggle()
                         .enterHeaderSearchText(searchTerm)
-                        .clickHeaderSearchButton();
+                        .clickHeaderSearchButton();      
 
                     searchPage
+                        .waitForSearchResultsToLoad(searchTerm)
                         .checkSearchResultsReturned(expectedResult);
                 });
             });

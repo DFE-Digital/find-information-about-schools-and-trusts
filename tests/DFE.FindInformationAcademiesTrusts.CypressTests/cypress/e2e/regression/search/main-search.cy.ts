@@ -36,7 +36,10 @@ describe('Testing the main/home page search functionality', () => {
 
       searchPage
         .checkMainAutocompleteIsPresent()
-        .checkAutocompleteContainsTypedText(expectedSchoolName);
+        .checkAutocompleteContainsTypedText(expectedSchoolName)
+        .selectTheFisrtOptionInDropdown()
+        .clickSearchPageSearchButton()
+        .searchResultsPageAppears();
     });
   });
 
@@ -48,7 +51,7 @@ describe('Testing the main/home page search functionality', () => {
 
       searchPage
         .waitForSearchResultsToLoad('west')
-        .checkSearchResultsReturned('west', );
+        .checkSearchResultsReturned('west');
 
       paginationPage
         .returnToHome();
