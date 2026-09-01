@@ -17,7 +17,7 @@
         <PackageReference Include="Dfe.AcademiesApi.Client" Version="1.0.15" />
         <PackageReference Include="Dfe.CaseAggregationService.Api.Client" Version="1.0.0" />
         <PackageReference Include="GovUK.Dfe.CoreLibs.Caching" Version="1.0.13" />
-        <PackageReference Include="GovUK.Dfe.PersonsApi.Client" Version="0.1.4" />
+        <PackageReference Include="GovUK.Dfe.PersonsApi.Client" Version="0.1.5" />
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22">
             <PrivateAssets>all</PrivateAssets>
