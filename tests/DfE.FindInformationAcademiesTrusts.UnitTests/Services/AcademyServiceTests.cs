@@ -88,6 +88,7 @@ public class AcademyServiceTests
     public async Task GetAcademiesInTrustPupilNumbersAsync_should_return_mapped_result_from_repository()
     {
         const string uid = "1234";
+        const string referenceNumber = "TR1234";
         AcademyPupilNumbers[] academies =
         [
             BuildDummyAcademyPupilNumbers("9876", "phase1", new AgeRange(2, 15), null, 200),
@@ -99,7 +100,7 @@ AcademyPupilNumbersServiceModel[] expected =
             new("8765", "Academy 8765", "phase2", new AgeRange(7, 12), new Statistic<int>.WithValue(2), 5)
         ];
         
-        _mockAcademyRepository.GetAcademiesInTrustPupilNumbersAsync(uid).Returns(academies);
+        _mockAcademyRepository.GetAcademiesInTrustPupilNumbersByTrnAsync(referenceNumber).Returns(academies);
         
         _mockTrustPupilService.GetPupilCountsForSchoolsInTrustAsync(uid).Returns(new TrustStatistics<Statistic<int>>
         {
@@ -107,7 +108,7 @@ AcademyPupilNumbersServiceModel[] expected =
             [8765] = new Statistic<int>.WithValue(2)
         });
         
-        var result = await _sut.GetAcademiesInTrustPupilNumbersAsync(uid);
+        var result = await _sut.GetAcademiesInTrustPupilNumbersAsync(uid,referenceNumber);
 
         result.Should().BeOfType<AcademyPupilNumbersServiceModel[]>();
         result.Should().BeEquivalentTo(expected);

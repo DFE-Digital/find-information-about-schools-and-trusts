@@ -47,6 +47,25 @@ class HeaderPage {
         return this;
     }
 
+    public selectTheFisrtOptionInDropdown(): this {
+        cy.wait(6000); // addeding explicit wait to ensure autocomplete options are loaded
+        this.elements.headerAutocomplete()
+            .first()
+            .click();
+        
+        this.clickSearchIcon();
+
+        cy.request({ url: window.location.href, failOnStatusCode: false }).then((response) => {
+            expect(response.status).not.to.equal(404);
+        });
+        return this;
+    }
+
+    public clickSearchIcon(): this {
+        this.elements.headerSearchButton().click();
+        return this;
+    }
+
     public enterHeaderSearchText(searchText: string): this {
         AutocompleteHelper.typeWithAutocomplete(this.elements.mainSearchBox, searchText);
         return this;

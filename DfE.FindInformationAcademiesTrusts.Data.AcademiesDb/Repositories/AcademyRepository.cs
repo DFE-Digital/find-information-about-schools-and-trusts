@@ -3,10 +3,11 @@ using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
-public class AcademyRepository(IAcademiesDbContext academiesDbContext)
+public class AcademyRepository(IAcademiesDbContext academiesDbContext, IGetEstablishments getEstablishments)
     : IAcademyRepository
 {
     public async Task<AcademyDetails[]> GetAcademiesInTrustDetailsAsync(string uid)
@@ -24,21 +25,20 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext)
                         DateOnly.ParseExact(gl.JoinedDate!, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None)))
             .ToArrayAsync();
     }
-
-    public async Task<AcademyPupilNumbers[]> GetAcademiesInTrustPupilNumbersAsync(string uid)
+    
+    public async Task<AcademyPupilNumbers[]> GetAcademiesInTrustPupilNumbersByTrnAsync(string referenceNumber)
     {
-        return await academiesDbContext.GiasGroupLinks
-            .Where(gl => gl.GroupUid == uid)
-            .Join(academiesDbContext.GiasEstablishments,
-                gl => gl.Urn!, e => e.Urn.ToString(),
-                (_, e) =>
-                    new AcademyPupilNumbers(e.Urn.ToString(),
-                        e.EstablishmentName,
-                        e.PhaseOfEducationName,
-                        new AgeRange(e.StatutoryLowAge, e.StatutoryHighAge),
-                        e.NumberOfPupils.ParseAsNullableInt(),
-                        e.SchoolCapacity.ParseAsNullableInt()))
-            .ToArrayAsync();
+        var details = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
+
+        return details
+            .Select(e => new AcademyPupilNumbers(
+                e.Urn.ToString(),
+                e.Name,
+                e.PhaseOfEducation.Name,
+                new AgeRange(e.StatutoryLowAge, e.StatutoryHighAge),
+                e.Census.NumberOfPupils.ParseAsNullableInt(),
+                e.SchoolCapacity.ParseAsNullableInt()))
+            .ToArray();
     }
 
     public async Task<AcademyFreeSchoolMeals[]> GetAcademiesInTrustFreeSchoolMealsAsync(string uid)
