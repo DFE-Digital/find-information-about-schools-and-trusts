@@ -1,14 +1,16 @@
-@page
+@page "/watchlist/select-establishment-type"
 @model DfE.FindInformationAcademiesTrusts.Pages.WatchList.SelectEstablishmentType
 
 @{
     Layout = "_ContentLayout";
+    ViewData["Title"] = "Select Establishment Type";
 }
 
 @if (Model.ShowError)
 {
     <partial name="_ErrorSummary"/>
 }
+
 
 
 <div class="govuk-grid-row">
