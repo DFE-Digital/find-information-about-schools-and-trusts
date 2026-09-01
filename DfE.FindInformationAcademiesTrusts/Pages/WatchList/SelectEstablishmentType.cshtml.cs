@@ -40,7 +40,7 @@ public class SelectEstablishmentType : ContentPageModel
         if (string.IsNullOrEmpty(OrganisationType))
         {
             ModelState.AddModelError(
-                "option-selction-error",
+                "option-selection-error",
                 errorMessage);
             ShowError = true;
 
