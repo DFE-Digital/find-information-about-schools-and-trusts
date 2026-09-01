@@ -32,7 +32,7 @@
                         Local Authority
                     </th>
                     <th scope="col" class="govuk-table__header">
-
+                        <span class="govuk-visually-hidden">Remove School</span>
                     </th>
                 </tr>
                 </thead>
@@ -45,13 +45,13 @@
                             <a class="govuk-link" asp-page="/">@item.Name</a>
                         </td>
                         <td class="govuk-table__cell">
-                            @item.Urn
+                            @item.Urn 
                         </td>
                         <td class="govuk-table__cell">
-                            @item.TrustName
+                            @(string.IsNullOrWhiteSpace(item.TrustName) ? "Not applicable" : item.TrustName)
                         </td>
                         <td class="govuk-table__cell">
-                            @item.LocalAuthority
+                            @item.LocalAuthority 
                         </td>
                         <td class="govuk-table__cell">
                             <a class="govuk-link" asp-page="/">Remove</a>

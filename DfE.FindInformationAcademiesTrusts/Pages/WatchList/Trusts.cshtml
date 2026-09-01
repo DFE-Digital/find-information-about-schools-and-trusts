@@ -30,7 +30,7 @@
                     Companies House Number
                 </th>
                 <th scope="col" class="govuk-table__header">
-
+                    <span class="govuk-visually-hidden">Remove Trust</span>
                 </th>
             </tr>
             </thead>
@@ -46,7 +46,7 @@
                         @item.TrustReferenceNumber
                     </td>
                     <td class="govuk-table__cell">
-                        @item.Region
+                        @(string.IsNullOrWhiteSpace(item.Region) ? "Not applicable" : item.Region)
                     </td>
                     <td class="govuk-table__cell">
                         @item.CompaniesHouseNumber
