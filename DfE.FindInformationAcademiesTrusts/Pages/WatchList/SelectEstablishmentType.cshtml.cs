@@ -33,25 +33,23 @@ public class SelectEstablishmentType : ContentPageModel
     public void OnGet()
     {
     }
-    
-    public IActionResult OnPost()
+
+    public IActionResult OnPost(string? organisationType)
     {
-        string errorMessage = "You must choose an establishment type";
-        if (string.IsNullOrEmpty(OrganisationType))
+        if (string.IsNullOrEmpty(organisationType))
         {
-            ModelState.AddModelError(
-                "option-selection-error",
-                errorMessage);
+            const string errorMessage = "You must choose an establishment type";
+
+            ModelState.AddModelError("option-selection-error", errorMessage);
+            ErrorMessage = errorMessage;
             ShowError = true;
 
-        }
-
-        if (!ModelState.IsValid)
-        {
-            ErrorMessage = errorMessage;
             return Page();
         }
-        
-        return RedirectToPage("NextPage");
+
+        return organisationType == "school"
+            ? RedirectToPage("SearchForASchool")
+            : RedirectToPage("SearchForATrust");
     }
+
 }
