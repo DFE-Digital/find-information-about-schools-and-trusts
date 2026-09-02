@@ -50,7 +50,7 @@ public class AcademiesExportService(ITrustService trustService, IAcademyService 
 
         var academiesDetails = await academyService.GetAcademiesInTrustDetailsAsync(uid);
         var academiesOfstedRatings = await academyService.GetAcademiesInTrustOfstedAsync(uid);
-        var academiesPupilNumbers = await academyService.GetAcademiesInTrustPupilNumbersAsync(uid);
+        var academiesPupilNumbers = await academyService.GetAcademiesInTrustPupilNumbersAsync(uid,referenceNumber);
         var academiesFreeSchoolMeals = await academyService.GetAcademiesInTrustFreeSchoolMealsAsync(uid);
 
         return WriteTrustInformation(trustSummary)

@@ -11,7 +11,7 @@ public interface IAcademyService
 {
     Task<AcademyDetailsServiceModel[]> GetAcademiesInTrustDetailsAsync(string uid);
     Task<SchoolOfstedServiceModel[]> GetAcademiesInTrustOfstedAsync(string uid);
-    Task<AcademyPupilNumbersServiceModel[]> GetAcademiesInTrustPupilNumbersAsync(string uid);
+    Task<AcademyPupilNumbersServiceModel[]> GetAcademiesInTrustPupilNumbersAsync(string uid,string referenceNumber);
     Task<AcademyFreeSchoolMealsServiceModel[]> GetAcademiesInTrustFreeSchoolMealsAsync(string uid);
     Task<AcademyPipelineSummaryServiceModel> GetAcademiesPipelineSummaryAsync(string trustReferenceNumber);
     Task<AcademyPipelineServiceModel[]> GetAcademiesPipelinePreAdvisoryAsync(string trustReferenceNumber);
@@ -45,9 +45,9 @@ public class AcademyService(
                 a.PreviousOfstedRating, a.CurrentOfstedRating, a.IsFurtherEducationalEstablishment)).ToArray();
     }
 
-    public async Task<AcademyPupilNumbersServiceModel[]> GetAcademiesInTrustPupilNumbersAsync(string uid)
+    public async Task<AcademyPupilNumbersServiceModel[]> GetAcademiesInTrustPupilNumbersAsync(string uid,string referenceNumber)
     {
-        var academies = await academyRepository.GetAcademiesInTrustPupilNumbersAsync(uid);
+        var academies = await academyRepository.GetAcademiesInTrustPupilNumbersByTrnAsync(referenceNumber);
         var pupilNumbers = await trustPupilService.GetPupilCountsForSchoolsInTrustAsync(uid);
 
         return academies.Select(a =>

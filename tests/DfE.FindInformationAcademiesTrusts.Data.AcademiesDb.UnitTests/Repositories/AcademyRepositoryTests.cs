@@ -1,19 +1,27 @@
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
+using Moq;
+using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V5.Establishments.EstablishmentDto;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Repositories;
 
 public class AcademyRepositoryTests
 {
     private const string GroupUid = "1234";
+    private const string referenceNumber = "TRN1234";
     private readonly AcademyRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
+    private readonly IGetEstablishments _mockGetEstablishments;
+    
 
     public AcademyRepositoryTests()
     {
-        _sut = new AcademyRepository(_mockAcademiesDbContext.Object);
+        _mockGetEstablishments = Substitute.For<IGetEstablishments>();
+        _sut = new AcademyRepository(_mockAcademiesDbContext.Object, _mockGetEstablishments);
     }
 
     [Fact]
@@ -122,74 +130,76 @@ public class AcademyRepositoryTests
     }
 
     [Fact]
-    public async Task GetAcademiesInTrustPupilNumbersAsync_should_return_academies_linked_to_trust()
+    public async Task GetAcademiesInTrustPupilNumbersByTrnAsync_should_return_academies_linked_to_trust()
     {
-        var giasGroup = _mockAcademiesDbContext.AddGiasGroupForTrust(GroupUid);
-        var giasEstablishments = Enumerable.Range(1000, 6).Select(n => new GiasEstablishment
+
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber).Returns(new EstablishmentDto[]
         {
-            Urn = n,
-            EstablishmentName = $"Academy {n}",
-            PhaseOfEducationName = $"Phase of Education {n}",
-            EstablishmentTypeGroupName = "Academies",
-            EstablishmentStatusName = "Open",
-            NumberOfPupils = $"{n}",
-            SchoolCapacity = $"{n}",
-            StatutoryLowAge = $"{n + 1}",
-            StatutoryHighAge = $"{n + 10}"
-        }).ToArray();
-        _mockAcademiesDbContext.GiasEstablishments.AddRange(giasEstablishments);
-        _mockAcademiesDbContext.AddGiasGroupLinks(giasGroup, giasEstablishments);
+            new EstablishmentDto
+            {
+                Urn = "1234",
+                Name = "Academy1",
+                PhaseOfEducation = new NameAndCodeDto()
+                {
+                    Name = "Test",
+                    Code = "1234"
+                },
+                Census = new CensusDto()
+                {
+                    NumberOfPupils = "1234",
+                },
+                StatutoryHighAge = "3",
+                StatutoryLowAge = "2",
+                SchoolCapacity = "332"
+            },
+            new EstablishmentDto()
+            {
+                Urn = "1235",
+                Name = "Academy2",
+                PhaseOfEducation = new NameAndCodeDto()
+                {
+                    Name = "Test2",
+                    Code = "1235"
+                },
+                Census = new CensusDto()
+                {
+                    NumberOfPupils = "1235",
+                },
+                StatutoryHighAge = "4",
+                StatutoryLowAge = "3",
+                SchoolCapacity = "333"
+            }
 
-        var result = await _sut.GetAcademiesInTrustPupilNumbersAsync(GroupUid);
+        });
 
-        result.Should()
-            .BeEquivalentTo(giasEstablishments,
-                options => options
-                    .WithAutoConversion()
-                    .ExcludingMissingMembers()
-            );
-
-        for (var i = 0; i < giasEstablishments.Length; i++)
+        var result = await _sut.GetAcademiesInTrustPupilNumbersByTrnAsync(referenceNumber);
+        result.Should().HaveCount(2);
+        result.Should().BeEquivalentTo(new[]
         {
-            result[i].AgeRange.Minimum.Should().Be(giasEstablishments[i].StatutoryLowAge.ParseAsNullableInt());
-            result[i].AgeRange.Maximum.Should().Be(giasEstablishments[i].StatutoryHighAge.ParseAsNullableInt());
-        }
+            new AcademyPupilNumbers(
+                "1234",
+                "Academy1",
+                "Test",
+                new AgeRange(2, 3),
+                1234,
+                332),
+            new AcademyPupilNumbers(
+                "1235",
+                "Academy2",
+                "Test2",
+                new AgeRange(3, 4),
+                1235,
+                333)
+        });
     }
 
     [Fact]
-    public async Task GetAcademiesInTrustPupilNumbersAsync_should_return_empty_array_when_no_academies_linked_to_trust()
+    public async Task GetAcademiesInTrustPupilNumbersByTrnAsync_should_return_empty_array_when_no_academies_linked_to_trust()
     {
-        var result = await _sut.GetAcademiesInTrustPupilNumbersAsync(GroupUid);
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber).Returns([]);
+
+        var result = await _sut.GetAcademiesInTrustPupilNumbersByTrnAsync(referenceNumber);
         result.Should().BeEmpty();
-    }
-
-    [Fact]
-    public async Task GetAcademiesInTrustFreeSchoolMealsAsync_should_return_academies_linked_to_trust()
-    {
-        var giasGroup = _mockAcademiesDbContext.AddGiasGroupForTrust(GroupUid);
-        var giasEstablishments = Enumerable.Range(1000, 6).Select(n => new GiasEstablishment
-        {
-            Urn = n,
-            EstablishmentName = $"Academy {n}",
-            PhaseOfEducationName = $"Phase of Education {n}",
-            TypeOfEstablishmentName = $"Type of Education {n}",
-            EstablishmentTypeGroupName = "Academies",
-            EstablishmentStatusName = "Open",
-            LaCode = $"{n}",
-            PercentageFsm = $"{n - 950.5}"
-        }).ToArray();
-        _mockAcademiesDbContext.GiasEstablishments.AddRange(giasEstablishments);
-        _mockAcademiesDbContext.AddGiasGroupLinks(giasGroup, giasEstablishments);
-
-        var result = await _sut.GetAcademiesInTrustFreeSchoolMealsAsync(GroupUid);
-        result.Should()
-            .BeEquivalentTo(giasEstablishments,
-                options => options
-                    .WithAutoConversion()
-                    .ExcludingMissingMembers()
-                    .WithMapping<AcademyFreeSchoolMeals>(e => e.LaCode, a => a.LocalAuthorityCode)
-                    .WithMapping<AcademyFreeSchoolMeals>(e => e.PercentageFsm, a => a.PercentageFreeSchoolMeals)
-            );
     }
 
     [Fact]

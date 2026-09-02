@@ -34,6 +34,17 @@ public class GetEstablishments(IDfeHttpClientFactory httpClientFactory,
 
         return result.Body;
     }
+    
+    public async Task<EstablishmentDto[]> GetEstablishmentsByTrustReferenceNumber(string trustReferenceNumber)
+    {
+        string path = $"/v4/establishments/trustReferenceNumber?trustReferenceNumber={trustReferenceNumber}";
+
+        ApiResponse<EstablishmentDto[]> result = await httpClientService.Get<EstablishmentDto[]>(_httpClient, path);
+
+        if (!result.Success) throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");
+
+        return result.Body;
+    }
 
     public async Task<EstablishmentResponse> GetEstablishmentWithSenData(int urn)
     {

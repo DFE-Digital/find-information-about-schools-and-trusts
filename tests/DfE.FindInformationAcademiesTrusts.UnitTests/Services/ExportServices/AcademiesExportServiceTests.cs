@@ -75,7 +75,7 @@ public class AcademiesExportServiceTests
                 new OfstedShortInspection(now, "School remains Good"),
                 new OfstedRating(1, now.AddDays(-1)), new OfstedRating(1, now), false)
         ]);
-        _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid).Returns([
+        _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid,trustReferenceNumber).Returns([
             new AcademyPupilNumbersServiceModel("123456", "Academy 1", "Primary", new AgeRange(5, 11), new Statistic<int>.WithValue(500), 600)
         ]);
         _mockAcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(trustUid)
@@ -151,7 +151,7 @@ public class AcademiesExportServiceTests
             new SchoolOfstedServiceModel("123456", null, now, new OfstedShortInspection(now, "School remains Good"),
                 new OfstedRating(-1, null), new OfstedRating(-1, null), false)
         ]);
-        _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid)
+        _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid,trustReferenceNumber)
             .Returns([new AcademyPupilNumbersServiceModel("123456", null, null, new AgeRange(5, 11), Statistic<int>.NotAvailable, null)]);
         _mockAcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(trustUid)
             .Returns([new AcademyFreeSchoolMealsServiceModel("123456", null, null, 0, 0)]);
@@ -196,7 +196,7 @@ public class AcademiesExportServiceTests
         ]);
         _mockAcademyService.GetAcademiesInTrustOfstedAsync(trustUid).Returns([]);
 
-        _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid).Returns([
+        _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid,trustReferenceNumber).Returns([
             new AcademyPupilNumbersServiceModel("123456", "Academy 1", "Primary", new AgeRange(5, 11), new Statistic<int>.WithValue(500), 600)
         ]);
         _mockAcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(trustUid)
@@ -230,7 +230,7 @@ public class AcademiesExportServiceTests
                 new OfstedRating(1, now), false)
         ]);
 
-        _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid).Returns([]);
+        _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid,trustReferenceNumber).Returns([]);
 
         _mockAcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(trustUid)
             .Returns([new AcademyFreeSchoolMealsServiceModel("123456", "Academy 1", 20, 25, 15)]);
@@ -268,7 +268,7 @@ public class AcademiesExportServiceTests
                 new OfstedRating(-1, null), new OfstedRating(1, now), false)
         ]);
 
-        _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid).Returns([
+        _mockAcademyService.GetAcademiesInTrustPupilNumbersAsync(trustUid,trustReferenceNumber).Returns([
             new AcademyPupilNumbersServiceModel("123456", "Academy 1", "Primary", new AgeRange(5, 11), new Statistic<int>.WithValue(500), 600)
         ]);
 

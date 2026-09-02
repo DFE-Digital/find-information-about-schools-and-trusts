@@ -53,6 +53,23 @@ class SearchPage {
         return this;
     }
 
+    public selectTheFisrtOptionInDropdown(): this {
+        this.elements.mainAutocomplete()
+            .first()
+            .click();
+        return this;
+    }
+
+    public searchResultsPageAppears(): this {
+        this.clickSearchPageSearchButton();
+        cy.request({ url: window.location.href, failOnStatusCode: false }).then((response) => {
+            expect(response.status).not.to.equal(404);
+        });
+      
+        return this;
+    }
+
+
     public enterSearchResultsSearchText(searchText: string): this {
         AutocompleteHelper.typeWithAutocomplete(this.elements.searchPageSearchBox, searchText);
         return this;
