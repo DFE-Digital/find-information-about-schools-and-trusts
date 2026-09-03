@@ -3,10 +3,11 @@ using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Models;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Domain.Entities;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
 
 namespace DfE.FindInformationAcademiesTrusts.Application.Watchlist.Queries;
 
-public class WatchlistQueryService(IGetEstablishments getEstablishments) : IWatchlistQueryService
+public class WatchlistQueryService(IGetEstablishments getEstablishments, IGetTrusts getTrusts) : IWatchlistQueryService
 {
     private static readonly IReadOnlyList<Domain.Entities.Watchlist> Watchlists =
     [
@@ -85,20 +86,20 @@ public class WatchlistQueryService(IGetEstablishments getEstablishments) : IWatc
         new()
         {
             Id = Guid.NewGuid(),
-            TrustId = "200002",
+            TrustId = "tr01414",
             IsTrust = true,
-            User = "Michael Turner",
+            User = "Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 9),
-            CreatedBy = "Michael Turner"
+            CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
         new()
         {
             Id = Guid.NewGuid(),
-            TrustId = "200003",
+            TrustId = "tr02343",
             IsTrust = true,
-            User = "Amelia Foster",
+            User = "Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 4),
-            CreatedBy = "Amelia Foster"
+            CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
         new()
         {
@@ -156,19 +157,32 @@ public class WatchlistQueryService(IGetEstablishments getEstablishments) : IWatc
         string user,
         CancellationToken cancellationToken)
     {
-        //var trusts = Watchlists
-        //    .Where(x => x.User == user && x.IsTrust);
-        
-        var trusts = new List<TrustWatchlistDto>
-        {
-            new(
-                "OUTWOOD GRANGE ACADEMIES TRUST",
-                "tr01585",
-                "",
-                "06995649"
-            )
-        };
+        var trusts = Watchlists
+            .Where(x => x.User == user && x.IsTrust);
 
-        return Result<IEnumerable<TrustWatchlistDto>>.Success(trusts);
+        List<string?> referenceNumbers = trusts
+            .Where(x => x.TrustId != null)
+            .Select(x => x.TrustId)
+            .ToList();
+
+        if (referenceNumbers.Count == 0)
+        {
+            return Result<IEnumerable<TrustWatchlistDto>>.Success([]);
+        }
+
+        IEnumerable<TrustDto> watchlistTrusts =
+            await getTrusts.GetTrustsByReferenceNumbers(referenceNumbers);
+
+        IEnumerable<TrustWatchlistDto> result = watchlistTrusts
+            .Select(x => new TrustWatchlistDto(
+                x.Name,
+                x.ReferenceNumber,
+                x.GroupUid,
+                x.Gor,
+                x.CompaniesHouseNumber
+                
+            ));
+
+        return Result<IEnumerable<TrustWatchlistDto>>.Success(result);
     }
 }
