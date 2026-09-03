@@ -123,7 +123,7 @@ class FinancialDocuments {
         // Check for the presence of each line of text
         const expectedTexts = [
             "Do not contact a trust about documents that are missing or in the wrong format.",
-            "To report a problem with a document email: academiesfinancialmonitoring@education.gov.uk.",
+            "To report a problem with a document email: academiesfinancialmonitoring.dfe@education.gov.uk.",
         ];
 
         expectedTexts.forEach(text => {

@@ -8,9 +8,9 @@ describe('Schools Navigation Tests', () => {
     const navTestAcademies = [
         {
             academyURN: 140214,
-            trustAcademyName: "ABBEY ACADEMIES TRUST",
-            trustUID: 2044,
-            trn: "tr00261"
+            trustAcademyName: "INFINITY ACADEMIES TRUST",
+            trustUID: 3539,
+            trn: "tr01154"
         },
 
         {
