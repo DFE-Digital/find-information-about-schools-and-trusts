@@ -9,8 +9,8 @@ describe('Schools Navigation Tests', () => {
         {
             academyURN: 140214,
             trustAcademyName: "INFINITY ACADEMIES TRUST",
-            trustUID: 2044,
-            trn: "tr00261"
+            trustUID: 3539,
+            trn: "tr01154"
         },
 
         {
