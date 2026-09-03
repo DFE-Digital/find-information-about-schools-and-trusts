@@ -15,7 +15,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - 300800 : Fix email incorrect email address
 
 ### Changed
-- 300343 : Add get trusts bulk by TRN number to v4 academies endpoint
 - 298897 : School governance data through api
 
 --
