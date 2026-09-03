@@ -30,10 +30,17 @@ public class SchoolRepositoryTests
     }
 
     [Fact]
-    public async Task GetSchoolSummaryAsync_should_return_null_if_not_found()
+    public async Task GetSchoolSummaryAsync_should_throw_if_not_found()
     {
-        var result = await _sut.GetSchoolSummaryAsync(999999);
-        result.Should().BeNull();
+        var urn = 123456;
+
+        _mockGetEstablishments.GetEstablishment(urn)
+            .ThrowsAsync(new ApiResponseException("Request to Api failed | StatusCode - 401"));
+
+        var action = () => _sut.GetSchoolSummaryAsync(urn);
+
+        await action.Should().ThrowAsync<ApiResponseException>()
+            .WithMessage("Request to Api failed | StatusCode - 401");
     }
 
     [Theory]
