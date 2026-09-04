@@ -40,7 +40,9 @@
             {
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
-                        <a class="govuk-link" asp-page="/">@item.Name</a>
+                        <a class="govuk-link" asp-page="/Trusts/Overview/TrustDetails"
+                           asp-route-uid="@item.GroupUid"
+                           asp-route-referencenumber="@item.TrustReferenceNumber">@item.Name</a>
                     </td>
                     <td class="govuk-table__cell">
                         @item.TrustReferenceNumber

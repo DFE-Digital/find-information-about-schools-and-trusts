@@ -42,7 +42,9 @@
                 {
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">
-                            <a class="govuk-link" asp-page="/">@item.Name</a>
+                            <a class="govuk-link" asp-page="/Schools/Overview/Details"
+                               asp-route-urn="@item.Urn">@item.Name</a>
+                            
                         </td>
                         <td class="govuk-table__cell">
                             @item.Urn 
