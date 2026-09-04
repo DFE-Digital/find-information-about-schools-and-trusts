@@ -2,18 +2,17 @@
 @model DfE.FindInformationAcademiesTrusts.Pages.WatchList.SearchForASchool
 
 @{
-    Layout = null;
+    Layout = "_ContentLayout";
+    ViewData["Title"] = "Search for a school";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-    <div>
-        Search for a school page coming soon
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <span class="govuk-caption-l">Add to watchlist</span>
+        <h1 class="govuk-heading-xl">Search for a school</h1>
+        <div id="school-hint" class="govuk-hint">
+            Search by URN (unique reference number) or name. Include any punctuation in names.
+        </div>
     </div>
-</body>
-</html>
+</div>
+

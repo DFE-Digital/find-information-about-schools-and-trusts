@@ -2,18 +2,16 @@
 @model DfE.FindInformationAcademiesTrusts.Pages.WatchList.SearchForATrust
 
 @{
-    Layout = null;
+    Layout = "_ContentLayout";
+    ViewData["Title"] = "Search for a trust";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-    <div>
-        Search for a trust page coming soon
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <span class="govuk-caption-l">Add to watchlist</span>
+        <h1 class="govuk-heading-xl">Search for a trust</h1>
+        <div id="school-hint" class="govuk-hint">
+            Search by TRN (trust reference number) or name. Include any punctuation in names.
+        </div>
     </div>
-</body>
-</html>
+</div>
