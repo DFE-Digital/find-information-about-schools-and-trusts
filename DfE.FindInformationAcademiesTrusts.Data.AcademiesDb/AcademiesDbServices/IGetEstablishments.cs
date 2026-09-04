@@ -14,4 +14,6 @@ public interface IGetEstablishments
     Task<EstablishmentDto[]> GetEstablishmentsByTrustReferenceNumber(string trustReferenceNumber);
 
     Task<EstablishmentResponse> GetEstablishmentWithSenData(int urn);
+
+    Task<List<EstablishmentDto>> GetEstablishmentsByUrns(List<int> urns);
 }

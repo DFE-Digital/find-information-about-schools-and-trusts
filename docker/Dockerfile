@@ -22,17 +22,22 @@ RUN npm ci --ignore-scripts && \
 FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-azurelinux3.0 AS build
 WORKDIR /build
 
-# - Copy over csprojs before running restore
+# Mount GitHub Token as a Docker secret so that NuGet Feed can be accessed
+RUN --mount=type=secret,id=github_token dotnet nuget add source --username USERNAME --password $(cat /run/secrets/github_token) --store-password-in-clear-text --name github "https://nuget.pkg.github.com/DFE-Digital/index.json"
+
+# - Copy over csprojs and restore nuget packages separately so they can be cached by Docker
+COPY ./DfE.FindInformationAcademiesTrusts.Domain/DfE.FindInformationAcademiesTrusts.Domain.csproj                       /build/DfE.FindInformationAcademiesTrusts.Domain/
+COPY ./DfE.FindInformationAcademiesTrusts.Application/DfE.FindInformationAcademiesTrusts.Application.csproj             /build/DfE.FindInformationAcademiesTrusts.Application/
 COPY ./DfE.FindInformationAcademiesTrusts.Data.Hardcoded/DfE.FindInformationAcademiesTrusts.Data.Hardcoded.csproj       /build/DfE.FindInformationAcademiesTrusts.Data.Hardcoded/
 COPY ./DfE.FindInformationAcademiesTrusts.Data.FiatDb/DfE.FindInformationAcademiesTrusts.Data.FiatDb.csproj             /build/DfE.FindInformationAcademiesTrusts.Data.FiatDb/
 COPY ./DfE.FindInformationAcademiesTrusts.Data/DfE.FindInformationAcademiesTrusts.Data.csproj                           /build/DfE.FindInformationAcademiesTrusts.Data/
 COPY ./DfE.FindInformationAcademiesTrusts.Data.AcademiesDb/DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.csproj   /build/DfE.FindInformationAcademiesTrusts.Data.AcademiesDb/
 COPY ./DfE.FindInformationAcademiesTrusts/DfE.FindInformationAcademiesTrusts.csproj                                     /build/DfE.FindInformationAcademiesTrusts/
-
-# Mount GitHub Token as a Docker secret, configure NuGet source, and restore in one RUN command
-RUN --mount=type=secret,id=github_token sh -c 'dotnet nuget add source --username USERNAME --password $(cat /run/secrets/github_token) --store-password-in-clear-text --name github "https://nuget.pkg.github.com/DFE-Digital/index.json" && dotnet restore DfE.FindInformationAcademiesTrusts'
+RUN dotnet restore DfE.FindInformationAcademiesTrusts
 
 # - Only copy over relevant C# code so this can be cached independently to other app changes
+COPY ./DfE.FindInformationAcademiesTrusts.Domain/           /build/DfE.FindInformationAcademiesTrusts.Domain/
+COPY ./DfE.FindInformationAcademiesTrusts.Application/      /build/DfE.FindInformationAcademiesTrusts.Application/
 COPY ./DfE.FindInformationAcademiesTrusts.Data.Hardcoded/   /build/DfE.FindInformationAcademiesTrusts.Data.Hardcoded/
 COPY ./DfE.FindInformationAcademiesTrusts.Data.FiatDb/      /build/DfE.FindInformationAcademiesTrusts.Data.FiatDb/
 COPY ./DfE.FindInformationAcademiesTrusts.Data/             /build/DfE.FindInformationAcademiesTrusts.Data/

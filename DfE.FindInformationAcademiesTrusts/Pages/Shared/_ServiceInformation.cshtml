@@ -1,4 +1,9 @@
-﻿<section aria-label="Service information" class="govuk-service-navigation" data-module="govuk-service-navigation">
+﻿@{
+    var currentPath = Context.Request.Path.Value ?? "";
+    var isWatchlistActive = currentPath.StartsWith("/watchlist", StringComparison.OrdinalIgnoreCase);
+}
+
+<section aria-label="Service information" class="govuk-service-navigation" data-module="govuk-service-navigation">
     <div class="govuk-width-container">
         <div class="govuk-service-navigation__container">
             <span class="govuk-service-navigation__service-name">
@@ -6,6 +11,20 @@
                     Find information about schools and trusts
                 </a>
             </span>
+            <nav aria-label="Service navigation">
+                <ul class="govuk-service-navigation__list">
+                    <li class="govuk-service-navigation__item @(!isWatchlistActive ? "govuk-service-navigation__item--active" : "")">
+                        <a href="/" class="govuk-service-navigation__link" aria-current="@(!isWatchlistActive ? "page" : null)">
+                            Trusts and schools
+                        </a>
+                    </li>
+                    <li class="govuk-service-navigation__item @(isWatchlistActive ? "govuk-service-navigation__item--active" : "")">
+                        <a href="/watchlist/watchlist-schools" class="govuk-service-navigation__link" aria-current="@(isWatchlistActive ? "page" : null)">
+                            Watchlist
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </section>

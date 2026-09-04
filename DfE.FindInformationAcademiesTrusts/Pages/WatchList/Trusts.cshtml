@@ -1,0 +1,71 @@
+@page "/watchlist/watchlist-trusts"
+@model DfE.FindInformationAcademiesTrusts.Pages.WatchList.Trusts
+
+@{
+    Layout = "_WatchListLayout";
+    ViewData["Title"] = "Watchlist-Trusts";
+    ViewData["ActiveWatchListTab"] = "Trusts";
+}
+
+<div class="govuk-grid-row">
+        <div class="govuk-grid-column-full app-table-container">
+        <table class="govuk-table si-row-colours-table" data-module="moj-sortable-table">
+        @if (Model.Items.Any())
+        {
+            <caption class="govuk-table__caption govuk-!-margin-bottom-4">
+                Trusts
+            </caption>
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-width-one-quarter" aria-sort="none">
+                    Trust name
+                </th>
+                <th scope="col" class="govuk-table__header" aria-sort="none">
+                    TRN
+                </th>
+                <th scope="col" class="govuk-table__header" aria-sort="none">
+                    Region
+                </th>
+                <th scope="col" class="govuk-table__header" aria-sort="none">
+                    Companies house number
+                </th>
+                <th scope="col" class="govuk-table__header">
+                    <span class="govuk-visually-hidden">Remove Trust</span>
+                </th>
+            </tr>
+            </thead>
+
+            <tbody class="govuk-table__body">
+            @foreach (var item in Model.Items)
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link" asp-page="/Trusts/Overview/TrustDetails"
+                           asp-route-uid="@item.GroupUid"
+                           asp-route-referencenumber="@item.TrustReferenceNumber">@item.Name</a>
+                    </td>
+                    <td class="govuk-table__cell">
+                        @item.TrustReferenceNumber
+                    </td>
+                    <td class="govuk-table__cell">
+                        @(string.IsNullOrWhiteSpace(item.Region) ? "Not applicable" : item.Region)
+                    </td>
+                    <td class="govuk-table__cell">
+                        @item.CompaniesHouseNumber
+                    </td>
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link" asp-page="/">Remove</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        }
+        else
+        {
+            <caption class="govuk-table__caption govuk-!-margin-bottom-4">
+                Your trusts watchlist is currently empty
+            </caption>
+        }
+        </table>
+    </div>
+</div>

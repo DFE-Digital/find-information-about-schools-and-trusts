@@ -1,0 +1,32 @@
+@page "/watchlist/select-establishment-type"
+@model DfE.FindInformationAcademiesTrusts.Pages.WatchList.SelectEstablishmentType
+
+@{
+    Layout = "_ContentLayout";
+    ViewData["Title"] = "Select Establishment Type";
+}
+
+@if (Model.ShowError)
+{
+    <partial name="_ErrorSummary"/>
+}
+
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <span class="govuk-caption-l">Add to watchlist</span>
+        <h1 class="govuk-heading-xl">Select the type of establishment to add</h1>
+
+        <form method="post" novalidate>
+            <govuk-radiobuttons-input name="@nameof(Model.OrganisationType)"
+                                      radio-buttons="@Model.OrganisationTypeRadioButtons"
+                                      error-message="@Model.ErrorMessage"
+                                      asp-for="@Model.OrganisationType" />
+
+            <button class="govuk-button" type="submit">
+                Continue
+            </button>
+        </form>
+    </div>
+</div>
