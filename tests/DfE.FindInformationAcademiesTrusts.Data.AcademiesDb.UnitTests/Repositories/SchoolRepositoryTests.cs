@@ -33,10 +33,17 @@ public class SchoolRepositoryTests
     }
 
     [Fact]
-    public async Task GetSchoolSummaryAsync_should_return_null_if_not_found()
+    public async Task GetSchoolSummaryAsync_should_throw_if_not_found()
     {
-        var result = await _sut.GetSchoolSummaryAsync(999999);
-        result.Should().BeNull();
+        var urn = 123456;
+
+        _mockGetEstablishments.GetEstablishment(urn)
+            .ThrowsAsync(new ApiResponseException("Request to Api failed | StatusCode - 401"));
+
+        var action = () => _sut.GetSchoolSummaryAsync(urn);
+
+        await action.Should().ThrowAsync<ApiResponseException>()
+            .WithMessage("Request to Api failed | StatusCode - 401");
     }
 
     [Theory]
@@ -49,50 +56,24 @@ public class SchoolRepositoryTests
         SchoolCategory expectedCategory)
     {
         var name = $"School {urn}";
-        _mockAcademiesDbContext.GiasEstablishments.AddRange(
-        [
-            new GiasEstablishment
+
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
             {
-                Urn = urn,
-                EstablishmentName = name,
-                TypeOfEstablishmentName = type,
-                EstablishmentTypeGroupName = typeGroup,
-                EstablishmentStatusName = "Open"
-            },
-            new GiasEstablishment
-            {
-                Urn = urn + 1,
-                EstablishmentName = "Different school",
-                TypeOfEstablishmentName = type,
-                EstablishmentTypeGroupName = typeGroup,
-                EstablishmentStatusName = "Open"
-            }
-        ]);
+                Urn = urn.ToString(),
+                Name = name,
+                EstablishmentType = new ()
+                {
+                    Name = type
+                },
+                EstablishmentGroupType = new ()
+                {
+                    Name = typeGroup
+                }
+            });
 
         var result = await _sut.GetSchoolSummaryAsync(urn);
         result.Should().BeEquivalentTo(new SchoolSummary(name, type, expectedCategory));
-    }
-
-    [Theory]
-    [InlineData("City technology college", "Independent schools")]
-    [InlineData("Online provider", "Online provider")]
-    [InlineData("Miscellaneous", "Other types")]
-    [InlineData("Higher education institutions", "Universities")]
-    public async Task GetSchoolSummaryAsync_should_not_return_schoolSummarys_for_unsupported_establishment_types(
-        string type,
-        string typeGroup)
-    {
-        _mockAcademiesDbContext.GiasEstablishments.Add(new GiasEstablishment
-        {
-            Urn = 123456,
-            EstablishmentName = "Unsupported Establishment",
-            TypeOfEstablishmentName = type,
-            EstablishmentTypeGroupName = typeGroup,
-            EstablishmentStatusName = "Open"
-        });
-
-        var result = await _sut.GetSchoolSummaryAsync(123456);
-        result.Should().BeNull();
     }
 
     [Fact]

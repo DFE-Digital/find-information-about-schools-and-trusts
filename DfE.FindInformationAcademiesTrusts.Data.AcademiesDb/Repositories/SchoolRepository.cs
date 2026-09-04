@@ -20,15 +20,14 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
 {
     public async Task<SchoolSummary?> GetSchoolSummaryAsync(int urn)
     {
-        return await academiesDbContext.GiasEstablishments
-            .Where(e => e.Urn == urn)
-            .Select(e => new SchoolSummary(
-                e.EstablishmentName!,
-                e.TypeOfEstablishmentName!,
-                e.EstablishmentTypeGroupName == "Academies"
-                    ? SchoolCategory.Academy
-                    : SchoolCategory.LaMaintainedSchool))
-            .SingleOrDefaultAsync();
+        var result = await getEstablishments.GetEstablishment(urn);
+
+        return new SchoolSummary(
+            result.Name,
+            result.EstablishmentType.Name,
+            result.EstablishmentGroupType.Name == "Academies"
+                ? SchoolCategory.Academy
+                : SchoolCategory.LaMaintainedSchool);
     }
 
     public async Task<SchoolDetails> GetSchoolDetailsAsync(int urn)
