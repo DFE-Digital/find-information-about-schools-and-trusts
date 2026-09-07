@@ -78,22 +78,15 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext, IGetEstab
             .SingleOrDefaultAsync();
     }
 
-    public async Task<AcademyOverview[]> GetOverviewOfAcademiesInTrustAsync(string uid)
+    public async Task<AcademyOverview[]> GetOverviewOfAcademiesInTrustAsync(string referenceNumber)
     {
-        return await academiesDbContext.GiasGroupLinks
-            .Where(gl => gl.GroupUid == uid)
-            .Join(
-                academiesDbContext.GiasEstablishments,
-                gl => gl.Urn!,
-                e => e.Urn.ToString(),
-                (gl, e) =>
-                    new AcademyOverview
-                    (
-                        e.Urn.ToString(),
-                        e.LaName ?? string.Empty,
-                        e.NumberOfPupils.ParseAsNullableInt(),
-                        e.SchoolCapacity.ParseAsNullableInt()
-                    ))
-            .ToArrayAsync();
+        var result = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
+
+        return result.Select(e => new AcademyOverview(
+                e.Urn.ToString(),
+                e.LocalAuthorityName,
+                e.Census.NumberOfPupils.ParseAsNullableInt(),
+                e.SchoolCapacity.ParseAsNullableInt()
+            )).ToArray();
     }
 }

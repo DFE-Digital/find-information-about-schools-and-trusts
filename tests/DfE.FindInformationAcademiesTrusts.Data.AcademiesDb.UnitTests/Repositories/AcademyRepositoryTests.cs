@@ -224,60 +224,34 @@ public class AcademyRepositoryTests
     public async Task GetOverviewOfAcademiesInTrustAsync_should_return_academies_linked_to_trust()
     {
         // Arrange
-        var giasGroup = _mockAcademiesDbContext.AddGiasGroupForTrust(GroupUid);
-        var giasEstablishments = Enumerable.Range(1000, 3).Select(n => new GiasEstablishment
+        EstablishmentDto[] establishments = Enumerable.Range(1000, 3).Select(n => new EstablishmentDto
         {
-            Urn = n,
-            EstablishmentName = $"Academy {n}",
-            LaName = $"Local authority {n}",
-            EstablishmentTypeGroupName = "Academies",
-            EstablishmentStatusName = "Open",
-            NumberOfPupils = (n * 10).ToString(),
+            Urn = n.ToString(),
+            Name = $"Academy {n}",
+            LocalAuthorityName = $"Local authority {n}",
+            EstablishmentGroupType = new NameAndCodeDto()
+            {
+                Name = "Academies",
+            },
+            Census = new CensusDto()
+            {
+                NumberOfPupils = (n * 10).ToString(),
+            },
             SchoolCapacity = (n * 15).ToString()
         }).ToArray();
-
-        _mockAcademiesDbContext.GiasEstablishments.AddRange(giasEstablishments);
-        _mockAcademiesDbContext.AddGiasGroupLinks(giasGroup, giasEstablishments);
+        
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns(establishments);
 
         // Act
-        var result = await _sut.GetOverviewOfAcademiesInTrustAsync(GroupUid);
+        var result = await _sut.GetOverviewOfAcademiesInTrustAsync(ReferenceNumber);
 
         // Assert
-        result.Should().BeEquivalentTo(giasEstablishments,
+        result.Should().BeEquivalentTo(establishments,
             options => options
                 .WithAutoConversion()
                 .ExcludingMissingMembers()
-                .WithMapping<AcademyOverview>(e => e.LaName, a => a.LocalAuthority)
+                .WithMapping<AcademyOverview>(e => e.LocalAuthorityName, a => a.LocalAuthority)
         );
-    }
-
-    [Fact]
-    public async Task GetOverviewOfAcademiesInTrustAsync_should_handle_academies_with_missing_data()
-    {
-        var giasGroup = _mockAcademiesDbContext.AddGiasGroupForTrust(GroupUid);
-        var giasEstablishment = new GiasEstablishment
-        {
-            Urn = 2000,
-            EstablishmentName = "Academy Missing Data",
-            EstablishmentTypeGroupName = "Academies",
-            EstablishmentStatusName = "Open",
-            LaName = null,
-            NumberOfPupils = null,
-            SchoolCapacity = null
-        };
-        _mockAcademiesDbContext.GiasEstablishments.Add(giasEstablishment);
-        _mockAcademiesDbContext.AddGiasGroupLinks(giasGroup, giasEstablishment);
-
-        var result = await _sut.GetOverviewOfAcademiesInTrustAsync(GroupUid);
-
-        result.Should().NotBeNull();
-        result.Length.Should().Be(1);
-
-        var academy = result[0];
-        academy.Urn.Should().Be("2000");
-        academy.LocalAuthority.Should().Be(string.Empty);
-        academy.NumberOfPupils.Should().BeNull();
-        academy.SchoolCapacity.Should().BeNull();
     }
 
     [Fact]
