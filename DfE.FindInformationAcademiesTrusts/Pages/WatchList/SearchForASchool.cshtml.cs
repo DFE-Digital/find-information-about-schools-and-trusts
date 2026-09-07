@@ -1,10 +1,12 @@
+using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Queries;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.Search;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.WatchList;
 
-public class SearchForASchool(ISearchService searchService) : ContentPageModel, IEstablishmentSearchFormModel
+public class SearchForASchool(ISearchService searchService,IWatchlistQueryService watchlistQueryService) : ContentPageModel, IEstablishmentSearchFormModel
 {
     
     public void OnGet()
@@ -12,9 +14,21 @@ public class SearchForASchool(ISearchService searchService) : ContentPageModel, 
         
     }
 
-    public async Task<IActionResult> OnGetPopulateAutocompleteAsync()
+    public async Task<IActionResult> OnGetPopulateAutocompleteAsync(CancellationToken cancellationToken)
     {
-        var results = (await searchService.GetSchoolSearchResultsForAutocompleteAsync(KeyWords))
+        var searchResults = await searchService.GetSchoolSearchResultsForAutocompleteAsync(KeyWords);
+
+        var currentUser = User.Identity?.Name;
+
+        var schoolWatchListItems = await watchlistQueryService
+            .GetAllEstablishmentsForUser(currentUser ?? string.Empty, cancellationToken);
+
+        var schoolWatchlistUrns = schoolWatchListItems.Value?
+            .Select(s => s.Urn)
+            .ToHashSet() ?? [];
+
+        var results = searchResults
+            .Where(result => !schoolWatchlistUrns.Contains(result.Id))
             .Select(result => new
             {
                 id = result.Id,
