@@ -61,7 +61,7 @@ public class TrustService(
             return null;
         }
 
-        var count = await academyRepository.GetNumberOfAcademiesInTrustAsync(summary.Uid);
+        var count = await academyRepository.GetNumberOfAcademiesInTrustAsync(summary.ReferenceNumber);
 
         var trustSummaryServiceModel = new TrustSummaryServiceModel(summary.Uid,summary.ReferenceNumber, summary.Name, summary.Type, count);
 

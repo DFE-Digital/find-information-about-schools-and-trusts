@@ -56,9 +56,10 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext, IGetEstab
             .ToArray();
     }
 
-    public async Task<int> GetNumberOfAcademiesInTrustAsync(string uid)
+    public async Task<int> GetNumberOfAcademiesInTrustAsync(string referenceNumber)
     {
-        return await academiesDbContext.GiasGroupLinks.CountAsync(gl => gl.GroupUid == uid && gl.Urn != null);
+        var result =  await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
+        return result.Count();
     }
 
     public async Task<string?> GetSingleAcademyTrustAcademyUrnAsync(string uid)
