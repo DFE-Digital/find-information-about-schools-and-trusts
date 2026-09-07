@@ -6,7 +6,7 @@ public interface IAcademyRepository
     Task<int> GetNumberOfAcademiesInTrustAsync(string uid);
     Task<AcademyDetails[]> GetAcademiesInTrustDetailsAsync(string uid);
 
-    Task<AcademyFreeSchoolMeals[]> GetAcademiesInTrustFreeSchoolMealsAsync(string uid);
+    Task<AcademyFreeSchoolMeals[]> GetAcademiesInTrustFreeSchoolMealsAsync(string referenceNumber);
     Task<AcademyOverview[]> GetOverviewOfAcademiesInTrustAsync(string uid);
     Task<string?> GetTrustUidFromAcademyUrnAsync(int urn);
 

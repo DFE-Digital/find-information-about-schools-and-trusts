@@ -41,20 +41,19 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext, IGetEstab
             .ToArray();
     }
 
-    public async Task<AcademyFreeSchoolMeals[]> GetAcademiesInTrustFreeSchoolMealsAsync(string uid)
+    public async Task<AcademyFreeSchoolMeals[]> GetAcademiesInTrustFreeSchoolMealsAsync(string referenceNumber)
     {
-        return await academiesDbContext.GiasGroupLinks
-            .Where(gl => gl.GroupUid == uid)
-            .Join(academiesDbContext.GiasEstablishments,
-                gl => gl.Urn!, e => e.Urn.ToString(),
-                (gl, e) =>
-                    new AcademyFreeSchoolMeals(e.Urn.ToString(),
-                        e.EstablishmentName,
-                        e.PercentageFsm.ParseAsNullableDouble(),
-                        int.Parse(e.LaCode!),
-                        e.TypeOfEstablishmentName,
-                        e.PhaseOfEducationName))
-            .ToArrayAsync();
+        var result = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
+        
+        return result
+            .Select(e => new AcademyFreeSchoolMeals(
+                e.Urn.ToString(),
+                e.Name,
+                e.Census.PercentageFsm.ParseAsNullableDouble(),
+                e.LocalAuthorityCode.ParseAsNullableInt(),
+                e.EstablishmentType.Name,
+                e.PhaseOfEducation.Name))
+            .ToArray();
     }
 
     public async Task<int> GetNumberOfAcademiesInTrustAsync(string uid)
