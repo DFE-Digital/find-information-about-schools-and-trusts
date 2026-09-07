@@ -2,6 +2,7 @@
 @{
     var placeholderText = Html.Raw("e.g. st mary's primary school");
     var keywords = Html.Raw(Model.KeyWords);
+    var autocompleteEndpoint = Url.Page(Model.AutocompletePagePath, pageHandler: "PopulateAutocomplete");
 }
 
 <div data-testid="app-search-form">
@@ -28,7 +29,7 @@
 <script asp-add-nonce type="application/javascript">
     
  const loadPageFormAutocomplete = async () => {
-    await Autocomplete.loadTrustSearch("@Model.PageSearchFormInputId", "@keywords", "@placeholderText")
+    await Autocomplete.loadTrustSearch("@Model.PageSearchFormInputId", "@keywords", "@placeholderText", "@autocompleteEndpoint")
   }
   window.addEventListener("load", loadPageFormAutocomplete);
 

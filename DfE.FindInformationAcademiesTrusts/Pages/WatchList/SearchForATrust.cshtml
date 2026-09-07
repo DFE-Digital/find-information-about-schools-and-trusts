@@ -13,5 +13,8 @@
         <div id="school-hint" class="govuk-hint">
             Search by TRN (trust reference number) or name. Include any punctuation in names.
         </div>
+        <form class="govuk-form-group app-search govuk-!-margin-bottom-0" asp-page="Search" method="post" role="search" aria-label="sitewide">
+            <partial name="_EstablishmentSearchForm" model="Model"/>
+        </form>
     </div>
 </div>

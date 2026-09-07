@@ -4,4 +4,5 @@ public interface IEstablishmentSearchFormModel
 {
     string? KeyWords { get; set; }
     string PageSearchFormInputId { get; }
+    string AutocompletePagePath { get; }
 }
