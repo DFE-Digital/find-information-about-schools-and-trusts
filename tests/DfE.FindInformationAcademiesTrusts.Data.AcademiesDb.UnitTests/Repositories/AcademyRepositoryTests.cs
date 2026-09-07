@@ -12,7 +12,7 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Reposito
 public class AcademyRepositoryTests
 {
     private const string GroupUid = "1234";
-    private const string referenceNumber = "TRN1234";
+    private const string ReferenceNumber = "TRN1234";
     private readonly AcademyRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
     private readonly IGetEstablishments _mockGetEstablishments;
@@ -62,22 +62,32 @@ public class AcademyRepositoryTests
     }
 
     [Fact]
-    public async Task GetNumberOfAcademiesInTrustAsync_should_return_zero_when_no_grouplinks()
+    public async Task GetNumberOfAcademiesInTrustAsync_should_return_zero_when_no_academies()
     {
-        var result = await _sut.GetNumberOfAcademiesInTrustAsync(GroupUid);
+        var result = await _sut.GetNumberOfAcademiesInTrustAsync(ReferenceNumber);
         result.Should().Be(0);
     }
 
-    [Theory]
-    [InlineData(1)]
-    [InlineData(3)]
-    public async Task GetNumberOfAcademiesInTrustAsync_should_return_number_of_grouplinks_for_uid(int numAcademies)
+    [Fact]
+    public async Task GetNumberOfAcademiesInTrustAsync_should_return_number_of_academies()
     {
-        _mockAcademiesDbContext.AddGiasGroupLinks("some other trust", "some other academy");
-        _mockAcademiesDbContext.AddGiasGroupLinks(GroupUid, numAcademies);
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns(new []
+        {
+            new EstablishmentDto
+            {
+                Urn = "1234",
+                Name = "Academy1",
+            },
+            new EstablishmentDto()
+            {
+                Urn = "1235",
+                Name = "Academy2",
+            }
 
-        var result = await _sut.GetNumberOfAcademiesInTrustAsync(GroupUid);
-        result.Should().Be(numAcademies);
+        });
+
+        var result = await _sut.GetNumberOfAcademiesInTrustAsync(ReferenceNumber);
+        result.Should().Be(2);
     }
 
     [Fact]
@@ -133,7 +143,7 @@ public class AcademyRepositoryTests
     public async Task GetAcademiesInTrustPupilNumbersByTrnAsync_should_return_academies_linked_to_trust()
     {
 
-        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber).Returns(new EstablishmentDto[]
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns(new EstablishmentDto[]
         {
             new EstablishmentDto
             {
@@ -172,7 +182,7 @@ public class AcademyRepositoryTests
 
         });
 
-        var result = await _sut.GetAcademiesInTrustPupilNumbersByTrnAsync(referenceNumber);
+        var result = await _sut.GetAcademiesInTrustPupilNumbersByTrnAsync(ReferenceNumber);
         result.Should().HaveCount(2);
         result.Should().BeEquivalentTo(new[]
         {
@@ -196,9 +206,9 @@ public class AcademyRepositoryTests
     [Fact]
     public async Task GetAcademiesInTrustPupilNumbersByTrnAsync_should_return_empty_array_when_no_academies_linked_to_trust()
     {
-        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber).Returns([]);
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns([]);
 
-        var result = await _sut.GetAcademiesInTrustPupilNumbersByTrnAsync(referenceNumber);
+        var result = await _sut.GetAcademiesInTrustPupilNumbersByTrnAsync(ReferenceNumber);
         result.Should().BeEmpty();
     }
 

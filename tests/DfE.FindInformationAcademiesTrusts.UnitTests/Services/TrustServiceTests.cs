@@ -85,7 +85,7 @@ public class TrustServiceTests
     {
         _mockTrustRepository.GetTrustSummaryAsync(referenceNumber)!
             .Returns(new TrustSummary(name, type, uid, referenceNumber));
-        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(uid).Returns(numAcademies);
+        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(referenceNumber).Returns(numAcademies);
 
         var result = await _sut.GetTrustSummaryAsync(referenceNumber);
         result.Should().BeEquivalentTo(new TrustSummaryServiceModel(uid, referenceNumber, name, type, numAcademies));
@@ -102,7 +102,7 @@ public class TrustServiceTests
 
         _mockTrustRepository.GetTrustSummaryAsync(referenceNumber)!
             .Returns(new TrustSummary(name, type, uid, referenceNumber));
-        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(uid).Returns(numAcademies);
+        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(referenceNumber).Returns(numAcademies);
 
         await _sut.GetTrustSummaryAsync(referenceNumber);
 
@@ -379,9 +379,9 @@ public class TrustServiceTests
 
         _mockTrustRepository.GetTrustSummaryAsync(referenceNumber)
             .Returns(new TrustSummary(name, type, uid, referenceNumber));
-        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(uid).Returns(numAcademies);
+        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(referenceNumber).Returns(numAcademies);
 
-        var result = await _sut.GetTrustSummaryAsync(urn);
+        var result = await _sut.GetTrustSummaryAsync(referenceNumber);
         result.Should().BeEquivalentTo(new TrustSummaryServiceModel(uid, referenceNumber, name, type, numAcademies));
     }
 }
