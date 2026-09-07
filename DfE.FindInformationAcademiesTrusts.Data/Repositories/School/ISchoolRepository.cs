@@ -16,7 +16,7 @@ public interface ISchoolRepository
 
     Task<SchoolReferenceNumbers?> GetReferenceNumbersAsync(int urn);
 
-    Task<Governor[]> GetGovernanceAsync(int urn);
+    Task<List<Governor>> GetGovernanceAsync(int urn);
 
     Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn);
 }

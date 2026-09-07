@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using Dfe.AcademiesApi.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
@@ -6,6 +7,7 @@ using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using GovUK.Dfe.PersonsApi.Client.Contracts;
 using Microsoft.Extensions.Logging;
 using NSubstitute.ExceptionExtensions;
 using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.EstablishmentDto;
@@ -18,6 +20,7 @@ public class SchoolRepositoryTests
     private readonly SchoolRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
     private readonly IGetEstablishments _mockGetEstablishments;
+    private readonly IEstablishmentsClient _establishmentsClient = Substitute.For<IEstablishmentsClient>();
 
     private readonly IStringFormattingUtilities _stringFormattingUtilities = new StringFormattingUtilities();
     private readonly ILogger<SchoolRepository> _mockLogger = MockLogger.CreateLogger<SchoolRepository>();
@@ -26,14 +29,21 @@ public class SchoolRepositoryTests
     {
         _mockGetEstablishments = Substitute.For<IGetEstablishments>();
         _sut = new SchoolRepository(_mockAcademiesDbContext.Object, _stringFormattingUtilities, _mockLogger,
-            _mockGetEstablishments);
+            _mockGetEstablishments, _establishmentsClient);
     }
 
     [Fact]
-    public async Task GetSchoolSummaryAsync_should_return_null_if_not_found()
+    public async Task GetSchoolSummaryAsync_should_throw_if_not_found()
     {
-        var result = await _sut.GetSchoolSummaryAsync(999999);
-        result.Should().BeNull();
+        var urn = 123456;
+
+        _mockGetEstablishments.GetEstablishment(urn)
+            .ThrowsAsync(new ApiResponseException("Request to Api failed | StatusCode - 401"));
+
+        var action = () => _sut.GetSchoolSummaryAsync(urn);
+
+        await action.Should().ThrowAsync<ApiResponseException>()
+            .WithMessage("Request to Api failed | StatusCode - 401");
     }
 
     [Theory]
@@ -46,50 +56,24 @@ public class SchoolRepositoryTests
         SchoolCategory expectedCategory)
     {
         var name = $"School {urn}";
-        _mockAcademiesDbContext.GiasEstablishments.AddRange(
-        [
-            new GiasEstablishment
+
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
             {
-                Urn = urn,
-                EstablishmentName = name,
-                TypeOfEstablishmentName = type,
-                EstablishmentTypeGroupName = typeGroup,
-                EstablishmentStatusName = "Open"
-            },
-            new GiasEstablishment
-            {
-                Urn = urn + 1,
-                EstablishmentName = "Different school",
-                TypeOfEstablishmentName = type,
-                EstablishmentTypeGroupName = typeGroup,
-                EstablishmentStatusName = "Open"
-            }
-        ]);
+                Urn = urn.ToString(),
+                Name = name,
+                EstablishmentType = new ()
+                {
+                    Name = type
+                },
+                EstablishmentGroupType = new ()
+                {
+                    Name = typeGroup
+                }
+            });
 
         var result = await _sut.GetSchoolSummaryAsync(urn);
         result.Should().BeEquivalentTo(new SchoolSummary(name, type, expectedCategory));
-    }
-
-    [Theory]
-    [InlineData("City technology college", "Independent schools")]
-    [InlineData("Online provider", "Online provider")]
-    [InlineData("Miscellaneous", "Other types")]
-    [InlineData("Higher education institutions", "Universities")]
-    public async Task GetSchoolSummaryAsync_should_not_return_schoolSummarys_for_unsupported_establishment_types(
-        string type,
-        string typeGroup)
-    {
-        _mockAcademiesDbContext.GiasEstablishments.Add(new GiasEstablishment
-        {
-            Urn = 123456,
-            EstablishmentName = "Unsupported Establishment",
-            TypeOfEstablishmentName = type,
-            EstablishmentTypeGroupName = typeGroup,
-            EstablishmentStatusName = "Open"
-        });
-
-        var result = await _sut.GetSchoolSummaryAsync(123456);
-        result.Should().BeNull();
     }
 
     [Fact]
@@ -402,6 +386,9 @@ public class SchoolRepositoryTests
     [Fact]
     public async Task GetGovernanceAsync_ShouldReturnEmpty_WithNoGovernanceSet()
     {
+        _establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(1234)
+            .Returns(new ObservableCollection<AcademyGovernance>());
+        
         var result = await _sut.GetGovernanceAsync(1234);
 
         result.Should().BeEmpty();
@@ -411,33 +398,37 @@ public class SchoolRepositoryTests
     public async Task GetGovernanceAsync_ShouldReturnExpectedData()
     {
         var urn = 123;
-
-        var giasGovernance = new GiasGovernance
-        {
-            Urn = urn.ToString(),
-            Forename1 = "testy",
-            Forename2 = "mc",
-            Surname = "testface",
-            DateOfAppointment = DateTime.UtcNow.AddDays(-100).ToString("dd/MM/yyyy"),
-            DateTermOfOfficeEndsEnded = DateTime.UtcNow.AddDays(100).ToString("dd/MM/yyyy"),
-            AppointingBody = "trust members"
-        };
-
-        var giasGovernance2 = new GiasGovernance
-        {
-            Urn = "9876",
-            Forename1 = "another",
-            Surname = "govener",
-            DateOfAppointment = DateTime.UtcNow.AddDays(-100).ToString("dd/MM/yyyy"),
-            DateTermOfOfficeEndsEnded = DateTime.UtcNow.AddDays(100).ToString("dd/MM/yyyy"),
-            AppointingBody = "trust members"
-        };
-
-        _mockAcademiesDbContext.GiasGovernances.AddRange([giasGovernance, giasGovernance2]);
+        
+        _establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(urn)
+            .Returns(new ObservableCollection<AcademyGovernance>
+            {
+                new AcademyGovernance
+                {
+                    Ukprn = "456",
+                    Urn = urn,
+                    DisplayName = "testy mc testface",
+                    Roles = ["trust member"] ,
+                    DateOfAppointment = DateTime.UtcNow.AddDays(-100).ToString("dd/MM/yyyy"),
+                    DateTermOfOfficeEndsEnded = DateTime.UtcNow.AddDays(100).ToString("dd/MM/yyyy"),
+                    Email = "testy@example.com",
+                    AppointingBody = "trust members"
+                },
+                new AcademyGovernance
+                {
+                    Ukprn = "789",
+                    Urn = urn,
+                    DisplayName = "another governor",
+                    Roles = ["governor"] ,
+                    DateOfAppointment = DateTime.UtcNow.AddDays(-100).ToString("dd/MM/yyyy"),
+                    DateTermOfOfficeEndsEnded = DateTime.UtcNow.AddDays(100).ToString("dd/MM/yyyy"),
+                    Email = "another@example.com",
+                    AppointingBody = "trust members"
+                }
+            });
 
         var result = await _sut.GetGovernanceAsync(urn);
 
-        result.Length.Should().Be(1);
+        result.Should().HaveCount(2);
         result[0].FullName.Should().Be("testy mc testface");
         result[0].AppointingBody.Should().Be("trust members");
         result[0].DateOfAppointment.Should().Be(DateTime.UtcNow.AddDays(-100).Date);

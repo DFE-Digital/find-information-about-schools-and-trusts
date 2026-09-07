@@ -4,10 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/compare/production-2026-08-26.7747...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-09-03.7770...HEAD)
 
 
 --- 
+## [Release-73][release-73] - 2026-09-03
+
+### Fixed
+
+- 300800 : Fix email incorrect email address
+
+### Changed
+- 298897 : School governance data through api
+
+--
 
 ## [Release-72][release-72] - 2026-08-26
 

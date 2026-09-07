@@ -265,7 +265,7 @@ export const testBreadcrumbSchoolData = {
 export const senSchoolData = [
     {
         typeOfSchool: "school with SEN provision",
-        urn: 122957
+        urn: 125654
     },
     {
         typeOfSchool: "academy with SEN provision",
@@ -364,7 +364,7 @@ export const testPaginationData = {
 
 export const referenceNumbersTestData = [
     {
-        urn: 122957,
+        urn: 125654,
         description: 'local authority maintained school'
     },
     {
