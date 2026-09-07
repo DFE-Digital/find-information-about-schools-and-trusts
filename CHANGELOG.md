@@ -7,6 +7,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-09-03.7770...HEAD)
 
 
+---
+## [Release-74][release-74] - 2026-09-08
+
+### Changed
+- 300311 : School Summary to use academies API
+- 299071 : Remove grey background from the 'Other tools and products' section in the homepage
+
 --- 
 ## [Release-73][release-73] - 2026-09-03
 
