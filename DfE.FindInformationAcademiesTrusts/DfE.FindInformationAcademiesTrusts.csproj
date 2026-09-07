@@ -56,4 +56,8 @@
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data.Hardcoded\DfE.FindInformationAcademiesTrusts.Data.Hardcoded.csproj" />
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data\DfE.FindInformationAcademiesTrusts.Data.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Pages\Shared\_EstablishmentSearchForm.cshtml" />
+    </ItemGroup>
 </Project>

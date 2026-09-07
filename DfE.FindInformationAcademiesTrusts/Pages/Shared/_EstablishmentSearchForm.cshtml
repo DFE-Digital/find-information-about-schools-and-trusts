@@ -1,0 +1,35 @@
+@model IEstablishmentSearchFormModel
+@{
+    var placeholderText = Html.Raw("e.g. st mary's primary school");
+    var keywords = Html.Raw(Model.KeyWords);
+}
+
+<div data-testid="app-search-form">
+    @* This is used by the no javascript users *@
+    <div class="app-search__wrapper app-search__wrapper--standalone">
+        <div id="@Model.PageSearchFormInputId-no-js-search-container">
+            <input class="govuk-input app-search__input" id="@Model.PageSearchFormInputId" type="search" asp-for="KeyWords" name="keywords" placeholder="@placeholderText">
+        </div>
+    </div>
+    <button class="govuk-button govuk-!-margin-top-3 govuk-!-margin-bottom-0" data-module="govuk-button" type="submit">
+        Continue
+    </button>
+</div>
+@* This template is used by a script to implement autocomplete *@
+<template id="@Model.PageSearchFormInputId-js-autocomplete-template">
+    <div>
+        <div id="@Model.PageSearchFormInputId-autocomplete-container"></div>
+        <input type="hidden" id="@Model.PageSearchFormInputId-selected-id" name="id"/>
+        <input type="hidden" id="@Model.PageSearchFormInputId-selected-referencenumber" name="referenceNumber"/>
+        <input type="hidden" id="@Model.PageSearchFormInputId-selected-searchResultType" name="searchResultType"/>
+    </div>
+</template>
+
+<script asp-add-nonce type="application/javascript">
+    
+ const loadPageFormAutocomplete = async () => {
+    await Autocomplete.loadTrustSearch("@Model.PageSearchFormInputId", "@keywords", "@placeholderText")
+  }
+  window.addEventListener("load", loadPageFormAutocomplete);
+
+</script>
