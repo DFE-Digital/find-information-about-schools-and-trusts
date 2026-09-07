@@ -70,14 +70,6 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext, IGetEstab
             .FirstOrDefaultAsync();
     }
 
-    public async Task<string?> GetTrustUidFromAcademyUrnAsync(int urn)
-    {
-        return await academiesDbContext.GiasGroupLinks.Trusts()
-            .Where(gl => gl.Urn == urn.ToString())
-            .Select(gl => gl.GroupUid)
-            .SingleOrDefaultAsync();
-    }
-
     public async Task<AcademyOverview[]> GetOverviewOfAcademiesInTrustAsync(string referenceNumber)
     {
         var result = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);

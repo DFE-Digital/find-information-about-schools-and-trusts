@@ -1,10 +1,8 @@
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
-using Moq;
 using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V5.Establishments.EstablishmentDto;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Repositories;
@@ -224,7 +222,7 @@ public class AcademyRepositoryTests
     public async Task GetOverviewOfAcademiesInTrustAsync_should_return_academies_linked_to_trust()
     {
         // Arrange
-        EstablishmentDto[] establishments = Enumerable.Range(1000, 3).Select(n => new EstablishmentDto
+       var establishments = Enumerable.Range(1000, 3).Select(n => new EstablishmentDto
         {
             Urn = n.ToString(),
             Name = $"Academy {n}",
@@ -268,72 +266,5 @@ public class AcademyRepositoryTests
         var result = await _sut.GetOverviewOfAcademiesInTrustAsync("non-existent-uid");
         result.Should().NotBeNull();
         result.Should().BeEmpty();
-    }
-
-    [Fact]
-    public async Task GetTrustUidFromAcademyUrnAsync_should_return_null_when_not_found()
-    {
-        const int unknownUrn = 999999;
-
-        var result = await _sut.GetTrustUidFromAcademyUrnAsync(unknownUrn);
-
-        result.Should().BeNull();
-    }
-
-    [Fact]
-    public async Task GetTrustUidFromAcademyUrnAsync_should_return_found_trust_uid_when_single_academy_trust()
-    {
-        var mat = _mockAcademiesDbContext.AddGiasGroupForTrust(GroupUid, groupType:"Single-academy trust");
-        var academy = _mockAcademiesDbContext.AddGiasEstablishment();
-        _mockAcademiesDbContext.AddGiasGroupLinks(mat, academy);
-
-        var result = await _sut.GetTrustUidFromAcademyUrnAsync(academy.Urn);
-
-        result.Should().Be(GroupUid);
-    }
-
-    [Fact]
-    public async Task GetTrustUidFromAcademyUrnAsync_should_return_found_trust_uid_when_multi_academy_trust()
-    {
-        var mat = _mockAcademiesDbContext.AddGiasGroupForTrust(GroupUid, groupType:"Multi-academy trust");
-        var academies =  Enumerable.Range(1000, 6).Select(n => new GiasEstablishment
-        {
-            Urn = n,
-            EstablishmentName = $"Academy {n}"
-        }).ToArray();
-        _mockAcademiesDbContext.AddGiasGroupLinks(mat, academies);
-    
-        var result = await _sut.GetTrustUidFromAcademyUrnAsync(academies[0].Urn);
-    
-        result.Should().Be(GroupUid);
-    }
-
-    [Fact]
-    public async Task GetTrustUidFromAcademyUrnAsync_should_throw_if_more_than_one_link_between_academy_and_trust()
-    {
-        var mat = _mockAcademiesDbContext.AddGiasGroupForTrust(GroupUid);
-        var academy = _mockAcademiesDbContext.AddGiasEstablishment();
-
-        _mockAcademiesDbContext.AddGiasGroupLinks(mat, academy);
-        _mockAcademiesDbContext.AddGiasGroupLinks(mat, academy);
-
-        var action = () => _sut.GetTrustUidFromAcademyUrnAsync(academy.Urn);
-
-        await action.Should().ThrowAsync<InvalidOperationException>();
-    }
-
-    [Theory]
-    [InlineData("Multi-academy trust", "123")]
-    [InlineData("Single-academy trust", "456")]
-    [InlineData("unknown trust", null)]
-    public async Task GetTrustUidFromAcademyUrnAsync_should_return_for_trust_types(string trustType, string? uid)
-    {
-        var trust = _mockAcademiesDbContext.AddGiasGroupForTrust(uid, groupType: trustType);
-        var academy = _mockAcademiesDbContext.AddGiasEstablishment();
-        _mockAcademiesDbContext.AddGiasGroupLinks(trust, academy);
-
-        var result = await _sut.GetTrustUidFromAcademyUrnAsync(academy.Urn);
-
-        result.Should().Be(uid);
     }
 }

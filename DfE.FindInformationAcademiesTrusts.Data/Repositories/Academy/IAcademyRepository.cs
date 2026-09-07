@@ -8,7 +8,5 @@ public interface IAcademyRepository
 
     Task<AcademyFreeSchoolMeals[]> GetAcademiesInTrustFreeSchoolMealsAsync(string referenceNumber);
     Task<AcademyOverview[]> GetOverviewOfAcademiesInTrustAsync(string referenceNumber);
-    Task<string?> GetTrustUidFromAcademyUrnAsync(int urn);
-
     Task<AcademyPupilNumbers[]> GetAcademiesInTrustPupilNumbersByTrnAsync(string referenceNumber);
 }
