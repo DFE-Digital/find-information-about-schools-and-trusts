@@ -2,6 +2,7 @@ using DfE.FindInformationAcademiesTrusts.Application.Common.Models;
 using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Models;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Domain.Entities;
+using DfE.FindInformationAcademiesTrusts.Domain.ValueObjects;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
 
@@ -11,111 +12,80 @@ public class WatchlistQueryService(IGetEstablishments getEstablishments, IGetTru
 {
     private static readonly IReadOnlyList<Domain.Entities.Watchlist> Watchlists =
     [
-        new()
+        new(new WatchlistId(Guid.NewGuid()), "135963", null,"Dan.RYAN@EDUCATION.GOV.UK")
         {
-            Id = Guid.NewGuid(),
-            EstablishmentId = "135963",
             IsTrust = false,
-            User = "Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 12),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
-        new()
+        new(new WatchlistId(Guid.NewGuid()), "101314", null,"Dan.RYAN@EDUCATION.GOV.UK")
         {
-            Id = Guid.NewGuid(),
-            EstablishmentId = "101314",
             IsTrust = false,
-            User = "Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 8),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
-        new()
+        new(new WatchlistId(Guid.NewGuid()), "139041", null,"Dan.RYAN@EDUCATION.GOV.UK")
         {
-            Id = Guid.NewGuid(),
-            EstablishmentId = "139041",
             IsTrust = false,
-            User = "Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 3),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
-        new()
+        new(new WatchlistId(Guid.NewGuid()), "136394", null,"Richika.DOGRA@EDUCATION.GOV.UK")
         {
-            Id = Guid.NewGuid(),
-            EstablishmentId = "136394",
             IsTrust = false,
-            User = "Richika.DOGRA@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 7, 28),
             CreatedBy = "Richika.DOGRA@EDUCATION.GOV.UK"
         },
-        new()
+        new(new WatchlistId(Guid.NewGuid()), "139041", null,"Richika.DOGRA@EDUCATION.GOV.UK")
         {
-            Id = Guid.NewGuid(),
-            EstablishmentId = "139041",
             IsTrust = false,
-            User = "Richika.DOGRA@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 7, 28),
             CreatedBy = "Richika.DOGRA@EDUCATION.GOV.UK"
         },
-        new()
+        new(new WatchlistId(Guid.NewGuid()), "135963", null,"Richika.DOGRA@EDUCATION.GOV.UK")
         {
-            Id = Guid.NewGuid(),
-            EstablishmentId = "135963",
             IsTrust = false,
-            User = "Richika.DOGRA@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 7, 28),
             CreatedBy = "Richika.DOGRA@EDUCATION.GOV.UK"
         },
-        new()
+        new(new WatchlistId(Guid.NewGuid()), "100005", null,"Laura Evans")
         {
-            Id = Guid.NewGuid(),
-            EstablishmentId = "100005",
             IsTrust = false,
-            User = "Laura Evans",
             CreatedOn = new DateTime(2026, 7, 21),
             CreatedBy = "Laura Evans"
         },
-        new()
+        new(new WatchlistId(Guid.NewGuid()), "0", null,"Dan.RYAN@EDUCATION.GOV.UK")
         {
-            Id = Guid.NewGuid(),
             TrustId = "tr01585",
             IsTrust = true,
-            User = "Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 14),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
-        new()
+        new(new WatchlistId(Guid.NewGuid()), "0", null,"Dan.RYAN@EDUCATION.GOV.UK")
         {
-            Id = Guid.NewGuid(),
             TrustId = "tr01414",
             IsTrust = true,
-            User = "Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 9),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
-        new()
+        new(new WatchlistId(Guid.NewGuid()), "0",null, "Dan.RYAN@EDUCATION.GOV.UK")
         {
-            Id = Guid.NewGuid(),
             TrustId = "tr02343",
             IsTrust = true,
-            User = "Dan.RYAN@EDUCATION.GOV.UK",
             CreatedOn = new DateTime(2026, 8, 4),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
-        new()
+        new(new WatchlistId(Guid.NewGuid()), "0", null,"Daniel Price")
         {
-            Id = Guid.NewGuid(),
             TrustId = "200004",
             IsTrust = true,
-            User = "Daniel Price",
             CreatedOn = new DateTime(2026, 7, 29),
             CreatedBy = "Daniel Price"
         },
-        new()
+        new(new WatchlistId(Guid.NewGuid()), "0", null,"Grace Mitchell")
         {
-            Id = Guid.NewGuid(),
             TrustId = "200005",
             IsTrust = true,
-            User = "Grace Mitchell",
             CreatedOn = new DateTime(2026, 7, 22),
             CreatedBy = "Grace Mitchell"
         }

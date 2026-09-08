@@ -12,6 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Watchlist\Commands\" />
+      <PackageReference Include="MediatR" Version="14.2.0" />
     </ItemGroup>
 </Project>
