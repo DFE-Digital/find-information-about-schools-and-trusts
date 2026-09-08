@@ -56,4 +56,15 @@ public class GetEstablishments(IDfeHttpClientFactory httpClientFactory,
 
         return result.Body;
     }
+
+    public async Task<EstablishmentDto> GetEstablishmentByUkprn(string ukprn)
+    {
+        string path = $"/v4/establishment/{ukprn}";
+        
+        ApiResponse<EstablishmentDto> result = await httpClientService.Get<EstablishmentDto>(_httpClient, path);
+        
+        if (!result.Success) throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");
+
+        return result.Body;
+    }
 }

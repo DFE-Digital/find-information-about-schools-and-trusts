@@ -32,7 +32,7 @@ public class ContactsAreaModel(
         if (pageResult.GetType() == typeof(NotFoundResult)) return pageResult;
 
         (TrustRelationshipManager, SfsoLead, AccountingOfficer, ChairOfTrustees, ChiefFinancialOfficer) =
-            await TrustService.GetTrustContactsAsync(Uid);
+            await TrustService.GetTrustContactsAsync(Uid, TrustReferenceNumber);
 
         // Add data sources
         var giasDataSource = await DataSourceService.GetAsync(Source.Gias);
