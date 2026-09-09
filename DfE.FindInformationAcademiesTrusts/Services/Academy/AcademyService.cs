@@ -72,7 +72,7 @@ public class AcademyService(
                     a.EstablishmentName,
                     a.PercentageFreeSchoolMeals,
                     a.LocalAuthorityCode.HasValue ?
-                    freeSchoolMealsAverageProvider.GetLaAverage(a.LocalAuthorityCode!.Value, a.PhaseOfEducation,
+                    freeSchoolMealsAverageProvider.GetLaAverage(a.LocalAuthorityCode.Value, a.PhaseOfEducation,
                         a.TypeOfEstablishment) : 0.00,
                     freeSchoolMealsAverageProvider.GetNationalAverage(a.PhaseOfEducation, a.TypeOfEstablishment)))
             .ToArray();
