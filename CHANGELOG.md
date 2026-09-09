@@ -4,8 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-09-03.7770...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-09-08.7776...HEAD)
 
+
+---
+## [Release-74][release-74] - 2026-09-08
+
+### Changed
+- 300311 : School Summary to use academies API
+- 299071 : Remove grey background from the 'Other tools and products' section in the homepage
 
 --- 
 ## [Release-73][release-73] - 2026-09-03
