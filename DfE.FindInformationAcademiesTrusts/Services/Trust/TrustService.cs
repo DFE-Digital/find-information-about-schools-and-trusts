@@ -15,7 +15,7 @@ public interface ITrustService
     Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(string referenceNumber);
     Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(int urn);
     Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string trn);
-    Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid);
+    Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid, string referenceNumber);
     Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string trustReferenceNumber, string uid);
 
     Task<InternalContactUpdatedServiceModel> UpdateContactAsync(int uid, string? name, string? email,
@@ -61,7 +61,7 @@ public class TrustService(
             return null;
         }
 
-        var count = await academyRepository.GetNumberOfAcademiesInTrustAsync(summary.Uid);
+        var count = await academyRepository.GetNumberOfAcademiesInTrustAsync(summary.ReferenceNumber);
 
         var trustSummaryServiceModel = new TrustSummaryServiceModel(summary.Uid,summary.ReferenceNumber, summary.Name, summary.Type, count);
 
@@ -83,9 +83,9 @@ public class TrustService(
             GetGovernanceTurnoverRate(governors));
     }
 
-    public async Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid)
+    public async Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid, string referenceNumber)
     {
-        var urn = await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(uid);
+        var urn = await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(referenceNumber);
 
         var trustContacts =
             await trustRepository.GetTrustContactsAsync(uid, urn);
@@ -120,10 +120,10 @@ public class TrustService(
         };
 
         var singleAcademyTrustAcademyUrn = trustType is TrustType.SingleAcademyTrust
-            ? await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(uid)
+            ? await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(trustReferenceNumber)
             : null;
 
-        var academiesOverview = await academyRepository.GetOverviewOfAcademiesInTrustAsync(uid);
+        var academiesOverview = await academyRepository.GetOverviewOfAcademiesInTrustAsync(trustReferenceNumber);
 
         var totalAcademies = academiesOverview.Length;
 
