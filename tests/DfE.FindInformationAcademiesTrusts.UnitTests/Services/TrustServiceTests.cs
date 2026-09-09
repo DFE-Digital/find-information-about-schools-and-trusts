@@ -178,7 +178,7 @@ public class TrustServiceTests
         var internalContacts = new TrustInternalContacts(internalContact, internalContact);
         _mockContactRepository.GetTrustInternalContactsAsync("1234").Returns(internalContacts);
 
-        var result = await _sut.GetTrustContactsAsync("1234");
+        var result = await _sut.GetTrustContactsAsync("1234", "TR5678");
 
         result.Should().BeEquivalentTo(contacts);
     }
@@ -191,7 +191,7 @@ public class TrustServiceTests
         GetTrustOverviewAsync_should_get_singleAcademyTrustAcademyUrn_from_academy_repository_when_trust_is_single_academy_trust(
             string? singleAcademyTrustAcademyUrn)
     {
-        _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync("2806")
+        _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync("TR0012")
             .Returns(singleAcademyTrustAcademyUrn);
         _mockTrustRepository.GetTrustOverviewAsync("TR0012").Returns(BaseTrustOverview);
 

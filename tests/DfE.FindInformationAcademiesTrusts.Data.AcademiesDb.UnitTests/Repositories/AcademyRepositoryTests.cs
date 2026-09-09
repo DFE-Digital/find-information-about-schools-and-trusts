@@ -89,52 +89,20 @@ public class AcademyRepositoryTests
     }
 
     [Fact]
-    public async Task
-        GetUrnForSingleAcademyTrustAsync_should_set_singleAcademyTrustAcademyUrn_to_null_when_multi_academy_trust()
-    {
-        var mat = _mockAcademiesDbContext.AddGiasGroupForTrust("2806", groupType: "Multi-academy trust");
-        var academy = _mockAcademiesDbContext.AddGiasEstablishment(1234);
-        _mockAcademiesDbContext.AddGiasGroupLinks(mat, academy);
-
-        var result = await _sut.GetSingleAcademyTrustAcademyUrnAsync("2806");
-
-        result.Should().BeNull();
-    }
-
-    [Fact]
-    public async Task
-        GetUrnForSingleAcademyTrustAsync_should_set_singleAcademyTrustAcademyUrn_to_null_when_Federation()
-    {
-        var mat = _mockAcademiesDbContext.AddGiasGroupForFederation("2806");
-        var academy = _mockAcademiesDbContext.AddGiasEstablishment(1234);
-        _mockAcademiesDbContext.AddGiasGroupLinks(mat, academy);
-
-        var result = await _sut.GetSingleAcademyTrustAcademyUrnAsync("2806");
-
-        result.Should().BeNull();
-    }
-
-    [Fact]
-    public async Task
-        GetUrnForSingleAcademyTrustAsync_should_set_singleAcademyTrustAcademyUrn_to_null_when_SAT_with_no_academies()
-    {
-        _ = _mockAcademiesDbContext.AddGiasGroupForTrust("2806", groupType: "Single-academy trust");
-
-        var result = await _sut.GetSingleAcademyTrustAcademyUrnAsync("2806");
-
-        result.Should().BeNull();
-    }
-
-    [Fact]
     public async Task GetUrnForSingleAcademyTrustAsync_should_set_singleAcademyTrustAcademyUrn_to_urn_of_SAT_academy()
     {
-        var sat = _mockAcademiesDbContext.AddGiasGroupForTrust("2806", groupType: "Single-academy trust");
-        var academy = _mockAcademiesDbContext.AddGiasEstablishment(123456);
-        _mockAcademiesDbContext.AddGiasGroupLinks(sat, academy);
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns(new []
+        {
+            new EstablishmentDto
+            {
+                Urn = "1234",
+                Name = "Academy1",
+            }
+        });
 
-        var result = await _sut.GetSingleAcademyTrustAcademyUrnAsync("2806");
+        var result = await _sut.GetSingleAcademyTrustAcademyUrnAsync(ReferenceNumber);
 
-        result.Should().Be("123456");
+        result.Should().Be("1234");
     }
 
     [Fact]

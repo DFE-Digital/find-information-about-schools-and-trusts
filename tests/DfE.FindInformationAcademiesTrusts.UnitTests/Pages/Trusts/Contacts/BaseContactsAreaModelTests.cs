@@ -25,7 +25,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseTrustPageTests<T>, ITe
 
     protected BaseContactsAreaModelTests()
     {
-        MockTrustService.GetTrustContactsAsync(Arg.Any<string>())
+        MockTrustService.GetTrustContactsAsync(Arg.Any<string>(), Arg.Any<string>())
             .Returns(Task.FromResult(_baseTrustContactsServiceModel));
     }
 
@@ -33,7 +33,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseTrustPageTests<T>, ITe
     public async Task OnGetAsync_sets_chair_of_trustees_to_be_current_chair()
     {
         var chairOfTrustees = new Person("Chair Of Trustees", "cot@test.com");
-        MockTrustService.GetTrustContactsAsync(TrustUid).Returns(Task.FromResult(_baseTrustContactsServiceModel with
+        MockTrustService.GetTrustContactsAsync(TrustUid, TrustReference).Returns(Task.FromResult(_baseTrustContactsServiceModel with
         {
             ChairOfTrustees = chairOfTrustees
         }));
@@ -46,7 +46,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseTrustPageTests<T>, ITe
     public async Task OnGetAsync_sets_accounting_officer_to_be_current_officer()
     {
         var accountingOfficer = new Person("Accounting Officer", "ao@test.com");
-        MockTrustService.GetTrustContactsAsync(TrustUid).Returns(Task.FromResult(_baseTrustContactsServiceModel with
+        MockTrustService.GetTrustContactsAsync(TrustUid, TrustReference).Returns(Task.FromResult(_baseTrustContactsServiceModel with
         {
             AccountingOfficer = accountingOfficer
         }));
@@ -61,7 +61,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseTrustPageTests<T>, ITe
     {
         var chiefFinancialOfficer = new Person("Chief Financial Officer", "cfo@test.com");
 
-        MockTrustService.GetTrustContactsAsync(TrustUid)
+        MockTrustService.GetTrustContactsAsync(TrustUid, TrustReference)
             .Returns(Task.FromResult(_baseTrustContactsServiceModel with
             {
                 ChiefFinancialOfficer = chiefFinancialOfficer
@@ -74,7 +74,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseTrustPageTests<T>, ITe
     [Fact]
     public async Task OnGetAsync_sets_trust_relationship_manager()
     {
-        MockTrustService.GetTrustContactsAsync(TrustUid)
+        MockTrustService.GetTrustContactsAsync(TrustUid, TrustReference)
             .Returns(Task.FromResult(_baseTrustContactsServiceModel with
             {
                 TrustRelationshipManager = _trustRelationshipManager
@@ -87,7 +87,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseTrustPageTests<T>, ITe
     [Fact]
     public async Task OnGetAsync_sets_trust_sfsolead()
     {
-        MockTrustService.GetTrustContactsAsync(TrustUid)
+        MockTrustService.GetTrustContactsAsync(TrustUid, TrustReference)
             .Returns(Task.FromResult(_baseTrustContactsServiceModel with { SfsoLead = _sfsoLead }));
 
         await Sut.OnGetAsync();
@@ -97,7 +97,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseTrustPageTests<T>, ITe
     [Fact]
     public async Task OnGetAsync_sets_chair_of_trustees_to_null_when_trust_has_no_chair()
     {
-        MockTrustService.GetTrustContactsAsync(TrustUid)
+        MockTrustService.GetTrustContactsAsync(TrustUid, TrustReference)
             .Returns(Task.FromResult(_baseTrustContactsServiceModel with { ChairOfTrustees = null }));
 
         await Sut.OnGetAsync();
@@ -107,7 +107,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseTrustPageTests<T>, ITe
     [Fact]
     public async Task OnGetAsync_sets_accounting_officer_to_null_be_when_trust_has_no_officer()
     {
-        MockTrustService.GetTrustContactsAsync(TrustUid)
+        MockTrustService.GetTrustContactsAsync(TrustUid, TrustReference)
             .Returns(Task.FromResult(_baseTrustContactsServiceModel with { AccountingOfficer = null }));
 
         await Sut.OnGetAsync();
@@ -117,7 +117,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseTrustPageTests<T>, ITe
     [Fact]
     public async Task OnGetAsync_sets_chief_financial_officer_to_null_be_when_trust_has_no_officer()
     {
-        MockTrustService.GetTrustContactsAsync(TrustUid)
+        MockTrustService.GetTrustContactsAsync(TrustUid, TrustReference)
             .Returns(Task.FromResult(_baseTrustContactsServiceModel with { ChiefFinancialOfficer = null }));
 
         await Sut.OnGetAsync();
@@ -155,7 +155,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseTrustPageTests<T>, ITe
     [Fact]
     public async Task OnGetAsync_sets_trustRelationshipManager_last_modified_details_in_data_source_list()
     {
-        MockTrustService.GetTrustContactsAsync(TrustUid)
+        MockTrustService.GetTrustContactsAsync(TrustUid, TrustReference)
             .Returns(Task.FromResult(_baseTrustContactsServiceModel with
             {
                 TrustRelationshipManager = _trustRelationshipManager
@@ -174,7 +174,7 @@ public abstract class BaseContactsAreaModelTests<T> : BaseTrustPageTests<T>, ITe
     [Fact]
     public async Task OnGetAsync_sets__sfsoLead_last_modified_details_in_data_source_list()
     {
-        MockTrustService.GetTrustContactsAsync(TrustUid)
+        MockTrustService.GetTrustContactsAsync(TrustUid, TrustReference)
             .Returns(Task.FromResult(_baseTrustContactsServiceModel with { SfsoLead = _sfsoLead }));
 
         await Sut.OnGetAsync();
