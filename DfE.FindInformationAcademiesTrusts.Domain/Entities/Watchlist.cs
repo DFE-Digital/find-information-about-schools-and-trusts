@@ -6,11 +6,12 @@ namespace DfE.FindInformationAcademiesTrusts.Domain.Entities;
 public class Watchlist : BaseAggregateRoot, IEntity<WatchlistId>
 {
     
-    public Watchlist(WatchlistId id, string? establishmentId,string? trustid, string user)
+    public Watchlist(WatchlistId id, string? establishmentId,string? trustid,bool isTrust, string user)
     {
         Id = id;
         EstablishmentId = establishmentId;
         TrustId = trustid;
+        IsTrust = isTrust;
         User = user;
     }
     

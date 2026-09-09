@@ -12,77 +12,77 @@ public class WatchlistQueryService(IGetEstablishments getEstablishments, IGetTru
 {
     private static readonly IReadOnlyList<Domain.Entities.Watchlist> Watchlists =
     [
-        new(new WatchlistId(Guid.NewGuid()), "135963", null,"Dan.RYAN@EDUCATION.GOV.UK")
+        new(new WatchlistId(Guid.NewGuid()), "135963", null,false,"Dan.RYAN@EDUCATION.GOV.UK")
         {
             IsTrust = false,
             CreatedOn = new DateTime(2026, 8, 12),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
-        new(new WatchlistId(Guid.NewGuid()), "101314", null,"Dan.RYAN@EDUCATION.GOV.UK")
+        new(new WatchlistId(Guid.NewGuid()), "101314", null,false,"Dan.RYAN@EDUCATION.GOV.UK")
         {
             IsTrust = false,
             CreatedOn = new DateTime(2026, 8, 8),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
-        new(new WatchlistId(Guid.NewGuid()), "139041", null,"Dan.RYAN@EDUCATION.GOV.UK")
+        new(new WatchlistId(Guid.NewGuid()), "139041", null,false,"Dan.RYAN@EDUCATION.GOV.UK")
         {
             IsTrust = false,
             CreatedOn = new DateTime(2026, 8, 3),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
-        new(new WatchlistId(Guid.NewGuid()), "136394", null,"Richika.DOGRA@EDUCATION.GOV.UK")
+        new(new WatchlistId(Guid.NewGuid()), "136394", null,false,"Richika.DOGRA@EDUCATION.GOV.UK")
         {
             IsTrust = false,
             CreatedOn = new DateTime(2026, 7, 28),
             CreatedBy = "Richika.DOGRA@EDUCATION.GOV.UK"
         },
-        new(new WatchlistId(Guid.NewGuid()), "139041", null,"Richika.DOGRA@EDUCATION.GOV.UK")
+        new(new WatchlistId(Guid.NewGuid()), "139041", null,false,"Richika.DOGRA@EDUCATION.GOV.UK")
         {
             IsTrust = false,
             CreatedOn = new DateTime(2026, 7, 28),
             CreatedBy = "Richika.DOGRA@EDUCATION.GOV.UK"
         },
-        new(new WatchlistId(Guid.NewGuid()), "135963", null,"Richika.DOGRA@EDUCATION.GOV.UK")
+        new(new WatchlistId(Guid.NewGuid()), "135963", null,false,"Richika.DOGRA@EDUCATION.GOV.UK")
         {
             IsTrust = false,
             CreatedOn = new DateTime(2026, 7, 28),
             CreatedBy = "Richika.DOGRA@EDUCATION.GOV.UK"
         },
-        new(new WatchlistId(Guid.NewGuid()), "100005", null,"Laura Evans")
+        new(new WatchlistId(Guid.NewGuid()), "100005", null,false,"Laura Evans")
         {
             IsTrust = false,
             CreatedOn = new DateTime(2026, 7, 21),
             CreatedBy = "Laura Evans"
         },
-        new(new WatchlistId(Guid.NewGuid()), "0", null,"Dan.RYAN@EDUCATION.GOV.UK")
+        new(new WatchlistId(Guid.NewGuid()), "0", null,true,"Dan.RYAN@EDUCATION.GOV.UK")
         {
             TrustId = "tr01585",
             IsTrust = true,
             CreatedOn = new DateTime(2026, 8, 14),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
-        new(new WatchlistId(Guid.NewGuid()), "0", null,"Dan.RYAN@EDUCATION.GOV.UK")
+        new(new WatchlistId(Guid.NewGuid()), "0", null,true,"Dan.RYAN@EDUCATION.GOV.UK")
         {
             TrustId = "tr01414",
             IsTrust = true,
             CreatedOn = new DateTime(2026, 8, 9),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
-        new(new WatchlistId(Guid.NewGuid()), "0",null, "Dan.RYAN@EDUCATION.GOV.UK")
+        new(new WatchlistId(Guid.NewGuid()), "0",null, true,"Dan.RYAN@EDUCATION.GOV.UK")
         {
             TrustId = "tr02343",
             IsTrust = true,
             CreatedOn = new DateTime(2026, 8, 4),
             CreatedBy = "Dan.RYAN@EDUCATION.GOV.UK"
         },
-        new(new WatchlistId(Guid.NewGuid()), "0", null,"Daniel Price")
+        new(new WatchlistId(Guid.NewGuid()), "0", null,true,"Daniel Price")
         {
             TrustId = "200004",
             IsTrust = true,
             CreatedOn = new DateTime(2026, 7, 29),
             CreatedBy = "Daniel Price"
         },
-        new(new WatchlistId(Guid.NewGuid()), "0", null,"Grace Mitchell")
+        new(new WatchlistId(Guid.NewGuid()), "0", null,true,"Grace Mitchell")
         {
             TrustId = "200005",
             IsTrust = true,

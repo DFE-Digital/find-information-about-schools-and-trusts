@@ -23,6 +23,7 @@ public class AddEstablishmentToWatchlist
                 watchlistId,
                 request.EstablishmentId,
                 null,
+                true,
                 request.User
             );
             

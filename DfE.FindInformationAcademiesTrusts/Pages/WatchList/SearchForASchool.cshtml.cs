@@ -40,6 +40,21 @@ public class SearchForASchool(ISearchService searchService,IWatchlistQueryServic
 
         return new JsonResult(results);
     }
+    
+    public async Task<IActionResult> OnPostAsync(string id, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            ModelState.AddModelError("SelectedSchoolId", "Please select a school from the list.");
+            return Page();
+        }
+
+        var currentUser = User.Identity?.Name;
+
+       
+
+        return RedirectToPage("/WatchList/ConfirmSchool",new {id});
+    }
 
     public string PageSearchFormInputId => "school-search";
     public string AutocompletePagePath => "/WatchList/SearchForASchool";

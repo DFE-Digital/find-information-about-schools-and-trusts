@@ -1,8 +1,7 @@
-using Dfe.FindInformationAcademiesTrusts.Domain;
 using System.Linq.Expressions;
 using DfE.FindInformationAcademiesTrusts.Domain.Common;
 
-namespace Dfe.FindInformationAcademiesTrusts.Domain.Interfaces.Repositories
+namespace DfE.FindInformationAcademiesTrusts.Domain.Interfaces.Repositories
 {
     /// <summary>Repository</summary>
     /// <typeparam name="TAggregate"></typeparam>

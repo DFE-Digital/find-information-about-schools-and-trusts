@@ -35,11 +35,15 @@ using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
+using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Commands;
 using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Queries;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
+using DfE.FindInformationAcademiesTrusts.Data.FiatDb.Security;
+using DfE.FindInformationAcademiesTrusts.Domain.Interfaces.Repositories;
 using GovUK.Dfe.CoreLibs.Http.Interfaces;
 using GovUK.Dfe.CoreLibs.Http.Middlewares.CorrelationId;
+using MediatR;
 
 namespace DfE.FindInformationAcademiesTrusts.Setup;
 
@@ -81,6 +85,21 @@ public static class Dependencies
                 }
             )
         );
+        
+        builder.Services.AddDbContext<FindInformationAcademiesTrustContext>(options =>
+            options.UseSqlServer(
+                builder.Configuration.GetConnectionString("DefaultConnection") ??
+                throw new InvalidOperationException("FIAT database connection string 'DefaultConnection' not found."),
+                sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                        2, // retry up to a maximum of 2 times
+                        TimeSpan.FromSeconds(5), // wait up to 5s for the server to respond before retry
+                        null
+                    );
+                }
+            )
+        );
 
         builder.Services.AddScoped<SetChangedByInterceptor>();
         builder.Services.AddScoped<IUserDetailsProvider, HttpContextUserDetailsProvider>();
@@ -91,6 +110,7 @@ public static class Dependencies
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<IAcademyRepository, AcademyRepository>();
         builder.Services.AddScoped<IOfstedRepository, OfstedRepository>();
+        builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
         builder.Services.AddScoped<ITrustRepository, TrustRepository>();
         builder.Services.AddScoped<ITrustGovernanceRepository, TrustGovernanceRepository>();
         builder.Services.AddScoped<IDataSourceRepository, DataSourceRepository>();
@@ -109,6 +129,7 @@ public static class Dependencies
         builder.Services.AddScoped<ISchoolPupilService, SchoolPupilService>();
         builder.Services.AddScoped<ITrustPupilService, TrustPupilService>();
         builder.Services.AddScoped<IWatchlistQueryService, WatchlistQueryService>();
+        builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(AddEstablishmentToWatchlistCommand).Assembly));
         builder.Services.AddScoped<IPipelineAcademiesExportService, PipelineAcademiesExportService>();
         builder.Services.AddScoped<IAcademiesExportService, AcademiesExportService>();
         builder.Services.AddScoped<ISchoolPupilsExportService, SchoolPupilsExportService>();
@@ -142,6 +163,9 @@ public static class Dependencies
         builder.Services.AddScoped<IOfstedService, OfstedService>();
         builder.Services.AddScoped<IOfstedServiceModelBuilder, OfstedServiceModelBuilder>();
         builder.Services.AddScoped<IPowerBiLinkBuilderService, PowerBiLinkBuilderService>();
+        builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
+        builder.Services.AddScoped<IUserContextService, UserContextService>();
+        
 
         builder.Services.AddServiceCaching(builder.Configuration);
 
