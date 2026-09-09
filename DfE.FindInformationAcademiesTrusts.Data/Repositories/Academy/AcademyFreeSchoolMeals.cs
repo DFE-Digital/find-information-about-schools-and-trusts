@@ -4,7 +4,7 @@ public record AcademyFreeSchoolMeals(
     string Urn,
     string? EstablishmentName,
     double? PercentageFreeSchoolMeals,
-    int LocalAuthorityCode,
+    int? LocalAuthorityCode,
     string? TypeOfEstablishment,
     string? PhaseOfEducation
 );

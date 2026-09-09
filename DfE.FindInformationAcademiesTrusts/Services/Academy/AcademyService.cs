@@ -12,7 +12,7 @@ public interface IAcademyService
     Task<AcademyDetailsServiceModel[]> GetAcademiesInTrustDetailsAsync(string uid);
     Task<SchoolOfstedServiceModel[]> GetAcademiesInTrustOfstedAsync(string uid);
     Task<AcademyPupilNumbersServiceModel[]> GetAcademiesInTrustPupilNumbersAsync(string uid,string referenceNumber);
-    Task<AcademyFreeSchoolMealsServiceModel[]> GetAcademiesInTrustFreeSchoolMealsAsync(string uid);
+    Task<AcademyFreeSchoolMealsServiceModel[]> GetAcademiesInTrustFreeSchoolMealsAsync(string referenceNumber);
     Task<AcademyPipelineSummaryServiceModel> GetAcademiesPipelineSummaryAsync(string trustReferenceNumber);
     Task<AcademyPipelineServiceModel[]> GetAcademiesPipelinePreAdvisoryAsync(string trustReferenceNumber);
     Task<AcademyPipelineServiceModel[]> GetAcademiesPipelinePostAdvisoryAsync(string trustReferenceNumber);
@@ -62,17 +62,18 @@ public class AcademyService(
         }
     }
 
-    public async Task<AcademyFreeSchoolMealsServiceModel[]> GetAcademiesInTrustFreeSchoolMealsAsync(string uid)
+    public async Task<AcademyFreeSchoolMealsServiceModel[]> GetAcademiesInTrustFreeSchoolMealsAsync(string referenceNumber)
     {
-        var academies = await academyRepository.GetAcademiesInTrustFreeSchoolMealsAsync(uid);
+        var academies = await academyRepository.GetAcademiesInTrustFreeSchoolMealsAsync(referenceNumber);
 
         return academies.Select(a =>
                 new AcademyFreeSchoolMealsServiceModel(
                     a.Urn,
                     a.EstablishmentName,
                     a.PercentageFreeSchoolMeals,
-                    freeSchoolMealsAverageProvider.GetLaAverage(a.LocalAuthorityCode, a.PhaseOfEducation,
-                        a.TypeOfEstablishment),
+                    a.LocalAuthorityCode.HasValue ?
+                    freeSchoolMealsAverageProvider.GetLaAverage(a.LocalAuthorityCode.Value, a.PhaseOfEducation,
+                        a.TypeOfEstablishment) : 0.00,
                     freeSchoolMealsAverageProvider.GetNationalAverage(a.PhaseOfEducation, a.TypeOfEstablishment)))
             .ToArray();
     }

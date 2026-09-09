@@ -41,59 +41,43 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext, IGetEstab
             .ToArray();
     }
 
-    public async Task<AcademyFreeSchoolMeals[]> GetAcademiesInTrustFreeSchoolMealsAsync(string uid)
+    public async Task<AcademyFreeSchoolMeals[]> GetAcademiesInTrustFreeSchoolMealsAsync(string referenceNumber)
     {
-        return await academiesDbContext.GiasGroupLinks
-            .Where(gl => gl.GroupUid == uid)
-            .Join(academiesDbContext.GiasEstablishments,
-                gl => gl.Urn!, e => e.Urn.ToString(),
-                (gl, e) =>
-                    new AcademyFreeSchoolMeals(e.Urn.ToString(),
-                        e.EstablishmentName,
-                        e.PercentageFsm.ParseAsNullableDouble(),
-                        int.Parse(e.LaCode!),
-                        e.TypeOfEstablishmentName,
-                        e.PhaseOfEducationName))
-            .ToArrayAsync();
+        var result = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
+        
+        return result
+            .Select(e => new AcademyFreeSchoolMeals(
+                e.Urn.ToString(),
+                e.Name,
+                e.Census.PercentageFsm.ParseAsNullableDouble(),
+                e.LocalAuthorityCode.ParseAsNullableInt(),
+                e.EstablishmentType.Name,
+                e.PhaseOfEducation.Name))
+            .ToArray();
     }
 
-    public async Task<int> GetNumberOfAcademiesInTrustAsync(string uid)
+    public async Task<int> GetNumberOfAcademiesInTrustAsync(string referenceNumber)
     {
-        return await academiesDbContext.GiasGroupLinks.CountAsync(gl => gl.GroupUid == uid && gl.Urn != null);
+        var result =  await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
+        return result.Length;
     }
 
-    public async Task<string?> GetSingleAcademyTrustAcademyUrnAsync(string uid)
+    public async Task<string?> GetSingleAcademyTrustAcademyUrnAsync(string referenceNumber)
     {
-        return await academiesDbContext.GiasGroupLinks.SingleAcademyTrusts()
-            .Where(gl => gl.GroupUid == uid)
-            .Select(gl => gl.Urn)
-            .FirstOrDefaultAsync();
+        var result = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
+
+        return result[0].Urn;
     }
 
-    public async Task<string?> GetTrustUidFromAcademyUrnAsync(int urn)
+    public async Task<AcademyOverview[]> GetOverviewOfAcademiesInTrustAsync(string referenceNumber)
     {
-        return await academiesDbContext.GiasGroupLinks.Trusts()
-            .Where(gl => gl.Urn == urn.ToString())
-            .Select(gl => gl.GroupUid)
-            .SingleOrDefaultAsync();
-    }
+        var result = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
 
-    public async Task<AcademyOverview[]> GetOverviewOfAcademiesInTrustAsync(string uid)
-    {
-        return await academiesDbContext.GiasGroupLinks
-            .Where(gl => gl.GroupUid == uid)
-            .Join(
-                academiesDbContext.GiasEstablishments,
-                gl => gl.Urn!,
-                e => e.Urn.ToString(),
-                (gl, e) =>
-                    new AcademyOverview
-                    (
-                        e.Urn.ToString(),
-                        e.LaName ?? string.Empty,
-                        e.NumberOfPupils.ParseAsNullableInt(),
-                        e.SchoolCapacity.ParseAsNullableInt()
-                    ))
-            .ToArrayAsync();
+        return result.Select(e => new AcademyOverview(
+                e.Urn.ToString(),
+                e.LocalAuthorityName,
+                e.Census.NumberOfPupils.ParseAsNullableInt(),
+                e.SchoolCapacity.ParseAsNullableInt()
+            )).ToArray();
     }
 }
