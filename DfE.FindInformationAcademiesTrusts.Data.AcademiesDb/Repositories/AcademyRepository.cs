@@ -59,7 +59,7 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext, IGetEstab
     public async Task<int> GetNumberOfAcademiesInTrustAsync(string referenceNumber)
     {
         var result =  await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
-        return result.Count();
+        return result.Length;
     }
 
     public async Task<string?> GetSingleAcademyTrustAcademyUrnAsync(string referenceNumber)
