@@ -1,7 +1,7 @@
 namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 
 public record SchoolPopulation(
-    Statistic<int> PupilsOnRole,
+    Statistic<int> PupilsOnRoll,
     Statistic<int> PupilsWithEhcPlan,
     Statistic<decimal> PupilsWithEhcPlanPercentage,
     Statistic<int> PupilsWithSenSupport,

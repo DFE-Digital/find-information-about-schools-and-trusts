@@ -1,3 +1,4 @@
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Edperf_Mstr;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
@@ -5,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
-public class PupilCensusRepository(IAcademiesDbContext dbContext) : IPupilCensusRepository
+public class PupilCensusRepository(IAcademiesDbContext dbContext, IGetEstablishments getEstablishments) : IPupilCensusRepository
 {
     public async Task<AnnualStatistics<SchoolPopulation>> GetSchoolPopulationStatisticsAsync(int urn)
     {
@@ -25,8 +26,11 @@ public class PupilCensusRepository(IAcademiesDbContext dbContext) : IPupilCensus
         return annualStatistics;
     }
 
-    public async Task<TrustStatistics<SchoolPopulation>> GetMostRecentPopulationStatisticsForTrustAsync(string uid)
+    public async Task<TrustStatistics<SchoolPopulation>> GetMostRecentPopulationStatisticsForTrustAsync(string trustReferenceNumber)
     {
+        // var establishments = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(trustReferenceNumber);
+        // var urns = establishments.Select(e => e.Urn).Distinct().ToList();
+        
         var results = await dbContext.GiasGroupLinks
             .Where(gl => gl.GroupUid == uid)
             .Join(dbContext.EdperfFiats, gl => gl.Urn, ef => ef.Urn.ToString(), (gl, ef) => ef)
@@ -46,15 +50,15 @@ public class PupilCensusRepository(IAcademiesDbContext dbContext) : IPupilCensus
 
     private static SchoolPopulation ConvertEdperfFiatToSchoolPopulation(EdperfFiat edperfFiat)
     {
-        var pupilsOnRole = ParseIntStatistic(edperfFiat.CensusNor);
+        var pupilsOnRoll = ParseIntStatistic(edperfFiat.CensusNor);
         var pupilsEligibleForFreeSchoolMeals = ParseIntStatistic(edperfFiat.CensusNumfsm);
         var pupilsEligibleForFreeSchoolMealsPercentage = pupilsEligibleForFreeSchoolMeals.Compute(
-            pupilsOnRole,
+            pupilsOnRoll,
             (fsm, por) => por == 0 ? 0m : Math.Round(100.0m * fsm / por, 1)
         );
 
         return new SchoolPopulation(
-            pupilsOnRole,
+            pupilsOnRoll,
             ParseIntStatistic(edperfFiat.CensusTsenelse),
             ParseDecimalStatistic(edperfFiat.CensusPsenelse),
             ParseIntStatistic(edperfFiat.CensusTsenelk),

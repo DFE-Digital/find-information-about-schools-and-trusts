@@ -376,7 +376,7 @@ public class PupilCensusRepositoryTests
         var result = await sut.GetSchoolPopulationStatisticsAsync(SchoolUrn);
         result.Should().NotBeEmpty();
         result.Should().HaveCount(1);
-        result[2020].PupilsOnRole.Should().Be(Statistic<int>.FromKind(expectedKind));
+        result[2020].PupilsOnRoll.Should().Be(Statistic<int>.FromKind(expectedKind));
         result[2020].PupilsWithEhcPlan.Should().Be(Statistic<int>.FromKind(expectedKind));
         result[2020].PupilsWithEhcPlanPercentage.Should().Be(Statistic<decimal>.FromKind(expectedKind));
         result[2020].PupilsWithSenSupport.Should().Be(Statistic<int>.FromKind(expectedKind));
@@ -444,7 +444,7 @@ public class PupilCensusRepositoryTests
 
         result.Should().NotBeEmpty();
         result.Should().HaveCount(1);
-        result[2020].PupilsOnRole.Should().Be(new Statistic<int>.WithValue(0));
+        result[2020].PupilsOnRoll.Should().Be(new Statistic<int>.WithValue(0));
         result[2020].PupilsEligibleForFreeSchoolMealsPercentage.Should().Be(new Statistic<decimal>.WithValue(0.0m));
     }
 
@@ -590,7 +590,7 @@ public class PupilCensusRepositoryTests
         
         result.Should().NotBeEmpty();
         result.Should().HaveCount(1);
-        result[AcademyUrn1].PupilsOnRole.Should().Be(Statistic<int>.FromKind(expectedKind));
+        result[AcademyUrn1].PupilsOnRoll.Should().Be(Statistic<int>.FromKind(expectedKind));
         result[AcademyUrn1].PupilsWithEhcPlan.Should().Be(Statistic<int>.FromKind(expectedKind));
         result[AcademyUrn1].PupilsWithEhcPlanPercentage.Should().Be(Statistic<decimal>.FromKind(expectedKind));
         result[AcademyUrn1].PupilsWithSenSupport.Should().Be(Statistic<int>.FromKind(expectedKind));
@@ -660,7 +660,7 @@ public class PupilCensusRepositoryTests
 
         result.Should().NotBeEmpty();
         result.Should().HaveCount(1);
-        result[AcademyUrn2].PupilsOnRole.Should().Be(new Statistic<int>.WithValue(0));
+        result[AcademyUrn2].PupilsOnRoll.Should().Be(new Statistic<int>.WithValue(0));
         result[AcademyUrn2].PupilsEligibleForFreeSchoolMealsPercentage.Should().Be(new Statistic<decimal>.WithValue(0.0m));
     }
 }

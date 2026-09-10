@@ -77,7 +77,7 @@ public class SchoolPupilsExportService(
         SetNumberCell(ExportColumns.SchoolPopulationColumns.Year, year.Value);
         SetCellToStatistic(
             ExportColumns.SchoolPopulationColumns.NumberOfPupilsOnRole,
-            schoolPopulation.PupilsOnRole
+            schoolPopulation.PupilsOnRoll
         );
         SetCellToStatistic(
             ExportColumns.SchoolPopulationColumns.NumberOfEligiblePupilsWithEhcPlan,

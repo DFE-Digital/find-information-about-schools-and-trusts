@@ -131,7 +131,7 @@ public class TrustService(
             .GroupBy(a => a.LocalAuthority)
             .ToDictionary(g => g.Key, g => g.Count());
 
-        var totalPupilNumbers = await trustPupilService.GetTotalPupilCountForTrustAsync(uid);
+        var totalPupilNumbers = await trustPupilService.GetTotalPupilCountForTrustAsync(trustReferenceNumber);
         var totalCapacity = academiesOverview.Sum(a => a.SchoolCapacity ?? 0);
 
         var hasIncompleteCapacityData = academiesOverview.Any(a => a.SchoolCapacity is null);
