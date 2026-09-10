@@ -168,11 +168,31 @@ public class TrustServiceTests
     }
 
     [Fact]
-    public async Task GetTrustContactsAsync_should_get_governanceResults_for_single_trust()
+    public async Task GetTrustContactsAsync_should_get_governanceResults_for_multi_trust()
     {
+        _mockTrustRepository.GetTrustOverviewAsync("TR5678").Returns(BaseTrustOverview with { Type = "Multi-academy trust" });
         var person = new Person("First Middle Last", "firstlast@email.com");
         var contacts = new TrustContacts(person, person, person);
         _mockTrustRepository.GetTrustContactsAsync("1234").Returns(contacts);
+        
+        var internalContact =
+            new InternalContact("First Middle Last", "firstlast@email.com", DateTime.Today, "Test@email.com");
+        var internalContacts = new TrustInternalContacts(internalContact, internalContact);
+        _mockContactRepository.GetTrustInternalContactsAsync("1234").Returns(internalContacts);
+
+        var result = await _sut.GetTrustContactsAsync("1234", "TR5678");
+
+        result.Should().BeEquivalentTo(contacts);
+    }
+    
+    [Fact]
+    public async Task GetTrustContactsAsync_should_get_governanceResults_for_single_trust()
+    {
+        _mockTrustRepository.GetTrustOverviewAsync("TR5678").Returns(BaseTrustOverview);
+        var person = new Person("First Middle Last", "firstlast@email.com");
+        var contacts = new TrustContacts(person, person, person);
+        _mockTrustRepository.GetTrustContactsAsync("1234").Returns(contacts);
+        
         var internalContact =
             new InternalContact("First Middle Last", "firstlast@email.com", DateTime.Today, "Test@email.com");
         var internalContacts = new TrustInternalContacts(internalContact, internalContact);
