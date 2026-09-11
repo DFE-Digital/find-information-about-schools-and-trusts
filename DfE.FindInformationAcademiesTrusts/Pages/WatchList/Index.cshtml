@@ -53,10 +53,10 @@
                             @(string.IsNullOrWhiteSpace(item.TrustName ?? "") ? "Not applicable" : item.TrustName)
                         </td>
                         <td class="govuk-table__cell">
-                            @item.LocalAuthorityName 
+                            @item.LocalAuthority 
                         </td>
                         <td class="govuk-table__cell">
-                            <a class="govuk-link" asp-page="/">Remove</a>
+                            <a class="govuk-link" asp-page="/WatchList/RemoveSchool" asp-route-watchlistidtoremove="@item.WatchlistId ">Remove</a>
                         </td>
                     </tr>
                 }

@@ -1,0 +1,20 @@
+@page
+@model DfE.FindInformationAcademiesTrusts.Pages.WatchList.RemoveSchool
+
+@{
+    Layout = "_ContentLayout";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <span class="govuk-caption-l">Remove School</span>
+        <h1 class="govuk-heading-xl">Remove School</h1>
+        <div id="school-hint" class="govuk-hint">
+            @Model.Id  
+        </div>
+        <form method="post">
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <button>Remove School</button>
+        </form>
+    </div>
+</div>
