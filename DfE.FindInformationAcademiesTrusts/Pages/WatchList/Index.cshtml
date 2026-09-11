@@ -50,10 +50,10 @@
                             @item.Urn 
                         </td>
                         <td class="govuk-table__cell">
-                            @(string.IsNullOrWhiteSpace(item.TrustName) ? "Not applicable" : item.TrustName)
+                            @(string.IsNullOrWhiteSpace(item.TrustName ?? "") ? "Not applicable" : item.TrustName)
                         </td>
                         <td class="govuk-table__cell">
-                            @item.LocalAuthority 
+                            @item.LocalAuthorityName 
                         </td>
                         <td class="govuk-table__cell">
                             <a class="govuk-link" asp-page="/">Remove</a>

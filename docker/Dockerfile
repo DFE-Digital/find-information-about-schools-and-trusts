@@ -66,11 +66,13 @@ RUN dpkg -i /usr/share/microsoft.deb && \
 # - Copy and configure sql migration script
 WORKDIR /app
 COPY ./DfE.FindInformationAcademiesTrusts.Data.FiatDb/Migrations/FiatDbMigrationScript.sql /app/sql/FiatDbMigrationScript.sql
+COPY ./DfE.FindInformationAcademiesTrusts.Data.FiatDb/Migrations/FindInformationAcademiesTrustsMigrationScript.sql /app/sql/FindInformationAcademiesTrustsMigrationScript.sql
 COPY ./docker/init-docker-entrypoint.sh /app/migratedb
 
 # - Set permissions, create user, and change ownership
 RUN chmod +x /app/migratedb && \
     touch /app/sql/FiatDbMigrationScriptOutput.txt && \
+    touch /app/sql/FindInformationAcademiesTrustsMigrationScriptOutput.txt && \
     useradd -r -m -U app && \
     chown -R app:app /app
 
@@ -87,9 +89,11 @@ COPY ./docker/web-docker-entrypoint.sh /app/docker-entrypoint.sh
 
 # - Copy and configure sql migration script
 COPY ./DfE.FindInformationAcademiesTrusts.Data.FiatDb/Migrations/FiatDbMigrationScript.sql /app/sql/FiatDbMigrationScript.sql
+COPY ./DfE.FindInformationAcademiesTrusts.Data.FiatDb/Migrations/FindInformationAcademiesTrustsMigrationScript.sql /app/sql/FindInformationAcademiesTrustsMigrationScript.sql
 
 RUN chmod +x /app/docker-entrypoint.sh && \
     touch /app/sql/FiatDbMigrationScriptOutput.txt && \
+    touch /app/sql/FindInformationAcademiesTrustsMigrationScriptOutput.txt && \
     chown "$APP_UID" "/app/sql" -R
 
 # - Copy frontend assets

@@ -35,12 +35,13 @@ using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
-using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Commands;
-using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Queries;
+using DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Commands;
+using DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Queries;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
-using DfE.FindInformationAcademiesTrusts.Data.FiatDb.Security;
 using DfE.FindInformationAcademiesTrusts.Domain.Interfaces.Repositories;
+using DfE.FindInformationAcademiesTrusts.Http;
+using DfE.FindInformationAcademiesTrusts.HttpServices;
 using GovUK.Dfe.CoreLibs.Http.Interfaces;
 using GovUK.Dfe.CoreLibs.Http.Middlewares.CorrelationId;
 using MediatR;
@@ -85,13 +86,16 @@ public static class Dependencies
                 }
             )
         );
-        
-        builder.Services.AddDbContext<FindInformationAcademiesTrustContext>(options =>
+
+        builder.Services.AddDbContext<FindInformationAcademiesTrustsContext>(options =>
             options.UseSqlServer(
                 builder.Configuration.GetConnectionString("DefaultConnection") ??
                 throw new InvalidOperationException("FIAT database connection string 'DefaultConnection' not found."),
                 sqlOptions =>
                 {
+                    // Shares the FiatDb database with FiatDbContext, so it needs its own
+                    // migrations history table to avoid colliding with FiatDbContext's.
+                    sqlOptions.MigrationsHistoryTable("__FindInformationAcademiesTrustsContextMigrationsHistory");
                     sqlOptions.EnableRetryOnFailure(
                         2, // retry up to a maximum of 2 times
                         TimeSpan.FromSeconds(5), // wait up to 5s for the server to respond before retry
@@ -153,19 +157,21 @@ public static class Dependencies
         builder.Services.AddAcademiesApiClient<IEstablishmentsV5Client, EstablishmentsV5Client>(builder.Configuration);
         builder.Services.AddAcademiesApiClient<IEstablishmentsV4Client, EstablishmentsV4Client>(builder.Configuration);
         builder.Services.AddScoped<IGetEstablishments, GetEstablishments>();
+        builder.Services.AddScoped<IGetEstablishmentsTemp, GetEstablishmentsTemp>();
         builder.Services.AddScoped<IGetTrusts, GetTrusts>();
+        builder.Services.AddScoped<IGetTrustsTemp, GetTrustsTemp>();
         builder.Services.AddScoped<IDfeHttpClientFactory, DfeHttpClientFactory>();
+        builder.Services.AddScoped<IDfeHttpClientFactoryTemp, DfeHttpClientFactoryTemp>();
         builder.Services.AddScoped<ICorrelationContext, CorrelationContext>();
         builder.Services.AddScoped<IHttpClientService, HttpClientService>();
+        builder.Services.AddScoped<IHttpClientServiceTemp, HttpClientServiceTemp>();
         builder.Services.AddAcademiesApiClient<ITrustsV4Client, TrustsV4Client>(builder.Configuration);
         builder.Services.AddScoped<IReportCardsRepository, ReportCardsRepository>();
         builder.Services.AddScoped<IReportCardsService, ReportCardsService>();
         builder.Services.AddScoped<IOfstedService, OfstedService>();
         builder.Services.AddScoped<IOfstedServiceModelBuilder, OfstedServiceModelBuilder>();
         builder.Services.AddScoped<IPowerBiLinkBuilderService, PowerBiLinkBuilderService>();
-        builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
-        builder.Services.AddScoped<IUserContextService, UserContextService>();
-        
+
 
         builder.Services.AddServiceCaching(builder.Configuration);
 

@@ -2,27 +2,26 @@ using DfE.FindInformationAcademiesTrusts.Domain.Interfaces.Repositories;
 using DfE.FindInformationAcademiesTrusts.Domain.ValueObjects;
 using MediatR;
 
-namespace DfE.FindInformationAcademiesTrusts.Application.Watchlist.Commands;
+namespace DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Commands;
 
-
-public record AddEstablishmentToWatchlistCommand(
-    string EstablishmentId,
+public record AddTrustToWatchlistCommand(
+    string TrustId,
     string User
 ): IRequest<bool>;
 
-public class AddEstablishmentToWatchlist
+public class AddTrustToWatchlist
 {
-    public class AddEstablishmentToWatchlistCommandHandler(IWatchlistRepository watchlistRepository)
-        : IRequestHandler<AddEstablishmentToWatchlistCommand, bool>
+    public class AddTrustToWatchlistCommandHandler(IWatchlistRepository watchlistRepository)
+        : IRequestHandler<AddTrustToWatchlistCommand, bool>
     {
-        public async Task<bool> Handle(AddEstablishmentToWatchlistCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(AddTrustToWatchlistCommand request, CancellationToken cancellationToken)
         {
             var watchlistId = new WatchlistId(Guid.NewGuid());
 
             var watchlistRecord = new Domain.Entities.Watchlist(
                 watchlistId,
-                request.EstablishmentId,
                 null,
+                request.TrustId,
                 true,
                 request.User
             );

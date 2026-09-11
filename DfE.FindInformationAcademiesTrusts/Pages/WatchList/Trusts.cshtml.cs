@@ -1,12 +1,16 @@
-using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Models;
-using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Queries;
+using DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Models;
+using DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Queries;
+using DfE.FindInformationAcademiesTrusts.HttpServices;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
+using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.EstablishmentDto;
+using TrustDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts.TrustDto;
+
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.WatchList;
 
-public class Trusts(IWatchlistQueryService watchlistQueryService) : ContentPageModel
+public class Trusts(IWatchlistQueryService watchlistQueryService,IGetTrustsTemp getTrusts) : ContentPageModel
 {
-    public IEnumerable<TrustWatchlistDto> Items { get; set; } = Array.Empty<TrustWatchlistDto>();
+    public IEnumerable<TrustDto> Items { get; set; } = Array.Empty<TrustDto>();
 
     public string? CurrentUser { get; set; }
 
@@ -17,9 +21,18 @@ public class Trusts(IWatchlistQueryService watchlistQueryService) : ContentPageM
     {
         CurrentUser = User.Identity?.Name;
         
-        var items = await watchlistQueryService.GetAllTrustsForUser(CurrentUser ?? string.Empty, cancellationToken);
-        Items = items.Value ?? Array.Empty<TrustWatchlistDto>();
+        var trustsWatchlist = await watchlistQueryService.GetAllTrustsForUser(CurrentUser ?? string.Empty, cancellationToken);
+        
+        List<string> referenceNumbers = trustsWatchlist.Value?
+            .Select(x => x.TrustId)
+            .Where(id => !string.IsNullOrWhiteSpace(id))
+            .Select(id => id!.Trim())
+            .ToList() ?? [];
+        
+        var items = await getTrusts.GetTrustsByReferenceNumbers(referenceNumbers);
 
+        Items = (IEnumerable<TrustDto>)items ?? Array.Empty<TrustDto>();
+        
         var schools = await watchlistQueryService.GetAllEstablishmentsForUser(CurrentUser ?? string.Empty, cancellationToken);
         SchoolsCount = schools.Value?.Count() ?? 0;
     }
