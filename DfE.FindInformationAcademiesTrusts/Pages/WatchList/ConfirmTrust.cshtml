@@ -1,0 +1,27 @@
+@page
+@model DfE.FindInformationAcademiesTrusts.Pages.WatchList.ConfirmTrust
+
+@{
+    Layout = null;
+}
+
+
+@{
+    Layout = "_ContentLayout";
+    
+    
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <span class="govuk-caption-l">Confirm Trust</span>
+        <h1 class="govuk-heading-xl">Confirm Trust</h1>
+        <div id="school-hint" class="govuk-hint">
+            @Model.ReferenceNumber @Model.Name 
+        </div>
+        <form method="post">
+            <input type="hidden" name="ReferenceNumber" value="@Model.ReferenceNumber" />
+            <button>Add Trust</button>
+        </form>
+    </div>
+</div>

@@ -4,7 +4,7 @@ export class Autocomplete {
   debounceTimer = null
   abortController = null
 
-  suggest = async (query, populateResults, inputId) => {
+  suggest = async (query, populateResults, inputId, endpoint = '/search?handler=populateautocomplete') => {
     // Clear selected trust if we then search for new trust
     // Avoids the uid turning up in the url
     const searchInput = document.getElementById(`${inputId}-selected-id`)
@@ -35,8 +35,9 @@ export class Autocomplete {
     this.abortController = new AbortController()
 
     try {
+      const separator = endpoint.includes('?') ? '&' : '?'
       const response = await fetch(
-          `/search?handler=populateautocomplete&keywords=${encodeURIComponent(query)}`,
+          `${endpoint}${separator}keywords=${encodeURIComponent(query)}`,
           {
             signal: this.abortController.signal
           }
@@ -69,7 +70,7 @@ export class Autocomplete {
     return hintText
   }
 
-  loadTrustSearch = async (inputId, defaultValue, placeholderText) => {
+  loadTrustSearch = async (inputId, defaultValue, placeholderText, endpoint = '/search?handler=populateautocomplete') => {
     const autocompleteTemplate = document.getElementById(`${inputId}-js-autocomplete-template`)
     const autocompleteTemplateContents = autocompleteTemplate.content.cloneNode(true)
     const elementToReplace = document.getElementById(`${inputId}-no-js-search-container`)
@@ -95,7 +96,7 @@ export class Autocomplete {
         }
 
         this.debounceTimer = setTimeout(() => {
-          this.suggest(query, populateResults, inputId)
+          this.suggest(query, populateResults, inputId, endpoint)
         }, 500)
       },
       autoselect: false,
