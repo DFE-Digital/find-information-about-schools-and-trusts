@@ -28,6 +28,7 @@ locals {
   mssql_azuread_admin_username                    = var.mssql_azuread_admin_username
   mssql_azuread_admin_object_id                   = var.mssql_azuread_admin_object_id
   mssql_managed_identity_assign_role              = var.mssql_managed_identity_assign_role
+  mssql_private_endpoint_subnet_cidr              = var.mssql_private_endpoint_subnet_cidr
   mssql_sku_name                                  = var.mssql_sku_name
   redis_cache_sku                                 = var.redis_cache_sku
   redis_cache_capacity                            = var.redis_cache_capacity
@@ -71,6 +72,7 @@ locals {
   enable_container_app_file_share                 = var.enable_container_app_file_share
   storage_account_ipv4_allow_list                 = var.storage_account_ipv4_allow_list
   storage_account_public_access_enabled           = var.storage_account_public_access_enabled
+  storage_subnet_cidr                             = var.storage_subnet_cidr
   enable_health_insights_api                      = var.enable_health_insights_api
   health_insights_api_cors_origins                = var.health_insights_api_cors_origins
   health_insights_api_ipv4_allow_list             = var.health_insights_api_ipv4_allow_list
