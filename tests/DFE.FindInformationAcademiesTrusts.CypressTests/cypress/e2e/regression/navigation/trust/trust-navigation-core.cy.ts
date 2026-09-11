@@ -119,12 +119,12 @@ describe('Trust Navigation Core Tests', () => {
                 cy.visit('/trusts/academies/pipeline/pre-decision?uid=5143&referencenumber=tr02343');
 
                 navigation
+                    .clickPipelineAcademiesPreDecisionNavButton()
+                    .checkCurrentURLIsCorrect('/trusts/academies/pipeline/pre-decision?uid=5143&referencenumber=tr02343')
                     .clickPipelineAcademiesPostDecisionNavButton()
                     .checkCurrentURLIsCorrect('/trusts/academies/pipeline/post-decision?uid=5143&referencenumber=tr02343')
                     .clickPipelineAcademiesFreeSchoolsNavButton()
-                    .checkCurrentURLIsCorrect('/trusts/academies/pipeline/post-decision?uid=5143&referencenumber=tr02343')
-                    .clickPipelineAcademiesPreDecisionNavButton()
-                    .checkCurrentURLIsCorrect('/trusts/academies/pipeline/pre-decision?uid=5143&referencenumber=tr02343');
+                    .checkCurrentURLIsCorrect('/trusts/academies/pipeline/free-schools?uid=5143&referencenumber=tr02343')
             });
         });
 
