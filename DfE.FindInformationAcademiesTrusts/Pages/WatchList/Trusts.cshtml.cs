@@ -29,11 +29,17 @@ public class Trusts(IWatchlistQueryService watchlistQueryService,IGetTrustsTemp 
             .Select(id => id!.Trim())
             .ToList() ?? [];
         
+        var schools = await watchlistQueryService.GetAllEstablishmentsForUser(CurrentUser ?? string.Empty, cancellationToken);
+        SchoolsCount = schools.Value?.Count() ?? 0;
+        
+        if(referenceNumbers.Count == 0)
+        {
+            Items = Array.Empty<TrustDto>();
+            return;
+        }
+        
         var items = await getTrusts.GetTrustsByReferenceNumbers(referenceNumbers);
 
         Items = (IEnumerable<TrustDto>)items ?? Array.Empty<TrustDto>();
-        
-        var schools = await watchlistQueryService.GetAllEstablishmentsForUser(CurrentUser ?? string.Empty, cancellationToken);
-        SchoolsCount = schools.Value?.Count() ?? 0;
     }
 }

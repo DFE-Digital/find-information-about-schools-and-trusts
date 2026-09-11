@@ -27,13 +27,23 @@ public class Index(IWatchlistQueryService watchlistQueryService,IGetEstablishmen
             .Where(id => !string.IsNullOrWhiteSpace(id) && int.TryParse(id, out _))
             .Select(id => int.Parse(id!))
             .ToList() ?? [];
-
-        var items = await getEstablishments.GetEstablishmentsByUrns(urns);
         
-        Items = (IEnumerable<EstablishmentDto>)items ?? Array.Empty<EstablishmentDto>();
+        
+        
+        
         
         var trustsWatchlist = await watchlistQueryService.GetAllTrustsForUser(CurrentUser ?? string.Empty, cancellationToken);
         
         TrustsCount = trustsWatchlist.Value?.Count() ?? 0;
+
+        if (urns.Count == 0)
+        {
+            Items = Array.Empty<EstablishmentDto>();
+            return;
+        }
+
+        var items = await getEstablishments.GetEstablishmentsByUrns(urns);
+        
+        Items = (IEnumerable<EstablishmentDto>)items ?? Array.Empty<EstablishmentDto>();
     }
 }
