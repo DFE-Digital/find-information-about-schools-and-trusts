@@ -1,4 +1,4 @@
-using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Queries;
+using DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Queries;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.Search;
 using Microsoft.ApplicationInsights;
@@ -24,7 +24,7 @@ public class SearchForASchool(ISearchService searchService,IWatchlistQueryServic
             .GetAllEstablishmentsForUser(currentUser ?? string.Empty, cancellationToken);
 
         var schoolWatchlistUrns = schoolWatchListItems.Value?
-            .Select(s => s.Urn)
+            .Select(s => s.EstablishmentId)
             .ToHashSet() ?? [];
 
         var results = searchResults

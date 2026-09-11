@@ -1,4 +1,4 @@
-namespace DfE.FindInformationAcademiesTrusts.Application.Watchlist.Models
+namespace DfE.FindInformationAcademiesTrusts.Application.Establishments.Models
 
 
 {

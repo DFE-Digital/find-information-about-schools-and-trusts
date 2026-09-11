@@ -1,4 +1,4 @@
-using DfE.FindInformationAcademiesTrusts.Application.Watchlist.Queries;
+using DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Queries;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.Search;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +23,7 @@ public class SearchForATrust(ISearchService searchService,IWatchlistQueryService
             .GetAllTrustsForUser(currentUser ?? string.Empty,cancellationToken);
 
         var trustWatchlistIds = trustWatchListItems.Value?
-            .Select(t => t.TrustReferenceNumber)
+            .Select(t => t.TrustId)
             .ToHashSet() ?? [];
 
         var results = searchResults
@@ -38,7 +38,24 @@ public class SearchForATrust(ISearchService searchService,IWatchlistQueryService
             });
 
         return new JsonResult(results);
+        
+        
     }
+    public async Task<IActionResult> OnPostAsync(string referenceNumber, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(referenceNumber))
+        {
+            ModelState.AddModelError("SelectedTrustId", "Please select a trust from the list.");
+            return Page();
+        }
+
+        var currentUser = User.Identity?.Name;
+
+       
+
+        return RedirectToPage("/WatchList/ConfirmTrust",new {referenceNumber});
+    }
+    
 
     public string PageSearchFormInputId => "trust-search";
     public string AutocompletePagePath => "/WatchList/SearchForATrust";
