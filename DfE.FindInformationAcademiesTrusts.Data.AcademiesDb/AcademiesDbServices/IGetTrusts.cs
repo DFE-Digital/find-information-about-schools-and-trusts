@@ -9,6 +9,8 @@ public interface IGetTrusts
     
     Task<TrustDto?> GetTrustByReferenceNumber(string referenceNumber);
 
+    Task<TrustDto[]> GetTrustsByReferenceNumbers(IEnumerable<string> referenceNumbers);
+
 
     Task<TrustDto?> GetEstablishmentTrust(int urn);
 }

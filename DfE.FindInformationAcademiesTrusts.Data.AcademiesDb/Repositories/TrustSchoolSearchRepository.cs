@@ -128,4 +128,72 @@ public class TrustSchoolSearchRepository(
 
         return results;
     }
+
+    public async Task<SearchResult[]> GetSchoolAutoCompleteSearchResultsAsync(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text) || (int.TryParse(text, out int number) && number < 100000))
+        {
+            return [];
+        }
+
+        var establishments = await getEstablishments.SearchEstablishments(text);
+
+        return establishments
+            .Where(x => int.TryParse(x.EstablishmentGroupType?.Code, out var code) &&
+                        AllowedEstablishmentGroupTypeCodes.Contains(code))
+            .OrderBy(x => x.Name!.StartsWith(text, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+            .Take(5)
+            .Select(e => new SearchResult(
+                e.Urn!.ToString(),
+                null,
+                e.Name!,
+                e.EstablishmentType!.Name!,
+                stringFormattingUtilities.BuildAddressString(
+                    e.Address!.Street,
+                    e.Address.Locality,
+                    e.Address.Town,
+                    e.Address.Postcode),
+                false,
+                e.EstablishmentNumber))
+            .ToArray();
+    }
+
+    public async Task<SearchResult[]> GetTrustAutoCompleteSearchResultsAsync(string? text)
+    {
+        if (string.IsNullOrWhiteSpace(text) || (int.TryParse(text, out int number) && number < 100000))
+        {
+            return [];
+        }
+
+        var trustSearchResults = await getTrusts.SearchTrusts(text);
+        var trusts = trustSearchResults.Data?.ToList() ?? [];
+
+        if (trusts.Count == 0)
+        {
+            var trustByTrn = await getTrusts.GetTrustByReferenceNumber(text);
+            if (trustByTrn != null)
+            {
+                trusts.Add(trustByTrn);
+            }
+        }
+
+        return trusts
+            .OrderBy(t =>
+                !string.IsNullOrWhiteSpace(t.Name) &&
+                t.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase))
+            .Take(5)
+            .Select(t => new SearchResult(
+                t.GroupUid?.ToString() ?? string.Empty,
+                t.ReferenceNumber?.ToString(),
+                t.Name ?? string.Empty,
+                t.Type.Name,
+                stringFormattingUtilities.BuildAddressString(
+                    t.Address.Street,
+                    t.Address.Locality,
+                    t.Address.Town,
+                    t.Address.Postcode),
+                true,
+                t.ReferenceNumber))
+            .ToArray();
+    }
 }
