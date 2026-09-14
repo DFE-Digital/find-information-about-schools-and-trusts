@@ -48,7 +48,7 @@ public class AcademyService(
     public async Task<AcademyPupilNumbersServiceModel[]> GetAcademiesInTrustPupilNumbersAsync(string uid,string referenceNumber)
     {
         var academies = await academyRepository.GetAcademiesInTrustPupilNumbersByTrnAsync(referenceNumber);
-        var pupilNumbers = await trustPupilService.GetPupilCountsForSchoolsInTrustAsync(uid);
+        var pupilNumbers = await trustPupilService.GetPupilCountsForSchoolsInTrustAsync(referenceNumber);
 
         return academies.Select(a =>
             new AcademyPupilNumbersServiceModel(a.Urn, a.EstablishmentName, a.PhaseOfEducation, a.AgeRange,

@@ -105,7 +105,7 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext, IGetEstab
 
     private static TValue? GetCensusValue<TValue>(
         string urn,
-        IReadOnlyDictionary<int, EdperfFiat> edPerfFiats,
+        Dictionary<int, EdperfFiat> edPerfFiats,
         Func<EdperfFiat, TValue?> selector)
         where TValue : struct
     {
