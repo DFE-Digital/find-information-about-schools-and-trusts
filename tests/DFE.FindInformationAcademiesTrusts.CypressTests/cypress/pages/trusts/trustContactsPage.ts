@@ -58,6 +58,9 @@ class ContactsPage {
         subHeaders: {
             subHeader: () => cy.get('[data-testid="subpage-header"]'),
         },
+        content: {
+            contactsInThisTrustContent: () => cy.get('[data-testid="contacts-in-this-trust-subnav"]'),
+        }
     };
 
 
@@ -210,6 +213,11 @@ class ContactsPage {
     public checkContactsInDfeSubHeaderPresent(): this {
         this.elements.subHeaders.subHeader().should('be.visible');
         this.elements.subHeaders.subHeader().should('contain', 'Contacts in DfE');
+        return this;
+    }
+
+    public checkContactsInThisTrustContentPresent(): this {
+        this.elements.content.contactsInThisTrustContent().should('not.contain.text', 'No contact name available');
         return this;
     }
 

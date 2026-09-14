@@ -85,10 +85,20 @@ public class TrustService(
 
     public async Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid, string referenceNumber)
     {
-        var urn = await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(referenceNumber);
+        var trustOverview = await trustRepository.GetTrustOverviewAsync(referenceNumber);
+        var trustType = trustOverview.Type switch
+        {
+            "Single-academy trust" => TrustType.SingleAcademyTrust,
+            "Multi-academy trust" => TrustType.MultiAcademyTrust,
+            _ => throw new InvalidOperationException($"Unknown trust type: {trustOverview.Type}")
+        };
+
+        var singleAcademyTrustAcademyUrn = trustType is TrustType.SingleAcademyTrust
+            ? await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(referenceNumber)
+            : null;
 
         var trustContacts =
-            await trustRepository.GetTrustContactsAsync(uid, urn);
+            await trustRepository.GetTrustContactsAsync(uid, singleAcademyTrustAcademyUrn);
         var internalContacts = await contactRepository.GetTrustInternalContactsAsync(uid);
 
         return new TrustContactsServiceModel(
