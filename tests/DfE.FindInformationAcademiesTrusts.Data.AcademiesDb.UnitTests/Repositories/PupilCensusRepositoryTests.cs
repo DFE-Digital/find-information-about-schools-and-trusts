@@ -1,7 +1,8 @@
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Edperf_Mstr;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
+using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.EstablishmentDto;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Repositories;
 
@@ -12,7 +13,7 @@ public class PupilCensusRepositoryTests
     private const int AcademyUrn1 = 234567;
     private const int AcademyUrn2 = 345678;
     
-    private const string Uid = "1234";
+    private const string TrustReferenceNumber = "TRN1234";
     
     private readonly PupilCensusRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
@@ -299,12 +300,24 @@ public class PupilCensusRepositoryTests
     public PupilCensusRepositoryTests()
     {
         _mockAcademiesDbContext.EdperfFiats.AddRange(_dummyEdperfFiats);
-        _mockAcademiesDbContext.GiasGroupLinks.AddRange([
-            new GiasGroupLink { GroupUid = Uid, Urn = AcademyUrn1.ToString(), GroupStatusCode = "OPEN", JoinedDate = "01/01/2020" },
-            new GiasGroupLink { GroupUid = Uid, Urn = AcademyUrn2.ToString(), GroupStatusCode = "OPEN", JoinedDate = "01/01/2020" }
-        ]);
 
-        _sut = new PupilCensusRepository(_mockAcademiesDbContext.Object);
+        _sut = CreateSut(_mockAcademiesDbContext, AcademyUrn1.ToString(), AcademyUrn2.ToString());
+    }
+
+    /// <summary>
+    /// Builds the subject under test with a stubbed establishments api which returns the given urns
+    /// for <see cref="TrustReferenceNumber" /> and nothing for any other trust reference number.
+    /// </summary>
+    private static PupilCensusRepository CreateSut(MockAcademiesDbContext mockAcademiesDbContext,
+        params string[] urnsInTrust)
+    {
+        var mockGetEstablishments = Substitute.For<IGetEstablishments>();
+
+        mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(Arg.Any<string>()).Returns([]);
+        mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(TrustReferenceNumber)
+            .Returns(urnsInTrust.Select(urn => new EstablishmentDto { Urn = urn }).ToArray());
+
+        return new PupilCensusRepository(mockAcademiesDbContext.Object, mockGetEstablishments);
     }
 
     [Fact]
@@ -327,7 +340,7 @@ public class PupilCensusRepositoryTests
             }
         ]);
 
-        var sut = new PupilCensusRepository(mockDbContext.Object);
+        var sut = CreateSut(mockDbContext);
 
         var result = await sut.GetSchoolPopulationStatisticsAsync(SchoolUrn);
 
@@ -371,7 +384,7 @@ public class PupilCensusRepositoryTests
             }
         ]);
 
-        var sut = new PupilCensusRepository(mockDbContext.Object);
+        var sut = CreateSut(mockDbContext);
 
         var result = await sut.GetSchoolPopulationStatisticsAsync(SchoolUrn);
         result.Should().NotBeEmpty();
@@ -408,7 +421,7 @@ public class PupilCensusRepositoryTests
             }
         ]);
 
-        var sut = new PupilCensusRepository(mockDbContext.Object);
+        var sut = CreateSut(mockDbContext);
 
         var result = await sut.GetSchoolPopulationStatisticsAsync(SchoolUrn);
         result.Should().NotBeEmpty();
@@ -438,7 +451,7 @@ public class PupilCensusRepositoryTests
             }
         ]);
 
-        var sut = new PupilCensusRepository(mockDbContext.Object);
+        var sut = CreateSut(mockDbContext);
 
         var result = await sut.GetSchoolPopulationStatisticsAsync(SchoolUrn);
 
@@ -468,7 +481,7 @@ public class PupilCensusRepositoryTests
             }
         ]);
 
-        var sut = new PupilCensusRepository(mockDbContext.Object);
+        var sut = CreateSut(mockDbContext);
 
         var result = await sut.GetAttendanceStatisticsAsync(SchoolUrn);
 
@@ -506,7 +519,7 @@ public class PupilCensusRepositoryTests
             }
         ]);
 
-        var sut = new PupilCensusRepository(mockDbContext.Object);
+        var sut = CreateSut(mockDbContext);
 
         var result = await sut.GetAttendanceStatisticsAsync(SchoolUrn);
 
@@ -531,7 +544,7 @@ public class PupilCensusRepositoryTests
             }
         ]);
 
-        var sut = new PupilCensusRepository(mockDbContext.Object);
+        var sut = CreateSut(mockDbContext);
 
         var result = await sut.GetAttendanceStatisticsAsync(SchoolUrn);
 
@@ -552,9 +565,19 @@ public class PupilCensusRepositoryTests
     [Fact]
     public async Task GetMostRecentPopulationStatisticsForTrustAsync_should_return_trust_population_statistics_when_trust_is_found()
     {
-        var result = await _sut.GetMostRecentPopulationStatisticsForTrustAsync(Uid);
+        var result = await _sut.GetMostRecentPopulationStatisticsForTrustAsync(TrustReferenceNumber);
         
         result.Should().BeEquivalentTo(_dummySchoolPopulationsForTrust);
+    }
+    
+    [Fact]
+    public async Task GetMostRecentPopulationStatisticsForTrustAsync_should_ignore_establishments_with_non_numeric_urns()
+    {
+        var sut = CreateSut(_mockAcademiesDbContext, "not a urn", AcademyUrn1.ToString());
+        
+        var result = await sut.GetMostRecentPopulationStatisticsForTrustAsync(TrustReferenceNumber);
+        
+        result.Keys.Should().BeEquivalentTo([AcademyUrn1]);
     }
     
     [Theory]
@@ -582,11 +605,9 @@ public class PupilCensusRepositoryTests
                 CensusNumfsm = statisticValue,
             }
         ]);
-        mockDbContext.GiasGroupLinks.Add(new GiasGroupLink { GroupUid = Uid, Urn = AcademyUrn1.ToString(), GroupStatusCode = "OPEN", JoinedDate = "01/01/2020" });
-
-        var sut = new PupilCensusRepository(mockDbContext.Object);
+        var sut = CreateSut(mockDbContext, AcademyUrn1.ToString());
         
-        var result = await sut.GetMostRecentPopulationStatisticsForTrustAsync(Uid);
+        var result = await sut.GetMostRecentPopulationStatisticsForTrustAsync(TrustReferenceNumber);
         
         result.Should().NotBeEmpty();
         result.Should().HaveCount(1);
@@ -620,11 +641,9 @@ public class PupilCensusRepositoryTests
                 CensusNumfsm = "13",
             }
         ]);
-        mockDbContext.GiasGroupLinks.Add(new GiasGroupLink { GroupUid = Uid, Urn = AcademyUrn2.ToString(), GroupStatusCode = "OPEN", JoinedDate = "01/01/2020" });
-
-        var sut = new PupilCensusRepository(mockDbContext.Object);
+        var sut = CreateSut(mockDbContext, AcademyUrn2.ToString());
         
-        var result = await sut.GetMostRecentPopulationStatisticsForTrustAsync(Uid);
+        var result = await sut.GetMostRecentPopulationStatisticsForTrustAsync(TrustReferenceNumber);
         
         result.Should().NotBeEmpty();
         result.Should().HaveCount(1);
@@ -652,11 +671,9 @@ public class PupilCensusRepositoryTests
             }
         ]);
 
-        mockDbContext.GiasGroupLinks.Add(new GiasGroupLink { GroupUid = Uid, Urn = AcademyUrn2.ToString(), GroupStatusCode = "OPEN", JoinedDate = "01/01/2020" });
-
-        var sut = new PupilCensusRepository(mockDbContext.Object);
+        var sut = CreateSut(mockDbContext, AcademyUrn2.ToString());
         
-        var result = await sut.GetMostRecentPopulationStatisticsForTrustAsync(Uid);
+        var result = await sut.GetMostRecentPopulationStatisticsForTrustAsync(TrustReferenceNumber);
 
         result.Should().NotBeEmpty();
         result.Should().HaveCount(1);

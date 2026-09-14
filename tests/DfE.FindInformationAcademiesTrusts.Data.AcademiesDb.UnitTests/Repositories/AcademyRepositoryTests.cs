@@ -1,4 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Edperf_Mstr;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
@@ -108,45 +109,49 @@ public class AcademyRepositoryTests
     [Fact]
     public async Task GetAcademiesInTrustPupilNumbersByTrnAsync_should_return_academies_linked_to_trust()
     {
-
         _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns(new EstablishmentDto[]
         {
-            new EstablishmentDto
+            new()
             {
                 Urn = "1234",
                 Name = "Academy1",
-                PhaseOfEducation = new NameAndCodeDto()
+                PhaseOfEducation = new NameAndCodeDto
                 {
                     Name = "Test",
                     Code = "1234"
                 },
-                Census = new CensusDto()
+                Census = new CensusDto
                 {
-                    NumberOfPupils = "1234",
+                    NumberOfPupils = "9999",
                 },
                 StatutoryHighAge = "3",
                 StatutoryLowAge = "2",
                 SchoolCapacity = "332"
             },
-            new EstablishmentDto()
+            new()
             {
                 Urn = "1235",
                 Name = "Academy2",
-                PhaseOfEducation = new NameAndCodeDto()
+                PhaseOfEducation = new NameAndCodeDto
                 {
                     Name = "Test2",
                     Code = "1235"
                 },
-                Census = new CensusDto()
+                Census = new CensusDto
                 {
-                    NumberOfPupils = "1235",
+                    NumberOfPupils = "8888",
                 },
                 StatutoryHighAge = "4",
                 StatutoryLowAge = "3",
                 SchoolCapacity = "333"
             }
-
         });
+
+        _mockAcademiesDbContext.EdperfFiats.AddRange([
+            new EdperfFiat { Urn = 1234, DownloadYear = "2020-2021", CensusNor = "100" },
+            new EdperfFiat { Urn = 1234, DownloadYear = "2023-2024", CensusNor = "1234" },
+            new EdperfFiat { Urn = 1235, DownloadYear = "2023-2024", CensusNor = "1235" }
+        ]);
 
         var result = await _sut.GetAcademiesInTrustPupilNumbersByTrnAsync(ReferenceNumber);
         result.Should().HaveCount(2);
@@ -170,6 +175,42 @@ public class AcademyRepositoryTests
     }
 
     [Fact]
+    public async Task GetAcademiesInTrustPupilNumbersByTrnAsync_should_return_null_number_of_pupils_when_edperf_fiat_is_missing()
+    {
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns([
+            new EstablishmentDto
+            {
+                Urn = "1234",
+                Name = "Academy1",
+                PhaseOfEducation = new NameAndCodeDto
+                {
+                    Name = "Test",
+                    Code = "1234"
+                },
+                Census = new CensusDto
+                {
+                    NumberOfPupils = "9999",
+                },
+                StatutoryHighAge = "3",
+                StatutoryLowAge = "2",
+                SchoolCapacity = "332"
+            }
+        ]);
+
+        var result = await _sut.GetAcademiesInTrustPupilNumbersByTrnAsync(ReferenceNumber);
+
+        result.Should().BeEquivalentTo([
+            new AcademyPupilNumbers(
+                "1234",
+                "Academy1",
+                "Test",
+                new AgeRange(2, 3),
+                null,
+                332)
+        ]);
+    }
+
+    [Fact]
     public async Task GetAcademiesInTrustPupilNumbersByTrnAsync_should_return_empty_array_when_no_academies_linked_to_trust()
     {
         _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns([]);
@@ -182,47 +223,188 @@ public class AcademyRepositoryTests
     public async Task
         GetAcademiesInTrustFreeSchoolMealsAsync_should_return_empty_array_when_no_academies_linked_to_trust()
     {
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(GroupUid).Returns([]);
+
         var result = await _sut.GetAcademiesInTrustFreeSchoolMealsAsync(GroupUid);
         result.Should().BeEmpty();
     }
 
     [Fact]
+    public async Task GetAcademiesInTrustFreeSchoolMealsAsync_should_return_academies_linked_to_trust()
+    {
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns([
+            new EstablishmentDto
+            {
+                Urn = "1234",
+                Name = "Academy1",
+                LocalAuthorityCode = "12",
+                EstablishmentType = new NameAndCodeDto
+                {
+                    Name = "Academy converter",
+                    Code = "34"
+                },
+                PhaseOfEducation = new NameAndCodeDto
+                {
+                    Name = "Primary",
+                    Code = "1"
+                },
+                Census = new CensusDto
+                {
+                    PercentageFsm = "99.9"
+                }
+            },
+            new EstablishmentDto
+            {
+                Urn = "1235",
+                Name = "Academy2",
+                LocalAuthorityCode = "22",
+                EstablishmentType = new NameAndCodeDto
+                {
+                    Name = "Academy sponsor led",
+                    Code = "35"
+                },
+                PhaseOfEducation = new NameAndCodeDto
+                {
+                    Name = "Secondary",
+                    Code = "2"
+                },
+                Census = new CensusDto
+                {
+                    PercentageFsm = "88.8"
+                }
+            }
+        ]);
+
+        _mockAcademiesDbContext.EdperfFiats.AddRange([
+            new EdperfFiat { Urn = 1234, DownloadYear = "2020-2021", CensusPnumeal = "1.1" },
+            new EdperfFiat { Urn = 1234, DownloadYear = "2023-2024", CensusPnumeal = "12.5%" },
+            new EdperfFiat { Urn = 1235, DownloadYear = "2023-2024", CensusPnumeal = "24.1" }
+        ]);
+
+        var result = await _sut.GetAcademiesInTrustFreeSchoolMealsAsync(ReferenceNumber);
+
+        result.Should().BeEquivalentTo([
+            new AcademyFreeSchoolMeals(
+                "1234",
+                "Academy1",
+                12.5,
+                12,
+                "Academy converter",
+                "Primary"),
+            new AcademyFreeSchoolMeals(
+                "1235",
+                "Academy2",
+                24.1,
+                22,
+                "Academy sponsor led",
+                "Secondary")
+        ]);
+    }
+
+    [Fact]
+    public async Task GetAcademiesInTrustFreeSchoolMealsAsync_should_return_null_percentage_when_edperf_fiat_is_missing()
+    {
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns([
+            new EstablishmentDto
+            {
+                Urn = "1234",
+                Name = "Academy1",
+                LocalAuthorityCode = "12",
+                EstablishmentType = new NameAndCodeDto
+                {
+                    Name = "Academy converter",
+                    Code = "34"
+                },
+                PhaseOfEducation = new NameAndCodeDto
+                {
+                    Name = "Primary",
+                    Code = "1"
+                },
+                Census = new CensusDto
+                {
+                    PercentageFsm = "99.9"
+                }
+            }
+        ]);
+
+        var result = await _sut.GetAcademiesInTrustFreeSchoolMealsAsync(ReferenceNumber);
+
+        result.Should().BeEquivalentTo([
+            new AcademyFreeSchoolMeals(
+                "1234",
+                "Academy1",
+                null,
+                12,
+                "Academy converter",
+                "Primary")
+        ]);
+    }
+
+    [Fact]
     public async Task GetOverviewOfAcademiesInTrustAsync_should_return_academies_linked_to_trust()
     {
-        // Arrange
-       var establishments = Enumerable.Range(1000, 3).Select(n => new EstablishmentDto
+        var establishments = Enumerable.Range(1000, 3).Select(n => new EstablishmentDto
         {
             Urn = n.ToString(),
             Name = $"Academy {n}",
             LocalAuthorityName = $"Local authority {n}",
-            EstablishmentGroupType = new NameAndCodeDto()
+            EstablishmentGroupType = new NameAndCodeDto
             {
                 Name = "Academies",
             },
-            Census = new CensusDto()
+            Census = new CensusDto
             {
-                NumberOfPupils = (n * 10).ToString(),
+                NumberOfPupils = "9999",
             },
             SchoolCapacity = (n * 15).ToString()
         }).ToArray();
-        
-        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns(establishments);
 
-        // Act
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns(establishments);
+        _mockAcademiesDbContext.EdperfFiats.AddRange([
+            new EdperfFiat { Urn = 1000, DownloadYear = "2020-2021", CensusNor = "10" },
+            new EdperfFiat { Urn = 1000, DownloadYear = "2023-2024", CensusNor = "100" },
+            new EdperfFiat { Urn = 1001, DownloadYear = "2023-2024", CensusNor = "101" },
+            new EdperfFiat { Urn = 1002, DownloadYear = "2023-2024", CensusNor = "102" }
+        ]);
+
         var result = await _sut.GetOverviewOfAcademiesInTrustAsync(ReferenceNumber);
 
-        // Assert
-        result.Should().BeEquivalentTo(establishments,
-            options => options
-                .WithAutoConversion()
-                .ExcludingMissingMembers()
-                .WithMapping<AcademyOverview>(e => e.LocalAuthorityName, a => a.LocalAuthority)
-        );
+        result.Should().BeEquivalentTo([
+            new AcademyOverview("1000", "Local authority 1000", 100, 15000),
+            new AcademyOverview("1001", "Local authority 1001", 101, 15015),
+            new AcademyOverview("1002", "Local authority 1002", 102, 15030)
+        ]);
+    }
+
+    [Fact]
+    public async Task GetOverviewOfAcademiesInTrustAsync_should_return_null_number_of_pupils_when_edperf_fiat_is_missing()
+    {
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns([
+            new EstablishmentDto
+            {
+                Urn = "1000",
+                Name = "Academy 1000",
+                LocalAuthorityName = "Local authority 1000",
+                Census = new CensusDto
+                {
+                    NumberOfPupils = "9999",
+                },
+                SchoolCapacity = "15000"
+            }
+        ]);
+
+        var result = await _sut.GetOverviewOfAcademiesInTrustAsync(ReferenceNumber);
+
+        result.Should().BeEquivalentTo([
+            new AcademyOverview("1000", "Local authority 1000", null, 15000)
+        ]);
     }
 
     [Fact]
     public async Task GetOverviewOfAcademiesInTrustAsync_should_return_empty_array_when_no_academies_linked_to_trust()
     {
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(GroupUid).Returns([]);
+
         var result = await _sut.GetOverviewOfAcademiesInTrustAsync(GroupUid);
         result.Should().NotBeNull();
         result.Should().BeEmpty();
@@ -231,6 +413,8 @@ public class AcademyRepositoryTests
     [Fact]
     public async Task GetOverviewOfAcademiesInTrustAsync_should_return_empty_array_when_trust_does_not_exist()
     {
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber("non-existent-uid").Returns([]);
+
         var result = await _sut.GetOverviewOfAcademiesInTrustAsync("non-existent-uid");
         result.Should().NotBeNull();
         result.Should().BeEmpty();

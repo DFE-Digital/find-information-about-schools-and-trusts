@@ -1,5 +1,6 @@
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Edperf_Mstr;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 using Microsoft.EntityFrameworkCore;
@@ -28,12 +29,17 @@ public class PupilCensusRepository(IAcademiesDbContext dbContext, IGetEstablishm
 
     public async Task<TrustStatistics<SchoolPopulation>> GetMostRecentPopulationStatisticsForTrustAsync(string trustReferenceNumber)
     {
-        // var establishments = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(trustReferenceNumber);
-        // var urns = establishments.Select(e => e.Urn).Distinct().ToList();
-        
-        var results = await dbContext.GiasGroupLinks
-            .Where(gl => gl.GroupUid == uid)
-            .Join(dbContext.EdperfFiats, gl => gl.Urn, ef => ef.Urn.ToString(), (gl, ef) => ef)
+        var establishments = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(trustReferenceNumber);
+
+        var urns = establishments
+            .Select(establishment => establishment.Urn.ParseAsNullableInt())
+            .Where(urn => urn is not null)
+            .Select(urn => urn!.Value)
+            .Distinct()
+            .ToList();
+
+        var results = await dbContext.EdperfFiats
+            .Where(ef => urns.Contains(ef.Urn))
             .GroupBy(ef => ef.Urn)
             .Select(grp => grp.OrderByDescending(ef => ef.DownloadYear).First())
             .ToListAsync();
@@ -44,7 +50,7 @@ public class PupilCensusRepository(IAcademiesDbContext dbContext, IGetEstablishm
         {
             trustStatistics.Add(result.Urn, ConvertEdperfFiatToSchoolPopulation(result));
         }
-        
+
         return trustStatistics;
     }
 
@@ -68,8 +74,6 @@ public class PupilCensusRepository(IAcademiesDbContext dbContext, IGetEstablishm
                 pupilsEligibleForFreeSchoolMeals,
                 pupilsEligibleForFreeSchoolMealsPercentage
             );
-
-            
     }
 
     public async Task<AnnualStatistics<Attendance>> GetAttendanceStatisticsAsync(int urn)
