@@ -157,6 +157,8 @@ public class TrustServiceTests
             AppointingBody: "Nick Warms",
             Email: null
         );
+        _mockTrustRepository.GetTrustOverviewAsync(trn)
+            .Returns(BaseTrustOverview with { Type = "Multi-academy trust" });
         _mockTrustGovernanceRepository.GetTrustGovernanceAsync(trn).Returns([leader, member, trustee, historic]);
 
         var result = await _sut.GetTrustGovernanceAsync(trn);
