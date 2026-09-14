@@ -277,7 +277,7 @@ public class TrustServiceTests
 
         _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(trustReferenceNumber).Returns(Task.FromResult(academiesOverview));
         _mockTrustRepository.GetTrustOverviewAsync(trustReferenceNumber).Returns(Task.FromResult(BaseTrustOverview with { Uid = uid, TrustReferenceNumber = trustReferenceNumber }));
-        _mockTrustPupilService.GetTotalPupilCountForTrustAsync(uid).Returns(1200);
+        _mockTrustPupilService.GetTotalPupilCountForTrustAsync(trustReferenceNumber).Returns(1200);
 
         // Act
         var result = await _sut.GetTrustOverviewAsync(trustReferenceNumber, uid);
