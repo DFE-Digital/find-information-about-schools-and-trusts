@@ -23,6 +23,9 @@ public class RemoveTrust(IMediator mediator) : ContentPageModel
     {
         var request = new RemoveTrustFromWatchlistCommand(id);
         var result = await mediator.Send(request, cancellationToken);
-        return RedirectToPage("/WatchList/Index");
+        
+        TempData["TrustRemoved"] = true;
+        ViewData["ActiveWatchListTab"] = "Trusts";
+        return RedirectToPage("/WatchList/Trusts");
     }
 }

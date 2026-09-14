@@ -12,6 +12,10 @@ public class ConfirmTrust(IGetTrusts getTrusts,IMediator mediator) : ContentPage
     public string? ReferenceNumber;
     
     public string? Name;
+    
+    public string? Region;
+    
+    public string? CompaniesHouseNumber;
     public string? CurrentUser { get; set; }
     
     public async Task OnGet(string referenceNumber)
@@ -21,6 +25,8 @@ public class ConfirmTrust(IGetTrusts getTrusts,IMediator mediator) : ContentPage
 
         ReferenceNumber = trust!.ReferenceNumber;
         Name = trust.Name;
+        Region = trust.Gor ?? "Not applicable";
+        CompaniesHouseNumber = trust.CompaniesHouseNumber;
     }
 
     public async Task<IActionResult> OnPostAsync(string referenceNumber,CancellationToken cancellationToken = default)
@@ -31,6 +37,15 @@ public class ConfirmTrust(IGetTrusts getTrusts,IMediator mediator) : ContentPage
         
         var result = await mediator.Send(request, cancellationToken);
         
-        return RedirectToPage("/WatchList/Index");
+        var action = Request.Form["action"].ToString();
+        
+        if (action == "add-another")
+        {
+            return RedirectToPage("/Watchlist/SearchForATrust");
+        }
+        
+        TempData["TrustAdded"] = true;
+        ViewData["ActiveWatchListTab"] = "Trusts";
+        return RedirectToPage("/WatchList/Trusts");
     }
 }

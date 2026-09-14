@@ -23,6 +23,8 @@ public class RemoveSchool(IMediator mediator) : ContentPageModel
     {
         var request = new RemoveEstablishmentFromWatchlistCommand(id);
         var result = await mediator.Send(request, cancellationToken);
+        
+        TempData["TrustRemoved"] = true;
         return RedirectToPage("/WatchList/Index");
     }
 }
