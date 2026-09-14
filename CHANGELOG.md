@@ -4,10 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-09-10.7786...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-09-14.7787...HEAD)
 
 
 ---
+## [Release-77][release-77] - 2026-09-14
+
+### Fixed
+
+- 302834 : Trust governance missing for Single Academy Trusts
+
+### Changed
+- 299098 : Pupil Census Repository to Use Academies API
+
 ## [Release-76][release-76] - 2026-09-10
 
 ### Fixed
