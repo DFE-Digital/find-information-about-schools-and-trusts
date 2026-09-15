@@ -56,7 +56,8 @@
                             @item.LocalAuthority 
                         </td>
                         <td class="govuk-table__cell">
-                            <a class="govuk-link" asp-page="/WatchList/RemoveSchool" asp-route-watchlistidtoremove="@item.WatchlistId">Remove</a>
+                            <a class="govuk-link" asp-page="/WatchList/RemoveSchool" asp-route-watchlistidtoremove="@item.WatchlistId"
+                               asp-route-establishmenturn="@item.Urn">Remove</a>
                         </td>
                     </tr>
                 }
