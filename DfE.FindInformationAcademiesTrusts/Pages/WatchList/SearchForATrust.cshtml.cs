@@ -7,10 +7,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.WatchList;
 
 public class SearchForATrust(ISearchService searchService,IWatchlistQueryService watchlistQueryService) : ContentPageModel, IEstablishmentSearchFormModel
 {
-    public void OnGet()
-    {
-        
-    }
+    public bool ShowError { get; set; }
 
     public async Task<IActionResult> OnGetPopulateAutocompleteAsync(CancellationToken cancellationToken)
     {
@@ -41,18 +38,26 @@ public class SearchForATrust(ISearchService searchService,IWatchlistQueryService
         
         
     }
-    public async Task<IActionResult> OnPostAsync(string referenceNumber, CancellationToken cancellationToken)
+    public async Task<IActionResult> OnPostAsync(string? referenceNumber, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(referenceNumber))
         {
-            ModelState.AddModelError("SelectedTrustId", "Please select a trust from the list.");
+            var keywords = Request.Form["keywords"].ToString();
+            if (string.IsNullOrEmpty(keywords))
+            {
+
+                ModelState.AddModelError(PageSearchFormInputId, "Enter the trust name or TRN");
+                ShowError = true;
+                return Page();
+            }
+            
+            ModelState.AddModelError(PageSearchFormInputId, "We could not find any trusts matching your search criteria");
+            ShowError = true;
             return Page();
         }
-
-        var currentUser = User.Identity?.Name;
-
-       
-
+            
+        
+        
         return RedirectToPage("/WatchList/ConfirmTrust",new {referenceNumber});
     }
     

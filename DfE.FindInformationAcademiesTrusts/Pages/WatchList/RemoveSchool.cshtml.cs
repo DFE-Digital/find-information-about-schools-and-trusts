@@ -35,7 +35,7 @@ public class RemoveSchool(IMediator mediator,IGetEstablishmentsTemp getEstablish
         var request = new RemoveEstablishmentFromWatchlistCommand(id);
         var result = await mediator.Send(request, cancellationToken);
         
-        TempData["TrustRemoved"] = true;
+        TempData["SchoolRemoved"] = true;
         return RedirectToPage("/WatchList/Index");
     }
 }

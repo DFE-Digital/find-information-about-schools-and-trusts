@@ -1,15 +1,26 @@
+@using System.Linq
 @model IEstablishmentSearchFormModel
 @{
     var placeholderText = Html.Raw("e.g. st mary's primary school");
     var keywords = Html.Raw(Model.KeyWords);
     var autocompleteEndpoint = Url.Page(Model.AutocompletePagePath, pageHandler: "PopulateAutocomplete");
+    var hasError = !ViewData.ModelState.IsValid;
+    var errorMessage = ViewData.ModelState.Values.SelectMany(v => v.Errors).FirstOrDefault()?.ErrorMessage;
 }
 
 <div data-testid="app-search-form">
-    @* This is used by the no javascript users *@
-    <div class="app-search__wrapper app-search__wrapper--standalone">
-        <div id="@Model.PageSearchFormInputId-no-js-search-container">
-            <input class="govuk-input app-search__input" id="@Model.PageSearchFormInputId" type="search" asp-for="KeyWords" name="keywords" placeholder="@placeholderText">
+    <div class="govuk-form-group @(hasError ? "govuk-form-group--error" : "")">
+        @if (hasError)
+        {
+            <p id="@Model.PageSearchFormInputId-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> @errorMessage
+            </p>
+        }
+        @* This is used by the no javascript users *@
+        <div class="app-search__wrapper app-search__wrapper--standalone">
+            <div id="@Model.PageSearchFormInputId-no-js-search-container">
+                <input class="govuk-input app-search__input @(hasError ? "govuk-input--error" : "")" id="@Model.PageSearchFormInputId" type="search" asp-for="KeyWords" name="keywords" placeholder="@placeholderText">
+            </div>
         </div>
     </div>
     <button class="govuk-button govuk-!-margin-top-3 govuk-!-margin-bottom-0" data-module="govuk-button" type="submit">
@@ -29,7 +40,7 @@
 <script asp-add-nonce type="application/javascript">
     
  const loadPageFormAutocomplete = async () => {
-    await Autocomplete.loadTrustSearch("@Model.PageSearchFormInputId", "@keywords", "@placeholderText", "@autocompleteEndpoint")
+    await Autocomplete.loadTrustSearch("@Model.PageSearchFormInputId", "@keywords", "@placeholderText", "@autocompleteEndpoint", @hasError.ToString().ToLowerInvariant())
   }
   window.addEventListener("load", loadPageFormAutocomplete);
 

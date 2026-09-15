@@ -9,10 +9,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.WatchList;
 public class SearchForASchool(ISearchService searchService,IWatchlistQueryService watchlistQueryService) : ContentPageModel, IEstablishmentSearchFormModel
 {
     
-    public void OnGet()
-    {
-        
-    }
+    public bool ShowError { get; set; }
 
     public async Task<IActionResult> OnGetPopulateAutocompleteAsync(CancellationToken cancellationToken)
     {
@@ -41,18 +38,24 @@ public class SearchForASchool(ISearchService searchService,IWatchlistQueryServic
         return new JsonResult(results);
     }
     
-    public async Task<IActionResult> OnPostAsync(string id, CancellationToken cancellationToken)
+    public async Task<IActionResult> OnPostAsync(string? id, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(id))
         {
-            ModelState.AddModelError("SelectedSchoolId", "Please select a school from the list.");
+            var keywords = Request.Form["keywords"].ToString();
+            
+            if(string.IsNullOrEmpty(keywords))
+            {
+                ModelState.AddModelError(PageSearchFormInputId, "Enter the school name or URN.");
+                ShowError = true;
+                return Page();
+            }
+            
+            ModelState.AddModelError(PageSearchFormInputId, "We could not find any schools matching your search criteria.");
+            ShowError = true;
             return Page();
         }
-
-        var currentUser = User.Identity?.Name;
-
-       
-
+        
         return RedirectToPage("/WatchList/ConfirmSchool",new {id});
     }
 

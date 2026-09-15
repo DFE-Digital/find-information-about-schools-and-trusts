@@ -6,6 +6,11 @@
     ViewData["Title"] = "Search for a trust";
 }
 
+@if (Model.ShowError)
+{
+    <partial name="_ErrorSummary"/>
+}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
         <span class="govuk-caption-l">Add to watchlist</span>

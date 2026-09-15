@@ -70,7 +70,7 @@ export class Autocomplete {
     return hintText
   }
 
-  loadTrustSearch = async (inputId, defaultValue, placeholderText, endpoint = '/search?handler=populateautocomplete') => {
+  loadTrustSearch = async (inputId, defaultValue, placeholderText, endpoint = '/search?handler=populateautocomplete', hasError = false) => {
     const autocompleteTemplate = document.getElementById(`${inputId}-js-autocomplete-template`)
     const autocompleteTemplateContents = autocompleteTemplate.content.cloneNode(true)
     const elementToReplace = document.getElementById(`${inputId}-no-js-search-container`)
@@ -82,6 +82,7 @@ export class Autocomplete {
       element: document.getElementById(`${inputId}-autocomplete-container`),
       id: inputId,
       name: 'keywords',
+      inputClasses: hasError ? 'govuk-input--error' : null,
       source: (query, populateResults) => {
         clearTimeout(this.debounceTimer)
 
