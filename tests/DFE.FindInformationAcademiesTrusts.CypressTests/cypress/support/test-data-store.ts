@@ -189,7 +189,7 @@ export const testTrustData = [
 export const trustsWithGovernanceData = [
     {
         typeOfTrust: "single academy trust with governance data",
-        uid: 5527
+        uid: 3617
     },
     {
         typeOfTrust: "multi academy trust with governance data",
@@ -213,7 +213,7 @@ export const testFinanceData = [
 export const testTrustOfstedData = [
     {
         typeOfTrust: "single academy trust",
-        uid: 5527
+        uid: 3617
     },
     {
         typeOfTrust: "multi academy trust",
