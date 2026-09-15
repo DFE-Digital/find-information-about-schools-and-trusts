@@ -102,13 +102,13 @@ AcademyPupilNumbersServiceModel[] expected =
         
         _mockAcademyRepository.GetAcademiesInTrustPupilNumbersByTrnAsync(referenceNumber).Returns(academies);
         
-        _mockTrustPupilService.GetPupilCountsForSchoolsInTrustAsync(uid).Returns(new TrustStatistics<Statistic<int>>
+        _mockTrustPupilService.GetPupilCountsForSchoolsInTrustAsync(referenceNumber).Returns(new TrustStatistics<Statistic<int>>
         {
             [9876] = new Statistic<int>.WithValue(100),
             [8765] = new Statistic<int>.WithValue(2)
         });
         
-        var result = await _sut.GetAcademiesInTrustPupilNumbersAsync(uid,referenceNumber);
+        var result = await _sut.GetAcademiesInTrustPupilNumbersAsync(uid, referenceNumber);
 
         result.Should().BeOfType<AcademyPupilNumbersServiceModel[]>();
         result.Should().BeEquivalentTo(expected);

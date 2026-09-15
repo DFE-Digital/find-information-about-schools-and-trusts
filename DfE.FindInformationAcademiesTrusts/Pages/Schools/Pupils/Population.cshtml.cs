@@ -62,8 +62,8 @@ public record PopulationDataViewModel(
     {
         return new PopulationDataViewModel(
             censusYear,
-            schoolPopulation.PupilsOnRole.DisplayValue(),
-            schoolPopulation.PupilsOnRole.SortValue(),
+            schoolPopulation.PupilsOnRoll.DisplayValue(),
+            schoolPopulation.PupilsOnRoll.SortValue(),
             schoolPopulation.PupilsWithEhcPlan
                 .DisplayValueWithPercentage(schoolPopulation.PupilsWithEhcPlanPercentage),
             schoolPopulation.PupilsWithEhcPlan.SortValue(),

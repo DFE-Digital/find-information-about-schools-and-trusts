@@ -1,11 +1,13 @@
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Edperf_Mstr;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 using Microsoft.EntityFrameworkCore;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
-public class PupilCensusRepository(IAcademiesDbContext dbContext) : IPupilCensusRepository
+public class PupilCensusRepository(IAcademiesDbContext dbContext, IGetEstablishments getEstablishments) : IPupilCensusRepository
 {
     public async Task<AnnualStatistics<SchoolPopulation>> GetSchoolPopulationStatisticsAsync(int urn)
     {
@@ -25,11 +27,19 @@ public class PupilCensusRepository(IAcademiesDbContext dbContext) : IPupilCensus
         return annualStatistics;
     }
 
-    public async Task<TrustStatistics<SchoolPopulation>> GetMostRecentPopulationStatisticsForTrustAsync(string uid)
+    public async Task<TrustStatistics<SchoolPopulation>> GetMostRecentPopulationStatisticsForTrustAsync(string trustReferenceNumber)
     {
-        var results = await dbContext.GiasGroupLinks
-            .Where(gl => gl.GroupUid == uid)
-            .Join(dbContext.EdperfFiats, gl => gl.Urn, ef => ef.Urn.ToString(), (gl, ef) => ef)
+        var establishments = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(trustReferenceNumber);
+
+        var urns = establishments
+            .Select(establishment => establishment.Urn.ParseAsNullableInt())
+            .Where(urn => urn is not null)
+            .Select(urn => urn!.Value)
+            .Distinct()
+            .ToList();
+
+        var results = await dbContext.EdperfFiats
+            .Where(ef => urns.Contains(ef.Urn))
             .GroupBy(ef => ef.Urn)
             .Select(grp => grp.OrderByDescending(ef => ef.DownloadYear).First())
             .ToListAsync();
@@ -40,21 +50,21 @@ public class PupilCensusRepository(IAcademiesDbContext dbContext) : IPupilCensus
         {
             trustStatistics.Add(result.Urn, ConvertEdperfFiatToSchoolPopulation(result));
         }
-        
+
         return trustStatistics;
     }
 
     private static SchoolPopulation ConvertEdperfFiatToSchoolPopulation(EdperfFiat edperfFiat)
     {
-        var pupilsOnRole = ParseIntStatistic(edperfFiat.CensusNor);
+        var pupilsOnRoll = ParseIntStatistic(edperfFiat.CensusNor);
         var pupilsEligibleForFreeSchoolMeals = ParseIntStatistic(edperfFiat.CensusNumfsm);
         var pupilsEligibleForFreeSchoolMealsPercentage = pupilsEligibleForFreeSchoolMeals.Compute(
-            pupilsOnRole,
+            pupilsOnRoll,
             (fsm, por) => por == 0 ? 0m : Math.Round(100.0m * fsm / por, 1)
         );
 
         return new SchoolPopulation(
-            pupilsOnRole,
+            pupilsOnRoll,
             ParseIntStatistic(edperfFiat.CensusTsenelse),
             ParseDecimalStatistic(edperfFiat.CensusPsenelse),
             ParseIntStatistic(edperfFiat.CensusTsenelk),
@@ -64,8 +74,6 @@ public class PupilCensusRepository(IAcademiesDbContext dbContext) : IPupilCensus
                 pupilsEligibleForFreeSchoolMeals,
                 pupilsEligibleForFreeSchoolMealsPercentage
             );
-
-            
     }
 
     public async Task<AnnualStatistics<Attendance>> GetAttendanceStatisticsAsync(int urn)

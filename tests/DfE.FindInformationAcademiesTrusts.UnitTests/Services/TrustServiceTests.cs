@@ -157,6 +157,8 @@ public class TrustServiceTests
             AppointingBody: "Nick Warms",
             Email: null
         );
+        _mockTrustRepository.GetTrustOverviewAsync(trn)
+            .Returns(BaseTrustOverview with { Type = "Multi-academy trust" });
         _mockTrustGovernanceRepository.GetTrustGovernanceAsync(trn).Returns([leader, member, trustee, historic]);
 
         var result = await _sut.GetTrustGovernanceAsync(trn);
@@ -297,7 +299,7 @@ public class TrustServiceTests
 
         _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(trustReferenceNumber).Returns(Task.FromResult(academiesOverview));
         _mockTrustRepository.GetTrustOverviewAsync(trustReferenceNumber).Returns(Task.FromResult(BaseTrustOverview with { Uid = uid, TrustReferenceNumber = trustReferenceNumber }));
-        _mockTrustPupilService.GetTotalPupilCountForTrustAsync(uid).Returns(1200);
+        _mockTrustPupilService.GetTotalPupilCountForTrustAsync(trustReferenceNumber).Returns(1200);
 
         // Act
         var result = await _sut.GetTrustOverviewAsync(trustReferenceNumber, uid);

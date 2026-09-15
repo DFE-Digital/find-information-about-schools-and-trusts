@@ -7,6 +7,7 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 using GovUK.Dfe.PersonsApi.Client.Contracts;
 using Microsoft.Extensions.Caching.Memory;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Trust;
 
@@ -73,7 +74,11 @@ public class TrustService(
 
     public async Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string trn)
     {
-        var governors = await trustGovernanceRepository.GetTrustGovernanceAsync(trn.ToUpper());
+        var (_, trustType, singleAcademyTrustAcademyUrn) = await GetTrustOverviewWithTypeAsync(trn);
+
+        var governors = trustType is TrustType.MultiAcademyTrust
+            ? await trustGovernanceRepository.GetTrustGovernanceAsync(trn.ToUpper())
+            : await trustGovernanceRepository.GetSatGovernanceAsync(int.Parse(singleAcademyTrustAcademyUrn!));
 
         return new TrustGovernanceServiceModel(
             governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleLeadership: true }).ToArray(),
@@ -85,17 +90,7 @@ public class TrustService(
 
     public async Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid, string referenceNumber)
     {
-        var trustOverview = await trustRepository.GetTrustOverviewAsync(referenceNumber);
-        var trustType = trustOverview.Type switch
-        {
-            "Single-academy trust" => TrustType.SingleAcademyTrust,
-            "Multi-academy trust" => TrustType.MultiAcademyTrust,
-            _ => throw new InvalidOperationException($"Unknown trust type: {trustOverview.Type}")
-        };
-
-        var singleAcademyTrustAcademyUrn = trustType is TrustType.SingleAcademyTrust
-            ? await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(referenceNumber)
-            : null;
+        var (_, _, singleAcademyTrustAcademyUrn) = await GetTrustOverviewWithTypeAsync(referenceNumber);
 
         var trustContacts =
             await trustRepository.GetTrustContactsAsync(uid, singleAcademyTrustAcademyUrn);
@@ -121,17 +116,8 @@ public class TrustService(
 
     public async Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string trustReferenceNumber, string uid)
     {
-        var trustOverview = await trustRepository.GetTrustOverviewAsync(trustReferenceNumber);
-        var trustType = trustOverview.Type switch
-        {
-            "Single-academy trust" => TrustType.SingleAcademyTrust,
-            "Multi-academy trust" => TrustType.MultiAcademyTrust,
-            _ => throw new InvalidOperationException($"Unknown trust type: {trustOverview.Type}")
-        };
-
-        var singleAcademyTrustAcademyUrn = trustType is TrustType.SingleAcademyTrust
-            ? await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(trustReferenceNumber)
-            : null;
+        var (trustOverview, trustType, singleAcademyTrustAcademyUrn) =
+            await GetTrustOverviewWithTypeAsync(trustReferenceNumber);
 
         var academiesOverview = await academyRepository.GetOverviewOfAcademiesInTrustAsync(trustReferenceNumber);
 
@@ -141,7 +127,7 @@ public class TrustService(
             .GroupBy(a => a.LocalAuthority)
             .ToDictionary(g => g.Key, g => g.Count());
 
-        var totalPupilNumbers = await trustPupilService.GetTotalPupilCountForTrustAsync(uid);
+        var totalPupilNumbers = await trustPupilService.GetTotalPupilCountForTrustAsync(trustReferenceNumber);
         var totalCapacity = academiesOverview.Sum(a => a.SchoolCapacity ?? 0);
 
         var hasIncompleteCapacityData = academiesOverview.Any(a => a.SchoolCapacity is null);
@@ -164,6 +150,24 @@ public class TrustService(
         );
 
         return overviewModel;
+    }
+
+    private async Task<(TrustOverview Overview, TrustType Type, string? SingleAcademyTrustAcademyUrn)>
+        GetTrustOverviewWithTypeAsync(string trustReferenceNumber)
+    {
+        var trustOverview = await trustRepository.GetTrustOverviewAsync(trustReferenceNumber);
+        var trustType = trustOverview.Type switch
+        {
+            "Single-academy trust" => TrustType.SingleAcademyTrust,
+            "Multi-academy trust" => TrustType.MultiAcademyTrust,
+            _ => throw new InvalidOperationException($"Unknown trust type: {trustOverview.Type}")
+        };
+
+        var singleAcademyTrustAcademyUrn = trustType is TrustType.SingleAcademyTrust
+            ? await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(trustReferenceNumber)
+            : null;
+
+        return (trustOverview, trustType, singleAcademyTrustAcademyUrn);
     }
 
     public decimal GetGovernanceTurnoverRate(List<Governor> governors)

@@ -62,7 +62,7 @@ public class TrustPupilServiceTests
         {
             statistics[i] = _dummySchoolPopulation with
             {
-                PupilsOnRole = new Statistic<int>.WithValue(pupilsPerSchool)
+                PupilsOnRoll = new Statistic<int>.WithValue(pupilsPerSchool)
             };
         }
         
@@ -84,7 +84,7 @@ public class TrustPupilServiceTests
     {
         var statistics = new TrustStatistics<SchoolPopulation>
         {
-            [1234] = _dummySchoolPopulation with { PupilsOnRole = Statistic<int>.FromKind(statisticKind) },
+            [1234] = _dummySchoolPopulation with { PupilsOnRoll = Statistic<int>.FromKind(statisticKind) },
             [2345] = _dummySchoolPopulation
         };
         
@@ -124,7 +124,7 @@ public class TrustPupilServiceTests
     {
         var statistics = new TrustStatistics<SchoolPopulation>
         {
-            [123456] = _dummySchoolPopulation with { PupilsOnRole = Statistic<int>.FromKind(statisticKind) }
+            [123456] = _dummySchoolPopulation with { PupilsOnRoll = Statistic<int>.FromKind(statisticKind) }
         };
         
         _mockPupilCensusRepository.GetMostRecentPopulationStatisticsForTrustAsync(Uid)
