@@ -141,7 +141,7 @@ public class TrustSchoolSearchRepository(
         return establishments
             .Where(x => int.TryParse(x.EstablishmentGroupType?.Code, out var code) &&
                         AllowedEstablishmentGroupTypeCodes.Contains(code))
-            .OrderBy(x => x.Name!.StartsWith(text, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+            .OrderBy(x => x.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
             .Take(5)
             .Select(e => new SearchResult(
                 e.Urn.ToString(),

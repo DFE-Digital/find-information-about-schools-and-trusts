@@ -9,13 +9,13 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 
 public class ConfirmTrust(IGetTrusts getTrusts,IMediator mediator) : ContentPageModel
 {
-    public string? ReferenceNumber;
+    public string? ReferenceNumber { get; set; }
     
-    public string? Name;
+    public string? Name { get; set; }
     
-    public string? Region;
+    public string? Region{  get; set; } 
     
-    public string? CompaniesHouseNumber;
+    public string? CompaniesHouseNumber{ get; set; }
     public string? CurrentUser { get; set; }
     
     public async Task OnGet(string referenceNumber)
