@@ -11,11 +11,11 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 public class RemoveSchool(IMediator mediator,IGetEstablishmentsTemp getEstablishments) : ContentPageModel
 {
 
-    public Guid? Id;
-    public string? Name;
-    public string? Urn;
-    public string? Trust;
-    public string? LocalAuthority;
+    public Guid? Id { get; set;}
+    public string? Name { get; set;}
+    public string? Urn { get; set;}
+    public string? Trust { get; set;}
+    public string? LocalAuthority { get; set;}
 
     public Task<IActionResult> OnGetAsync(Guid watchlistIdToRemove,string establishmentName,string establishmentUrn,string establishmentTrust,string establishmentLocalAuthority, CancellationToken cancellationToken)
     {

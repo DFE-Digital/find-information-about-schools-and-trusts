@@ -3,13 +3,14 @@ using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Domain.ValueObjects;
 using DfE.FindInformationAcademiesTrusts.HttpServices;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
+using Dfe.FindInformationAcademiesTrusts.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 
-public class ConfirmSchool(IGetEstablishmentsTemp getEstablishments,IMediator mediator) : ContentPageModel
+public class ConfirmSchool(IGetEstablishmentsTemp getEstablishments,IMediator mediator,ErrorService errorService) : ContentPageModel
 {
     public string? Id { get; set; }
     
@@ -39,6 +40,12 @@ public class ConfirmSchool(IGetEstablishmentsTemp getEstablishments,IMediator me
         var request = new AddEstablishmentToWatchlistCommand(establishmentId, CurrentUser!);
         
         var result = await mediator.Send(request, cancellationToken);
+        
+        if (!result)
+        {
+            errorService.AddApiError();
+            return Page();
+        }
         
         var action = Request.Form["action"].ToString();
         

@@ -42,6 +42,7 @@ using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
 using DfE.FindInformationAcademiesTrusts.Domain.Interfaces.Repositories;
 using DfE.FindInformationAcademiesTrusts.Http;
 using DfE.FindInformationAcademiesTrusts.HttpServices;
+using Dfe.FindInformationAcademiesTrusts.Services;
 using GovUK.Dfe.CoreLibs.Http.Interfaces;
 using GovUK.Dfe.CoreLibs.Http.Middlewares.CorrelationId;
 using MediatR;
@@ -124,7 +125,7 @@ public static class Dependencies
         builder.Services.AddScoped<ITrustDocumentRepository, TrustDocumentRepository>();
         builder.Services.AddScoped<ISchoolRepository, SchoolRepository>();
         builder.Services.AddScoped<IPupilCensusRepository, PupilCensusRepository>();
-
+        builder.Services.AddScoped<ErrorService>();
         builder.Services.AddScoped<IDataSourceService, DataSourceService>();
         builder.Services.AddScoped<ITrustService, TrustService>();
         builder.Services.AddScoped<IAcademyService, AcademyService>();

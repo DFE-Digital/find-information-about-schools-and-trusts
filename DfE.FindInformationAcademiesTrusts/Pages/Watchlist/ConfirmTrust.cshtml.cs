@@ -1,13 +1,14 @@
 using DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Commands;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
+using Dfe.FindInformationAcademiesTrusts.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 
-public class ConfirmTrust(IGetTrusts getTrusts,IMediator mediator) : ContentPageModel
+public class ConfirmTrust(IGetTrusts getTrusts,IMediator mediator,ErrorService errorService) : ContentPageModel
 {
     public string? ReferenceNumber { get; set; }
     
@@ -37,6 +38,13 @@ public class ConfirmTrust(IGetTrusts getTrusts,IMediator mediator) : ContentPage
         
         var result = await mediator.Send(request, cancellationToken);
         
+        
+        if (!result)
+        {
+            errorService.AddApiError();
+            return Page();
+        }
+
         var action = Request.Form["action"].ToString();
         
         if (action == "add-another")

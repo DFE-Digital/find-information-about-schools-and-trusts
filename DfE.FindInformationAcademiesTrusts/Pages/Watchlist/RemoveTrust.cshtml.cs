@@ -10,11 +10,11 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 
 public class RemoveTrust(IMediator mediator,IGetTrustsTemp getTrusts) : ContentPageModel
 {
-    public Guid? Id;
-    public string? Name;
-    public string? Trn;
-    public string? Region;
-    public string? CompaniesHouseNumber;
+    public Guid? Id { get; set;}
+    public string? Name { get; set;}
+    public string? Trn { get; set;}
+    public string? Region { get; set;}
+    public string? CompaniesHouseNumber { get; set;}
     
     
 
