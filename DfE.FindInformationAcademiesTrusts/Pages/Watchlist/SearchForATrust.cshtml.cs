@@ -3,7 +3,7 @@ using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.Search;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DfE.FindInformationAcademiesTrusts.Pages.WatchList;
+namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 
 public class SearchForATrust(ISearchService searchService,IWatchlistQueryService watchlistQueryService) : ContentPageModel, IEstablishmentSearchFormModel
 {

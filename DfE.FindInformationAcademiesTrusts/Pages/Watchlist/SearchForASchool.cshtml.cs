@@ -4,7 +4,7 @@ using DfE.FindInformationAcademiesTrusts.Services.Search;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DfE.FindInformationAcademiesTrusts.Pages.WatchList;
+namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 
 public class SearchForASchool(ISearchService searchService,IWatchlistQueryService watchlistQueryService) : ContentPageModel, IEstablishmentSearchFormModel
 {

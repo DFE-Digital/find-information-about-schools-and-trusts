@@ -7,7 +7,7 @@ using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishment
 using TrustDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts.TrustDto;
 
 
-namespace DfE.FindInformationAcademiesTrusts.Pages.WatchList;
+namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 
 public class Trusts(IWatchlistQueryService watchlistQueryService,IGetTrustsTemp getTrusts) : ContentPageModel
 {

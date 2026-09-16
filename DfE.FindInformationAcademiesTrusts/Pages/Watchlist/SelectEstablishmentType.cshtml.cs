@@ -4,7 +4,7 @@ using Dfe.FindInformationAcademiesTrusts.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace DfE.FindInformationAcademiesTrusts.Pages.WatchList;
+namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 
 public class SelectEstablishmentType : ContentPageModel
 {

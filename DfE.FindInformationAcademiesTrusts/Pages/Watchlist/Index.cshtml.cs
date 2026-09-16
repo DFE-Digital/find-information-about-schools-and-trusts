@@ -6,7 +6,7 @@ using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using Dfe.FindInformationAcademiesTrusts.ViewModels;
 using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.EstablishmentDto;
 
-namespace DfE.FindInformationAcademiesTrusts.Pages.WatchList;
+namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 
 public class Index(IWatchlistQueryService watchlistQueryService,IGetEstablishmentsTemp getEstablishments) : ContentPageModel
 {

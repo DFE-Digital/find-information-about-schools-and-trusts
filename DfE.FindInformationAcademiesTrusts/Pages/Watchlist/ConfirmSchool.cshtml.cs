@@ -7,17 +7,18 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace DfE.FindInformationAcademiesTrusts.Pages.WatchList;
+namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 
 public class ConfirmSchool(IGetEstablishmentsTemp getEstablishments,IMediator mediator) : ContentPageModel
 {
-    public string? Id;
+    public string? Id { get; set; }
     
-    public string? Name;
+    public string? Name  { get; set; }
     
-    public string? Trust;
+    public string? Trust  { get; set; }
     
-    public string? LocalAuthority;
+    public string? LocalAuthority { get; set; }
+    
     public string? CurrentUser { get; set; }
     
     public async Task OnGet(string id)
