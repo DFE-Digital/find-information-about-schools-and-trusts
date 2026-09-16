@@ -15,6 +15,7 @@ export class AuthenticationInterceptor {
                         ...req.headers,
                         'Authorization': `Bearer ${authKey}`,
                         ...(params?.role && {'X-test-role': params.role}),
+                        ...(params?.username && {'X-test-email': params.username}),
                     };
                 }
             ).as("AuthInterceptor");
