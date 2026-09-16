@@ -144,12 +144,12 @@ public class TrustSchoolSearchRepository(
             .OrderBy(x => x.Name!.StartsWith(text, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
             .Take(5)
             .Select(e => new SearchResult(
-                e.Urn!.ToString(),
+                e.Urn.ToString(),
                 null,
-                e.Name!,
-                e.EstablishmentType!.Name!,
+                e.Name,
+                e.EstablishmentType.Name,
                 stringFormattingUtilities.BuildAddressString(
-                    e.Address!.Street,
+                    e.Address.Street,
                     e.Address.Locality,
                     e.Address.Town,
                     e.Address.Postcode),

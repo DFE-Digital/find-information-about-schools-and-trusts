@@ -29,11 +29,7 @@ public class SelectEstablishmentType : ContentPageModel
             Value = "trust"
         }
     ];
-
-    public void OnGet()
-    {
-    }
-
+    
     public IActionResult OnPost(string? organisationType)
     {
         if (string.IsNullOrEmpty(organisationType))

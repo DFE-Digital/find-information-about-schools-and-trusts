@@ -21,7 +21,7 @@ public class WatchlistQueryService(IWatchlistRepository watchlistRepository) : I
         var usersEstablishments = establishments
             .Where(x => x.User == user && !x.IsTrust).ToList();
 
-        if (!usersEstablishments.Any())
+        if (usersEstablishments.Count == 0)
         {
             return Result<IEnumerable<Watchlist>>.Success([]);
         }
@@ -39,7 +39,7 @@ public class WatchlistQueryService(IWatchlistRepository watchlistRepository) : I
         var usersTrusts = trusts
             .Where(x => x.User == user && x.IsTrust).ToList();
 
-        if (!usersTrusts.Any())
+        if (usersTrusts.Count == 0)
         {
             return Result<IEnumerable<Watchlist>>.Success([]);
         }
