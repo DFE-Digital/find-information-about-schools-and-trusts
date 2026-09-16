@@ -40,7 +40,7 @@ public class SearchForASchool(ISearchService searchService,IWatchlistQueryServic
     
     public async Task<IActionResult> OnPostAsync(string? id, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(id))
+        if (string.IsNullOrWhiteSpace(id) || id == "undefined")
         {
             var keywords = Request.Form["keywords"].ToString();
             

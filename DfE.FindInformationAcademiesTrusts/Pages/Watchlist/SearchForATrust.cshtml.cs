@@ -40,7 +40,7 @@ public class SearchForATrust(ISearchService searchService,IWatchlistQueryService
     }
     public async Task<IActionResult> OnPostAsync(string? referenceNumber, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(referenceNumber))
+        if (string.IsNullOrWhiteSpace(referenceNumber) ||  referenceNumber == "undefined")
         {
             var keywords = Request.Form["keywords"].ToString();
             if (string.IsNullOrEmpty(keywords))
