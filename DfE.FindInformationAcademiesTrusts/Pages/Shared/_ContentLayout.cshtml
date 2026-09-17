@@ -10,9 +10,12 @@
     {
       <nav class="govuk-breadcrumbs govuk-!-margin-top-6 govuk-!-margin-bottom-6" aria-label="Breadcrumb">
         <ol class="govuk-breadcrumbs__list">
-          <li class="govuk-breadcrumbs__list-item">
-            <a class="govuk-breadcrumbs__link" asp-page="/Index">Home</a>
-          </li>
+          @if (Context.Request.Path.Value != null && !Context.Request.Path.Value.Contains("watchlist"))
+          {
+            <li class="govuk-breadcrumbs__list-item">
+              <a class="govuk-breadcrumbs__link" asp-page="/Index">Home</a>
+            </li>
+          }
         </ol>
       </nav>
     }

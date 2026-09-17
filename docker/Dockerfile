@@ -22,17 +22,22 @@ RUN npm ci --ignore-scripts && \
 FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-azurelinux3.0 AS build
 WORKDIR /build
 
-# - Copy over csprojs before running restore
+# Mount GitHub Token as a Docker secret so that NuGet Feed can be accessed
+RUN --mount=type=secret,id=github_token dotnet nuget add source --username USERNAME --password $(cat /run/secrets/github_token) --store-password-in-clear-text --name github "https://nuget.pkg.github.com/DFE-Digital/index.json"
+
+# - Copy over csprojs and restore nuget packages separately so they can be cached by Docker
+COPY ./DfE.FindInformationAcademiesTrusts.Domain/DfE.FindInformationAcademiesTrusts.Domain.csproj                       /build/DfE.FindInformationAcademiesTrusts.Domain/
+COPY ./DfE.FindInformationAcademiesTrusts.Application/DfE.FindInformationAcademiesTrusts.Application.csproj             /build/DfE.FindInformationAcademiesTrusts.Application/
 COPY ./DfE.FindInformationAcademiesTrusts.Data.Hardcoded/DfE.FindInformationAcademiesTrusts.Data.Hardcoded.csproj       /build/DfE.FindInformationAcademiesTrusts.Data.Hardcoded/
 COPY ./DfE.FindInformationAcademiesTrusts.Data.FiatDb/DfE.FindInformationAcademiesTrusts.Data.FiatDb.csproj             /build/DfE.FindInformationAcademiesTrusts.Data.FiatDb/
 COPY ./DfE.FindInformationAcademiesTrusts.Data/DfE.FindInformationAcademiesTrusts.Data.csproj                           /build/DfE.FindInformationAcademiesTrusts.Data/
 COPY ./DfE.FindInformationAcademiesTrusts.Data.AcademiesDb/DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.csproj   /build/DfE.FindInformationAcademiesTrusts.Data.AcademiesDb/
 COPY ./DfE.FindInformationAcademiesTrusts/DfE.FindInformationAcademiesTrusts.csproj                                     /build/DfE.FindInformationAcademiesTrusts/
-
-# Mount GitHub Token as a Docker secret, configure NuGet source, and restore in one RUN command
-RUN --mount=type=secret,id=github_token sh -c 'dotnet nuget add source --username USERNAME --password $(cat /run/secrets/github_token) --store-password-in-clear-text --name github "https://nuget.pkg.github.com/DFE-Digital/index.json" && dotnet restore DfE.FindInformationAcademiesTrusts'
+RUN dotnet restore DfE.FindInformationAcademiesTrusts
 
 # - Only copy over relevant C# code so this can be cached independently to other app changes
+COPY ./DfE.FindInformationAcademiesTrusts.Domain/           /build/DfE.FindInformationAcademiesTrusts.Domain/
+COPY ./DfE.FindInformationAcademiesTrusts.Application/      /build/DfE.FindInformationAcademiesTrusts.Application/
 COPY ./DfE.FindInformationAcademiesTrusts.Data.Hardcoded/   /build/DfE.FindInformationAcademiesTrusts.Data.Hardcoded/
 COPY ./DfE.FindInformationAcademiesTrusts.Data.FiatDb/      /build/DfE.FindInformationAcademiesTrusts.Data.FiatDb/
 COPY ./DfE.FindInformationAcademiesTrusts.Data/             /build/DfE.FindInformationAcademiesTrusts.Data/
@@ -61,11 +66,13 @@ RUN dpkg -i /usr/share/microsoft.deb && \
 # - Copy and configure sql migration script
 WORKDIR /app
 COPY ./DfE.FindInformationAcademiesTrusts.Data.FiatDb/Migrations/FiatDbMigrationScript.sql /app/sql/FiatDbMigrationScript.sql
+COPY ./DfE.FindInformationAcademiesTrusts.Data.FiatDb/Migrations/FindInformationAcademiesTrustsMigrationScript.sql /app/sql/FindInformationAcademiesTrustsMigrationScript.sql
 COPY ./docker/init-docker-entrypoint.sh /app/migratedb
 
 # - Set permissions, create user, and change ownership
 RUN chmod +x /app/migratedb && \
     touch /app/sql/FiatDbMigrationScriptOutput.txt && \
+    touch /app/sql/FindInformationAcademiesTrustsMigrationScriptOutput.txt && \
     useradd -r -m -U app && \
     chown -R app:app /app
 
@@ -82,9 +89,11 @@ COPY ./docker/web-docker-entrypoint.sh /app/docker-entrypoint.sh
 
 # - Copy and configure sql migration script
 COPY ./DfE.FindInformationAcademiesTrusts.Data.FiatDb/Migrations/FiatDbMigrationScript.sql /app/sql/FiatDbMigrationScript.sql
+COPY ./DfE.FindInformationAcademiesTrusts.Data.FiatDb/Migrations/FindInformationAcademiesTrustsMigrationScript.sql /app/sql/FindInformationAcademiesTrustsMigrationScript.sql
 
 RUN chmod +x /app/docker-entrypoint.sh && \
     touch /app/sql/FiatDbMigrationScriptOutput.txt && \
+    touch /app/sql/FindInformationAcademiesTrustsMigrationScriptOutput.txt && \
     chown "$APP_UID" "/app/sql" -R
 
 # - Copy frontend assets
