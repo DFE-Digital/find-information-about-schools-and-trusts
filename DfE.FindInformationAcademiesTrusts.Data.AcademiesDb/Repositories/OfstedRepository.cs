@@ -68,20 +68,12 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, IGetEstabl
         var result = await GetOfstedRatings([urnString]);
         var ofstedRatings = result[urnString];
 
-        var giasGroupLink = await academiesDbContext.GiasGroupLinks
-            .Where(gl => gl.Urn == urnString)
-            .Select(gl => new
-            {
-                Urn = gl.Urn!,
-                gl.EstablishmentName,
-                gl.JoinedDate
-            })
-            .FirstOrDefaultAsync();
+        var schoolDetails = await getEstablishments.GetEstablishment(urn);
 
         return new SchoolOfsted(
             urnString,
-            giasGroupLink?.EstablishmentName,
-            giasGroupLink?.JoinedDate.ParseAsNullableDate(),
+            schoolDetails.Name,
+            schoolDetails.DateJoinedTrust.ParseAsNullableDate(),
             ofstedRatings.ShortInspection,
             ofstedRatings.Previous,
             ofstedRatings.Current,
