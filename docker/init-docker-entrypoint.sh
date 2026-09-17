@@ -23,4 +23,12 @@ do
   sleep 5
 done
 
+echo "Running FindInformationAcademiesTrusts database migrations ..."
+until /opt/mssql-tools18/bin/sqlcmd -S "${mssqlconn[Server]}" -U "${mssqlconn[UserId]}" -P "${mssqlconn[Password]}" -d "${mssqlconn[Database]}" -C -I -i /app/sql/FindInformationAcademiesTrustsMigrationScript.sql -o /app/sql/FindInformationAcademiesTrustsMigrationScriptOutput.txt
+do
+  cat /app/sql/FindInformationAcademiesTrustsMigrationScriptOutput.txt
+  echo "Retrying FindInformationAcademiesTrusts database migrations ..."
+  sleep 5
+done
+
 echo "Done!"

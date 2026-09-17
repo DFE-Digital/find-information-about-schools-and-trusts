@@ -56,14 +56,24 @@ public class GetEstablishments(IDfeHttpClientFactory httpClientFactory,
 
         return result.Body;
     }
-
-    public async Task<EstablishmentDto> GetEstablishmentByUkprn(string ukprn)
+    
+    public async Task<List<EstablishmentDto>> GetEstablishmentsByUrns(List<int> urns)
     {
-        string path = $"/v4/establishment/{ukprn}";
-        
-        ApiResponse<EstablishmentDto> result = await httpClientService.Get<EstablishmentDto>(_httpClient, path);
-        
-        if (!result.Success) throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");
+        const string path = "v4/establishments/bulk/urns";
+
+        var request = new
+        {
+            urns = urns.ToArray()
+        };
+
+        ApiResponse<List<EstablishmentDto>> result =
+            await httpClientService.Post<object, List<EstablishmentDto>>(
+                _httpClient,
+                path,
+                request);
+
+        if (!result.Success)
+            throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");
 
         return result.Body;
     }
