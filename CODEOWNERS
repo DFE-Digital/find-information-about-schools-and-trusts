@@ -2,9 +2,9 @@
 * @SteBradbury @nimblelinzi @thomasmcinnes-nimble @saziadfe
 
 # This sets the owner for DevOps related code
-.github/workflows/* @drizzlyowl @stretch96 @SteBradbury @nimblelinzi @saziadfe
-docker/* @drizzlyowl @stretch96 @SteBradbury @nimblelinzi @saziadfe
-terraform/* @drizzlyowl @stretch96 @SteBradbury @nimblelinzi @saziadfe
+.github/workflows/* @stretch96 @SteBradbury @nimblelinzi @saziadfe
+docker/* @stretch96 @SteBradbury @nimblelinzi @saziadfe
+terraform/* @stretch96 @SteBradbury @nimblelinzi @saziadfe
 
 # This sets the owner for Cypress tests.
 tests/DFE.FindInformationAcademiesTrusts.CypressTests/ @SteBradbury @nimblelinzi @thomasmcinnes-nimble @saziadfe
