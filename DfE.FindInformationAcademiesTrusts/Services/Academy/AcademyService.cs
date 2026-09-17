@@ -10,8 +10,8 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Academy;
 public interface IAcademyService
 {
     Task<AcademyDetailsServiceModel[]> GetAcademiesInTrustDetailsAsync(string uid);
-    Task<SchoolOfstedServiceModel[]> GetAcademiesInTrustOfstedAsync(string uid);
-    Task<AcademyPupilNumbersServiceModel[]> GetAcademiesInTrustPupilNumbersAsync(string uid,string referenceNumber);
+    Task<SchoolOfstedServiceModel[]> GetAcademiesInTrustOfstedAsync(string trustReferenceNumber);
+    Task<AcademyPupilNumbersServiceModel[]> GetAcademiesInTrustPupilNumbersAsync(string referenceNumber);
     Task<AcademyFreeSchoolMealsServiceModel[]> GetAcademiesInTrustFreeSchoolMealsAsync(string referenceNumber);
     Task<AcademyPipelineSummaryServiceModel> GetAcademiesPipelineSummaryAsync(string trustReferenceNumber);
     Task<AcademyPipelineServiceModel[]> GetAcademiesPipelinePreAdvisoryAsync(string trustReferenceNumber);
@@ -36,16 +36,16 @@ public class AcademyService(
                 a.UrbanRural?.Replace("(England/Wales) ", ""), a.DateAcademyJoinedTrust)).ToArray();
     }
 
-    public async Task<SchoolOfstedServiceModel[]> GetAcademiesInTrustOfstedAsync(string uid)
+    public async Task<SchoolOfstedServiceModel[]> GetAcademiesInTrustOfstedAsync(string trustReferenceNumber)
     {
-        var academies = await ofstedRepository.GetAcademiesInTrustOfstedAsync(uid);
+        var academies = await ofstedRepository.GetAcademiesInTrustOfstedAsync(trustReferenceNumber);
 
         return academies.Select(a =>
             new SchoolOfstedServiceModel(a.Urn, a.EstablishmentName, a.DateAcademyJoinedTrust, a.ShortInspection,
                 a.PreviousOfstedRating, a.CurrentOfstedRating, a.IsFurtherEducationalEstablishment)).ToArray();
     }
 
-    public async Task<AcademyPupilNumbersServiceModel[]> GetAcademiesInTrustPupilNumbersAsync(string uid,string referenceNumber)
+    public async Task<AcademyPupilNumbersServiceModel[]> GetAcademiesInTrustPupilNumbersAsync(string referenceNumber)
     {
         var academies = await academyRepository.GetAcademiesInTrustPupilNumbersByTrnAsync(referenceNumber);
         var pupilNumbers = await trustPupilService.GetPupilCountsForSchoolsInTrustAsync(referenceNumber);

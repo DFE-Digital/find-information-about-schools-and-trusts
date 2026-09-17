@@ -1,4 +1,5 @@
 using System.Globalization;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
@@ -7,34 +8,33 @@ using Microsoft.Extensions.Logging;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
-public class OfstedRepository(IAcademiesDbContext academiesDbContext, ILogger<AcademyRepository> logger)
+public class OfstedRepository(IAcademiesDbContext academiesDbContext, IGetEstablishments getEstablishments, ILogger<AcademyRepository> logger)
     : IOfstedRepository
 {
     private static readonly DateTime
         SingleHeadlineGradesPolicyChangeDate = new(2024, 09, 02, 0, 0, 0, DateTimeKind.Utc);
 
-    public async Task<SchoolOfsted[]> GetAcademiesInTrustOfstedAsync(string uid)
+    public async Task<SchoolOfsted[]> GetAcademiesInTrustOfstedAsync(string trustReferenceNumber)
     {
-        var giasGroupLinkData = await academiesDbContext.GiasGroupLinks
-            .Where(gl => gl.GroupUid == uid)
-            .Select(gl => new
+        var academies = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(trustReferenceNumber);
+        var academiesData = academies.Select(a => new
             {
-                Urn = gl.Urn!,
-                gl.EstablishmentName,
-                gl.JoinedDate
+                a.Urn,
+                a.Name,
+                a.DateJoinedTrust
             })
-            .ToListAsync();
+            .ToList();
 
-        var ofstedRatings = await GetOfstedRatings(giasGroupLinkData.Select(gl => gl.Urn).ToArray());
+        var ofstedRatings = await GetOfstedRatings(academiesData.Select(a => a.Urn).ToArray());
 
-        var academyOfsteds = giasGroupLinkData.Select(gl =>
-                new SchoolOfsted(gl.Urn,
-                    gl.EstablishmentName,
-                    DateTime.ParseExact(gl.JoinedDate!, "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                    ofstedRatings[gl.Urn].ShortInspection,
-                    ofstedRatings[gl.Urn].Previous,
-                    ofstedRatings[gl.Urn].Current,
-                    ofstedRatings[gl.Urn].IsFurtherEducationalEstablishment
+        var academyOfsteds = academiesData.Select(a =>
+                new SchoolOfsted(a.Urn,
+                    a.Name,
+                    DateTime.ParseExact(a.DateJoinedTrust!, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                    ofstedRatings[a.Urn].ShortInspection,
+                    ofstedRatings[a.Urn].Previous,
+                    ofstedRatings[a.Urn].Current,
+                    ofstedRatings[a.Urn].IsFurtherEducationalEstablishment
                 ))
             .ToArray();
 

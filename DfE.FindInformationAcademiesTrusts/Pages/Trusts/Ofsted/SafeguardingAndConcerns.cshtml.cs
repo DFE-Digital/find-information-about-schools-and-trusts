@@ -27,7 +27,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted
 
             if (pageResult.GetType() == typeof(NotFoundResult)) return pageResult;
 
-            SafeGuardingInspectionModels = await ofstedService.GetOfstedOverviewSafeguardingAndConcerns(Uid);
+            SafeGuardingInspectionModels = await ofstedService.GetOfstedOverviewSafeguardingAndConcerns(TrustReferenceNumber);
 
             return pageResult;
         }

@@ -8,11 +8,11 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
     public interface IOfstedService
     {
         Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspectionAsync(int urn);
-        Task<List<OfstedOverviewInspectionServiceModel>> GetOfstedOverviewInspectionForTrustAsync(string uid);
+        Task<List<OfstedOverviewInspectionServiceModel>> GetOfstedOverviewInspectionForTrustAsync(string trustReferenceNumber);
         Task<OlderSchoolOfstedServiceModel> GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn);
         Task<List<TrustOfstedReportServiceModel<ReportCardServiceModel>>> GetEstablishmentsInTrustReportCardsAsync(string uid);
-        Task<List<TrustOfstedReportServiceModel<OlderInspectionServiceModel>>> GetEstablishmentsInTrustOlderOfstedRatings(string uid);
-        Task<List<TrustOfstedReportServiceModel<SafeGuardingAndConcernsServiceModel>>> GetOfstedOverviewSafeguardingAndConcerns(string uid);
+        Task<List<TrustOfstedReportServiceModel<OlderInspectionServiceModel>>> GetEstablishmentsInTrustOlderOfstedRatings(string trustReferenceNumber);
+        Task<List<TrustOfstedReportServiceModel<SafeGuardingAndConcernsServiceModel>>> GetOfstedOverviewSafeguardingAndConcerns(string trustReferenceNumber);
     }
 
     public class OfstedService(IReportCardsService reportCardsService, IOfstedRepository ofstedRepository, IOfstedServiceModelBuilder ofstedServiceModelBuilder, IAcademyService academyService, ILogger<IOfstedService> logger) : IOfstedService
@@ -25,9 +25,9 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
             return ofstedServiceModelBuilder.BuildOfstedOverviewInspection(schoolOfstedRatings, reportCards);
         }
         
-        public async Task<List<OfstedOverviewInspectionServiceModel>> GetOfstedOverviewInspectionForTrustAsync(string uid)
+        public async Task<List<OfstedOverviewInspectionServiceModel>> GetOfstedOverviewInspectionForTrustAsync(string trustReferenceNumber)
         {
-            var schoolOfstedRatings = await ofstedRepository.GetAcademiesInTrustOfstedAsync(uid);
+            var schoolOfstedRatings = await ofstedRepository.GetAcademiesInTrustOfstedAsync(trustReferenceNumber);
             
             var reportCards = await reportCardsService.GetReportCardsAsync(schoolOfstedRatings.Select(x => x.Urn).ToList());
 
@@ -85,9 +85,9 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
             return trustReportCards;
         }
 
-        public async Task<List<TrustOfstedReportServiceModel<OlderInspectionServiceModel>>> GetEstablishmentsInTrustOlderOfstedRatings(string uid)
+        public async Task<List<TrustOfstedReportServiceModel<OlderInspectionServiceModel>>> GetEstablishmentsInTrustOlderOfstedRatings(string trustReferenceNumber)
         {
-            var academies = await ofstedRepository.GetAcademiesInTrustOfstedAsync(uid);
+            var academies = await ofstedRepository.GetAcademiesInTrustOfstedAsync(trustReferenceNumber);
             
             var trustOfstedReports = new List<TrustOfstedReportServiceModel<OlderInspectionServiceModel>>();
 
@@ -109,16 +109,16 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
                 }
                 else
                 {
-                    logger.LogError("Unable to parse academy urn {Urn} for trust {Uid}", schoolOfsted.Urn, uid);
+                    logger.LogError("Unable to parse academy urn {Urn} for trust {Trn}", schoolOfsted.Urn, trustReferenceNumber);
                 }
             }
 
             return trustOfstedReports;
         }
 
-        public async Task<List<TrustOfstedReportServiceModel<SafeGuardingAndConcernsServiceModel>>> GetOfstedOverviewSafeguardingAndConcerns(string uid)
+        public async Task<List<TrustOfstedReportServiceModel<SafeGuardingAndConcernsServiceModel>>> GetOfstedOverviewSafeguardingAndConcerns(string trustReferenceNumber)
         {
-            var schoolOfstedRatings = await ofstedRepository.GetAcademiesInTrustOfstedAsync(uid);
+            var schoolOfstedRatings = await ofstedRepository.GetAcademiesInTrustOfstedAsync(trustReferenceNumber);
 
             var reportCards = await reportCardsService.GetReportCardsAsync(schoolOfstedRatings.Select(x => x.Urn).ToList());
             
@@ -146,7 +146,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
                 }
                 else
                 {
-                    logger.LogError("Unable to parse academy urn {Urn} for trust {Uid}", schoolOfstedRating.Urn, uid);
+                    logger.LogError("Unable to parse academy urn {Urn} for trust {Uid}", schoolOfstedRating.Urn, trustReferenceNumber);
                 }
             }
 

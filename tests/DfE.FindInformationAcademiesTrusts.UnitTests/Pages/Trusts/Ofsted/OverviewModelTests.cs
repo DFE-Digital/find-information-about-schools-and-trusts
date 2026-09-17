@@ -24,7 +24,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.Ofsted
             Sut = new OverviewModel(MockDataSourceService, MockTrustService, MockOfstedService)
                 { Uid = TrustUid };
 
-            MockOfstedService.GetOfstedOverviewInspectionForTrustAsync(TrustUid).Returns([mockInspectionResult]);
+            MockOfstedService.GetOfstedOverviewInspectionForTrustAsync(TrustReference).Returns([mockInspectionResult]);
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Trusts.Ofsted
 
             _ = await Sut.OnGetAsync();
 
-            await MockOfstedService.Received(1).GetOfstedOverviewInspectionForTrustAsync(TrustUid);
+            await MockOfstedService.Received(1).GetOfstedOverviewInspectionForTrustAsync(TrustReference);
 
             Sut.OverviewInspectionModels.Should().BeEquivalentTo([mockInspectionResult]);
         }
