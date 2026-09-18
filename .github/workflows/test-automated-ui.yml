@@ -46,6 +46,7 @@ jobs:
               cypress/e2e/regression/search/**/*.cy.ts
               cypress/e2e/regression/*.cy.ts
               cypress/e2e/regression/navigation/general/*.cy.ts
+              cypress/e2e/regression/watchlist/**/*.cy.ts
           - group: regression-navigation-and-school-routing
             browser: "edge"
             spec: |
