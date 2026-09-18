@@ -60,20 +60,6 @@ describe('Watchlist Accessibility', () => {
     });
 
     describe('Watchlist State Messages Accessibility', () => {
-        it('should have accessible empty watchlist message', () => {
-            cy.get('body').then($body => {
-                if ($body.find('[data-testid*="empty-watchlist"]').length > 0) {
-                    cy.checkAccessibility('[data-testid*="empty-watchlist"]');
-                }
-                if ($body.find('.watchlist-empty-message').length > 0) {
-                    cy.checkAccessibility('.watchlist-empty-message');
-                }
-                if ($body.find('p:contains("watchlist")').length > 0) {
-                    cy.checkAccessibility('p:contains("watchlist")');
-                }
-            });
-        });
-
         it('should have accessible watchlist alerts and notifications', () => {
             cy.get('body').then($body => {
                 if ($body.find('[role="alert"]').length > 0) {

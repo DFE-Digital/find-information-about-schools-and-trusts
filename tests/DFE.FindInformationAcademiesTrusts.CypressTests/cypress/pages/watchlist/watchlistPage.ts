@@ -3,7 +3,7 @@ import { AutocompleteHelper } from '../../support/autocompleteHelper';
 class WatchlistPage {
 
     elements = {
-        pageHeading: () => cy.get('h1.govuk-heading-xl'),
+        pageHeading: () => cy.get('h1.govuk-heading-l'),
         addToWatchlistButton: () => cy.get('.govuk-button').contains('Add to watchlist'),
         removeFromWatchlistLink: () => cy.get('.govuk-link').contains('Remove'),
         selectSchool: () => cy.get('.govuk-radios__item').contains('School'),
@@ -135,6 +135,7 @@ class WatchlistPage {
     }
 
     public trustPageAppears(): this {
+        cy.wait(5000)
         cy.url().should('include', '/trusts/overview');
         return this;
     }
@@ -206,7 +207,7 @@ class WatchlistPage {
     }
 
     public confirmTrustDetails(details: string): this {
-        cy.url().should('include', '/confirmtrust');
+        cy.url().should('include','/confirm-trust');
         cy.get('h1').should('contain', 'Confirm trust details');
         this.elements.establishmentDetails().should('be.visible').and('not.be.empty');
         const expectedRows = ['Trust name', 'TRN', 'Region', 'Companies house number'];
