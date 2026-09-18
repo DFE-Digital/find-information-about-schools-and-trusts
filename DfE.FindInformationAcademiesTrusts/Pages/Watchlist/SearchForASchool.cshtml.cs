@@ -61,4 +61,7 @@ public class SearchForASchool(ISearchService searchService,IWatchlistQueryServic
 
     public string PageSearchFormInputId => "school-search";
     public string AutocompletePagePath => "/WatchList/SearchForASchool";
+
+    public string Heading => "Search for a school";
+    public string Hint => "Search by URN (unique reference number) or name. Include any punctuation in names.";
 }

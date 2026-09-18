@@ -1,4 +1,4 @@
-@page
+@page "/watchlist/search-for-a-trust"
 @model DfE.FindInformationAcademiesTrusts.Pages.Watchlist.SearchForATrust
 
 @{
@@ -14,10 +14,6 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
         <span class="govuk-caption-l">Add to watchlist</span>
-        <h1 class="govuk-heading-xl">Search for a trust</h1>
-        <div id="school-hint" class="govuk-hint">
-            Search by TRN (trust reference number) or name. Include any punctuation in names.
-        </div>
         <form class="govuk-form-group app-search govuk-!-margin-bottom-0" asp-page="Search" method="post" role="search" aria-label="sitewide">
             <partial name="_EstablishmentSearchForm" model="Model"/>
         </form>

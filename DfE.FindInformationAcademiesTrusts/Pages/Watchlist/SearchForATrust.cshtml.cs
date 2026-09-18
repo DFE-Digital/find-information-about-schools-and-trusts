@@ -64,4 +64,7 @@ public class SearchForATrust(ISearchService searchService,IWatchlistQueryService
 
     public string PageSearchFormInputId => "trust-search";
     public string AutocompletePagePath => "/WatchList/SearchForATrust";
+    
+    public string Heading => "Search for a trust";
+    public string Hint => "Search by TRN (trust reference number) or name. Include any punctuation in names.";
 }

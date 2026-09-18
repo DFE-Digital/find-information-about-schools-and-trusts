@@ -49,6 +49,10 @@ public abstract class InputTagHelperBase(IHtmlHelper htmlHelper) : TagHelper
 
     [HtmlAttributeName("heading-style")]
     public string HeadingStyle { get; set; } = string.Empty;
+    
+    [HtmlAttributeName("heading-type")]
+    public string HeadingType { get; set; } = string.Empty;
+    
     [HtmlAttributeName("error-message")]
     public string ErrorMessage { get; set; } = string.Empty;
     

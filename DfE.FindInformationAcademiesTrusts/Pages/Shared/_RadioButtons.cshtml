@@ -3,9 +3,11 @@
     <div class="govuk-radios @(Model.Inline ? "govuk-radios--inline" : "")" data-module="govuk-radios">
         @if (!string.IsNullOrEmpty(Model.Heading))
         {
-            <div class="govuk-fieldset__legend @Model.HeadingStyle">
-                @Model.Heading
-            </div>
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    @Model.Heading
+                </h1>
+            </legend>
         }
 
         @if (!string.IsNullOrEmpty(Model.ErrorMessage))

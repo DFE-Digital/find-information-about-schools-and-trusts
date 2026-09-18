@@ -16,13 +16,13 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
         <span class="govuk-caption-l">Add to watchlist</span>
-        <h1 class="govuk-heading-xl">Select the type of establishment to add</h1>
-
         <form method="post" novalidate>
             <govuk-radiobuttons-input name="@nameof(Model.OrganisationType)"
                                       radio-buttons="@Model.OrganisationTypeRadioButtons"
                                       error-message="@Model.ErrorMessage"
-                                      asp-for="@Model.OrganisationType" />
+                                      asp-for="@Model.OrganisationType"
+                                      heading="Select the type of establishment to add"/>
+            
 
             <button class="govuk-button" type="submit">
                 Continue

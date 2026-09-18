@@ -1,4 +1,4 @@
-@page "/watchlist/watchlist-schools"
+@page "/watchlist/schools"
 @model DfE.FindInformationAcademiesTrusts.Pages.Watchlist.Index
 
 @{
@@ -10,7 +10,7 @@
 
 <div class="govuk-grid-row">
         <div class="govuk-grid-column-full app-table-container">
-            <table class="govuk-table si-row-colours-table" data-module="moj-sortable-table">
+            <table class="govuk-table si-row-colours-table--school" data-module="moj-sortable-table">
             
             @if (Model.Items.Any())
             {
@@ -66,7 +66,7 @@
             else
             {
                 <caption class="govuk-table__caption govuk-!-margin-bottom-4">
-                    Your schools watchlist is currently empty.
+                    Your schools watchlist is currently empty
                 </caption>
             }
             </table>
