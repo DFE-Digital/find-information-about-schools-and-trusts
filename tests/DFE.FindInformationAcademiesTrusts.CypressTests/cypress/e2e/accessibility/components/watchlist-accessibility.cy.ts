@@ -129,7 +129,7 @@ describe('Watchlist Accessibility', () => {
         });
     });
 
-      describe('Watchlist Page Accessibility - Trusts', () => {
+    describe('Watchlist Page Accessibility - Trusts', () => {
           it('should have accessible links', () => {
              watchlistPage.navigateToTrustsTab();
 
@@ -145,5 +145,5 @@ describe('Watchlist Accessibility', () => {
                   }
               });
           });
-      });
+    });
 });
