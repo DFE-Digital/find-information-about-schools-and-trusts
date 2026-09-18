@@ -5,6 +5,8 @@ class HomePage {
     elements = {
         mainSearchBox: () => cy.get('#home-search'),
         mainSearchButton: () => cy.get('[data-testid="search"]'),
+        watchlistTab: () => cy.get('a').contains('Watchlist'),
+        trustAndSchoolTab: () => cy.get('a').contains('Trusts and schools'),
 
         header: {
             manageProjectsAndCasesLink: () => cy.get('[data-testid="mpcHeaderLink"]')
@@ -25,6 +27,21 @@ class HomePage {
             manageProjectsAndCases: () => cy.get('.dfe-card').contains('Manage projects and cases')
         }
     };
+
+    public verifyHeading(headingText: string): this {
+        cy.get('h1').contains(headingText).should('be.visible');
+        return this;
+    }
+
+    public clickWatchlistLink(): this {
+        this.elements.watchlistTab().click();
+        return this;
+    }
+
+    public clickTrustAndSchoolTab(): this {
+        this.elements.trustAndSchoolTab().click();
+        return this;
+    }
 
     public enterMainSearchText(searchText: string): this {
         AutocompleteHelper.typeWithAutocomplete(this.elements.mainSearchBox, searchText);
@@ -67,6 +84,11 @@ class HomePage {
         this.elements.whatYouCanFindList.laMaintainedSchools().should('be.visible');
         this.elements.whatYouCanFindList.specialSchools().should('be.visible');
         this.elements.whatYouCanFindList.trusts().should('be.visible');
+        return this;
+    }
+
+    public verifyTrustAndSchoolTabIsDefault(): this {
+        this.elements.trustAndSchoolTab().should('have.attr', 'aria-current', 'page');
         return this;
     }
 }
