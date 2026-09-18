@@ -51,7 +51,7 @@ public abstract class EditTrustContactFormModel(ITrustService trustService, Trus
 
     protected override async Task<InternalContact?> GetContactAsync()
     {
-        var contacts = await trustService.GetTrustContactsAsync(Id);
+        var contacts = await trustService.GetTrustContactsAsync(Id, ReferenceNumber);
         return GetContactFromServiceModel(contacts);
     }
 

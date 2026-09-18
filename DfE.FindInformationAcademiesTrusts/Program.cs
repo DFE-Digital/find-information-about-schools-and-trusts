@@ -43,6 +43,7 @@ internal static class Program
 
             });
             
+            
             builder.Services.Configure<RouteOptions>(options =>
             {
                 options.LowercaseUrls = true;

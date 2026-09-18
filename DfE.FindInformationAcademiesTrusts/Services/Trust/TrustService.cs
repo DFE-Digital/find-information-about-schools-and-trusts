@@ -7,6 +7,7 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 using GovUK.Dfe.PersonsApi.Client.Contracts;
 using Microsoft.Extensions.Caching.Memory;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Trust;
 
@@ -15,7 +16,7 @@ public interface ITrustService
     Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(string referenceNumber);
     Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(int urn);
     Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string trn);
-    Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid);
+    Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid, string referenceNumber);
     Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string trustReferenceNumber, string uid);
 
     Task<InternalContactUpdatedServiceModel> UpdateContactAsync(int uid, string? name, string? email,
@@ -61,7 +62,7 @@ public class TrustService(
             return null;
         }
 
-        var count = await academyRepository.GetNumberOfAcademiesInTrustAsync(summary.Uid);
+        var count = await academyRepository.GetNumberOfAcademiesInTrustAsync(summary.ReferenceNumber);
 
         var trustSummaryServiceModel = new TrustSummaryServiceModel(summary.Uid,summary.ReferenceNumber, summary.Name, summary.Type, count);
 
@@ -73,7 +74,11 @@ public class TrustService(
 
     public async Task<TrustGovernanceServiceModel> GetTrustGovernanceAsync(string trn)
     {
-        var governors = await trustGovernanceRepository.GetTrustGovernanceAsync(trn.ToUpper());
+        var (_, trustType, singleAcademyTrustAcademyUrn) = await GetTrustOverviewWithTypeAsync(trn);
+
+        var governors = trustType is TrustType.MultiAcademyTrust
+            ? await trustGovernanceRepository.GetTrustGovernanceAsync(trn.ToUpper())
+            : await trustGovernanceRepository.GetSatGovernanceAsync(int.Parse(singleAcademyTrustAcademyUrn!));
 
         return new TrustGovernanceServiceModel(
             governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleLeadership: true }).ToArray(),
@@ -83,12 +88,12 @@ public class TrustService(
             GetGovernanceTurnoverRate(governors));
     }
 
-    public async Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid)
+    public async Task<TrustContactsServiceModel> GetTrustContactsAsync(string uid, string referenceNumber)
     {
-        var urn = await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(uid);
+        var (_, _, singleAcademyTrustAcademyUrn) = await GetTrustOverviewWithTypeAsync(referenceNumber);
 
         var trustContacts =
-            await trustRepository.GetTrustContactsAsync(uid, urn);
+            await trustRepository.GetTrustContactsAsync(uid, singleAcademyTrustAcademyUrn);
         var internalContacts = await contactRepository.GetTrustInternalContactsAsync(uid);
 
         return new TrustContactsServiceModel(
@@ -111,19 +116,10 @@ public class TrustService(
 
     public async Task<TrustOverviewServiceModel> GetTrustOverviewAsync(string trustReferenceNumber, string uid)
     {
-        var trustOverview = await trustRepository.GetTrustOverviewAsync(trustReferenceNumber);
-        var trustType = trustOverview.Type switch
-        {
-            "Single-academy trust" => TrustType.SingleAcademyTrust,
-            "Multi-academy trust" => TrustType.MultiAcademyTrust,
-            _ => throw new InvalidOperationException($"Unknown trust type: {trustOverview.Type}")
-        };
+        var (trustOverview, trustType, singleAcademyTrustAcademyUrn) =
+            await GetTrustOverviewWithTypeAsync(trustReferenceNumber);
 
-        var singleAcademyTrustAcademyUrn = trustType is TrustType.SingleAcademyTrust
-            ? await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(uid)
-            : null;
-
-        var academiesOverview = await academyRepository.GetOverviewOfAcademiesInTrustAsync(uid);
+        var academiesOverview = await academyRepository.GetOverviewOfAcademiesInTrustAsync(trustReferenceNumber);
 
         var totalAcademies = academiesOverview.Length;
 
@@ -131,7 +127,7 @@ public class TrustService(
             .GroupBy(a => a.LocalAuthority)
             .ToDictionary(g => g.Key, g => g.Count());
 
-        var totalPupilNumbers = await trustPupilService.GetTotalPupilCountForTrustAsync(uid);
+        var totalPupilNumbers = await trustPupilService.GetTotalPupilCountForTrustAsync(trustReferenceNumber);
         var totalCapacity = academiesOverview.Sum(a => a.SchoolCapacity ?? 0);
 
         var hasIncompleteCapacityData = academiesOverview.Any(a => a.SchoolCapacity is null);
@@ -154,6 +150,24 @@ public class TrustService(
         );
 
         return overviewModel;
+    }
+
+    private async Task<(TrustOverview Overview, TrustType Type, string? SingleAcademyTrustAcademyUrn)>
+        GetTrustOverviewWithTypeAsync(string trustReferenceNumber)
+    {
+        var trustOverview = await trustRepository.GetTrustOverviewAsync(trustReferenceNumber);
+        var trustType = trustOverview.Type switch
+        {
+            "Single-academy trust" => TrustType.SingleAcademyTrust,
+            "Multi-academy trust" => TrustType.MultiAcademyTrust,
+            _ => throw new InvalidOperationException($"Unknown trust type: {trustOverview.Type}")
+        };
+
+        var singleAcademyTrustAcademyUrn = trustType is TrustType.SingleAcademyTrust
+            ? await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(trustReferenceNumber)
+            : null;
+
+        return (trustOverview, trustType, singleAcademyTrustAcademyUrn);
     }
 
     public decimal GetGovernanceTurnoverRate(List<Governor> governors)

@@ -7,7 +7,7 @@ public class SchoolPopulationTests
     [Fact]
     public void Unknown_has_NotAvailable_statistic_for_all_parameters()
     {
-        SchoolPopulation.Unknown.PupilsOnRole
+        SchoolPopulation.Unknown.PupilsOnRoll
             .Should().Be(Statistic<int>.NotAvailable);
         SchoolPopulation.Unknown.PupilsWithEhcPlan
             .Should().Be(Statistic<int>.NotAvailable);
@@ -30,7 +30,7 @@ public class SchoolPopulationTests
     [Fact]
     public void NotYetSubmitted_has_NotYetSubmitted_statistic_for_all_parameters()
     {
-        SchoolPopulation.NotYetSubmitted.PupilsOnRole
+        SchoolPopulation.NotYetSubmitted.PupilsOnRoll
             .Should().Be(Statistic<int>.NotYetSubmitted);
         SchoolPopulation.NotYetSubmitted.PupilsWithEhcPlan
             .Should().Be(Statistic<int>.NotYetSubmitted);

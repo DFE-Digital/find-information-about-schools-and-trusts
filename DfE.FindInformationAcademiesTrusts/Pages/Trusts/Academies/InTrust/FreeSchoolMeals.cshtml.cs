@@ -33,7 +33,7 @@ public class FreeSchoolMealsModel(
         var pageResult = await base.OnGetAsync();
         if (pageResult is NotFoundResult) return pageResult;
 
-        Academies = await AcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(Uid);
+        Academies = await AcademyService.GetAcademiesInTrustFreeSchoolMealsAsync(ReferenceNumber);
 
 
         return pageResult;

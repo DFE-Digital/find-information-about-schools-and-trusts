@@ -20,7 +20,7 @@ public class EditSfsoLeadModelTests
 
     public EditSfsoLeadModelTests()
     {
-        _mockTrustService.GetTrustContactsAsync("1234").Returns(
+        _mockTrustService.GetTrustContactsAsync(_fakeTrust.Uid, _fakeTrust.ReferenceNumber).Returns(
             Task.FromResult(new TrustContactsServiceModel(null, _sfsoLead, null, null, null)));
         _mockTrustService.GetTrustSummaryAsync(_fakeTrust.ReferenceNumber)!.Returns(Task.FromResult(_fakeTrust));
 

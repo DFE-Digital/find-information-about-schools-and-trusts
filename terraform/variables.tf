@@ -403,6 +403,12 @@ variable "mssql_sku_name" {
   default     = "Basic"
 }
 
+variable "mssql_private_endpoint_subnet_cidr" {
+  description = "Specify a subnet prefix to use for the mssql_private_endpoint subnet"
+  type        = string
+  default     = ""
+}
+
 variable "key_vault_access_ipv4" {
   description = "List of IPv4 Addresses that are permitted to access the Key Vault"
   type        = list(string)
@@ -458,6 +464,12 @@ variable "storage_account_ipv4_allow_list" {
 variable "storage_account_public_access_enabled" {
   description = "Should the Azure Storage Account have Public visibility?"
   type        = bool
+}
+
+variable "storage_subnet_cidr" {
+  description = "Specify a subnet prefix to use for the storage subnet"
+  type        = string
+  default     = ""
 }
 
 variable "enable_health_insights_api" {

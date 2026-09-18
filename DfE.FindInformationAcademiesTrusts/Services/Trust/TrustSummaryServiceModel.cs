@@ -5,4 +5,5 @@ public record TrustSummaryServiceModel(
     string ReferenceNumber,
     string Name,
     string Type,
-    int NumberOfAcademies);
+    int NumberOfAcademies
+    );

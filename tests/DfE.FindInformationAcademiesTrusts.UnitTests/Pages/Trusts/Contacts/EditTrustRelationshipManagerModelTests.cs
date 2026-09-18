@@ -21,7 +21,7 @@ public class EditTrustRelationshipManagerModelTests
 
     public EditTrustRelationshipManagerModelTests()
     {
-        _mockTrustService.GetTrustContactsAsync("1234").Returns(
+        _mockTrustService.GetTrustContactsAsync(_fakeTrust.Uid, _fakeTrust.ReferenceNumber).Returns(
             Task.FromResult(new TrustContactsServiceModel(_trustRelationshipManager, null, null, null, null)));
         _mockTrustService.GetTrustSummaryAsync(_fakeTrust.ReferenceNumber)!.Returns(Task.FromResult(_fakeTrust));
 

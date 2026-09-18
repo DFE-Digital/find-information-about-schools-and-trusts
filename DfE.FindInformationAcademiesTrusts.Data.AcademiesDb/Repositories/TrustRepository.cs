@@ -12,8 +12,6 @@ public class TrustRepository(
     IGetTrusts getTrusts,
     IStringFormattingUtilities stringFormattingUtilities) : ITrustRepository
 {
-    private IQueryable<GiasGroup> Trusts { get; } = academiesDbContext.Groups.Trusts();
-
     public async Task<TrustSummary?> GetTrustSummaryAsync(string referenceNumber)
     {
         var details = await getTrusts.GetTrustByReferenceNumber(referenceNumber);

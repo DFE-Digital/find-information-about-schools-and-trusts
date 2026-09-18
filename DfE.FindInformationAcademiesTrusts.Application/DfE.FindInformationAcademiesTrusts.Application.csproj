@@ -12,6 +12,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Watchlist\Commands\" />
+      <PackageReference Include="MediatR" Version="12.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Establishments\Commands\" />
     </ItemGroup>
 </Project>

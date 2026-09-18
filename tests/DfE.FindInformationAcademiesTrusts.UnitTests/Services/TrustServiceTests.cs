@@ -85,7 +85,7 @@ public class TrustServiceTests
     {
         _mockTrustRepository.GetTrustSummaryAsync(referenceNumber)!
             .Returns(new TrustSummary(name, type, uid, referenceNumber));
-        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(uid).Returns(numAcademies);
+        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(referenceNumber).Returns(numAcademies);
 
         var result = await _sut.GetTrustSummaryAsync(referenceNumber);
         result.Should().BeEquivalentTo(new TrustSummaryServiceModel(uid, referenceNumber, name, type, numAcademies));
@@ -102,7 +102,7 @@ public class TrustServiceTests
 
         _mockTrustRepository.GetTrustSummaryAsync(referenceNumber)!
             .Returns(new TrustSummary(name, type, uid, referenceNumber));
-        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(uid).Returns(numAcademies);
+        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(referenceNumber).Returns(numAcademies);
 
         await _sut.GetTrustSummaryAsync(referenceNumber);
 
@@ -157,6 +157,8 @@ public class TrustServiceTests
             AppointingBody: "Nick Warms",
             Email: null
         );
+        _mockTrustRepository.GetTrustOverviewAsync(trn)
+            .Returns(BaseTrustOverview with { Type = "Multi-academy trust" });
         _mockTrustGovernanceRepository.GetTrustGovernanceAsync(trn).Returns([leader, member, trustee, historic]);
 
         var result = await _sut.GetTrustGovernanceAsync(trn);
@@ -168,17 +170,37 @@ public class TrustServiceTests
     }
 
     [Fact]
-    public async Task GetTrustContactsAsync_should_get_governanceResults_for_single_trust()
+    public async Task GetTrustContactsAsync_should_get_governanceResults_for_multi_trust()
     {
+        _mockTrustRepository.GetTrustOverviewAsync("TR5678").Returns(BaseTrustOverview with { Type = "Multi-academy trust" });
         var person = new Person("First Middle Last", "firstlast@email.com");
         var contacts = new TrustContacts(person, person, person);
         _mockTrustRepository.GetTrustContactsAsync("1234").Returns(contacts);
+        
         var internalContact =
             new InternalContact("First Middle Last", "firstlast@email.com", DateTime.Today, "Test@email.com");
         var internalContacts = new TrustInternalContacts(internalContact, internalContact);
         _mockContactRepository.GetTrustInternalContactsAsync("1234").Returns(internalContacts);
 
-        var result = await _sut.GetTrustContactsAsync("1234");
+        var result = await _sut.GetTrustContactsAsync("1234", "TR5678");
+
+        result.Should().BeEquivalentTo(contacts);
+    }
+    
+    [Fact]
+    public async Task GetTrustContactsAsync_should_get_governanceResults_for_single_trust()
+    {
+        _mockTrustRepository.GetTrustOverviewAsync("TR5678").Returns(BaseTrustOverview);
+        var person = new Person("First Middle Last", "firstlast@email.com");
+        var contacts = new TrustContacts(person, person, person);
+        _mockTrustRepository.GetTrustContactsAsync("1234").Returns(contacts);
+        
+        var internalContact =
+            new InternalContact("First Middle Last", "firstlast@email.com", DateTime.Today, "Test@email.com");
+        var internalContacts = new TrustInternalContacts(internalContact, internalContact);
+        _mockContactRepository.GetTrustInternalContactsAsync("1234").Returns(internalContacts);
+
+        var result = await _sut.GetTrustContactsAsync("1234", "TR5678");
 
         result.Should().BeEquivalentTo(contacts);
     }
@@ -191,7 +213,7 @@ public class TrustServiceTests
         GetTrustOverviewAsync_should_get_singleAcademyTrustAcademyUrn_from_academy_repository_when_trust_is_single_academy_trust(
             string? singleAcademyTrustAcademyUrn)
     {
-        _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync("2806")
+        _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync("TR0012")
             .Returns(singleAcademyTrustAcademyUrn);
         _mockTrustRepository.GetTrustOverviewAsync("TR0012").Returns(BaseTrustOverview);
 
@@ -275,9 +297,9 @@ public class TrustServiceTests
             new("1003", "LocalAuthorityA", null, 400)
         };
 
-        _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(uid).Returns(Task.FromResult(academiesOverview));
+        _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(trustReferenceNumber).Returns(Task.FromResult(academiesOverview));
         _mockTrustRepository.GetTrustOverviewAsync(trustReferenceNumber).Returns(Task.FromResult(BaseTrustOverview with { Uid = uid, TrustReferenceNumber = trustReferenceNumber }));
-        _mockTrustPupilService.GetTotalPupilCountForTrustAsync(uid).Returns(1200);
+        _mockTrustPupilService.GetTotalPupilCountForTrustAsync(trustReferenceNumber).Returns(1200);
 
         // Act
         var result = await _sut.GetTrustOverviewAsync(trustReferenceNumber, uid);
@@ -330,7 +352,7 @@ public class TrustServiceTests
             new("1003", "LocalAuthorityA", null, 400)
         };
 
-        _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(uid).Returns(Task.FromResult(academiesOverview));
+        _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(trustReferenceNumber).Returns(Task.FromResult(academiesOverview));
         _mockTrustRepository.GetTrustOverviewAsync(trustReferenceNumber).Returns(Task.FromResult(BaseTrustOverview with { Uid = uid, TrustReferenceNumber = trustReferenceNumber }));
         _mockTrustPupilService.GetTotalPupilCountForTrustAsync(uid).Returns(1000);
 
@@ -379,9 +401,9 @@ public class TrustServiceTests
 
         _mockTrustRepository.GetTrustSummaryAsync(referenceNumber)
             .Returns(new TrustSummary(name, type, uid, referenceNumber));
-        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(uid).Returns(numAcademies);
+        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(referenceNumber).Returns(numAcademies);
 
-        var result = await _sut.GetTrustSummaryAsync(urn);
+        var result = await _sut.GetTrustSummaryAsync(referenceNumber);
         result.Should().BeEquivalentTo(new TrustSummaryServiceModel(uid, referenceNumber, name, type, numAcademies));
     }
 }
