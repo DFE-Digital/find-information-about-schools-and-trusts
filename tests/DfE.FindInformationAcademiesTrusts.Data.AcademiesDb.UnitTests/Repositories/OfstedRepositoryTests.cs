@@ -1,5 +1,4 @@
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Mis_Mstr;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using FluentAssertions.Execution;
@@ -15,11 +14,13 @@ public class OfstedRepositoryTests
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
     private readonly IGetEstablishments _mockGetEstablishments;
     private readonly ILogger<AcademyRepository> _mockLogger = MockLogger.CreateLogger<AcademyRepository>();
+    private readonly Dictionary<string, List<string>> _predecessorUrnsByCurrentUrn = new();
 
     public OfstedRepositoryTests()
     {
         _mockGetEstablishments = Substitute.For<IGetEstablishments>();
         _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(Arg.Any<string>()).Returns([]);
+        _mockGetEstablishments.GetEstablishmentsByUrns(Arg.Any<List<int>>()).Returns([]);
         _sut = new OfstedRepository(_mockAcademiesDbContext.Object, _mockGetEstablishments, _mockLogger);
     }
 
@@ -36,12 +37,33 @@ public class OfstedRepositoryTests
 
     private void AddPredecessorLink(string currentUrn, string predecessorUrn)
     {
-        _mockAcademiesDbContext.GiasEstablishmentLinks.Add(new GiasEstablishmentLink
+        if (!_predecessorUrnsByCurrentUrn.TryGetValue(currentUrn, out var predecessorUrns))
         {
-            Urn = currentUrn,
-            LinkUrn = predecessorUrn,
-            LinkType = "Predecessor"
-        });
+            predecessorUrns = [];
+            _predecessorUrnsByCurrentUrn[currentUrn] = predecessorUrns;
+        }
+
+        predecessorUrns.Add(predecessorUrn);
+
+        _mockGetEstablishments.GetEstablishmentsByUrns(Arg.Any<List<int>>())
+            .Returns(callInfo =>
+            {
+                var requestedUrns = callInfo.Arg<List<int>>();
+                return requestedUrns.SelectMany(urn =>
+                {
+                    if (!_predecessorUrnsByCurrentUrn.TryGetValue(urn.ToString(), out var predecessors) ||
+                        predecessors.Count == 0)
+                    {
+                        return [];
+                    }
+
+                    return predecessors.Select(predecessor => new EstablishmentDto
+                    {
+                        Urn = urn.ToString(),
+                        PreviousEstablishment = new PreviousEstablishmentDto { Urn = predecessor }
+                    });
+                }).ToList();
+            });
     }
 
     private void SetupEstablishment(int urn, string name = "Test School", string? dateJoinedTrust = "01/01/2022")
@@ -345,12 +367,6 @@ public class OfstedRepositoryTests
 
         SetupAcademiesInTrust(noLinkUrn, successorOnlyUrn, multiplePredecessorsUrn);
 
-        _mockAcademiesDbContext.GiasEstablishmentLinks.Add(new GiasEstablishmentLink
-        {
-            Urn = successorOnlyUrn,
-            LinkUrn = "399999",
-            LinkType = "Successor"
-        });
         AddPredecessorLink(multiplePredecessorsUrn, "388888");
         AddPredecessorLink(multiplePredecessorsUrn, "377777");
         _mockAcademiesDbContext.MisMstrEstablishmentFiat.AddRange(
@@ -382,7 +398,7 @@ public class OfstedRepositoryTests
 
         await _sut.GetAcademiesInTrustOfstedAsync(TrustReferenceNumber);
 
-        _ = _mockAcademiesDbContext.Object.DidNotReceive().GiasEstablishmentLink;
+        await _mockGetEstablishments.DidNotReceive().GetEstablishmentsByUrns(Arg.Any<List<int>>());
     }
 
     [Fact]

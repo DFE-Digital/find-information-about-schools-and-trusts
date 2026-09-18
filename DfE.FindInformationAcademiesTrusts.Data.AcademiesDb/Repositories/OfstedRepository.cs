@@ -8,7 +8,10 @@ using Microsoft.Extensions.Logging;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
-public class OfstedRepository(IAcademiesDbContext academiesDbContext, IGetEstablishments getEstablishments, ILogger<AcademyRepository> logger)
+public class OfstedRepository(
+    IAcademiesDbContext academiesDbContext,
+    IGetEstablishments getEstablishments,
+    ILogger<AcademyRepository> logger)
     : IOfstedRepository
 {
     private static readonly DateTime
@@ -166,16 +169,16 @@ public class OfstedRepository(IAcademiesDbContext academiesDbContext, IGetEstabl
     /// <returns>Key: Previous URN, Value: Current URN</returns>
     private async Task<Dictionary<int, int>> GetPredecessorUrns(string[] currentUrns)
     {
-        var allPredecessorsForUrns = academiesDbContext.GiasEstablishmentLink
-            .Where(gel => gel.LinkType == "Predecessor" && currentUrns.Contains(gel.Urn));
+        var currentUrnIds = currentUrns.Select(int.Parse).ToList();
+        var schools = await getEstablishments.GetEstablishmentsByUrns(currentUrnIds);
 
-        var currentUrnsWithOneClearPredecessor = await allPredecessorsForUrns
-            .GroupBy(gel => Convert.ToInt32(gel.Urn))
+        return schools
+            .Where(s => s.PreviousEstablishment?.Urn is not null && currentUrns.Contains(s.Urn))
+            .GroupBy(s => Convert.ToInt32(s.Urn))
             .Where(group => group.Count() == 1)
-            .Select(group => new { PreviousUrn = Convert.ToInt32(group.Single().LinkUrn), CurrentUrn = group.Key })
-            .ToDictionaryAsync(u => u.PreviousUrn, u => u.CurrentUrn);
-
-        return currentUrnsWithOneClearPredecessor;
+            .ToDictionary(
+                group => Convert.ToInt32(group.Single().PreviousEstablishment!.Urn),
+                group => group.Key);
     }
 
     private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatingsFromDb(IEnumerable<string> urns)
