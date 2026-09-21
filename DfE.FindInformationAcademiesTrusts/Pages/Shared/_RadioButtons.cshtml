@@ -1,8 +1,29 @@
 @model Dfe.FindInformationAcademiesTrusts.ViewModels.RadioButtonViewModel
 
+@{
+    string ariaDescribedBy = string.Empty;
+
+    if (!string.IsNullOrEmpty(Model.Hint) || !string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        var ids = new List<string>();
+        
+        if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            ids.Add("option-selection-error");
+        }
+        
+        if (!string.IsNullOrEmpty(Model.Hint))
+        {
+            ids.Add("-hint");
+        }
+
+        ariaDescribedBy = string.Join(" ", ids);
+    }
+}
+
 <div class="govuk-form-group @(string.IsNullOrEmpty(Model.ErrorMessage) ? "" : "govuk-form-group--error")">
     
-    <fieldset class="govuk-fieldset" @(Model.Hint != null || Model.ErrorMessage != null ? "aria-describedby=\"" + (string.IsNullOrEmpty(Model.ErrorMessage) ? "" : "option-selection-error ") + (string.IsNullOrEmpty(Model.Hint) ? "" : "-hint") + "\"" : "")>
+    <fieldset class="govuk-fieldset" aria-describedby="@ariaDescribedBy">
         
         @if (!string.IsNullOrEmpty(Model.Heading))
         {
@@ -12,21 +33,18 @@
                 </h1>
             </legend>
         }
-
         @if (!string.IsNullOrEmpty(Model.Hint))
         {
             <div id="-hint" class="govuk-hint" data-cy="hint-@Model.Name?.Replace(" ", "-")">
                 @Model.Hint
             </div>
         }
-
         @if (!string.IsNullOrEmpty(Model.ErrorMessage))
         {
             <p id="option-selection-error" class="govuk-error-message">
                 <span class="govuk-visually-hidden">Error:</span> @Model.ErrorMessage
             </p>
         }
-
         <div class="govuk-radios @(Model.Inline ? "govuk-radios--inline" : "")" data-module="govuk-radios">
             @foreach (var radioButton in Model.RadioButtons)
             {
@@ -34,7 +52,6 @@
                 {
                     <div class="govuk-radios__divider">or</div>
                 }
-
                 <div class="govuk-radios__item">
                     <input class="govuk-radios__input"
                            id="@radioButton.Id"
@@ -44,7 +61,6 @@
                            value="@radioButton.Value"
                            @(radioButton.Input != null ? $"data-aria-controls=conditional-{radioButton.Id}" : "")
                            @(radioButton.Value == Model.Value ? "checked=\"checked\"" : "") />
-
                     <label class="govuk-label govuk-radios__label" for="@radioButton.Id">
                         @radioButton.Name
                     </label>
@@ -55,12 +71,10 @@
                         </div>
                     }
                 </div>
-
                 @if (radioButton.Input != null)
                 {
                     <div id="conditional-@radioButton.Id"
                          class="govuk-radios__conditional @(radioButton.Value == Model.Value ? "" : "govuk-radios__conditional--hidden")">
-
                         <div class="govuk-form-group @(!radioButton.Input.IsValid ? "govuk-form-group--error" : "")">
                             @if (!string.IsNullOrWhiteSpace(radioButton.Input.ValidationMessage))
                             {

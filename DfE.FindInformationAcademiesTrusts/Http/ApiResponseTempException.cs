@@ -3,14 +3,14 @@ using System.Runtime.Serialization;
 
 namespace DfE.FindInformationAcademiesTrusts.Http;
 [ExcludeFromCodeCoverage]
-public class ApiResponseExceptionTemp : Exception
+public class ApiResponseTempException : Exception
 {
-    public ApiResponseExceptionTemp(string message)
+    public ApiResponseTempException(string message)
         : base(message)
     {
     }
 
-    public ApiResponseExceptionTemp(string message, Exception innerException)
+    public ApiResponseTempException(string message, Exception innerException)
         : base(message, innerException)
     {
     }

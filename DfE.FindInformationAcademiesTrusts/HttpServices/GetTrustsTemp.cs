@@ -19,7 +19,7 @@ public class GetTrustsTemp(IDfeHttpClientFactoryTemp httpClientFactoryTemp,
         
         ApiResponseTemp<TrustListResponseTemp<TrustDto>> result = await httpClientServiceTemp.Get<TrustListResponseTemp<TrustDto>>(_httpClient, path);
 
-        if (!result.Success) throw new ApiResponseExceptionTemp($"Request to Api failed | StatusCode - {result.StatusCode}");
+        if (!result.Success) throw new ApiResponseTempException($"Request to Api failed | StatusCode - {result.StatusCode}");
 
         return result.Body;
     }
@@ -37,7 +37,7 @@ public class GetTrustsTemp(IDfeHttpClientFactoryTemp httpClientFactoryTemp,
             return null;
         }
         
-        if (!result.Success) throw new ApiResponseExceptionTemp($"Request to Api failed | StatusCode - {result.StatusCode}");
+        if (!result.Success) throw new ApiResponseTempException($"Request to Api failed | StatusCode - {result.StatusCode}");
 
         return result.Body;
     }
@@ -56,7 +56,7 @@ public class GetTrustsTemp(IDfeHttpClientFactoryTemp httpClientFactoryTemp,
 
         if (!result.Success)
         {
-            throw new ApiResponseExceptionTemp(
+            throw new ApiResponseTempException(
                 $"Request to Api failed | StatusCode - {result.StatusCode}");
         }
 
@@ -79,7 +79,7 @@ public class GetTrustsTemp(IDfeHttpClientFactoryTemp httpClientFactoryTemp,
             }
             else
             {
-                throw new ApiResponseExceptionTemp($"Request to Api failed | StatusCode - {result.StatusCode}");
+                throw new ApiResponseTempException($"Request to Api failed | StatusCode - {result.StatusCode}");
             }
         }
 

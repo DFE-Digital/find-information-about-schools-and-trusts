@@ -19,7 +19,7 @@ public class GetEstablishmentsTemp(IDfeHttpClientFactoryTemp httpClientFactoryTe
         
         ApiResponseTemp<List<EstablishmentDto>> result = await httpClientServiceTemp.Get<List<EstablishmentDto>>(_httpClient, path);
 
-        if (!result.Success) throw new ApiResponseExceptionTemp($"Request to Api failed | StatusCode - {result.StatusCode}");
+        if (!result.Success) throw new ApiResponseTempException($"Request to Api failed | StatusCode - {result.StatusCode}");
 
         return result.Body;
     }
@@ -30,7 +30,7 @@ public class GetEstablishmentsTemp(IDfeHttpClientFactoryTemp httpClientFactoryTe
 
         ApiResponseTemp<EstablishmentDto> result = await httpClientServiceTemp.Get<EstablishmentDto>(_httpClient, path);
 
-        if (!result.Success) throw new ApiResponseExceptionTemp($"Request to Api failed | StatusCode - {result.StatusCode}");
+        if (!result.Success) throw new ApiResponseTempException($"Request to Api failed | StatusCode - {result.StatusCode}");
 
         return result.Body;
     }
@@ -41,7 +41,7 @@ public class GetEstablishmentsTemp(IDfeHttpClientFactoryTemp httpClientFactoryTe
 
         ApiResponseTemp<EstablishmentDto[]> result = await httpClientServiceTemp.Get<EstablishmentDto[]>(_httpClient, path);
 
-        if (!result.Success) throw new ApiResponseExceptionTemp($"Request to Api failed | StatusCode - {result.StatusCode}");
+        if (!result.Success) throw new ApiResponseTempException($"Request to Api failed | StatusCode - {result.StatusCode}");
 
         return result.Body;
     }
@@ -52,7 +52,7 @@ public class GetEstablishmentsTemp(IDfeHttpClientFactoryTemp httpClientFactoryTe
 
         ApiResponseTemp<EstablishmentResponse> result = await httpClientServiceTemp.Get<EstablishmentResponse>(_httpClient, path);
 
-        if (!result.Success) throw new ApiResponseExceptionTemp($"Request to Api failed | StatusCode - {result.StatusCode}");
+        if (!result.Success) throw new ApiResponseTempException($"Request to Api failed | StatusCode - {result.StatusCode}");
 
         return result.Body;
     }
@@ -73,7 +73,7 @@ public class GetEstablishmentsTemp(IDfeHttpClientFactoryTemp httpClientFactoryTe
                 request);
 
         if (!result.Success)
-            throw new ApiResponseExceptionTemp($"Request to Api failed | StatusCode - {result.StatusCode}");
+            throw new ApiResponseTempException($"Request to Api failed | StatusCode - {result.StatusCode}");
 
         return result.Body;
     }

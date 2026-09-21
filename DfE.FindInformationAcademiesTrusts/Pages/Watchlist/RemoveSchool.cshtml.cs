@@ -3,13 +3,14 @@ using DfE.FindInformationAcademiesTrusts.Domain.ValueObjects;
 using DfE.FindInformationAcademiesTrusts.HttpServices;
 using Dfe.FindInformationAcademiesTrusts.Models;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
+using Dfe.FindInformationAcademiesTrusts.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 
-public class RemoveSchool(IMediator mediator,IGetEstablishmentsTemp getEstablishments) : ContentPageModel
+public class RemoveSchool(IMediator mediator,IGetEstablishmentsTemp getEstablishments,ErrorService errorService) : ContentPageModel
 {
 
     public Guid? Id { get; set;}
@@ -34,7 +35,15 @@ public class RemoveSchool(IMediator mediator,IGetEstablishmentsTemp getEstablish
     public async Task<IActionResult> OnPostAsync(Guid id,CancellationToken cancellationToken = default)
     {
         var request = new RemoveEstablishmentFromWatchlistCommand(id);
+        
         var result = await mediator.Send(request, cancellationToken);
+        
+        if (!result)
+        {
+            errorService.AddApiError();
+            return Page();
+        }
+        
         
         TempData["SchoolRemoved"] = true;
         return RedirectToPage(Links.Watchlist.Index.Page);

@@ -15,7 +15,13 @@ public class Index(IWatchlistQueryService watchlistQueryService,IGetEstablishmen
     public string? CurrentUser { get; set; }
 
     public int SchoolsCount => Items.Count();
-    public int TrustsCount; 
+    
+    private int _trustsCount;
+    public int TrustsCount
+    {
+        get => _trustsCount;
+        set => _trustsCount = value;
+    }
 
     public async Task OnGetAsync(CancellationToken cancellationToken)
     {
