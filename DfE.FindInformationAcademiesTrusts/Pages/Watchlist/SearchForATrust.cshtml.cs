@@ -1,4 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Queries;
+using Dfe.FindInformationAcademiesTrusts.Models;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.Search;
 using Microsoft.AspNetCore.Mvc;
@@ -58,12 +59,12 @@ public class SearchForATrust(ISearchService searchService,IWatchlistQueryService
             
         
         
-        return RedirectToPage("/WatchList/ConfirmTrust",new {referenceNumber});
+        return RedirectToPage(@Links.Watchlist.ConfirmTrust.Page,new {referenceNumber});
     }
     
 
     public string PageSearchFormInputId => "trust-search";
-    public string AutocompletePagePath => "/WatchList/SearchForATrust";
+    public string AutocompletePagePath => "/Watchlist/SearchForATrust";
     
     public string Heading => "Search for a trust";
     public string Hint => "Search by TRN (trust reference number) or name. Include any punctuation in names.";

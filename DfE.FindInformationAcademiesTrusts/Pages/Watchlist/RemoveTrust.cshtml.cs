@@ -1,6 +1,7 @@
 using DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Commands;
 using DfE.FindInformationAcademiesTrusts.Domain.ValueObjects;
 using DfE.FindInformationAcademiesTrusts.HttpServices;
+using Dfe.FindInformationAcademiesTrusts.Models;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +39,6 @@ public class RemoveTrust(IMediator mediator,IGetTrustsTemp getTrusts) : ContentP
         
         TempData["TrustRemoved"] = true;
         ViewData["ActiveWatchListTab"] = "Trusts";
-        return RedirectToPage("/WatchList/Trusts");
+        return RedirectToPage(Links.Watchlist.TrustsWatchlist.Page);
     }
 }

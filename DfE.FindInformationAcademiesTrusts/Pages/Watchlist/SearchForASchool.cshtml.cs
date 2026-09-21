@@ -1,4 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Queries;
+using Dfe.FindInformationAcademiesTrusts.Models;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.Search;
 using Microsoft.ApplicationInsights;
@@ -56,11 +57,11 @@ public class SearchForASchool(ISearchService searchService,IWatchlistQueryServic
             return Page();
         }
         
-        return RedirectToPage("/WatchList/ConfirmSchool",new {id});
+        return RedirectToPage(Links.Watchlist.ConfirmSchool.Page,new {id});
     }
 
     public string PageSearchFormInputId => "school-search";
-    public string AutocompletePagePath => "/WatchList/SearchForASchool";
+    public string AutocompletePagePath => "/Watchlist/SearchForASchool";
 
     public string Heading => "Search for a school";
     public string Hint => "Search by URN (unique reference number) or name. Include any punctuation in names.";

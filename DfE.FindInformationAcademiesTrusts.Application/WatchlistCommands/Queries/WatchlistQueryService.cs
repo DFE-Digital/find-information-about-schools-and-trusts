@@ -1,11 +1,7 @@
 using DfE.FindInformationAcademiesTrusts.Application.Common.Models;
-using DfE.FindInformationAcademiesTrusts.Application.Establishments.Models;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Domain.Entities;
 using DfE.FindInformationAcademiesTrusts.Domain.Interfaces.Repositories;
 using DfE.FindInformationAcademiesTrusts.Domain.ValueObjects;
-using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
-using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
 
 namespace DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Queries;
 
@@ -18,8 +14,7 @@ public class WatchlistQueryService(IWatchlistRepository watchlistRepository) : I
     {
         var establishments = await watchlistRepository.GetEstablishmentsForUser(user, cancellationToken);
         
-        var usersEstablishments = establishments
-            .Where(x => x.User == user && !x.IsTrust).ToList();
+        var usersEstablishments = establishments.ToList();
 
         if (usersEstablishments.Count == 0)
         {
@@ -35,16 +30,16 @@ public class WatchlistQueryService(IWatchlistRepository watchlistRepository) : I
         CancellationToken cancellationToken)
     {
         var trusts  = await watchlistRepository.GetTrustsForUser(user, cancellationToken);
-        
-        var usersTrusts = trusts
-            .Where(x => x.User == user && x.IsTrust).ToList();
 
-        if (usersTrusts.Count == 0)
+
+        var watchlists = trusts.ToList();
+        
+        if (watchlists.Count == 0)
         {
             return Result<IEnumerable<Watchlist>>.Success([]);
         }
         
         
-        return Result<IEnumerable<Watchlist>>.Success(usersTrusts);
+        return Result<IEnumerable<Watchlist>>.Success(watchlists);
     }
 }

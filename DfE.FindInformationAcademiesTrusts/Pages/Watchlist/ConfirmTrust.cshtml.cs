@@ -1,5 +1,6 @@
 using DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Commands;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
+using Dfe.FindInformationAcademiesTrusts.Models;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using Dfe.FindInformationAcademiesTrusts.Services;
 using MediatR;
@@ -49,11 +50,11 @@ public class ConfirmTrust(IGetTrusts getTrusts,IMediator mediator,ErrorService e
         
         if (action == "add-another")
         {
-            return RedirectToPage("/Watchlist/SearchForATrust");
+            return RedirectToPage(Links.Watchlist.SearchForATrust.Page);
         }
         
         TempData["TrustAdded"] = true;
         ViewData["ActiveWatchListTab"] = "Trusts";
-        return RedirectToPage("/WatchList/Trusts");
+        return RedirectToPage(Links.Watchlist.TrustsWatchlist.Page);
     }
 }

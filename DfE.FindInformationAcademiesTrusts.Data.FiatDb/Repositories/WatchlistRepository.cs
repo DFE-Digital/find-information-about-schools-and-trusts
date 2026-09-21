@@ -18,6 +18,7 @@ public class WatchlistRepository(FindInformationAcademiesTrustsContext dbContext
         return await DbSet()
             .AsNoTracking()
             .Where(w => w.User == user && !w.IsTrust)
+            .OrderBy(w => w.CreatedOn)
             .Distinct()
             .ToListAsync(cancellationToken);
     }
@@ -32,6 +33,7 @@ public class WatchlistRepository(FindInformationAcademiesTrustsContext dbContext
         return await DbSet()
             .AsNoTracking()
             .Where(w => w.User == user && w.IsTrust)
+            .OrderBy(w => w.CreatedOn)
             .Distinct()
             .ToListAsync(cancellationToken);
     }

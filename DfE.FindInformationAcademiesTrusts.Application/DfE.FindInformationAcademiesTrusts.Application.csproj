@@ -7,15 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data.AcademiesDb\DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.csproj" />
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Domain\DfE.FindInformationAcademiesTrusts.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="MediatR" Version="12.5.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Establishments\Commands\" />
     </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 using DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Commands;
 using DfE.FindInformationAcademiesTrusts.Domain.ValueObjects;
 using DfE.FindInformationAcademiesTrusts.HttpServices;
+using Dfe.FindInformationAcademiesTrusts.Models;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,6 @@ public class RemoveSchool(IMediator mediator,IGetEstablishmentsTemp getEstablish
         var result = await mediator.Send(request, cancellationToken);
         
         TempData["SchoolRemoved"] = true;
-        return RedirectToPage("/WatchList/Index");
+        return RedirectToPage(Links.Watchlist.Index.Page);
     }
 }

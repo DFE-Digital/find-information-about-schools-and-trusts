@@ -1,4 +1,5 @@
 @page "/watchlist/confirm-trust"
+@using Dfe.FindInformationAcademiesTrusts.Models
 @model DfE.FindInformationAcademiesTrusts.Pages.Watchlist.ConfirmTrust
 
 
@@ -55,7 +56,7 @@
                         data-cy="save-and-add-another-button">
                     Save and add another
                 </button>
-                <a asp-page="/Watchlist/Trusts" class="govuk-link">Cancel and go back to watchlist</a>
+                <a asp-page="@Links.Watchlist.TrustsWatchlist.Page" class="govuk-link">Cancel and go back to watchlist</a>
             </div>
         </form>
     </div>

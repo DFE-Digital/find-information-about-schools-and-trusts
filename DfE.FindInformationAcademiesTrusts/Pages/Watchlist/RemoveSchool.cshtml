@@ -1,4 +1,5 @@
 @page "/watchlist/remove-school"
+@using Dfe.FindInformationAcademiesTrusts.Models
 @model DfE.FindInformationAcademiesTrusts.Pages.Watchlist.RemoveSchool
 
 @{
@@ -58,7 +59,7 @@
                         data-cy="remove-from-watchlist-button">
                     Remove from watchlist
                 </button>
-                <a class="govuk-link" asp-page="/WatchList/Index">Cancel and go back to watchlist</a>
+                <a class="govuk-link" asp-page="@Links.Watchlist.Index.Page">Cancel and go back to watchlist</a>
             </div>
         </form>
     </div>

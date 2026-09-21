@@ -2,6 +2,7 @@ using DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Commands;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Domain.ValueObjects;
 using DfE.FindInformationAcademiesTrusts.HttpServices;
+using Dfe.FindInformationAcademiesTrusts.Models;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using Dfe.FindInformationAcademiesTrusts.Services;
 using MediatR;
@@ -51,10 +52,10 @@ public class ConfirmSchool(IGetEstablishmentsTemp getEstablishments,IMediator me
         
         if (action == "add-another")
         {
-            return RedirectToPage("/Watchlist/SearchForASchool");
+            return RedirectToPage(Links.Watchlist.SearchForASchool.Page);
         }
         
         TempData["SchoolAdded"] = true;
-        return RedirectToPage("/WatchList/Index");
+        return RedirectToPage(Links.Watchlist.Index.Page);
     }
 }
