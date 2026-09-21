@@ -70,8 +70,8 @@ public class GetEstablishmentsTempTests
         var service = CreateSut();
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<ApiResponseTempException>(
-            () => service.SearchEstablishments("Test School"));
+        var exception =
+            await Assert.ThrowsAsync<ApiResponseTempException>(() => service.SearchEstablishments("Test School"));
 
         Assert.Contains("InternalServerError", exception.Message);
     }
@@ -135,8 +135,7 @@ public class GetEstablishmentsTempTests
         var service = CreateSut();
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<ApiResponseTempException>(
-            () => service.GetEstablishment(123456));
+        var exception = await Assert.ThrowsAsync<ApiResponseTempException>(() => service.GetEstablishment(123456));
 
         Assert.Contains("InternalServerError", exception.Message);
     }
@@ -210,8 +209,8 @@ public class GetEstablishmentsTempTests
         var service = CreateSut();
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<ApiResponseTempException>(
-            () => service.GetEstablishmentWithSenData(123456));
+        var exception =
+            await Assert.ThrowsAsync<ApiResponseTempException>(() => service.GetEstablishmentWithSenData(123456));
 
         Assert.Contains("InternalServerError", exception.Message);
     }
@@ -271,8 +270,9 @@ public class GetEstablishmentsTempTests
         var service = CreateSut();
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<ApiResponseTempException>(
-            () => service.GetEstablishmentsByTrustReferenceNumber("TRN123456"));
+        var exception =
+            await Assert.ThrowsAsync<ApiResponseTempException>(() =>
+                service.GetEstablishmentsByTrustReferenceNumber("TRN123456"));
 
         Assert.Contains("InternalServerError", exception.Message);
     }
@@ -338,8 +338,8 @@ public class GetEstablishmentsTempTests
         var service = CreateSut();
 
         // Act & Assert
-        var exception = await Assert.ThrowsAsync<ApiResponseTempException>(
-            () => service.GetEstablishmentsByUrns([123456]));
+        var exception =
+            await Assert.ThrowsAsync<ApiResponseTempException>(() => service.GetEstablishmentsByUrns([123456]));
 
         Assert.Contains("InternalServerError", exception.Message);
     }
@@ -371,7 +371,11 @@ public class GetEstablishmentsTempTests
         // Assert
         Assert.Equal("v4/establishments/bulk/urns", capturedPath);
         Assert.NotNull(capturedRequest);
+
         var urns = capturedRequest.GetType().GetProperty("urns")!.GetValue(capturedRequest);
-        Assert.Equal(new[] { 123456, 654321 }, urns);
+
+        // Fix: Extracted inline array to a local variable to prevent repeated allocations
+        var expectedUrns = new[] { 123456, 654321 };
+        Assert.Equal(expectedUrns, urns);
     }
 }

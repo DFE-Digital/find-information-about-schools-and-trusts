@@ -239,8 +239,12 @@ public class GetTrustsTempTests
         Assert.Same(trust, result);
         Assert.Equal("/v4/trusts/establishments/urns", capturedPath);
         Assert.NotNull(capturedRequest);
+    
         var urns = capturedRequest.GetType().GetProperty("urns")!.GetValue(capturedRequest);
-        Assert.Equal(new[] { 123456 }, urns);
+    
+        // Fix: Extracted inline array allocation to a local variable
+        var expectedUrns = new[] { 123456 };
+        Assert.Equal(expectedUrns, urns);
     }
 
     [Fact]
