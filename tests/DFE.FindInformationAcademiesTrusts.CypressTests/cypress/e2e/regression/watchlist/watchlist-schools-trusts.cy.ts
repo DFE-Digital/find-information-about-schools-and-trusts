@@ -25,20 +25,21 @@ describe('User navigates to the FAST site and by default \'Trust and school\' ta
 
             watchlistPage
                 .verifyHeading('My watchlist')
-                .schoolTabAppearsByDefault()
+                .trustsTabAppearsByDefault()
+                .trustTabAppearsWithContent()
+                .navigateToSchoolTab()
                 .schoolTabContainsContent()
-                .navigateToTrustsTab()
-                .trustTabAppearsWithContent();
+                
         });
 
-        it('user should be able to navigate to the School tab from the Trust tab', () => {
+        it('user should be able to navigate to the Trust tab from the School tab', () => {
             homePage
                 .clickWatchlistLink();
 
             watchlistPage
-                .schoolTabAppearsByDefault()
-                .navigateToTrustsTab()
-                .navigateToSchoolTab();
+                .trustsTabAppearsByDefault()
+                .navigateToSchoolTab()
+                .navigateToTrustsTab();
         });
 
         it('user should be able to add establishment - School to watchlist', () => {
@@ -63,7 +64,8 @@ describe('User navigates to the FAST site and by default \'Trust and school\' ta
                 .clickWatchlistLink();
 
             watchlistPage
-                .schoolTabAppearsByDefault()
+                .trustsTabAppearsByDefault()
+                .navigateToSchoolTab()
                 .sortColumnsInSchoolTab();
         });
 
@@ -73,7 +75,8 @@ describe('User navigates to the FAST site and by default \'Trust and school\' ta
                 .clickWatchlistLink();
 
             watchlistPage
-                .schoolTabAppearsByDefault()
+                .trustsTabAppearsByDefault()
+                .navigateToSchoolTab()
                 .clickFirstSchoolInWatchlist()
                 .schoolPageAppears();
         });
@@ -83,6 +86,7 @@ describe('User navigates to the FAST site and by default \'Trust and school\' ta
                 .clickWatchlistLink();
 
             watchlistPage
+                .navigateToSchoolTab()
                 .removeSchoolFromWatchlist()
                 .successMessageAppears('School removed from watchlist');
         });
@@ -124,7 +128,6 @@ describe('User navigates to the FAST site and by default \'Trust and school\' ta
                 .clickWatchlistLink();
 
             watchlistPage
-            watchlistPage
                 .clickAddToWatchlistButton()
                 .selectTrustEstablishmentType()
                 .clickContinue()
@@ -139,7 +142,7 @@ describe('User navigates to the FAST site and by default \'Trust and school\' ta
                 .clickWatchlistLink();
 
             watchlistPage
-                .navigateToTrustsTab()
+                .trustsTabAppearsByDefault()
                 .sortColumnsInTrustTab();
         });
 
@@ -148,7 +151,7 @@ describe('User navigates to the FAST site and by default \'Trust and school\' ta
                 .clickWatchlistLink();
 
             watchlistPage
-                .navigateToTrustsTab()
+                .trustsTabAppearsByDefault()
                 .clickFirstTrustInWatchlist()
                 .trustPageAppears();
         });
@@ -158,7 +161,7 @@ describe('User navigates to the FAST site and by default \'Trust and school\' ta
                 .clickWatchlistLink();
 
             watchlistPage
-                .navigateToTrustsTab()
+                .trustsTabAppearsByDefault()
                 .removeTrustFromWatchlist()
                 .successMessageAppears('Trust removed from watchlist');
         });

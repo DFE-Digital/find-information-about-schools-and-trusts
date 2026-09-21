@@ -59,8 +59,8 @@ class WatchlistPage {
         return this;
     }
 
-    public schoolTabAppearsByDefault(): this {
-        this.elements.subNav.activeTab().should('contain', 'Schools');
+    public trustsTabAppearsByDefault(): this {
+        this.elements.subNav.activeTab().should('contain', 'Trusts');
         return this;
     }
 
@@ -158,11 +158,13 @@ class WatchlistPage {
     }
 
     public selectSchoolEstablishmentType(): this {
+        cy.get('label').should('contain', 'Select the type of establishment to add');
         this.elements.selectSchool().click();
         return this;
     }
 
     public selectTrustEstablishmentType(): this {
+        cy.get('label').should('contain', 'Select the type of establishment to add');
         this.elements.selectTrust().click();
         return this;
     }
@@ -290,7 +292,7 @@ class WatchlistPage {
     public trustCountIncreases(): this {
         this.elements.trustCount().invoke('text').then((text) => {
             const trimmedText = text.trim().replace(/\D/g, '');
-            const count = parseInt(trimmedText, 10);
+            const count = Number.parseInt(trimmedText, 10);
             expect(count).to.be.greaterThan(0);
         });
         return this;

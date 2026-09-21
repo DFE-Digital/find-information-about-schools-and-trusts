@@ -10,7 +10,7 @@ describe('Watchlist Accessibility', () => {
         cy.get('#main-content').should('be.visible');
     });
 
-    describe('Watchlist Page Accessibility- Schools', () => {
+    describe('Watchlist Page Accessibility- Trusts', () => {
         it('should have accessible watchlist container', () => {
             cy.get('body').then($body => {
                 if ($body.find('[data-testid*="watchlist"]').length > 0) {
@@ -115,9 +115,9 @@ describe('Watchlist Accessibility', () => {
         });
     });
 
-    describe('Watchlist Page Accessibility - Trusts', () => {
+    describe('Watchlist Page Accessibility - Schools', () => {
           it('should have accessible links', () => {
-             watchlistPage.navigateToTrustsTab();
+             watchlistPage.navigateToSchoolTab();
 
               cy.get('body').then($body => {
                   if ($body.find('a').length > 0) {
