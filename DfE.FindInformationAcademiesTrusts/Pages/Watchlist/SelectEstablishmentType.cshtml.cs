@@ -6,7 +6,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 
 public class SelectEstablishmentType : ContentPageModel
 {
-    private IList<RadioButtonsLabelViewModel> _organisationTypeRadioButtons =
+    public IList<RadioButtonsLabelViewModel> OrganisationTypeRadioButtons { get; set; } =
     [
         new()
         {
@@ -21,12 +21,6 @@ public class SelectEstablishmentType : ContentPageModel
             Value = "trust"
         }
     ];
-
-    public IList<RadioButtonsLabelViewModel> OrganisationTypeRadioButtons
-    {
-        get => _organisationTypeRadioButtons;
-        set => _organisationTypeRadioButtons = value;
-    }
 
     public string? OrganisationType { get; set; }
     public string? ErrorMessage { get; set; }
