@@ -46,6 +46,6 @@ public class RemoveSchool(IMediator mediator,IGetEstablishmentsTemp getEstablish
         
         
         TempData["SchoolRemoved"] = true;
-        return RedirectToPage(Links.Watchlist.Index.Page);
+        return RedirectToPage(Links.Watchlist.SchoolsWatchlist.Page);
     }
 }

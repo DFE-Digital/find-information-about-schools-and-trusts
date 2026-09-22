@@ -86,7 +86,6 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Models
         }
 
         [Theory]
-        [InlineData("/watchlist/index")]
         [InlineData("/watchlist/schools")]
         [InlineData("/watchlist/trusts")]
         [InlineData("/watchlist/selectschool")]
@@ -116,19 +115,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Models
             var items = LinkItemsIn(typeof(Watchlist));
 
             // Assert
-            Assert.Equal(10, items.Count);
-        }
-
-        [Fact]
-        public void Watchlist_Index_ShouldHaveCorrectValues()
-        {
-            // Arrange & Act
-            var linkItem = Watchlist.Index;
-
-            // Assert
-            Assert.NotNull(linkItem);
-            Assert.Equal("/watchlist/index", linkItem.Page);
-            Assert.Equal("Back", linkItem.BackText);
+            Assert.Equal(9, items.Count);
         }
 
         [Fact]

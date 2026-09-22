@@ -5,16 +5,16 @@ using DfE.FindInformationAcademiesTrusts.Domain.ValueObjects;
 using DfE.FindInformationAcademiesTrusts.HttpServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using IndexModel = DfE.FindInformationAcademiesTrusts.Pages.Watchlist.Index;
+using SchoolsModel = DfE.FindInformationAcademiesTrusts.Pages.Watchlist.Schools;
 using WatchlistEntity = DfE.FindInformationAcademiesTrusts.Domain.Entities.Watchlist;
 using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.EstablishmentDto;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Watchlist;
 
-public class WatchlistIndexModelTests
+public class WatchlistSchoolsModelTests
 {
     [Fact]
-    public async Task OnGetAsync_ShouldPopulateTheSchoolsAndTrustsForTheCurrentUser()
+    public async Task OnGetAsync_ShouldPopulateTheSchoolsAndTrustsCountForTheCurrentUser()
     {
         const string userName = "user@education.gov.uk";
 
@@ -46,7 +46,7 @@ public class WatchlistIndexModelTests
         });
         getEstablishments.GetEstablishment(100002).Returns((EstablishmentDto)null!);
 
-        var sut = new IndexModel(watchlistQueryService, getEstablishments)
+        var sut = new SchoolsModel(watchlistQueryService, getEstablishments)
         {
             PageContext = new PageContext
             {

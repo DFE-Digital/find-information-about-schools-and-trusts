@@ -8,7 +8,7 @@ using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishment
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 
-public class Index(IWatchlistQueryService watchlistQueryService,IGetEstablishmentsTemp getEstablishments) : ContentPageModel
+public class Schools(IWatchlistQueryService watchlistQueryService,IGetEstablishmentsTemp getEstablishments) : ContentPageModel
 {
     public IEnumerable<SchoolWatchlistViewModel> Items { get; set; } = Array.Empty<SchoolWatchlistViewModel>();
 

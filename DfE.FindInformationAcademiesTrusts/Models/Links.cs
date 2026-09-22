@@ -13,7 +13,6 @@ public static class Links
     
     public static class Watchlist
     {
-        public static readonly LinkItem Index = AddLinkItem(backText: "Back", page: "/watchlist/index");
         public static readonly LinkItem SchoolsWatchlist = AddLinkItem(backText: "Back", page: "/watchlist/schools");
         public static readonly LinkItem TrustsWatchlist = AddLinkItem(backText: "Back", page: "/watchlist/trusts");
         public static readonly LinkItem SelectSchool = AddLinkItem(backText: "Back", page: "/watchlist/selectschool");

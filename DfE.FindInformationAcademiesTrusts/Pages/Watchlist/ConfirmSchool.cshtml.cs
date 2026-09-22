@@ -56,6 +56,6 @@ public class ConfirmSchool(IGetEstablishmentsTemp getEstablishments,IMediator me
         }
         
         TempData["SchoolAdded"] = true;
-        return RedirectToPage(Links.Watchlist.Index.Page);
+        return RedirectToPage(Links.Watchlist.SchoolsWatchlist.Page);
     }
 }

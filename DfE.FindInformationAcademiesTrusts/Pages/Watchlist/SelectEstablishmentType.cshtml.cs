@@ -10,15 +10,15 @@ public class SelectEstablishmentType : ContentPageModel
     [
         new()
         {
-            Name = "School",
-            Id = "school",
-            Value = "school"
-        },
-        new()
-        {
             Name = "Trust",
             Id = "trust",
             Value = "trust"
+        },
+        new()
+        {
+            Name = "School",
+            Id = "school",
+            Value = "school"
         }
     ];
 
