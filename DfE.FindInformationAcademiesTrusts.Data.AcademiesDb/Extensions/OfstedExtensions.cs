@@ -13,13 +13,15 @@ public static class OfstedExtensions
         return ConvertNullableStringToOfstedRatingScore(rating);
     }
 
-    public static OfstedRatingScore ToOfstedRatingScore(this int? rating)
+    public static OfstedRatingScore ToOfstedRatingScore(this string? rating)
     {
         if (rating is null)
             return OfstedRatingScore.NotInspected;
-
-        if (Enum.IsDefined(typeof(OfstedRatingScore), rating))
-            return (OfstedRatingScore)rating;
+        
+        var ofstedRating = int.Parse(rating);
+        
+        if (Enum.IsDefined(typeof(OfstedRatingScore), ofstedRating))
+            return (OfstedRatingScore)ofstedRating;
 
         return OfstedRatingScore.Unknown;
     }
