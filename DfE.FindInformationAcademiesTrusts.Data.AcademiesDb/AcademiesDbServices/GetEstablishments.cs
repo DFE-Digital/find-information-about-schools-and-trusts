@@ -99,4 +99,15 @@ public class GetEstablishments(IDfeHttpClientFactory httpClientFactory,
 
         return result.Body;
     }
+
+    public async Task<List<EstablishmentResponse>> GetEstablishmentsWithOfstedData(int[] urns)
+    {
+        string path = $"establishments/bulk?Urn={urns}";
+        
+        ApiResponse<List<EstablishmentResponse>> result = await httpClientService.Get<List<EstablishmentResponse>>(_httpClient, path);
+
+        if (!result.Success) throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");
+
+        return result.Body;
+    }
 }

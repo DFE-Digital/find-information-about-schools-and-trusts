@@ -181,16 +181,20 @@ public class OfstedRepository(
                 group => group.Key);
     }
 
-    private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatingsFromDb(IEnumerable<string> urns)
-    {
-        // URN to search by and URN to return are the same
-        var urnMapping = urns.ToDictionary(int.Parse, int.Parse);
-        return await GetOfstedRatingsFromDb(urnMapping);
-    }
+    // private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatingsFromDb(IEnumerable<string> urns)
+    // {
+    //     // URN to search by and URN to return are the same
+    //     var urnMapping = urns.ToDictionary(int.Parse, int.Parse);
+    //     return await GetOfstedRatingsFromDb(urnMapping);
+    // }
 
     /// <param name="urnMapping">Key: URN to search by, Value: URN to return</param>
-    private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatingsFromDb(Dictionary<int, int> urnMapping)
+    private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatingsFromDb(string[] urns)
     {
+        var parsedUrns = urns.Select(u => int.Parse(u)).ToArray();
+        var establishments = await getEstablishments.GetEstablishmentsWithOfstedData(parsedUrns);
+        
+        
         // Ofsted data is held in MisEstablishments for most academies
         var ofstedRatings = await academiesDbContext.MisMstrEstablishmentsFiat
             .Where(me => urnMapping.Keys.Contains(me.Urn))

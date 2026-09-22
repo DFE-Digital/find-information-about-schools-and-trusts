@@ -18,4 +18,6 @@ public interface IGetEstablishments
     Task<EstablishmentDto> GetEstablishmentByUkprn(string ukprn);
     
     Task<List<EstablishmentDto>> GetEstablishmentsByUrns(List<int> urns);
+
+    Task<List<EstablishmentResponse>> GetEstablishmentsWithOfstedData(int[] urns);
 }
