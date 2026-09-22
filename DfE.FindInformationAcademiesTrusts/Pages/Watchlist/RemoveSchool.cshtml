@@ -1,0 +1,66 @@
+@page "/watchlist/remove-school"
+@using Dfe.FindInformationAcademiesTrusts.Models
+@model DfE.FindInformationAcademiesTrusts.Pages.Watchlist.RemoveSchool
+
+@{
+    Layout = "_ContentLayout";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <span class="govuk-caption-l">Remove from watchlist</span>
+        <h1 class="govuk-heading-l">Remove school from watchlist</h1>
+        <div id="hint" class="govuk-hint">
+            <p class="govuk-hint govuk-!-margin-bottom-1">
+                Confirm the details below to remove the school from your watchlist.
+            </p>
+            <p class="govuk-hint">
+                The school can still be found within FAST.
+            </p>
+        </div>
+        <dl class="govuk-summary-list">
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Name
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.Name
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                URN
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @Model.Urn
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Trust
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @(Model.Trust)
+            </dd>
+        </div>
+        <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">
+                Local authority
+            </dt>
+            <dd class="govuk-summary-list__value">
+                @(Model.LocalAuthority)
+            </dd>
+        </div>
+        </dl>
+        <form method="post" novalidate>
+            <div class="govuk-button-group govuk-!-margin-top-5">
+                <input type="hidden" name="Id" value="@Model.Id"/>
+                <button class="govuk-button govuk-button--warning" type="submit" name="action" data-module="govuk-button"
+                        data-cy="remove-from-watchlist-button">
+                    Remove from watchlist
+                </button>
+                <a class="govuk-link" asp-page="@Links.Watchlist.SchoolsWatchlist.Page">Cancel and go back to watchlist</a>
+            </div>
+        </form>
+    </div>
+</div>

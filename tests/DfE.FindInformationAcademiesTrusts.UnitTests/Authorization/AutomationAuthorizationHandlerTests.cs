@@ -96,7 +96,8 @@ public class AutomationAuthorizationHandlerTests
         var expected = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
         {
             new("name", "Automation User - name"),
-            new("preferred_username", "FastTestUser@education.gov.uk")
+            new("preferred_username", "FastTestUser@education.gov.uk"),
+            new("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", "FastTestUser@education.gov.uk")
         }));
         var actual = _httpContext.User;
         // Exclude subject due to cyclical references
@@ -118,6 +119,26 @@ public class AutomationAuthorizationHandlerTests
             new("preferred_username", "FastTestUser@education.gov.uk"),
             new("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", "FastTestUser@education.gov.uk"),
             new("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", testRole)
+        }));
+        var actual = _httpContext.User;
+        // Exclude subject due to cyclical references
+        actual.Claims.Should().BeEquivalentTo(expected.Claims, options => options.Excluding(claim => claim.Subject));
+    }
+
+    [Fact]
+    public void IfTestEmailInHeaderIsSet_ShouldUseItForNameAndPreferredUsernameClaims()
+    {
+        var testEmail = "cypress-watchlist@education.gov.uk";
+
+        _httpContext.Request.Headers.Append("X-test-email", testEmail);
+
+        _sut.SetupAutomationUser();
+
+        var expected = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
+        {
+            new("name", "Automation User - name"),
+            new("preferred_username", testEmail),
+            new("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", testEmail)
         }));
         var actual = _httpContext.User;
         // Exclude subject due to cyclical references

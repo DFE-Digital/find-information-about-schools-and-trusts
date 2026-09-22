@@ -1,0 +1,64 @@
+@{
+    Layout = "_ContentLayout";
+
+    bool schoolAdded = (bool)(TempData["SchoolAdded"] ?? false);
+    bool schoolRemoved = (bool)(TempData["SchoolRemoved"] ?? false);
+    bool trustAdded = (bool)(TempData["TrustAdded"] ?? false);
+    bool trustRemoved = (bool)(TempData["TrustRemoved"] ?? false);
+
+    string? notificationMessage = null;
+
+    if (schoolAdded)
+    {
+        notificationMessage = "School added to watchlist";
+    }
+    else if (schoolRemoved)
+    {
+        notificationMessage = "School removed from watchlist";
+    }
+    else if (trustAdded)
+    {
+        notificationMessage = "Trust added to watchlist";
+        
+    }
+    else if (trustRemoved)
+    {
+        notificationMessage = "Trust removed from watchlist";
+    }
+}
+
+@if (notificationMessage != null)
+{
+    <div class="govuk-notification-banner govuk-notification-banner--success"
+         role="alert"
+         aria-labelledby="govuk-notification-banner-title"
+         data-module="govuk-notification-banner"
+         cy-data="task-updated-success-notification">
+
+        <div class="govuk-notification-banner__header">
+            <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                Success
+            </h2>
+        </div>
+
+        <div class="govuk-notification-banner__content">
+            <h3 class="govuk-notification-banner__heading" id="contact-added">
+                @notificationMessage
+            </h3>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <h1 class="govuk-heading-l">My watchlist</h1>
+        <p class="govuk-body">
+            You can use your watchlist to quickly navigate to your favoured establishment page.
+        </p>
+        <a asp-page="/Watchlist/SelectEstablishmentType"  class="govuk-button">Add to watchlist</a>
+    </div>
+</div>
+
+<partial name="_WatchlistSubNavigation" model="@(new WatchlistSubNavigationModel(ViewData["ActiveWatchListTab"] as string, Model.SchoolsCount, Model.TrustsCount))" />
+
+@RenderBody()

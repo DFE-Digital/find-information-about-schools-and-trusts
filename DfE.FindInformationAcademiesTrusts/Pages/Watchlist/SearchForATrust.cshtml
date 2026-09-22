@@ -1,0 +1,21 @@
+@page "/watchlist/search-for-a-trust"
+@model DfE.FindInformationAcademiesTrusts.Pages.Watchlist.SearchForATrust
+
+@{
+    Layout = "_ContentLayout";
+    ViewData["Title"] = "Search for a trust";
+}
+
+@if (Model.ShowError)
+{
+    <partial name="_ErrorSummary"/>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <span class="govuk-caption-l">Add to watchlist</span>
+        <form class="govuk-form-group app-search govuk-!-margin-bottom-0" asp-page="Search" method="post" role="search" aria-label="sitewide">
+            <partial name="_EstablishmentSearchForm" model="Model"/>
+        </form>
+    </div>
+</div>
