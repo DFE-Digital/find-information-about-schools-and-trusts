@@ -27,6 +27,7 @@ class WatchlistPage {
         schoolWatchlistTable: () => cy.get('.govuk-table[data-module="moj-sortable-table"]'),
         trustWatchlistTable: () => cy.get('.govuk-table[data-module="moj-sortable-table"]'),
         removeFromWatchlistButton: () => cy.get('[data-cy="remove-from-watchlist-button"]'),
+        emptyTrustsWatchlistMessage: () => cy.get('.govuk-grid-row'),
 
         trustsTable: {
             table: () => cy.get('.govuk-table[data-module="moj-sortable-table"]'),
@@ -158,13 +159,12 @@ class WatchlistPage {
     }
 
     public selectSchoolEstablishmentType(): this {
-        cy.get('label').should('contain', 'Select the type of establishment to add');
+        cy.get('h1').should('contain', 'Select the type of establishment to add');
         this.elements.selectSchool().click();
         return this;
     }
 
     public selectTrustEstablishmentType(): this {
-        cy.get('label').should('contain', 'Select the type of establishment to add');
         this.elements.selectTrust().click();
         return this;
     }
@@ -269,6 +269,12 @@ class WatchlistPage {
         return this;
     }
 
+    public hasEmptyTrustsWatchlistMessage(): this {
+        this.elements.emptyTrustsWatchlistMessage().should('be.visible').and('contain', 'Your trusts watchlist is currently empty');
+        return this;
+    }
+
+    
     public watchlistNotEmpty(): this {
         this.elements.emptySchoolWatchlistMessage().should('not.contain', 'Watchlist is not empty');
         return this;

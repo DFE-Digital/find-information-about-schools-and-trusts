@@ -163,7 +163,8 @@ describe('User navigates to the FAST site and by default \'Trust and school\' ta
             watchlistPage
                 .trustsTabAppearsByDefault()
                 .removeTrustFromWatchlist()
-                .successMessageAppears('Trust removed from watchlist');
+                .successMessageAppears('Trust removed from watchlist')
+                .hasEmptyTrustsWatchlistMessage();
         });
     });
 });
