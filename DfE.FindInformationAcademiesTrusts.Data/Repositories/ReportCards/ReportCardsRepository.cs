@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using Dfe.AcademiesApi.Client.Contracts;
+using GovUK.Dfe.AcademiesApi.Client.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.ReportCards

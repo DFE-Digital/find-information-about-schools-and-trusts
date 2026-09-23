@@ -1,4 +1,4 @@
-﻿using Dfe.AcademiesApi.Client.Contracts;
+﻿using GovUK.Dfe.AcademiesApi.Client.Contracts;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.UnitTests
 {

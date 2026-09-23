@@ -1,6 +1,4 @@
-﻿using Dfe.AcademiesApi.Client;
-using Dfe.AcademiesApi.Client.Contracts;
-using Dfe.CaseAggregationService.Api.Client.Extensions;
+﻿using Dfe.CaseAggregationService.Api.Client.Extensions;
 using Dfe.CaseAggregationService.Client;
 using Dfe.CaseAggregationService.Client.Contracts;
 using Dfe.TramsDataApi.Client.Extensions;
@@ -43,6 +41,8 @@ using DfE.FindInformationAcademiesTrusts.Domain.Interfaces.Repositories;
 using DfE.FindInformationAcademiesTrusts.Http;
 using DfE.FindInformationAcademiesTrusts.HttpServices;
 using Dfe.FindInformationAcademiesTrusts.Services;
+using GovUK.Dfe.AcademiesApi.Client;
+using GovUK.Dfe.AcademiesApi.Client.Contracts;
 using GovUK.Dfe.CoreLibs.Http.Interfaces;
 using GovUK.Dfe.CoreLibs.Http.Middlewares.CorrelationId;
 using MediatR;

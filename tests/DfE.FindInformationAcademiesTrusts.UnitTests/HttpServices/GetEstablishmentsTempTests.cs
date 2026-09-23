@@ -1,7 +1,7 @@
 using System.Net;
-using Dfe.AcademiesApi.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Http;
 using DfE.FindInformationAcademiesTrusts.HttpServices;
+using GovUK.Dfe.AcademiesApi.Client.Contracts;
 using Moq;
 using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.EstablishmentDto;
 
