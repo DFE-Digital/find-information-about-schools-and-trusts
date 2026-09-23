@@ -95,6 +95,8 @@ public class OfstedRepository(
         if (missingUrns.Length > 0)
         {
             var previousUrnMapping = await GetPredecessorUrns(missingUrns);
+            // previously this was passing old urn: new urn - when the ofsted object is created in then used the value (new urn) as the urn in the object
+            // need a way of doing this that is less difficult to understand
             var oldOfstedRatings = await GetOfstedRatingsFromDb(previousUrnMapping);
 
             allOfstedRatings = allOfstedRatings.Concat(oldOfstedRatings).ToDictionary();
