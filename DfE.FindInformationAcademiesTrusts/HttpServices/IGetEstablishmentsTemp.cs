@@ -1,6 +1,4 @@
-using System.Collections.ObjectModel;
-using Dfe.AcademiesApi.Client.Contracts;
-using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
+using GovUK.Dfe.AcademiesApi.Client.Contracts;
 using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.EstablishmentDto;
 
 namespace DfE.FindInformationAcademiesTrusts.HttpServices;

@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using Dfe.AcademiesApi.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
@@ -7,6 +6,7 @@ using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Tad;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using GovUK.Dfe.AcademiesApi.Client.Contracts;
 using GovUK.Dfe.PersonsApi.Client.Contracts;
 using Microsoft.Extensions.Logging;
 using NSubstitute.ExceptionExtensions;
