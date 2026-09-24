@@ -1,4 +1,5 @@
 using System.Globalization;
+using Dfe.AcademiesApi.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
@@ -87,7 +88,7 @@ public class OfstedRepository(
     private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatings(string[] urns)
     {
         // First pass at getting ofsted ratings from the db
-        var allOfstedRatings = await GetOfstedRatingsFromDb(urns);
+        var allOfstedRatings = await GetOfstedRatingsForTrust(urns);
 
         // If any missing then this could be a school that has recently changed URN
         // try to get ofsted rating using predecessor URN
@@ -95,9 +96,10 @@ public class OfstedRepository(
         if (missingUrns.Length > 0)
         {
             var previousUrnMapping = await GetPredecessorUrns(missingUrns);
-            // previously this was passing old urn: new urn - when the ofsted object is created in then used the value (new urn) as the urn in the object
+            // previously this was passing {old urn: new urn} - when the ofsted object was created it then used the value (new urn) as the urn in the object
             // need a way of doing this that is less difficult to understand
-            var oldOfstedRatings = await GetOfstedRatingsFromDb(previousUrnMapping);
+            
+            var oldOfstedRatings = await GetOfstedRatingsForTrust(previousUrnMapping);
 
             allOfstedRatings = allOfstedRatings.Concat(oldOfstedRatings).ToDictionary();
         }
@@ -190,12 +192,29 @@ public class OfstedRepository(
     //     return await GetOfstedRatingsFromDb(urnMapping);
     // }
 
-    /// <param name="urnMapping">Key: URN to search by, Value: URN to return</param>
-    private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatingsFromDb(string[] urns)
+    private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatingsForTrust(string[] urns)
     {
         var parsedUrns = urns.Select(u => int.Parse(u)).ToArray();
         var establishments = await getEstablishments.GetEstablishmentsWithOfstedData(parsedUrns);
 
+        return CreateOfstedRatings(establishments, parsedUrns);
+    }
+
+    /// <param name="urnMapping">Key: URN to search by, Value: URN to return</param>
+    private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatingsForTrust(Dictionary<int, int> urnMapping)
+    {
+        var urns = urnMapping.Keys.ToArray();
+        var establishments = await getEstablishments.GetEstablishmentsWithOfstedData(urns);
+
+        var ofstedRatings = CreateOfstedRatings(establishments, urns);
+
+        return ofstedRatings.ToDictionary(
+            rating => urnMapping[int.Parse(rating.Key)].ToString(),
+            rating => rating.Value);
+    }
+    
+    private static Dictionary<string, AcademyOfstedRatings> CreateOfstedRatings(List<EstablishmentResponse> establishments, int[] urns)
+    {
         var ofstedRatings = establishments.Select(e => new AcademyOfstedRatings(
                 int.Parse(e.Urn!),
                 new OfstedShortInspection(
@@ -263,7 +282,7 @@ public class OfstedRepository(
 
         // Check to see if all ratings have been found in MisEstablishments, if not search in MisFurtherEducationEstablishments
         // Note: if an entry is in MisEstablishments then it will not be in MisFurtherEducationEstablishments, even if it has no ofsted data
-        var missingUrns = parsedUrns.Where(urn => ofstedRatings.All(o => o.Urn != urn)).ToList();
+        var missingUrns = urns.Where(urn => ofstedRatings.All(o => o.Urn != urn)).ToList();
         if (missingUrns.Count != 0)
         {
             ofstedRatings.AddRange(establishments
