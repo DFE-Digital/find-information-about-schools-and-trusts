@@ -19,7 +19,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
         private readonly IReportCardsService _mockReportCardsService = Substitute.For<IReportCardsService>();
         private readonly IOfstedServiceModelBuilder _mockOfstedServiceModelBuilder = Substitute.For<IOfstedServiceModelBuilder>();
         private readonly IAcademyService _mockAcademyService = Substitute.For<IAcademyService>();
-        private readonly ILogger<IOfstedService> _mockLogger = Substitute.For<ILogger<IOfstedService>>();
+        private readonly ILogger<OfstedService> _mockLogger = Substitute.For<ILogger<OfstedService>>();
 
         public OfstedServiceTests()
         {

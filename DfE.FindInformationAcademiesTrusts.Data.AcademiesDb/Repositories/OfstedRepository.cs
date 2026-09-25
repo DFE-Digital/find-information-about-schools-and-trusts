@@ -12,7 +12,7 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 public class OfstedRepository(
     IAcademiesDbContext academiesDbContext,
     IGetEstablishments getEstablishments,
-    ILogger<AcademyRepository> logger)
+    ILogger<OfstedRepository> logger)
     : IOfstedRepository
 {
     private static readonly DateTime

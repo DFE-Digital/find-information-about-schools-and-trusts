@@ -29,7 +29,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
         IOfstedRepository ofstedRepository,
         IOfstedServiceModelBuilder ofstedServiceModelBuilder,
         IAcademyService academyService,
-        ILogger<IOfstedService> logger) : IOfstedService
+        ILogger<OfstedService> logger) : IOfstedService
     {
         public async Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspectionAsync(int urn)
         {
@@ -171,7 +171,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
                 }
                 else
                 {
-                    logger.LogError("Unable to parse academy urn {Urn} for trust {Uid}", schoolOfstedRating.Urn,
+                    logger.LogError("Unable to parse academy urn {Urn} for trust {Trn}", schoolOfstedRating.Urn,
                         trustReferenceNumber);
                 }
             }

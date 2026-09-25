@@ -16,7 +16,7 @@ public class OfstedRepositoryTests
     private readonly OfstedRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
     private readonly IGetEstablishments _mockGetEstablishments;
-    private readonly ILogger<AcademyRepository> _mockLogger = MockLogger.CreateLogger<AcademyRepository>();
+    private readonly ILogger<OfstedRepository> _mockLogger = MockLogger.CreateLogger<OfstedRepository>();
     private readonly Dictionary<string, List<string>> _predecessorUrnsByCurrentUrn = new();
     private readonly Dictionary<int, EstablishmentResponse> _ofstedEstablishmentsByUrn = new();
 
