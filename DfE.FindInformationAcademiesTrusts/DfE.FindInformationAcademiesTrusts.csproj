@@ -14,8 +14,8 @@
         <PackageReference Include="Azure.Extensions.AspNetCore.DataProtection.Keys" Version="1.6.1" />
         <PackageReference Include="Azure.Identity" Version="1.19.0" />
         <PackageReference Include="ClosedXML" Version="0.105.0" />
-        <PackageReference Include="Dfe.AcademiesApi.Client" Version="1.0.15" />
         <PackageReference Include="Dfe.CaseAggregationService.Api.Client" Version="1.0.0" />
+        <PackageReference Include="GovUK.Dfe.AcademiesApi.Client" Version="0.0.7" />
         <PackageReference Include="GovUK.Dfe.CoreLibs.Caching" Version="1.0.13" />
         <PackageReference Include="GovUK.Dfe.PersonsApi.Client" Version="0.1.5" />
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
@@ -50,9 +50,14 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Application\DfE.FindInformationAcademiesTrusts.Application.csproj" />
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data.AcademiesDb\DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.csproj" />
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data.FiatDb\DfE.FindInformationAcademiesTrusts.Data.FiatDb.csproj" />
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data.Hardcoded\DfE.FindInformationAcademiesTrusts.Data.Hardcoded.csproj" />
         <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Data\DfE.FindInformationAcademiesTrusts.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Pages\Shared\_EstablishmentSearchForm.cshtml" />
     </ItemGroup>
 </Project>

@@ -6,6 +6,8 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Search;
 public interface ISearchService
 {
     Task<SearchResultServiceModel[]> GetSearchResultsForAutocompleteAsync(string? keyWords);
+    Task<SearchResultServiceModel[]> GetSchoolSearchResultsForAutocompleteAsync(string? keyWords);
+    Task<SearchResultServiceModel[]> GetTrustSearchResultsForAutocompleteAsync(string? keyWords);
     Task<PagedSearchResults> GetSearchResultsForPageAsync(string? keyWords, int pageNumber);
 }
 
@@ -21,6 +23,30 @@ public class SearchService(ITrustSchoolSearchRepository trustSchoolSearchReposit
         }
 
         var results = await trustSchoolSearchRepository.GetAutoCompleteSearchResultsAsync(keyWords);
+
+        return BuildResults(results);
+    }
+
+    public async Task<SearchResultServiceModel[]> GetSchoolSearchResultsForAutocompleteAsync(string? keyWords)
+    {
+        if (string.IsNullOrWhiteSpace(keyWords))
+        {
+            return [];
+        }
+
+        var results = await trustSchoolSearchRepository.GetSchoolAutoCompleteSearchResultsAsync(keyWords);
+
+        return BuildResults(results);
+    }
+
+    public async Task<SearchResultServiceModel[]> GetTrustSearchResultsForAutocompleteAsync(string? keyWords)
+    {
+        if (string.IsNullOrWhiteSpace(keyWords))
+        {
+            return [];
+        }
+
+        var results = await trustSchoolSearchRepository.GetTrustAutoCompleteSearchResultsAsync(keyWords);
 
         return BuildResults(results);
     }

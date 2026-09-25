@@ -1,0 +1,63 @@
+@page "/watchlist/confirm-trust"
+@using Dfe.FindInformationAcademiesTrusts.Models
+@model DfE.FindInformationAcademiesTrusts.Pages.Watchlist.ConfirmTrust
+
+
+@{
+    Layout = "_ContentLayout";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <span class="govuk-caption-l">Add to watchlist</span>
+        <h1 class="govuk-heading-l">Confirm trust details</h1>
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Trust name
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.Name
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    TRN
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.ReferenceNumber
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Region
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.Region
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Companies house number
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.CompaniesHouseNumber
+                </dd>
+            </div>
+        </dl>
+        <form method="post">
+            <div class="govuk-button-group govuk-!-margin-top-5">
+                <input type="hidden" name="ReferenceNumber" value="@Model.ReferenceNumber"/>
+                <button class="govuk-button" type="submit" name="action" value="finish"
+                        data-module="govuk-button" data-cy="save-and-finish-button">
+                    Save and complete
+                </button>
+                <button class="govuk-button govuk-button--secondary" type="submit" name="action" value="add-another" data-module="govuk-button"
+                        data-cy="save-and-add-another-button">
+                    Save and add another
+                </button>
+                <a asp-page="@Links.Watchlist.TrustsWatchlist.Page" class="govuk-link">Cancel and go back to watchlist</a>
+            </div>
+        </form>
+    </div>
+</div>

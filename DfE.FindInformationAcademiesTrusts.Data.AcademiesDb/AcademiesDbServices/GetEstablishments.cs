@@ -1,8 +1,5 @@
-using System.Net.Http.Json;
-using System.Web;
-using Dfe.AcademiesApi.Client.Contracts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
-using Microsoft.Extensions.Logging;
+using GovUK.Dfe.AcademiesApi.Client.Contracts;
 using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.EstablishmentDto;
 
 
@@ -56,14 +53,24 @@ public class GetEstablishments(IDfeHttpClientFactory httpClientFactory,
 
         return result.Body;
     }
-
-    public async Task<EstablishmentDto> GetEstablishmentByUkprn(string ukprn)
+    
+    public async Task<List<EstablishmentDto>> GetEstablishmentsByUrns(List<int> urns)
     {
-        string path = $"/v4/establishment/{ukprn}";
-        
-        ApiResponse<EstablishmentDto> result = await httpClientService.Get<EstablishmentDto>(_httpClient, path);
-        
-        if (!result.Success) throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");
+        const string path = "v4/establishments/bulk/urns";
+
+        var request = new
+        {
+            urns = urns.ToArray()
+        };
+
+        ApiResponse<List<EstablishmentDto>> result =
+            await httpClientService.Post<object, List<EstablishmentDto>>(
+                _httpClient,
+                path,
+                request);
+
+        if (!result.Success)
+            throw new ApiResponseException($"Request to Api failed | StatusCode - {result.StatusCode}");
 
         return result.Body;
     }

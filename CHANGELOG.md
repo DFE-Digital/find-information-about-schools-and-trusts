@@ -4,10 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-09-14.7787...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-09-22.7820...HEAD)
 
 
 ---
+## [Release-78][release-78] - 2026-09-22
+
+### Changed
+- 292937 : View My Watchlist
+- 292938 : Watchlist -Select Establishment Type
+- 292939 : Search for an Establishment
+- 292943 : Confirm Establishment Details
+- 295777 : Remove an establishment from my watchlist
+
+--
 ## [Release-77][release-77] - 2026-09-14
 
 ### Fixed

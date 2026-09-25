@@ -35,23 +35,25 @@ public class AutomationAuthorizationHandler(
 
     public void SetupAutomationUser()
     {
+        var testEmail = httpContextAccessor.HttpContext?.Request.Headers["X-test-email"];
+        var email = string.IsNullOrWhiteSpace(testEmail) ? "FastTestUser@education.gov.uk" : testEmail.ToString()!;
+
         var identity = new ClaimsIdentity(new List<Claim>
         {
             new("name", "Automation User - name"),
-            new("preferred_username", "FastTestUser@education.gov.uk"),
+            new("preferred_username", email),
+            new("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name", email),
         });
 
         var testRole = httpContextAccessor.HttpContext?.Request.Headers["X-test-role"];
         if (!string.IsNullOrWhiteSpace(testRole))
         {
-            identity.AddClaim(new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
-                "FastTestUser@education.gov.uk"));
             identity.AddClaim(new Claim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
                 testRole.Value.ToString()));
         }
-        
+
         var user = new ClaimsPrincipal(identity);
-        
+
 
         httpContextAccessor.HttpContext!.User = user;
     }
