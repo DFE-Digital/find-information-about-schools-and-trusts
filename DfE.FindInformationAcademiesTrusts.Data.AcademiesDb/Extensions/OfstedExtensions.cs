@@ -15,7 +15,7 @@ public static class OfstedExtensions
 
     public static OfstedRatingScore ToOfstedRatingScore(this string? rating)
     {
-        if (rating is null)
+        if (string.IsNullOrEmpty(rating))
             return OfstedRatingScore.NotInspected;
         
         var ofstedRating = int.Parse(rating);
