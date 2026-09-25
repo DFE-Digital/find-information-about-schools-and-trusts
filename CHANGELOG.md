@@ -4,8 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-09-22.7820...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-09-25.7827...HEAD)
 
+
+---
+## [Release-79][release-79] - 2026-09-25
+
+### Fixed
+
+- 305076 : Incorrect FSM data on trusts/academies page
 
 ---
 ## [Release-78][release-78] - 2026-09-22
