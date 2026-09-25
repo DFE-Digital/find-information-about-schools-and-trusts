@@ -88,7 +88,7 @@ public class OfstedRepository(
     private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatings(string[] urns)
     {
         // First pass at getting ofsted ratings from the db
-        var allOfstedRatings = await GetOfstedRatingsForTrust(urns);
+        var allOfstedRatings = await GetOfstedRatingsForTrustOrSchool(urns);
 
         // If any missing then this could be a school that has recently changed URN
         // try to get ofsted rating using predecessor URN
@@ -97,7 +97,7 @@ public class OfstedRepository(
         {
             var previousUrnMapping = await GetPredecessorUrns(missingUrns);
             
-            var oldOfstedRatings = await GetOfstedRatingsForTrust(previousUrnMapping);
+            var oldOfstedRatings = await GetOfstedRatingsForTrustOrSchool(previousUrnMapping);
 
             allOfstedRatings = allOfstedRatings.Concat(oldOfstedRatings).ToDictionary();
         }
@@ -183,7 +183,7 @@ public class OfstedRepository(
                 group => group.Key);
     }
 
-    private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatingsForTrust(string[] urns)
+    private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatingsForTrustOrSchool(string[] urns)
     {
         var parsedUrns = urns.Select(u => int.Parse(u)).ToArray();
         var establishments = await getEstablishments.GetEstablishmentsWithOfstedData(parsedUrns);
@@ -192,7 +192,7 @@ public class OfstedRepository(
     }
 
     /// <param name="urnMapping">Key: URN to search by, Value: URN to return</param>
-    private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatingsForTrust(Dictionary<int, int> urnMapping)
+    private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatingsForTrustOrSchool(Dictionary<int, int> urnMapping)
     {
         var urns = urnMapping.Keys.ToArray();
         var establishments = await getEstablishments.GetEstablishmentsWithOfstedData(urns);
