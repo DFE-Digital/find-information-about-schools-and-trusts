@@ -276,9 +276,9 @@ public class AcademyRepositoryTests
         ]);
 
         _mockAcademiesDbContext.EdperfFiats.AddRange([
-            new EdperfFiat { Urn = 1234, DownloadYear = "2020-2021", CensusPnumeal = "1.1" },
-            new EdperfFiat { Urn = 1234, DownloadYear = "2023-2024", CensusPnumeal = "12.5%" },
-            new EdperfFiat { Urn = 1235, DownloadYear = "2023-2024", CensusPnumeal = "24.1" }
+            new EdperfFiat { Urn = 1234, DownloadYear = "2020-2021", CensusNumfsm = "10", CensusNor = "200" },
+            new EdperfFiat { Urn = 1234, DownloadYear = "2023-2024", CensusNumfsm = "100", CensusNor = "200" },
+            new EdperfFiat { Urn = 1235, DownloadYear = "2023-2024", CensusNumfsm = "25", CensusNor = "100"}
         ]);
 
         var result = await _sut.GetAcademiesInTrustFreeSchoolMealsAsync(ReferenceNumber);
@@ -287,14 +287,14 @@ public class AcademyRepositoryTests
             new AcademyFreeSchoolMeals(
                 "1234",
                 "Academy1",
-                12.5,
+                50,
                 12,
                 "Academy converter",
                 "Primary"),
             new AcademyFreeSchoolMeals(
                 "1235",
                 "Academy2",
-                24.1,
+                25,
                 22,
                 "Academy sponsor led",
                 "Secondary")
