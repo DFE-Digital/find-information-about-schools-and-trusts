@@ -1,9 +1,7 @@
-using DfE.FindInformationAcademiesTrusts.Data;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
-using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using DfE.FindInformationAcademiesTrusts.HttpServices;
 using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
@@ -15,16 +13,15 @@ public class SchoolServiceTests
 {
     private readonly SchoolService _sut;
     private readonly ISchoolRepository _mockSchoolRepository = Substitute.For<ISchoolRepository>();
-    private readonly IOfstedRepository _mockOfstedRepository = Substitute.For<IOfstedRepository>();
     private readonly IReportCardsService _mockReportCardsService = Substitute.For<IReportCardsService>();
-    private readonly IGetEstablishments _mockGetEstablishments;
+    private readonly IGetEstablishmentsTemp _mockGetEstablishments;
 
     private readonly MockMemoryCache _mockMemoryCache = new();
 
     public SchoolServiceTests()
     {
-        _mockGetEstablishments = Substitute.For<IGetEstablishments>();
-        _sut = new SchoolService(_mockMemoryCache.Object, _mockGetEstablishments, _mockSchoolRepository, _mockOfstedRepository);
+        _mockGetEstablishments = Substitute.For<IGetEstablishmentsTemp>();
+        _sut = new SchoolService(_mockMemoryCache.Object, _mockGetEstablishments, _mockSchoolRepository);
 
         _mockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(new ReportCardServiceModel());
     }
@@ -247,45 +244,6 @@ public class SchoolServiceTests
 
         result.Historic.Should().ContainSingle().Which.Should().BeEquivalentTo(historic);
         result.Current.Should().BeEquivalentTo([chair, governor]);
-    }
-
-    [Fact]
-    public async Task GetOfstedHeadlineGradesAsync_returns_data_from_ofsted_repository()
-    {
-        const int urn = 123456;
-
-        var expectedShortInspection = new OfstedShortInspection(new DateTime(2022, 1, 1), "School remains Good");
-        var expectedCurrentInspection =
-            new OfstedFullInspectionSummary(new DateTime(2021, 1, 1), OfstedRatingScore.Good);
-        var expectedPreviousInspection =
-            new OfstedFullInspectionSummary(new DateTime(2011, 1, 1), OfstedRatingScore.RequiresImprovement);
-
-        _mockOfstedRepository.GetOfstedShortInspectionAsync(urn).Returns(expectedShortInspection);
-        _mockOfstedRepository.GetOfstedInspectionHistorySummaryAsync(urn)
-            .Returns(new OfstedInspectionHistorySummary(expectedCurrentInspection, expectedPreviousInspection));
-
-        var result = await _sut.GetOfstedHeadlineGrades(urn);
-
-        result.ShortInspection.Should().BeEquivalentTo(expectedShortInspection);
-        result.CurrentInspection.Should().BeEquivalentTo(expectedCurrentInspection);
-        result.PreviousInspection.Should().BeEquivalentTo(expectedPreviousInspection);
-    }
-
-    [Fact]
-    public async Task GetSchoolOfstedRatingsAsync_returns_data_from_ofsted_repository()
-    {
-        const int urn = 123456;
-
-        var expected = new SchoolOfsted("1", "Academy 1", new DateTime(2022, 12, 1),
-            new OfstedShortInspection(new DateTime(2025, 7, 1), "School remains Good"),
-            new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2023, 1, 1)),
-            new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 2, 1)), false);
-
-        _mockOfstedRepository.GetSchoolOfstedRatingsAsync(urn).Returns(expected);
-
-        var result = await _sut.GetSchoolOfstedRatingsAsync(urn);
-
-        result.Should().BeEquivalentTo(expected);
     }
 
     [Theory]
