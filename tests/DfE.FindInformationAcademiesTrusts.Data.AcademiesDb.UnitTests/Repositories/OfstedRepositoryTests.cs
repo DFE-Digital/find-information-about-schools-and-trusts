@@ -10,6 +10,7 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Reposito
 public class OfstedRepositoryTests
 {
     private const string TrustReferenceNumber = "TR98765";
+    private static readonly int[] UrnFoundInOfstedData = [700001];
     private readonly OfstedRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
     private readonly IGetEstablishments _mockGetEstablishments;
@@ -452,7 +453,7 @@ public class OfstedRepositoryTests
         await _sut.GetAcademiesInTrustOfstedAsync(TrustReferenceNumber);
 
         await _mockGetEstablishments.Received(1).GetEstablishmentsByUrns(
-            Arg.Is<List<int>>(urns => urns.SequenceEqual(new[] { 700001 })));
+            Arg.Is<List<int>>(urns => urns.SequenceEqual(UrnFoundInOfstedData)));
     }
 
     [Fact]
