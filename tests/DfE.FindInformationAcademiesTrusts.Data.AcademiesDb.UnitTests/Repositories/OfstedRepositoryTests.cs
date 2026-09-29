@@ -4,9 +4,6 @@ using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using FluentAssertions.Execution;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 using Microsoft.Extensions.Logging;
-using EstablishmentResponse = GovUK.Dfe.AcademiesApi.Client.Contracts.EstablishmentResponse;
-using MISEstablishmentResponse = GovUK.Dfe.AcademiesApi.Client.Contracts.MISEstablishmentResponse;
-using MISFEAResponse = GovUK.Dfe.AcademiesApi.Client.Contracts.MISFEAResponse;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.UnitTests.Repositories;
 
@@ -18,19 +15,63 @@ public class OfstedRepositoryTests
     private readonly IGetEstablishments _mockGetEstablishments;
     private readonly ILogger<OfstedRepository> _mockLogger = MockLogger.CreateLogger<OfstedRepository>();
     private readonly Dictionary<string, List<string>> _predecessorUrnsByCurrentUrn = new();
-    private readonly Dictionary<int, EstablishmentResponse> _ofstedEstablishmentsByUrn = new();
+    private readonly Dictionary<int, EstablishmentDto> _ofstedEstablishmentsByUrn = new();
 
     public OfstedRepositoryTests()
     {
         _mockGetEstablishments = Substitute.For<IGetEstablishments>();
         _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(Arg.Any<string>()).Returns([]);
-        _mockGetEstablishments.GetEstablishmentsByUrns(Arg.Any<List<int>>()).Returns([]);
-        _mockGetEstablishments.GetEstablishmentsWithOfstedData(Arg.Any<int[]>())
-            .Returns(callInfo => callInfo.Arg<int[]>()
-                .Where(_ofstedEstablishmentsByUrn.ContainsKey)
-                .Select(urn => _ofstedEstablishmentsByUrn[urn])
-                .ToList());
+        _mockGetEstablishments.GetEstablishmentsByUrns(Arg.Any<List<int>>())
+            .Returns(callInfo => BuildEstablishmentsByUrns(callInfo.Arg<List<int>>()));
         _sut = new OfstedRepository(_mockAcademiesDbContext.Object, _mockGetEstablishments, _mockLogger);
+    }
+
+    private List<EstablishmentDto> BuildEstablishmentsByUrns(List<int> requestedUrns)
+    {
+        var results = new List<EstablishmentDto>();
+
+        foreach (var urn in requestedUrns)
+        {
+            var urnString = urn.ToString();
+            _ofstedEstablishmentsByUrn.TryGetValue(urn, out var ofsted);
+
+            if (_predecessorUrnsByCurrentUrn.TryGetValue(urnString, out var predecessors) && predecessors.Count > 0)
+            {
+                results.AddRange(predecessors.Select(predecessor =>
+                    CreateEstablishment(urnString, predecessor, ofsted)));
+                continue;
+            }
+
+            if (ofsted is not null)
+            {
+                results.Add(CreateEstablishment(urnString, null, ofsted));
+            }
+        }
+
+        return results;
+    }
+
+    private static EstablishmentDto CreateEstablishment(string urn, string? predecessorUrn, EstablishmentDto? ofsted)
+    {
+        var establishment = new EstablishmentDto
+        {
+            Urn = urn,
+            PreviousEstablishment = predecessorUrn is null
+                ? null
+                : new PreviousEstablishmentDto { Urn = predecessorUrn }
+        };
+
+        if (ofsted?.MISEstablishment is not null)
+        {
+            establishment.MISEstablishment = ofsted.MISEstablishment;
+        }
+
+        if (ofsted?.MisFurtherEducationEstablishment is not null)
+        {
+            establishment.MisFurtherEducationEstablishment = ofsted.MisFurtherEducationEstablishment;
+        }
+
+        return establishment;
     }
 
     private void SetupAcademiesInTrust(params string[] urns)
@@ -53,26 +94,6 @@ public class OfstedRepositoryTests
         }
 
         predecessorUrns.Add(predecessorUrn);
-
-        _mockGetEstablishments.GetEstablishmentsByUrns(Arg.Any<List<int>>())
-            .Returns(callInfo =>
-            {
-                var requestedUrns = callInfo.Arg<List<int>>();
-                return requestedUrns.SelectMany(urn =>
-                {
-                    if (!_predecessorUrnsByCurrentUrn.TryGetValue(urn.ToString(), out var predecessors) ||
-                        predecessors.Count == 0)
-                    {
-                        return [];
-                    }
-
-                    return predecessors.Select(predecessor => new EstablishmentDto
-                    {
-                        Urn = urn.ToString(),
-                        PreviousEstablishment = new PreviousEstablishmentDto { Urn = predecessor }
-                    });
-                }).ToList();
-            });
     }
 
     private void SetupEstablishment(int urn, string name = "Test School", string? dateJoinedTrust = "01/01/2022")
@@ -85,23 +106,23 @@ public class OfstedRepositoryTests
         });
     }
 
-    private void AddSchoolOfsted(int urn, MISEstablishmentResponse ofstedData)
+    private void AddSchoolOfsted(int urn, MisEstablishmentDto ofstedData)
     {
         var establishment = GetOrCreateOfstedEstablishment(urn);
-        establishment.MisEstablishment = ofstedData;
+        establishment.MISEstablishment = ofstedData;
     }
 
-    private void AddFurtherEducationOfsted(int urn, MISFEAResponse ofstedData)
+    private void AddFurtherEducationOfsted(int urn, MisFurtherEducationEstablishmentDto ofstedData)
     {
         var establishment = GetOrCreateOfstedEstablishment(urn);
         establishment.MisFurtherEducationEstablishment = ofstedData;
     }
 
-    private EstablishmentResponse GetOrCreateOfstedEstablishment(int urn)
+    private EstablishmentDto GetOrCreateOfstedEstablishment(int urn)
     {
         if (!_ofstedEstablishmentsByUrn.TryGetValue(urn, out var establishment))
         {
-            establishment = new EstablishmentResponse { Urn = urn.ToString() };
+            establishment = new EstablishmentDto { Urn = urn.ToString() };
             _ofstedEstablishmentsByUrn[urn] = establishment;
         }
 
@@ -169,18 +190,18 @@ public class OfstedRepositoryTests
 
         SetupAcademiesInTrust(misUrn, furtherEdUrn, unknownUrn);
 
-        AddSchoolOfsted(111111, new MISEstablishmentResponse
+        AddSchoolOfsted(111111, new MisEstablishmentDto
         {
             OverallEffectiveness = "1",
             InspectionStartDate = "15/05/2023",
             DateOfLatestSection8Inspection = "20/06/2024",
             Section8InspectionOverallOutcome = "School remains Good"
         });
-        AddFurtherEducationOfsted(222222, new MISFEAResponse
+        AddFurtherEducationOfsted(222222, new MisFurtherEducationEstablishmentDto
         {
             OverallEffectiveness = "2",
             LastDayOfInspection = "10/03/2023",
-            DateOfLatestShortInspection = "01/07/2024"
+            DateOfLatestSection8Inspection = "01/07/2024"
         });
 
         var result = await _sut.GetAcademiesInTrustOfstedAsync(TrustReferenceNumber);
@@ -220,7 +241,7 @@ public class OfstedRepositoryTests
     public async Task GetAcademiesInTrustOfstedAsync_should_map_current_and_previous_judgements_from_mis_establishments()
     {
         SetupAcademiesInTrust("987654");
-        AddSchoolOfsted(987654, new MISEstablishmentResponse
+        AddSchoolOfsted(987654, new MisEstablishmentDto
         {
             OverallEffectiveness = "1",
             QualityOfEducation = "1",
@@ -271,7 +292,7 @@ public class OfstedRepositoryTests
     public async Task GetAcademiesInTrustOfstedAsync_should_map_further_education_judgements_when_urn_is_not_in_mis_establishments()
     {
         SetupAcademiesInTrust("987654");
-        AddFurtherEducationOfsted(987654, new MISFEAResponse
+        AddFurtherEducationOfsted(987654, new MisFurtherEducationEstablishmentDto
         {
             OverallEffectiveness = "1",
             QualityOfEducation = "2",
@@ -319,12 +340,12 @@ public class OfstedRepositoryTests
     public async Task GetAcademiesInTrustOfstedAsync_should_only_use_further_education_data_for_urns_missing_from_mis_establishments()
     {
         SetupAcademiesInTrust("900001", "900002");
-        AddSchoolOfsted(900001, new MISEstablishmentResponse
+        AddSchoolOfsted(900001, new MisEstablishmentDto
         {
             EarlyYearsProvision = "1"
         });
-        AddFurtherEducationOfsted(900001, new MISFEAResponse());
-        AddFurtherEducationOfsted(900002, new MISFEAResponse());
+        AddFurtherEducationOfsted(900001, new MisFurtherEducationEstablishmentDto());
+        AddFurtherEducationOfsted(900002, new MisFurtherEducationEstablishmentDto());
 
         var result = await _sut.GetAcademiesInTrustOfstedAsync(TrustReferenceNumber);
 
@@ -344,8 +365,8 @@ public class OfstedRepositoryTests
     public async Task GetAcademiesInTrustOfstedAsync_should_return_not_inspected_when_ofsted_row_exists_without_ratings()
     {
         SetupAcademiesInTrust("500001", "500002");
-        AddSchoolOfsted(500001, new MISEstablishmentResponse());
-        AddFurtherEducationOfsted(500002, new MISFEAResponse());
+        AddSchoolOfsted(500001, new MisEstablishmentDto());
+        AddFurtherEducationOfsted(500002, new MisFurtherEducationEstablishmentDto());
 
         var result = await _sut.GetAcademiesInTrustOfstedAsync(TrustReferenceNumber);
 
@@ -356,11 +377,38 @@ public class OfstedRepositoryTests
     }
 
     [Fact]
+    public async Task
+        GetAcademiesInTrustOfstedAsync_should_use_predecessor_ratings_when_current_urn_has_no_inspection_dates()
+    {
+        SetupAcademiesInTrust("800002");
+        AddSchoolOfsted(800002, new MisEstablishmentDto());
+        AddPredecessorLink("800002", "899998");
+        AddSchoolOfsted(899998, new MisEstablishmentDto
+        {
+            QualityOfEducation = "1",
+            InspectionStartDate = "15/05/2023",
+            PreviousQualityOfEducation = "3",
+            PreviousInspectionStartDate = "01/02/2013",
+            DateOfLatestSection8Inspection = "20/06/2024"
+        });
+
+        var result = await _sut.GetAcademiesInTrustOfstedAsync(TrustReferenceNumber);
+
+        var actual = result.Should().ContainSingle().Subject;
+        actual.Urn.Should().Be("800002");
+        actual.CurrentOfstedRating.QualityOfEducation.Should().Be(OfstedRatingScore.Outstanding);
+        actual.CurrentOfstedRating.InspectionDate.Should().Be(new DateTime(2023, 5, 15));
+        actual.PreviousOfstedRating.QualityOfEducation.Should().Be(OfstedRatingScore.RequiresImprovement);
+        actual.PreviousOfstedRating.InspectionDate.Should().Be(new DateTime(2013, 2, 1));
+        actual.ShortInspection.InspectionDate.Should().Be(new DateTime(2024, 6, 20));
+    }
+
+    [Fact]
     public async Task GetAcademiesInTrustOfstedAsync_should_use_predecessor_ratings_when_current_urn_has_no_ofsted_record()
     {
         SetupAcademiesInTrust("800001");
         AddPredecessorLink("800001", "899999");
-        AddSchoolOfsted(899999, new MISEstablishmentResponse
+        AddSchoolOfsted(899999, new MisEstablishmentDto
         {
             QualityOfEducation = "1",
             PreviousQualityOfEducation = "3"
@@ -395,22 +443,24 @@ public class OfstedRepositoryTests
     public async Task GetAcademiesInTrustOfstedAsync_should_not_look_up_predecessor_when_urn_is_found_in_ofsted_data()
     {
         SetupAcademiesInTrust("700001");
-        AddSchoolOfsted(700001, new MISEstablishmentResponse
+        AddSchoolOfsted(700001, new MisEstablishmentDto
         {
-            QualityOfEducation = "1"
+            QualityOfEducation = "1",
+            InspectionStartDate = "15/05/2023"
         });
 
         await _sut.GetAcademiesInTrustOfstedAsync(TrustReferenceNumber);
 
-        await _mockGetEstablishments.DidNotReceive().GetEstablishmentsByUrns(Arg.Any<List<int>>());
+        await _mockGetEstablishments.Received(1).GetEstablishmentsByUrns(
+            Arg.Is<List<int>>(urns => urns.SequenceEqual(new[] { 700001 })));
     }
 
     [Fact]
     public async Task GetAcademiesInTrustOfstedAsync_should_log_error_when_ofsted_ratings_are_unrecognised()
     {
         SetupAcademiesInTrust("600001", "600002");
-        AddSchoolOfsted(600001, new MISEstablishmentResponse { OverallEffectiveness = "not a valid score" });
-        AddSchoolOfsted(600002, new MISEstablishmentResponse
+        AddSchoolOfsted(600001, new MisEstablishmentDto { OverallEffectiveness = "not a valid score" });
+        AddSchoolOfsted(600002, new MisEstablishmentDto
         {
             OverallEffectiveness = "1",
             InspectionStartDate = "01/01/2022"
@@ -429,26 +479,26 @@ public class OfstedRepositoryTests
     {
         // Single headline grades stopped being issued on 2 September 2024 for non-further education.
         SetupAcademiesInTrust("400001", "400002", "400003", "400005");
-        AddSchoolOfsted(400001, new MISEstablishmentResponse
+        AddSchoolOfsted(400001, new MisEstablishmentDto
         {
             OverallEffectiveness = "1",
             InspectionStartDate = "01/01/2025",
             PreviousFullInspectionOverallEffectiveness = "3",
             PreviousInspectionStartDate = "01/01/2021"
         });
-        AddSchoolOfsted(400002, new MISEstablishmentResponse
+        AddSchoolOfsted(400002, new MisEstablishmentDto
         {
             OverallEffectiveness = "2",
             InspectionStartDate = "02/09/2024"
         });
-        AddSchoolOfsted(400003, new MISEstablishmentResponse
+        AddSchoolOfsted(400003, new MisEstablishmentDto
         {
             OverallEffectiveness = "Not judged",
             InspectionStartDate = "01/01/2025",
             PreviousFullInspectionOverallEffectiveness = "3",
             PreviousInspectionStartDate = "12/12/2024"
         });
-        AddSchoolOfsted(400005, new MISEstablishmentResponse
+        AddSchoolOfsted(400005, new MisEstablishmentDto
         {
             OverallEffectiveness = "1",
             InspectionStartDate = "01/09/2024",
@@ -496,7 +546,7 @@ public class OfstedRepositoryTests
         GetAcademiesInTrustOfstedAsync_should_keep_further_education_single_headline_grades_issued_after_2_september_2024()
     {
         SetupAcademiesInTrust("410001");
-        AddFurtherEducationOfsted(410001, new MISFEAResponse
+        AddFurtherEducationOfsted(410001, new MisFurtherEducationEstablishmentDto
         {
             OverallEffectiveness = "1",
             PreviousOverallEffectiveness = "3",
@@ -516,9 +566,8 @@ public class OfstedRepositoryTests
     public async Task
         GetOfstedInspectionHistorySummaryAsync_when_current_inspection_date_is_missing_then_CurrentInspection_has_null_InspectionDate()
     {
-        AddSchoolOfsted(123456, new MISEstablishmentResponse
+        AddSchoolOfsted(123456, new MisEstablishmentDto
         {
-            InspectionStartDate = null,
             OverallEffectiveness = "1",
             PreviousInspectionStartDate = "01/01/2012",
             PreviousFullInspectionOverallEffectiveness = "1"
@@ -534,11 +583,10 @@ public class OfstedRepositoryTests
     public async Task
         GetOfstedInspectionHistorySummaryAsync_when_previous_inspection_date_is_missing_then_PreviousInspection_has_null_InspectionDate()
     {
-        AddSchoolOfsted(123456, new MISEstablishmentResponse
+        AddSchoolOfsted(123456, new MisEstablishmentDto
         {
             InspectionStartDate = "01/01/2022",
             OverallEffectiveness = "1",
-            PreviousInspectionStartDate = null,
             PreviousFullInspectionOverallEffectiveness = "1"
         });
 
@@ -552,12 +600,11 @@ public class OfstedRepositoryTests
     public async Task
         GetOfstedInspectionHistorySummaryAsync_when_previous_overall_effectiveness_is_missing_then_PreviousInspection_has_NotInspected_InspectionOutcome()
     {
-        AddSchoolOfsted(123456, new MISEstablishmentResponse
+        AddSchoolOfsted(123456, new MisEstablishmentDto
         {
             InspectionStartDate = "01/01/2022",
             OverallEffectiveness = "1",
-            PreviousInspectionStartDate = "01/01/2012",
-            PreviousFullInspectionOverallEffectiveness = null
+            PreviousInspectionStartDate = "01/01/2012"
         });
 
         var result = await _sut.GetOfstedInspectionHistorySummaryAsync(123456);
