@@ -5,6 +5,7 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
@@ -52,12 +53,38 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext, IGetEstab
             .Select(e => new AcademyFreeSchoolMeals(
                 e.Urn.ToString(),
                 e.Name,
-                GetCensusValue(e.Urn, census, ef => ef.CensusPnumeal?.TrimEnd('%').ParseAsNullableDouble()),
+                GetFsmPercentage(GetCensusValue(e.Urn, census, ef => ef.CensusNumfsm), GetCensusValue(e.Urn, census, ef => ef.CensusNor)),
                 e.LocalAuthorityCode.ParseAsNullableInt(),
                 e.EstablishmentType.Name,
                 e.PhaseOfEducation.Name))
             .ToArray();
     }
+
+    private static double? GetFsmPercentage(string? freeSchoolMealsNumber, string? pupilsOnRollNumber)
+    {
+        var pupilsEligibleForFreeSchoolMeals = ParseIntStatistic(freeSchoolMealsNumber);
+        var pupilsOnRoll = ParseIntStatistic(pupilsOnRollNumber);
+        var pupilsEligibleForFreeSchoolMealsPercentage = pupilsEligibleForFreeSchoolMeals.Compute(
+            pupilsOnRoll,
+            (fsm, por) => por == 0 ? 0m : Math.Round(100.0m * fsm / por, 1));
+
+        return pupilsEligibleForFreeSchoolMealsPercentage is Statistic<decimal>.WithValue { Value: var percentage }
+            ? (double)percentage
+            : null;
+    }
+    
+    private static Statistic<int> ParseIntStatistic(string? input)
+    {
+        return input switch
+        {
+            "SUPP" => Statistic<int>.Suppressed,
+            "NP" => Statistic<int>.NotPublished,
+            "NA" => Statistic<int>.NotApplicable,
+            _ when int.TryParse(input, out var value) => new Statistic<int>.WithValue(value),
+            _ => Statistic<int>.NotAvailable
+        };
+    }
+    
 
     public async Task<int> GetNumberOfAcademiesInTrustAsync(string referenceNumber)
     {
@@ -107,11 +134,10 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext, IGetEstab
         string urn,
         Dictionary<int, EdperfFiat> edPerfFiats,
         Func<EdperfFiat, TValue?> selector)
-        where TValue : struct
     {
         if (urn.ParseAsNullableInt() is not { } parsedUrn || !edPerfFiats.TryGetValue(parsedUrn, out var census))
         {
-            return null;
+            return default;
         }
 
         return selector(census);
