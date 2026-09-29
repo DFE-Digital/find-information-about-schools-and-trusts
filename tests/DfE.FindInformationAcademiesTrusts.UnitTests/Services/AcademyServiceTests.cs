@@ -87,7 +87,6 @@ public class AcademyServiceTests
     [Fact]
     public async Task GetAcademiesInTrustPupilNumbersAsync_should_return_mapped_result_from_repository()
     {
-        const string uid = "1234";
         const string referenceNumber = "TR1234";
         AcademyPupilNumbers[] academies =
         [
@@ -108,7 +107,7 @@ AcademyPupilNumbersServiceModel[] expected =
             [8765] = new Statistic<int>.WithValue(2)
         });
         
-        var result = await _sut.GetAcademiesInTrustPupilNumbersAsync(uid, referenceNumber);
+        var result = await _sut.GetAcademiesInTrustPupilNumbersAsync(referenceNumber);
 
         result.Should().BeOfType<AcademyPupilNumbersServiceModel[]>();
         result.Should().BeEquivalentTo(expected);
