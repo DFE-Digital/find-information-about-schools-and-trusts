@@ -45,11 +45,6 @@ public class SchoolService(
         }
         
         var result = await getEstablishments.GetEstablishment(urn);
-        
-        if (result is null)
-        {
-            return null;
-        }
 
         var summary = new SchoolSummaryServiceModel(
             urn,
