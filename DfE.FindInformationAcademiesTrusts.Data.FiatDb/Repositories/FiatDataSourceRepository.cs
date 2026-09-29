@@ -1,4 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.FiatDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.DataSource;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,7 @@ public interface IFiatDataSourceRepository
     Task<DataSource> GetTrustContactDataSourceAsync(int uid, TrustContactRole role);
 }
 
-public class FiatDataSourceRepository(FiatDbContext dbContext) : IFiatDataSourceRepository
+public class FiatDataSourceRepository(FindInformationAcademiesTrustsContext dbContext) : IFiatDataSourceRepository
 {
     public async Task<DataSource> GetSchoolContactDataSourceAsync(int urn, SchoolContactRole role)
     {

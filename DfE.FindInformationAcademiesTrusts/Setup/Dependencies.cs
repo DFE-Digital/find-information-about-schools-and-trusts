@@ -73,30 +73,12 @@ public static class Dependencies
             provider.GetService<AcademiesDbContext>() ??
             throw new InvalidOperationException("AcademiesDbContext not registered"));
 
-        builder.Services.AddDbContext<FiatDbContext>(options =>
-            options.UseSqlServer(
-                builder.Configuration.GetConnectionString("DefaultConnection") ??
-                throw new InvalidOperationException("FIAT database connection string 'DefaultConnection' not found."),
-                sqlOptions =>
-                {
-                    sqlOptions.EnableRetryOnFailure(
-                        2, // retry up to a maximum of 2 times
-                        TimeSpan.FromSeconds(5), // wait up to 5s for the server to respond before retry
-                        null
-                    );
-                }
-            )
-        );
-
         builder.Services.AddDbContext<FindInformationAcademiesTrustsContext>(options =>
             options.UseSqlServer(
                 builder.Configuration.GetConnectionString("DefaultConnection") ??
                 throw new InvalidOperationException("FIAT database connection string 'DefaultConnection' not found."),
                 sqlOptions =>
                 {
-                    // Shares the FiatDb database with FiatDbContext, so it needs its own
-                    // migrations history table to avoid colliding with FiatDbContext's.
-                    sqlOptions.MigrationsHistoryTable("__FindInformationAcademiesTrustsContextMigrationsHistory");
                     sqlOptions.EnableRetryOnFailure(
                         2, // retry up to a maximum of 2 times
                         TimeSpan.FromSeconds(5), // wait up to 5s for the server to respond before retry
@@ -106,7 +88,6 @@ public static class Dependencies
             )
         );
 
-        builder.Services.AddScoped<SetChangedByInterceptor>();
         builder.Services.AddScoped<IUserDetailsProvider, HttpContextUserDetailsProvider>();
 
         builder.Services.AddScoped<IDateTimeProvider, DateTimeProvider>();

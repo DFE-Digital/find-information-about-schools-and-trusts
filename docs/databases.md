@@ -25,10 +25,10 @@ dotnet user-secrets set "ConnectionStrings:DefaultConnection" "[secret goes here
 dotnet tool restore
 
 # Check whether there needs to be a new migration
-dotnet ef migrations has-pending-model-changes --context FiatDbContext --project DfE.FindInformationAcademiesTrusts.Data.FiatDb --startup-project DfE.FindInformationAcademiesTrusts
+dotnet ef migrations has-pending-model-changes --context FindInformationAcademiesTrustsContext --project DfE.FindInformationAcademiesTrusts.Data.FiatDb --startup-project DfE.FindInformationAcademiesTrusts
 
 # Add new migration
-dotnet ef migrations add NameOfMigrationGoesHere --context FiatDbContext --project DfE.FindInformationAcademiesTrusts.Data.FiatDb --startup-project DfE.FindInformationAcademiesTrusts
+dotnet ef migrations add NameOfMigrationGoesHere --context FindInformationAcademiesTrustsContext --project DfE.FindInformationAcademiesTrusts.Data.FiatDb --startup-project DfE.FindInformationAcademiesTrusts
 ```
 
 A new migration and snapshot should be created in `DfE.FindInformationAcademiesTrusts.Data.FiatDb/Migrations`. Look to ensure that only the changes you were expecting are there and add any custom migration code to this new migration file.
@@ -37,15 +37,15 @@ Ensure that you test the new migration on a local copy of the database (which co
 
 ```bash
 # Update db to latest migration
-dotnet ef database update --context FiatDbContext --project DfE.FindInformationAcademiesTrusts.Data.FiatDb --startup-project DfE.FindInformationAcademiesTrusts
+dotnet ef database update --context FindInformationAcademiesTrustsContext --project DfE.FindInformationAcademiesTrusts.Data.FiatDb --startup-project DfE.FindInformationAcademiesTrusts
 
 # Undo all known updates to db (note that removed migrations can't be removed from db by EF)
-dotnet ef database update 0 --context FiatDbContext --project DfE.FindInformationAcademiesTrusts.Data.FiatDb --startup-project DfE.FindInformationAcademiesTrusts
+dotnet ef database update 0 --context FindInformationAcademiesTrustsContext --project DfE.FindInformationAcademiesTrusts.Data.FiatDb --startup-project DfE.FindInformationAcademiesTrusts
 ```
 
 Once happy, **run the script below** to generate the SQL script which is used by the pipeline to deploy the migrations. You may want to double check that the SQL output is as expected but do not alter this SQL script directly as it will be overwritten by the next migration.
 
 ```bash
 # Turn migrations into SQL
-dotnet ef migrations script --idempotent -o ./DfE.FindInformationAcademiesTrusts.Data.FiatDb/Migrations/FiatDbMigrationScript.sql --context FiatDbContext --project DfE.FindInformationAcademiesTrusts.Data.FiatDb --startup-project DfE.FindInformationAcademiesTrusts
+dotnet ef migrations script --idempotent -o ./DfE.FindInformationAcademiesTrusts.Data.FiatDb/Migrations/FiatDbMigrationScript.sql --context FindInformationAcademiesTrustsContext --project DfE.FindInformationAcademiesTrusts.Data.FiatDb --startup-project DfE.FindInformationAcademiesTrusts
 ```

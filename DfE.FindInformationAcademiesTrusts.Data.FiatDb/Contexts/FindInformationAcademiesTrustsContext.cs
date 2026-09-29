@@ -12,12 +12,16 @@ public class FindInformationAcademiesTrustsContext(
     : DbContext(options)
 {
     public DbSet<Watchlist> Watchlists { get; set; }
+    public DbSet<SchoolContact> SchoolContacts { get; set; }
+    public DbSet<TrustContact> TrustContacts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         ConfigureWatchlist(modelBuilder);
+        ConfigureSchoolContact(modelBuilder);
+        ConfigureTrustContact(modelBuilder);
     }
 
     private static void ConfigureWatchlist(ModelBuilder modelBuilder)
@@ -47,6 +51,44 @@ public class FindInformationAcademiesTrustsContext(
         });
     }
 
+    private static void ConfigureSchoolContact(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<SchoolContact>(entity =>
+        {
+            entity.ToTable("SchoolContacts", table => table.IsTemporal());
+            entity.HasKey(c => c.Id);
+
+            entity.Property(c => c.Role).HasConversion<string>();
+            entity.Property(c => c.Name).HasMaxLength(500);
+            entity.Property(c => c.Email).HasMaxLength(320);
+            entity.Property(c => c.LastModifiedByName).HasMaxLength(500);
+            entity.Property(c => c.LastModifiedByEmail).HasMaxLength(320);
+            entity.Property(c => c.LastModifiedAtTime).HasComputedColumnSql("[PeriodStart]");
+
+            entity.HasIndex(c => c.Urn);
+            entity.HasIndex(c => new { c.Urn, c.Role }).IsUnique();
+        });
+    }
+
+    private static void ConfigureTrustContact(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<TrustContact>(entity =>
+        {
+            entity.ToTable("Contacts", table => table.IsTemporal());
+            entity.HasKey(c => c.Id);
+
+            entity.Property(c => c.Role).HasConversion<string>();
+            entity.Property(c => c.Name).HasMaxLength(500);
+            entity.Property(c => c.Email).HasMaxLength(320);
+            entity.Property(c => c.LastModifiedByName).HasMaxLength(500);
+            entity.Property(c => c.LastModifiedByEmail).HasMaxLength(320);
+            entity.Property(c => c.LastModifiedAtTime).HasComputedColumnSql("[PeriodStart]");
+
+            entity.HasIndex(c => c.Uid);
+            entity.HasIndex(c => new { c.Uid, c.Role }).IsUnique();
+        });
+    }
+
     public override int SaveChanges()
     {
         SetAuditFields();
@@ -61,23 +103,32 @@ public class FindInformationAcademiesTrustsContext(
 
     private void SetAuditFields()
     {
-        var (name, _) = userDetailsProvider.GetUserDetails();
+        var (name, email) = userDetailsProvider.GetUserDetails();
         var utcNow = DateTime.UtcNow;
 
         var entries = ChangeTracker.Entries()
-            .Where(e => e.Entity is IAuditableEntity &&
-                        (e.State == EntityState.Added || e.State == EntityState.Modified));
+            .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
 
         foreach (var entry in entries)
         {
-            var entity = (IAuditableEntity)entry.Entity;
-            entity.LastModifiedOn = utcNow;
-            entity.LastModifiedBy = name;
-
-            if (entry.State == EntityState.Added)
+            switch (entry.Entity)
             {
-                entity.CreatedOn = utcNow;
-                entity.CreatedBy = name;
+                case IAuditableEntity entity:
+                    entity.LastModifiedOn = utcNow;
+                    entity.LastModifiedBy = name;
+
+                    if (entry.State == EntityState.Added)
+                    {
+                        entity.CreatedOn = utcNow;
+                        entity.CreatedBy = name;
+                    }
+
+                    break;
+
+                case BaseEntity entity:
+                    entity.LastModifiedByName = name;
+                    entity.LastModifiedByEmail = email;
+                    break;
             }
         }
     }

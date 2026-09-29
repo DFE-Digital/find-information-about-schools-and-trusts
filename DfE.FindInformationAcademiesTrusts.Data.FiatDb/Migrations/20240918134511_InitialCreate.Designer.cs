@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.FiatDb.Migrations
 {
-    [DbContext(typeof(FiatDbContext))]
+    [DbContext(typeof(FindInformationAcademiesTrustsContext))]
     [Migration("20240918134511_InitialCreate")]
     partial class InitialCreate
     {
