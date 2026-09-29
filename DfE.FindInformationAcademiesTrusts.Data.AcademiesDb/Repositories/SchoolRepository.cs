@@ -17,19 +17,7 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
     ILogger<SchoolRepository> logger, 
     IGetEstablishments getEstablishments,
     IEstablishmentsClient establishmentsClient) : ISchoolRepository
-{
-    public async Task<SchoolSummary?> GetSchoolSummaryAsync(int urn)
-    {
-        var result = await getEstablishments.GetEstablishment(urn);
-
-        return new SchoolSummary(
-            result.Name,
-            result.EstablishmentType.Name,
-            result.EstablishmentGroupType.Name == "Academies"
-                ? SchoolCategory.Academy
-                : SchoolCategory.LaMaintainedSchool);
-    }
-
+{ 
     public async Task<SchoolDetails> GetSchoolDetailsAsync(int urn)
     {
         var result = await getEstablishments.GetEstablishment(urn);

@@ -1,3 +1,5 @@
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
+using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
@@ -24,6 +26,7 @@ public interface ISchoolService
 
 public class SchoolService(
     IMemoryCache memoryCache,
+    IGetEstablishments getEstablishments,
     ISchoolRepository schoolRepository,
     IOfstedRepository ofstedRepository) : ISchoolService
 {
@@ -40,21 +43,26 @@ public class SchoolService(
         {
             return cachedTrustSummary;
         }
-
-        var summary = await schoolRepository.GetSchoolSummaryAsync(urn);
-
-        if (summary is null)
+        
+        var result = await getEstablishments.GetEstablishment(urn);
+        
+        if (result is null)
         {
             return null;
         }
 
-        var schoolSummaryServiceModel =
-            new SchoolSummaryServiceModel(urn, summary.Name, summary.Type, summary.Category);
+        var summary = new SchoolSummaryServiceModel(
+            urn,
+            result.Name,
+            result.EstablishmentType.Name,
+            result.EstablishmentGroupType.Name == "Academies"
+                ? SchoolCategory.Academy
+                : SchoolCategory.LaMaintainedSchool);
 
-        memoryCache.Set(cacheKey, schoolSummaryServiceModel,
+        memoryCache.Set(cacheKey, summary,
             new MemoryCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(10) });
 
-        return schoolSummaryServiceModel;
+        return summary;
     }
 
     public async Task<SchoolReferenceNumbersServiceModel> GetReferenceNumbersAsync(int urn)
