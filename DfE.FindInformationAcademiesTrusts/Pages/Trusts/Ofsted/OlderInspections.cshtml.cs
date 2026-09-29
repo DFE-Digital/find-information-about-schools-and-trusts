@@ -28,7 +28,9 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Ofsted
 
             if (pageResult.GetType() == typeof(NotFoundResult)) return pageResult;
 
-            OlderOfstedInspections = await ofstedService.GetEstablishmentsInTrustOlderOfstedRatings(TrustReferenceNumber);
+            OlderOfstedInspections = (await ofstedService.GetEstablishmentsInTrustOlderOfstedRatings(TrustReferenceNumber))
+                .OrderBy(inspection => inspection.SchoolName)
+                .ToList();
 
             PowerBiLink = powerBiLinkBuilderService.BuildOfstedPublishedLinkForTrust(TrustReferenceNumber);
 

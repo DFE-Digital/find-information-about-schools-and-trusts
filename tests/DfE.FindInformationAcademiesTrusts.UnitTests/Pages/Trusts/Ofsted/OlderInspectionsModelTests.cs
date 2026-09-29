@@ -54,6 +54,47 @@ public class OlderInspectionsModelTests : BaseOfstedAreaModelTests<OlderInspecti
     }
 
     [Fact]
+    public async Task OnGetAsync_should_sort_OlderInspections_by_SchoolName()
+    {
+        List<TrustOfstedReportServiceModel<OlderInspectionServiceModel>> unsortedInspections =
+        [
+            new()
+            {
+                Urn = 2,
+                SchoolName = "Zebra Academy",
+                ReportDetails = new OlderInspectionServiceModel
+                {
+                    Ratings =
+                    [
+                        new OfstedRating((int)OfstedRatingScore.Good,
+                            new DateTime(2023, 01, 20, 0, 0, 0, DateTimeKind.Local))
+                    ]
+                }
+            },
+            new()
+            {
+                Urn = 1,
+                SchoolName = "Alpha Academy",
+                ReportDetails = new OlderInspectionServiceModel
+                {
+                    Ratings =
+                    [
+                        new OfstedRating((int)OfstedRatingScore.Good,
+                            new DateTime(2023, 01, 20, 0, 0, 0, DateTimeKind.Local))
+                    ]
+                }
+            }
+        ];
+
+        MockOfstedService.GetEstablishmentsInTrustOlderOfstedRatings(TrustReference).Returns(unsortedInspections);
+
+        _ = await Sut.OnGetAsync();
+
+        Sut.OlderOfstedInspections.Select(inspection => inspection.SchoolName)
+            .Should().Equal("Alpha Academy", "Zebra Academy");
+    }
+
+    [Fact]
     public override async Task OnGetAsync_ShouldSetPowerBiLinkUrl()
     {
         Sut.PowerBiLink.Should().BeNullOrEmpty();
