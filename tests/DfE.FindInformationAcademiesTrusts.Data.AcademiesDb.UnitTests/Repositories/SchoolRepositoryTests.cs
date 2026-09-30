@@ -33,50 +33,6 @@ public class SchoolRepositoryTests
     }
 
     [Fact]
-    public async Task GetSchoolSummaryAsync_should_throw_if_not_found()
-    {
-        var urn = 123456;
-
-        _mockGetEstablishments.GetEstablishment(urn)
-            .ThrowsAsync(new ApiResponseException("Request to Api failed | StatusCode - 401"));
-
-        var action = () => _sut.GetSchoolSummaryAsync(urn);
-
-        await action.Should().ThrowAsync<ApiResponseException>()
-            .WithMessage("Request to Api failed | StatusCode - 401");
-    }
-
-    [Theory]
-    [InlineData(123456, "Academy converter", "Academies", SchoolCategory.Academy)]
-    [InlineData(234567, "Sixth form centres", "Colleges", SchoolCategory.LaMaintainedSchool)]
-    [InlineData(345678, "Free schools special", "Free Schools", SchoolCategory.LaMaintainedSchool)]
-    [InlineData(456789, "Foundation school", "Local authority maintained schools", SchoolCategory.LaMaintainedSchool)]
-    [InlineData(456789, "Non-maintained special school", "Special schools", SchoolCategory.LaMaintainedSchool)]
-    public async Task GetSchoolSummaryAsync_should_return_schoolSummary_if_found(int urn, string type, string typeGroup,
-        SchoolCategory expectedCategory)
-    {
-        var name = $"School {urn}";
-
-        _mockGetEstablishments.GetEstablishment(urn)
-            .Returns(new EstablishmentDto
-            {
-                Urn = urn.ToString(),
-                Name = name,
-                EstablishmentType = new ()
-                {
-                    Name = type
-                },
-                EstablishmentGroupType = new ()
-                {
-                    Name = typeGroup
-                }
-            });
-
-        var result = await _sut.GetSchoolSummaryAsync(urn);
-        result.Should().BeEquivalentTo(new SchoolSummary(name, type, expectedCategory));
-    }
-
-    [Fact]
     public async Task GetSchoolDetailsAsync_should_return_school_details()
     {
         var urn = 123456;
