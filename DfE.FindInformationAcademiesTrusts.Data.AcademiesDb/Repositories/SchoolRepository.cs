@@ -140,7 +140,7 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
             var openedOnDate = await academiesDbContext.GiasGroupLinks
                 .Where(gl => gl.GroupUid == schoolFederationDetails.FederationUid)
                 .Select(gl =>
-                    DateOnly.ParseExact(gl.OpenDate!, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None))
+                    DateTime.ParseExact(gl.OpenDate!, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None))
                 .FirstAsync();
 
             var schools = await academiesDbContext.GiasEstablishments
