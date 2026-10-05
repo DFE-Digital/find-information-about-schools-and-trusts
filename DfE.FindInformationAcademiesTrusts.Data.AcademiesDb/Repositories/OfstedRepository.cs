@@ -3,7 +3,6 @@ using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Contexts;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
-using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using EstablishmentDto = GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments.EstablishmentDto;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -13,7 +12,6 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 public class OfstedRepository(
     IAcademiesDbContext academiesDbContext,
     IGetEstablishments getEstablishments,
-    ISchoolRepository schoolRepository,
     ILogger<OfstedRepository> logger)
     : IOfstedRepository
 {
@@ -75,15 +73,11 @@ public class OfstedRepository(
         var ofstedRatings = result[urnString];
 
         var schoolDetails = await getEstablishments.GetEstablishment(urn);
-
-        var federationDetails = await schoolRepository.GetSchoolFederationDetailsAsync(urn);
         
-        var dateJoined = federationDetails.OpenedOnDate ?? schoolDetails.DateJoinedTrust.ParseAsNullableDate();
-
         return new SchoolOfsted(
             urnString,
             schoolDetails.Name,
-            dateJoined,
+            schoolDetails.DateJoinedTrust.ParseAsNullableDate(),
             ofstedRatings.ShortInspection,
             ofstedRatings.Previous,
             ofstedRatings.Current,

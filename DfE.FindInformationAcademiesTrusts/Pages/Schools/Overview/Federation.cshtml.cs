@@ -25,7 +25,7 @@ public class FederationModel(
 
     public string FederationName { get; set; } = string.Empty;
     public string FederationUid { get; set; } = string.Empty;
-    public DateTime? OpenedOnDate { get; set; }
+    public DateOnly? OpenedOnDate { get; set; }
     public Dictionary<string, string> Schools { get; set; } = [];
 
     public static readonly string NotAvailable = "Not available";
