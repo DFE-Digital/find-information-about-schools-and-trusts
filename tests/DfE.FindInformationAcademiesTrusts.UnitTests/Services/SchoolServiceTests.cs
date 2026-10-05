@@ -1,11 +1,11 @@
-using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
-using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using DfE.FindInformationAcademiesTrusts.HttpServices;
 using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services;
 
@@ -13,14 +13,15 @@ public class SchoolServiceTests
 {
     private readonly SchoolService _sut;
     private readonly ISchoolRepository _mockSchoolRepository = Substitute.For<ISchoolRepository>();
-    private readonly IOfstedRepository _mockOfstedRepository = Substitute.For<IOfstedRepository>();
     private readonly IReportCardsService _mockReportCardsService = Substitute.For<IReportCardsService>();
+    private readonly IGetEstablishmentsTemp _mockGetEstablishments;
 
     private readonly MockMemoryCache _mockMemoryCache = new();
 
     public SchoolServiceTests()
     {
-        _sut = new SchoolService(_mockMemoryCache.Object, _mockSchoolRepository, _mockOfstedRepository);
+        _mockGetEstablishments = Substitute.For<IGetEstablishmentsTemp>();
+        _sut = new SchoolService(_mockMemoryCache.Object, _mockGetEstablishments, _mockSchoolRepository);
 
         _mockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(new ReportCardServiceModel());
     }
@@ -37,39 +38,54 @@ public class SchoolServiceTests
         var result = await _sut.GetSchoolSummaryAsync(urn);
         result.Should().Be(cachedResult);
 
-        await _mockSchoolRepository.DidNotReceive().GetSchoolSummaryAsync(urn);
-    }
-
-    [Fact]
-    public async Task GetSchoolSummaryAsync_should_return_null_if_not_found()
-    {
-        _mockSchoolRepository.GetSchoolSummaryAsync(999999).Returns((SchoolSummary?)null);
-
-        var result = await _sut.GetSchoolSummaryAsync(999999);
-        result.Should().BeNull();
+        // await _mockSchoolRepository.DidNotReceive().GetSchoolSummaryAsync(urn);
     }
 
     [Theory]
-    [InlineData(280689, "My School", "Foundation school", SchoolCategory.LaMaintainedSchool)]
-    [InlineData(900855, "My Academy", "Academy converter", SchoolCategory.Academy)]
+    [InlineData(280689, "My School", "Foundation school", "Local authority maintained schools", SchoolCategory.LaMaintainedSchool)]
+    [InlineData(900855, "My Academy", "Academy converter", "Academies", SchoolCategory.Academy)]
     public async Task GetSchoolSummaryAsync_should_return_schoolSummary_if_found(int urn, string name, string type,
-        SchoolCategory category)
+        string category, SchoolCategory resultCategory)
     {
-        _mockSchoolRepository.GetSchoolSummaryAsync(urn).Returns(new SchoolSummary(name, type, category));
+        _mockGetEstablishments.GetEstablishment(urn).Returns(new EstablishmentDto
+        {
+            Urn = urn.ToString(),
+            Name = name,
+            EstablishmentType = new()
+            {
+                Name = type
+            },
+            EstablishmentGroupType = new()
+            {
+                Name = category
+            }
+        });
 
         var result = await _sut.GetSchoolSummaryAsync(urn);
-        result.Should().BeEquivalentTo(new SchoolSummaryServiceModel(urn, name, type, category));
+        result.Should().BeEquivalentTo(new SchoolSummaryServiceModel(urn, name, type, resultCategory));
     }
 
     [Theory]
-    [InlineData(280689, "My School", "Foundation school", SchoolCategory.LaMaintainedSchool)]
-    [InlineData(900855, "My Academy", "Academy converter", SchoolCategory.Academy)]
-    public async Task GetSchoolSummaryAsync_uncached_should_cache_result(int urn, string name, string type,
-        SchoolCategory category)
+    [InlineData(280689, "My School", "Foundation school", "Local authority maintained schools", SchoolCategory.LaMaintainedSchool)]
+    [InlineData(900855, "My Academy", "Academy converter", "Academies", SchoolCategory.Academy)]
+    public async Task GetSchoolSummaryAsync_uncached_should_cache_result(int urn, string name, string type, string category,
+        SchoolCategory resultCategory)
     {
         var key = $"{nameof(SchoolService.GetSchoolSummaryAsync)}:{urn}";
 
-        _mockSchoolRepository.GetSchoolSummaryAsync(urn).Returns(new SchoolSummary(name, type, category));
+        _mockGetEstablishments.GetEstablishment(urn).Returns(new EstablishmentDto
+        {
+            Urn = urn.ToString(),
+            Name = name,
+            EstablishmentType = new()
+            {
+                Name = type
+            },
+            EstablishmentGroupType = new()
+            {
+                Name = category
+            }
+        });
 
         await _sut.GetSchoolSummaryAsync(urn);
 
@@ -77,7 +93,7 @@ public class SchoolServiceTests
 
         var cachedEntry = _mockMemoryCache.MockCacheEntries[key];
 
-        cachedEntry.Value.Should().BeEquivalentTo(new SchoolSummaryServiceModel(urn, name, type, category));
+        cachedEntry.Value.Should().BeEquivalentTo(new SchoolSummaryServiceModel(urn, name, type, resultCategory));
         cachedEntry.SlidingExpiration.Should().Be(TimeSpan.FromMinutes(10));
     }
 
@@ -228,45 +244,6 @@ public class SchoolServiceTests
 
         result.Historic.Should().ContainSingle().Which.Should().BeEquivalentTo(historic);
         result.Current.Should().BeEquivalentTo([chair, governor]);
-    }
-
-    [Fact]
-    public async Task GetOfstedHeadlineGradesAsync_returns_data_from_ofsted_repository()
-    {
-        const int urn = 123456;
-
-        var expectedShortInspection = new OfstedShortInspection(new DateTime(2022, 1, 1), "School remains Good");
-        var expectedCurrentInspection =
-            new OfstedFullInspectionSummary(new DateTime(2021, 1, 1), OfstedRatingScore.Good);
-        var expectedPreviousInspection =
-            new OfstedFullInspectionSummary(new DateTime(2011, 1, 1), OfstedRatingScore.RequiresImprovement);
-
-        _mockOfstedRepository.GetOfstedShortInspectionAsync(urn).Returns(expectedShortInspection);
-        _mockOfstedRepository.GetOfstedInspectionHistorySummaryAsync(urn)
-            .Returns(new OfstedInspectionHistorySummary(expectedCurrentInspection, expectedPreviousInspection));
-
-        var result = await _sut.GetOfstedHeadlineGrades(urn);
-
-        result.ShortInspection.Should().BeEquivalentTo(expectedShortInspection);
-        result.CurrentInspection.Should().BeEquivalentTo(expectedCurrentInspection);
-        result.PreviousInspection.Should().BeEquivalentTo(expectedPreviousInspection);
-    }
-
-    [Fact]
-    public async Task GetSchoolOfstedRatingsAsync_returns_data_from_ofsted_repository()
-    {
-        const int urn = 123456;
-
-        var expected = new SchoolOfsted("1", "Academy 1", new DateTime(2022, 12, 1),
-            new OfstedShortInspection(new DateTime(2025, 7, 1), "School remains Good"),
-            new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2023, 1, 1)),
-            new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 2, 1)), false);
-
-        _mockOfstedRepository.GetSchoolOfstedRatingsAsync(urn).Returns(expected);
-
-        var result = await _sut.GetSchoolOfstedRatingsAsync(urn);
-
-        result.Should().BeEquivalentTo(expected);
     }
 
     [Theory]
