@@ -74,10 +74,19 @@ public class OfstedRepository(
 
         var schoolDetails = await getEstablishments.GetEstablishment(urn);
         
+        // temporary fix to get joined date for foundations and federations as well as academies
+        var giasGroupLink = await academiesDbContext.GiasGroupLinks
+            .Where(gl => gl.Urn == urnString)
+            .Select(gl => new
+            {
+                gl.JoinedDate
+            })
+            .FirstOrDefaultAsync();
+        
         return new SchoolOfsted(
             urnString,
             schoolDetails.Name,
-            schoolDetails.DateJoinedTrust.ParseAsNullableDate(),
+            giasGroupLink?.JoinedDate.ParseAsNullableDate(),
             ofstedRatings.ShortInspection,
             ofstedRatings.Previous,
             ofstedRatings.Current,
