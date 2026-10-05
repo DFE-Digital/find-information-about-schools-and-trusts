@@ -1,4 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Gias;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Models.Mis_Mstr;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 using FluentAssertions.Execution;
@@ -104,6 +105,17 @@ public class OfstedRepositoryTests
             Urn = urn.ToString(),
             Name = name,
             DateJoinedTrust = dateJoinedTrust
+        });
+    }
+
+    private void AddGiasGroupLink(string urn, string? joinedDate, string groupStatusCode = "OPEN")
+    {
+        _mockAcademiesDbContext.GiasGroupLinks.Add(new GiasGroupLink
+        {
+            Urn = urn,
+            GroupUid = "1234",
+            GroupStatusCode = groupStatusCode,
+            JoinedDate = joinedDate
         });
     }
 
@@ -685,10 +697,12 @@ public class OfstedRepositoryTests
     }
 
     [Fact]
-    public async Task GetSchoolOfstedRatingsAsync_should_set_establishment_name_and_date_joined_trust()
+    public async Task GetSchoolOfstedRatingsAsync_should_set_establishment_name_and_joined_date_from_gias_group_link()
     {
         const int urn = 987654;
-        SetupEstablishment(urn, "Test School", "13/06/2023");
+        // DateAcademyJoinedTrust is taken from Gias group link, so the establishment date is different.
+        SetupEstablishment(urn, "Test School", "01/01/2000");
+        AddGiasGroupLink(urn.ToString(), "13/06/2023");
 
         var result = await _sut.GetSchoolOfstedRatingsAsync(urn);
 
@@ -700,10 +714,23 @@ public class OfstedRepositoryTests
 
     [Fact]
     public async Task
-        GetSchoolOfstedRatingsAsync_should_leave_DateAcademyJoinedTrust_null_when_establishment_has_no_joined_date()
+        GetSchoolOfstedRatingsAsync_should_leave_DateAcademyJoinedTrust_null_when_no_gias_group_link_exists()
     {
         const int urn = 987654;
-        SetupEstablishment(urn, "Independent school", null);
+        SetupEstablishment(urn, "Independent school", "01/01/2022");
+
+        var result = await _sut.GetSchoolOfstedRatingsAsync(urn);
+
+        result.DateAcademyJoinedTrust.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task
+        GetSchoolOfstedRatingsAsync_should_leave_DateAcademyJoinedTrust_null_when_gias_group_link_has_no_joined_date()
+    {
+        const int urn = 987654;
+        SetupEstablishment(urn, "Foundation school", "01/01/2022");
+        AddGiasGroupLink(urn.ToString(), null);
 
         var result = await _sut.GetSchoolOfstedRatingsAsync(urn);
 
