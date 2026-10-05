@@ -112,6 +112,6 @@ public class OfstedExtensionsTests
     [InlineData(0, OfstedRatingScore.InsufficientEvidence)]
     public void ToOfstedRatingScore_should_transform_given_int(int? rating, OfstedRatingScore expected)
     {
-        rating.ToOfstedRatingScore().Should().Be(expected);
+        rating.ToString().ToOfstedRatingScore().Should().Be(expected);
     }
 }
