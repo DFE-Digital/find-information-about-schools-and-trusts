@@ -15,6 +15,6 @@ public static class HealthCheckSetup
   public static void AddDbHealthChecks(WebApplicationBuilder builder) {
      builder.Services.AddHealthChecks()
       .AddDbContextCheck<AcademiesDbContext>()
-      .AddDbContextCheck<FiatDbContext>();
+      .AddDbContextCheck<FindInformationAcademiesTrustsContext>();
   }
 }
