@@ -73,37 +73,6 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
         return new SchoolContact(fullName, email);
     }
 
-    // public async Task<SenProvision> GetSchoolSenProvisionAsync(int urn)
-    // {
-    //     var result = await getEstablishments.GetEstablishmentWithSenData(urn);
-    //     
-    //     var senProvision = new SenProvision(
-    //         result.ResourcedProvisionOnRoll,
-    //         result.ResourcedProvisionOnCapacity,
-    //         result.SenUnitOnRoll,
-    //         result.SenUnitCapacity,
-    //         result.TypeOfResourcedProvision,
-    //         new List<string>
-    //         {
-    //             result.SeN1!,
-    //             result.SeN2!,
-    //             result.SeN3!,
-    //             result.SeN4!,
-    //             result.SeN5!,
-    //             result.SeN6!,
-    //             result.SeN7!,
-    //             result.SeN8!,
-    //             result.SeN9!,
-    //             result.SeN10!,
-    //             result.SeN11!,
-    //             result.SeN12!,
-    //             result.SeN13!
-    //         }
-    //     );
-    //     
-    //     return senProvision;
-    // }
-
     public async Task<bool> IsPartOfFederationAsync(int urn)
     {
         var federationsCode = await academiesDbContext.GiasEstablishments
