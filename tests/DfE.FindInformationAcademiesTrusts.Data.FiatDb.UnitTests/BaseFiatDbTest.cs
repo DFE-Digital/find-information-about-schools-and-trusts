@@ -1,6 +1,6 @@
-using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.FiatDb.Contexts;
-using DfE.FindInformationAcademiesTrusts.Data.FiatDb.Models;
+using DfE.FindInformationAcademiesTrusts.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.FiatDb.UnitTests;
@@ -10,7 +10,7 @@ namespace DfE.FindInformationAcademiesTrusts.Data.FiatDb.UnitTests;
 public abstract class BaseFiatDbTest : IDisposable
 {
     private bool _isDisposed;
-    protected FiatDbContext FiatDbContext { get; }
+    protected FindInformationAcademiesTrustsContext DbContext { get; }
     protected IUserDetailsProvider MockUserDetailsProvider { get; }
 
     protected BaseFiatDbTest(FiatDbContainerFixture fiatDbContainerFixture)
@@ -18,12 +18,13 @@ public abstract class BaseFiatDbTest : IDisposable
         MockUserDetailsProvider = Substitute.For<IUserDetailsProvider>();
         MockUserDetailsProvider.GetUserDetails().Returns(("Default TestUser", "user@defaulttest"));
 
-        FiatDbContext = new FiatDbContext(
-            new DbContextOptionsBuilder<FiatDbContext>().UseSqlServer(fiatDbContainerFixture.ConnectionString).Options,
-            new SetChangedByInterceptor(MockUserDetailsProvider));
+        DbContext = new FindInformationAcademiesTrustsContext(
+            new DbContextOptionsBuilder<FindInformationAcademiesTrustsContext>()
+                .UseSqlServer(fiatDbContainerFixture.ConnectionString).Options,
+            MockUserDetailsProvider);
 
-        FiatDbContext.Database.EnsureDeleted();
-        FiatDbContext.Database.EnsureCreated();
+        DbContext.Database.EnsureDeleted();
+        DbContext.Database.EnsureCreated();
 
         AddSeedData();
     }
@@ -33,7 +34,7 @@ public abstract class BaseFiatDbTest : IDisposable
     /// </summary>
     private void AddSeedData()
     {
-        FiatDbContext.SchoolContacts.AddRange(
+        DbContext.SchoolContacts.AddRange(
             new SchoolContact
             {
                 Name = "Other TrustRelationshipManager",
@@ -43,7 +44,7 @@ public abstract class BaseFiatDbTest : IDisposable
             }
         );
 
-        FiatDbContext.TrustContacts.AddRange(
+        DbContext.TrustContacts.AddRange(
             new TrustContact
             {
                 Name = "Other TrustRelationshipManager",
@@ -60,7 +61,7 @@ public abstract class BaseFiatDbTest : IDisposable
             }
         );
 
-        FiatDbContext.SaveChanges();
+        DbContext.SaveChanges();
     }
 
     public void Dispose()
@@ -75,7 +76,7 @@ public abstract class BaseFiatDbTest : IDisposable
 
         if (disposing)
         {
-            FiatDbContext.Dispose();
+            DbContext.Dispose();
         }
 
         _isDisposed = true;

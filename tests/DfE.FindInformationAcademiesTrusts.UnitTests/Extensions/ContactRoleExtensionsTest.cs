@@ -1,4 +1,4 @@
-﻿using DfE.FindInformationAcademiesTrusts.Data.Enums;
+﻿using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Extensions;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Extensions;
