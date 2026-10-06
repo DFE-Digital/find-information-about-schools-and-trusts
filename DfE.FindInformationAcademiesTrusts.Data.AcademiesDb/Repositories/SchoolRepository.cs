@@ -18,41 +18,6 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
     IGetEstablishments getEstablishments,
     IEstablishmentsClient establishmentsClient) : ISchoolRepository
 { 
-    // public async Task<SchoolDetails> GetSchoolDetailsAsync(int urn)
-    // {
-    //     var result = await getEstablishments.GetEstablishment(urn);
-    //     
-    //     DateTime? dateJoinedTrust = null;
-    //
-    //     if (!string.IsNullOrEmpty(result.DateJoinedTrust) &&
-    //         DateTime.TryParseExact(
-    //             result.DateJoinedTrust,
-    //             "dd/MM/yyyy",
-    //             CultureInfo.InvariantCulture,
-    //             DateTimeStyles.None,
-    //             out var parsedDate))
-    //     {
-    //         dateJoinedTrust = parsedDate;
-    //     }
-    //
-    //
-    //     return new SchoolDetails(
-    //         Name:  result.Name,
-    //             Address: stringFormattingUtilities.BuildAddressString(
-    //                 result.Address.Street,
-    //                 result.Address.Locality,
-    //                 result.Address.Town,
-    //                 result.Address.Postcode
-    //             ),
-    //             Region: result.Gor.Name,
-    //             LocalAuthority: result.LocalAuthorityName,
-    //             PhaseOfEducationName: result.PhaseOfEducation.Name,
-    //             AgeRange: new AgeRange(result.StatutoryLowAge, result.StatutoryHighAge),
-    //             NurseryProvision: result.NurseryProvision,
-    //             TrustName: result.TrustName,
-    //             DateJoinedTrust: dateJoinedTrust);
-    // }
-
     public async Task<SchoolContact?> GetSchoolContactsAsync(int urn)
     {
         var headteacher = await academiesDbContext.TadHeadTeacherContacts

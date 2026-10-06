@@ -15,7 +15,6 @@ public class SchoolOverviewDetailsService(IStringFormattingUtilities stringForma
 {
     public async Task<SchoolOverviewServiceModel> GetSchoolOverviewDetailsAsync(int urn)
     {
-        // var schoolDetails = await schoolRepository.GetSchoolDetailsAsync(urn);
         var schoolDetails = await getEstablishments.GetEstablishment(urn);
         
         DateTime? dateJoinedTrust = null;

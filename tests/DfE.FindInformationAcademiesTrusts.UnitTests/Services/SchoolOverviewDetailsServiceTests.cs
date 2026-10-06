@@ -13,14 +13,8 @@ public class SchoolOverviewDetailsServiceTests
     private readonly int _academySchoolUrn = 678;
 
     private readonly SchoolOverviewDetailsService _sut;
-    private readonly ISchoolRepository _mockSchoolRepository = Substitute.For<ISchoolRepository>();
     private readonly IGetEstablishmentsTemp _mockGetEstablishments;
     private readonly IStringFormattingUtilities _stringFormattingUtilities = new StringFormattingUtilities();
-
-    private readonly SchoolDetails _academySchoolDetails = new("Cool academy",
-        "some address", "yorkshire", "leeds", "secondary", new AgeRange(2, 6), "no nursery classes", "some trust",
-        new DateTime(2011, 04, 03));
-
 
     public SchoolOverviewDetailsServiceTests()
     {
