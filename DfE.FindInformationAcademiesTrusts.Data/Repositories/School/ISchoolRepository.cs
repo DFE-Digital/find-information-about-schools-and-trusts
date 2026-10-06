@@ -6,7 +6,7 @@ public interface ISchoolRepository
 
     Task<SchoolContact?> GetSchoolContactsAsync(int urn);
 
-    Task<SenProvision> GetSchoolSenProvisionAsync(int urn);
+    // Task<SenProvision> GetSchoolSenProvisionAsync(int urn);
 
     Task<bool> IsPartOfFederationAsync(int urn);
 
