@@ -1,4 +1,8 @@
-﻿using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+﻿using System.Globalization;
+using DfE.FindInformationAcademiesTrusts.Data;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using DfE.FindInformationAcademiesTrusts.HttpServices;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.School;
 
@@ -7,17 +11,36 @@ public interface ISchoolOverviewDetailsService
     Task<SchoolOverviewServiceModel> GetSchoolOverviewDetailsAsync(int urn);
 }
 
-public class SchoolOverviewDetailsService(ISchoolRepository schoolRepository) : ISchoolOverviewDetailsService
+public class SchoolOverviewDetailsService(IStringFormattingUtilities stringFormattingUtilities, IGetEstablishmentsTemp getEstablishments) : ISchoolOverviewDetailsService
 {
     public async Task<SchoolOverviewServiceModel> GetSchoolOverviewDetailsAsync(int urn)
     {
-        var schoolDetails = await schoolRepository.GetSchoolDetailsAsync(urn);
+        // var schoolDetails = await schoolRepository.GetSchoolDetailsAsync(urn);
+        var schoolDetails = await getEstablishments.GetEstablishment(urn);
+        
+        DateTime? dateJoinedTrust = null;
+        
+        if (!string.IsNullOrEmpty(schoolDetails.DateJoinedTrust) &&
+            DateTime.TryParseExact(
+                schoolDetails.DateJoinedTrust,
+                "dd/MM/yyyy",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out var parsedDate))
+        {
+            dateJoinedTrust = parsedDate;
+        }
 
         var nurseryProvision = GetNurseryProvision(schoolDetails.NurseryProvision);
+        var address = stringFormattingUtilities.BuildAddressString(
+            schoolDetails.Address.Street,
+            schoolDetails.Address.Locality,
+            schoolDetails.Address.Town,
+            schoolDetails.Address.Postcode);
 
-        var overviewModel = new SchoolOverviewServiceModel(schoolDetails.Name, schoolDetails.Address,
-            schoolDetails.Region, schoolDetails.LocalAuthority, schoolDetails.PhaseOfEducationName,
-            schoolDetails.AgeRange, nurseryProvision, schoolDetails.TrustName, schoolDetails.DateJoinedTrust);
+        var overviewModel = new SchoolOverviewServiceModel(schoolDetails.Name, address,
+            schoolDetails.Gor.Name, schoolDetails.LocalAuthorityName, schoolDetails.PhaseOfEducation.Name,
+            new AgeRange(schoolDetails.StatutoryLowAge, schoolDetails.StatutoryHighAge), nurseryProvision, schoolDetails.TrustName, dateJoinedTrust);
 
         return overviewModel;
     }
