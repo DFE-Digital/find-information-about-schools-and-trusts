@@ -1,5 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Data;
-using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Contacts;

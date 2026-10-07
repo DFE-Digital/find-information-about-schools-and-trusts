@@ -1,5 +1,6 @@
 using DfE.FindInformationAcademiesTrusts.Configuration;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;

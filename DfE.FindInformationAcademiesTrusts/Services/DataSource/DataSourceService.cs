@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.FiatDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.DataSource;
 using Microsoft.Extensions.Caching.Memory;

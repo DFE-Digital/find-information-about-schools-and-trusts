@@ -1,4 +1,4 @@
-namespace DfE.FindInformationAcademiesTrusts.Data.Enums;
+namespace DfE.FindInformationAcademiesTrusts.Domain.Enums;
 
 public enum TrustContactRole
 {

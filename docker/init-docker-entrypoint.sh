@@ -15,19 +15,19 @@ do
   mssqlconn[${ARR[0]}]=${ARR[1]}
 done
 
+echo "Merging FIAT database migrations history ..."
+until /opt/mssql-tools18/bin/sqlcmd -S "${mssqlconn[Server]}" -U "${mssqlconn[UserId]}" -P "${mssqlconn[Password]}" -d "${mssqlconn[Database]}" -C -I -i /app/sql/MergeMigrationsHistoryScript.sql -o /app/sql/MergeMigrationsHistoryScriptOutput.txt
+do
+  cat /app/sql/MergeMigrationsHistoryScriptOutput.txt
+  echo "Retrying FIAT database migrations history merge ..."
+  sleep 5
+done
+
 echo "Running FIAT database migrations ..."
 until /opt/mssql-tools18/bin/sqlcmd -S "${mssqlconn[Server]}" -U "${mssqlconn[UserId]}" -P "${mssqlconn[Password]}" -d "${mssqlconn[Database]}" -C -I -i /app/sql/FiatDbMigrationScript.sql -o /app/sql/FiatDbMigrationScriptOutput.txt
 do
   cat /app/sql/FiatDbMigrationScriptOutput.txt
   echo "Retrying FIAT database migrations ..."
-  sleep 5
-done
-
-echo "Running FindInformationAcademiesTrusts database migrations ..."
-until /opt/mssql-tools18/bin/sqlcmd -S "${mssqlconn[Server]}" -U "${mssqlconn[UserId]}" -P "${mssqlconn[Password]}" -d "${mssqlconn[Database]}" -C -I -i /app/sql/FindInformationAcademiesTrustsMigrationScript.sql -o /app/sql/FindInformationAcademiesTrustsMigrationScriptOutput.txt
-do
-  cat /app/sql/FindInformationAcademiesTrustsMigrationScriptOutput.txt
-  echo "Retrying FindInformationAcademiesTrusts database migrations ..."
   sleep 5
 done
 
