@@ -12,4 +12,8 @@
       <PackageReference Include="GovUK.Dfe.PersonsApi.Client" Version="0.1.5" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DfE.FindInformationAcademiesTrusts.Domain\DfE.FindInformationAcademiesTrusts.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

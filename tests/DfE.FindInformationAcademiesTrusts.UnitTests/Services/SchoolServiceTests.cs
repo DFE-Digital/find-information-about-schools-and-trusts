@@ -37,8 +37,6 @@ public class SchoolServiceTests
 
         var result = await _sut.GetSchoolSummaryAsync(urn);
         result.Should().Be(cachedResult);
-
-        // await _mockSchoolRepository.DidNotReceive().GetSchoolSummaryAsync(urn);
     }
 
     [Theory]

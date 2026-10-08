@@ -1,5 +1,5 @@
-﻿using DfE.FindInformationAcademiesTrusts.Data.Enums;
-using DfE.FindInformationAcademiesTrusts.Data.FiatDb.Models;
+﻿using DfE.FindInformationAcademiesTrusts.Domain.Enums;
+using DfE.FindInformationAcademiesTrusts.Domain.Entities;
 using DfE.FindInformationAcademiesTrusts.Data.FiatDb.Repositories;
 using FluentAssertions.Execution;
 
@@ -11,7 +11,7 @@ public class ContactRepositoryTests : BaseFiatDbTest
 
     public ContactRepositoryTests(FiatDbContainerFixture fiatDbContainerFixture) : base(fiatDbContainerFixture)
     {
-        _sut = new ContactRepository(FiatDbContext);
+        _sut = new ContactRepository(DbContext);
     }
 
     [Fact]
@@ -29,14 +29,14 @@ public class ContactRepositoryTests : BaseFiatDbTest
     [Fact]
     public async Task GetTrustInternalContactsAsync_should_return_TrustRelationshipManager_when_there_is_no_SfsoLead()
     {
-        FiatDbContext.TrustContacts.Add(new TrustContact
+        DbContext.TrustContacts.Add(new TrustContact
         {
             Email = "trm@testemail.com",
             Name = "Trust Relationship Manager",
             Role = TrustContactRole.TrustRelationshipManager,
             Uid = 1234
         });
-        await FiatDbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync();
 
         var result = await _sut.GetTrustInternalContactsAsync("1234");
 
@@ -53,14 +53,14 @@ public class ContactRepositoryTests : BaseFiatDbTest
     [Fact]
     public async Task GetTrustInternalContactsAsync_should_return_SfsoLead_when_there_is_no_TrustRelationshipManager()
     {
-        FiatDbContext.TrustContacts.Add(new TrustContact
+        DbContext.TrustContacts.Add(new TrustContact
         {
             Email = "sfsolead@testemail.com",
             Name = "SFSO Lead",
             Role = TrustContactRole.SfsoLead,
             Uid = 1234
         });
-        await FiatDbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync();
 
         var result = await _sut.GetTrustInternalContactsAsync("1234");
 
@@ -78,7 +78,7 @@ public class ContactRepositoryTests : BaseFiatDbTest
     public async Task
         GetTrustInternalContactsAsync_should_return_SfsoLead_and_TrustRelationshipManager_when_both_are_present()
     {
-        await FiatDbContext.TrustContacts.AddRangeAsync(
+        await DbContext.TrustContacts.AddRangeAsync(
             new TrustContact
             {
                 Email = "trm@testemail.com",
@@ -94,7 +94,7 @@ public class ContactRepositoryTests : BaseFiatDbTest
                 Uid = 1234
             }
         );
-        await FiatDbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync();
 
         var result = await _sut.GetTrustInternalContactsAsync("1234");
 
@@ -122,9 +122,9 @@ public class ContactRepositoryTests : BaseFiatDbTest
             result.NameUpdated.Should().BeTrue();
             result.EmailUpdated.Should().BeTrue();
 
-            FiatDbContext.ChangeTracker.HasChanges().Should().BeFalse();
+            DbContext.ChangeTracker.HasChanges().Should().BeFalse();
 
-            var contact = FiatDbContext.TrustContacts.Single(c => c.Uid == 1234);
+            var contact = DbContext.TrustContacts.Single(c => c.Uid == 1234);
             contact.Name.Should().Be("New Name");
             contact.Email.Should().Be("new@email.com");
             contact.Role.Should().Be(role);
@@ -144,8 +144,8 @@ public class ContactRepositoryTests : BaseFiatDbTest
             Role = role,
             Uid = 1234
         };
-        FiatDbContext.TrustContacts.Add(contact);
-        await FiatDbContext.SaveChangesAsync();
+        DbContext.TrustContacts.Add(contact);
+        await DbContext.SaveChangesAsync();
 
         var result = await _sut.UpdateTrustInternalContactsAsync(1234, "New Name", "new@email.com", role);
 
@@ -154,7 +154,7 @@ public class ContactRepositoryTests : BaseFiatDbTest
             result.NameUpdated.Should().BeTrue();
             result.EmailUpdated.Should().BeTrue();
 
-            FiatDbContext.ChangeTracker.HasChanges().Should().BeFalse();
+            DbContext.ChangeTracker.HasChanges().Should().BeFalse();
             contact.Name.Should().Be("New Name");
             contact.Email.Should().Be("new@email.com");
         }
@@ -172,8 +172,8 @@ public class ContactRepositoryTests : BaseFiatDbTest
             Role = role,
             Uid = 1234
         };
-        FiatDbContext.TrustContacts.Add(contact);
-        await FiatDbContext.SaveChangesAsync();
+        DbContext.TrustContacts.Add(contact);
+        await DbContext.SaveChangesAsync();
 
         var result =
             await _sut.UpdateTrustInternalContactsAsync(1234, "New Name", contact.Email, role);
@@ -183,7 +183,7 @@ public class ContactRepositoryTests : BaseFiatDbTest
             result.NameUpdated.Should().BeTrue();
             result.EmailUpdated.Should().BeFalse();
 
-            FiatDbContext.ChangeTracker.HasChanges().Should().BeFalse();
+            DbContext.ChangeTracker.HasChanges().Should().BeFalse();
             contact.Name.Should().Be("New Name");
             contact.Email.Should().Be("oldemail@testemail.com");
         }
@@ -201,8 +201,8 @@ public class ContactRepositoryTests : BaseFiatDbTest
             Role = role,
             Uid = 1234
         };
-        FiatDbContext.TrustContacts.Add(contact);
-        await FiatDbContext.SaveChangesAsync();
+        DbContext.TrustContacts.Add(contact);
+        await DbContext.SaveChangesAsync();
 
         var result =
             await _sut.UpdateTrustInternalContactsAsync(1234, contact.Name, "new@email.com", role);
@@ -212,7 +212,7 @@ public class ContactRepositoryTests : BaseFiatDbTest
             result.NameUpdated.Should().BeFalse();
             result.EmailUpdated.Should().BeTrue();
 
-            FiatDbContext.ChangeTracker.HasChanges().Should().BeFalse();
+            DbContext.ChangeTracker.HasChanges().Should().BeFalse();
             contact.Name.Should().Be("Old Name");
             contact.Email.Should().Be("new@email.com");
         }
@@ -228,8 +228,8 @@ public class ContactRepositoryTests : BaseFiatDbTest
             Role = TrustContactRole.SfsoLead,
             Uid = 1234
         };
-        FiatDbContext.TrustContacts.Add(contact);
-        await FiatDbContext.SaveChangesAsync();
+        DbContext.TrustContacts.Add(contact);
+        await DbContext.SaveChangesAsync();
 
         var result =
             await _sut.UpdateTrustInternalContactsAsync(1234, null, null, contact.Role);
@@ -239,7 +239,7 @@ public class ContactRepositoryTests : BaseFiatDbTest
             result.NameUpdated.Should().BeTrue();
             result.EmailUpdated.Should().BeTrue();
 
-            FiatDbContext.ChangeTracker.HasChanges().Should().BeFalse();
+            DbContext.ChangeTracker.HasChanges().Should().BeFalse();
             contact.Name.Should().BeEmpty();
             contact.Email.Should().BeEmpty();
         }
@@ -256,8 +256,8 @@ public class ContactRepositoryTests : BaseFiatDbTest
             result.NameUpdated.Should().BeTrue();
             result.EmailUpdated.Should().BeTrue();
 
-            FiatDbContext.ChangeTracker.HasChanges().Should().BeFalse();
-            var contact = FiatDbContext.TrustContacts.Single(c => c.Uid == 1234);
+            DbContext.ChangeTracker.HasChanges().Should().BeFalse();
+            var contact = DbContext.TrustContacts.Single(c => c.Uid == 1234);
             contact.Name.Should().BeEmpty();
             contact.Email.Should().BeEmpty();
         }
@@ -277,14 +277,14 @@ public class ContactRepositoryTests : BaseFiatDbTest
     [Fact]
     public async Task GetSchoolInternalContactsAsync_should_return_RegionsGroupLocalAuthorityLead_when_available()
     {
-        FiatDbContext.SchoolContacts.Add(new SchoolContact
+        DbContext.SchoolContacts.Add(new SchoolContact
         {
             Email = "regions.group.local.authority.lead@education.gov.uk",
             Name = "Regions Group Local Authority Lead",
             Role = SchoolContactRole.RegionsGroupLocalAuthorityLead,
             Urn = 123456
         });
-        await FiatDbContext.SaveChangesAsync();
+        await DbContext.SaveChangesAsync();
 
         var result = await _sut.GetSchoolInternalContactsAsync(123456);
 
@@ -308,9 +308,9 @@ public class ContactRepositoryTests : BaseFiatDbTest
             result.NameUpdated.Should().BeTrue();
             result.EmailUpdated.Should().BeTrue();
 
-            FiatDbContext.ChangeTracker.HasChanges().Should().BeFalse();
+            DbContext.ChangeTracker.HasChanges().Should().BeFalse();
 
-            var contact = FiatDbContext.SchoolContacts.Single(c => c.Urn == 123456);
+            var contact = DbContext.SchoolContacts.Single(c => c.Urn == 123456);
             contact.Name.Should().Be("New Name");
             contact.Email.Should().Be("new@email.com");
             contact.Role.Should().Be(role);
@@ -329,8 +329,8 @@ public class ContactRepositoryTests : BaseFiatDbTest
             Role = role,
             Urn = 123456
         };
-        FiatDbContext.SchoolContacts.Add(contact);
-        await FiatDbContext.SaveChangesAsync();
+        DbContext.SchoolContacts.Add(contact);
+        await DbContext.SaveChangesAsync();
 
         var result = await _sut.UpdateSchoolInternalContactsAsync(123456, "New Name", "new@email.com", role);
 
@@ -339,7 +339,7 @@ public class ContactRepositoryTests : BaseFiatDbTest
             result.NameUpdated.Should().BeTrue();
             result.EmailUpdated.Should().BeTrue();
 
-            FiatDbContext.ChangeTracker.HasChanges().Should().BeFalse();
+            DbContext.ChangeTracker.HasChanges().Should().BeFalse();
             contact.Name.Should().Be("New Name");
             contact.Email.Should().Be("new@email.com");
         }
@@ -356,8 +356,8 @@ public class ContactRepositoryTests : BaseFiatDbTest
             Role = role,
             Urn = 123456
         };
-        FiatDbContext.SchoolContacts.Add(contact);
-        await FiatDbContext.SaveChangesAsync();
+        DbContext.SchoolContacts.Add(contact);
+        await DbContext.SaveChangesAsync();
 
         var result =
             await _sut.UpdateSchoolInternalContactsAsync(123456, "New Name", contact.Email, role);
@@ -367,7 +367,7 @@ public class ContactRepositoryTests : BaseFiatDbTest
             result.NameUpdated.Should().BeTrue();
             result.EmailUpdated.Should().BeFalse();
 
-            FiatDbContext.ChangeTracker.HasChanges().Should().BeFalse();
+            DbContext.ChangeTracker.HasChanges().Should().BeFalse();
             contact.Name.Should().Be("New Name");
             contact.Email.Should().Be("oldemail@testemail.com");
         }
@@ -384,8 +384,8 @@ public class ContactRepositoryTests : BaseFiatDbTest
             Role = role,
             Urn = 123456
         };
-        FiatDbContext.SchoolContacts.Add(contact);
-        await FiatDbContext.SaveChangesAsync();
+        DbContext.SchoolContacts.Add(contact);
+        await DbContext.SaveChangesAsync();
 
         var result =
             await _sut.UpdateSchoolInternalContactsAsync(123456, contact.Name, "new@email.com", role);
@@ -395,7 +395,7 @@ public class ContactRepositoryTests : BaseFiatDbTest
             result.NameUpdated.Should().BeFalse();
             result.EmailUpdated.Should().BeTrue();
 
-            FiatDbContext.ChangeTracker.HasChanges().Should().BeFalse();
+            DbContext.ChangeTracker.HasChanges().Should().BeFalse();
             contact.Name.Should().Be("Old Name");
             contact.Email.Should().Be("new@email.com");
         }
@@ -411,8 +411,8 @@ public class ContactRepositoryTests : BaseFiatDbTest
             Role = SchoolContactRole.RegionsGroupLocalAuthorityLead,
             Urn = 123456
         };
-        FiatDbContext.SchoolContacts.Add(contact);
-        await FiatDbContext.SaveChangesAsync();
+        DbContext.SchoolContacts.Add(contact);
+        await DbContext.SaveChangesAsync();
 
         var result =
             await _sut.UpdateSchoolInternalContactsAsync(123456, null, null, contact.Role);
@@ -422,7 +422,7 @@ public class ContactRepositoryTests : BaseFiatDbTest
             result.NameUpdated.Should().BeTrue();
             result.EmailUpdated.Should().BeTrue();
 
-            FiatDbContext.ChangeTracker.HasChanges().Should().BeFalse();
+            DbContext.ChangeTracker.HasChanges().Should().BeFalse();
             contact.Name.Should().BeEmpty();
             contact.Email.Should().BeEmpty();
         }
@@ -440,8 +440,8 @@ public class ContactRepositoryTests : BaseFiatDbTest
             result.NameUpdated.Should().BeTrue();
             result.EmailUpdated.Should().BeTrue();
 
-            FiatDbContext.ChangeTracker.HasChanges().Should().BeFalse();
-            var contact = FiatDbContext.SchoolContacts.Single(c => c.Urn == 123456);
+            DbContext.ChangeTracker.HasChanges().Should().BeFalse();
+            var contact = DbContext.SchoolContacts.Single(c => c.Urn == 123456);
             contact.Name.Should().BeEmpty();
             contact.Email.Should().BeEmpty();
         }
