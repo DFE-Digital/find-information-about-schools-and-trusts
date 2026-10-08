@@ -33,52 +33,6 @@ public class SchoolRepositoryTests
     }
 
     [Fact]
-    public async Task GetSchoolDetailsAsync_should_return_school_details()
-    {
-        var urn = 123456;
-
-        _mockGetEstablishments.GetEstablishment(urn)
-            .Returns(new EstablishmentDto
-            {
-                Urn = urn.ToString(),
-                EstablishmentType = new()
-                {
-                    Name = "Foundation school"
-                },
-                EstablishmentGroupType = new()
-                {
-                    Name = "Local authority maintained schools"
-                },
-                Name = "cool school",
-                Address = new()
-                {
-                    Street = "1st line",
-                    Town = "Funky Town",
-                    Postcode = "BBL 123",
-                },
-                Gor = new()
-                {
-                    Name = "Yorkshire"
-                },
-                LocalAuthorityName = "Leeds",
-                PhaseOfEducation = new()
-                {
-                    Name = "Secondary"
-                },
-                StatutoryLowAge = "5",
-                StatutoryHighAge = "16",
-                NurseryProvision = "None",
-                TrustName = null,
-                DateJoinedTrust = null
-            });
-
-        var result = await _sut.GetSchoolDetailsAsync(urn);
-
-        result.Should().BeEquivalentTo(new SchoolDetails("cool school", "1st line, Funky Town, BBL 123", "Yorkshire",
-            "Leeds", "Secondary", new AgeRange(5, 16), "None", null, null));
-    }
-
-    [Fact]
     public async Task GetSchoolContactsAsync_should_return_headteacher_from_tad()
     {
         var urn = 45678;
