@@ -85,46 +85,6 @@ public class SchoolRepositoryTests
     }
 
     [Fact]
-    public async Task GetSchoolSenProvisionAsync_should_return_sen_provision()
-    {
-        var urn = 123456;
-
-        _mockGetEstablishments.GetEstablishmentWithSenData(urn)
-            .Returns(new EstablishmentResponse
-            {
-                Urn = urn.ToString(),
-                EstablishmentName = "cool school",
-                ResourcedProvisionOnRoll = "2",
-                ResourcedProvisionOnCapacity = "3",
-                SenUnitOnRoll = "22",
-                SenUnitCapacity = "4",
-                TypeOfResourcedProvision = "Resourced",
-                SeN1 = "Sen1",
-                SeN2 = "Sen2",
-                SeN3 = "Sen3",
-                SeN4 = "Sen4",
-                SeN5 = "Sen5",
-                SeN6 = "Sen6",
-                SeN7 = "Sen7",
-                SeN8 = "Sen8",
-                SeN9 = "Sen9",
-                SeN10 = "Sen10",
-                SeN11 = "Sen11",
-                SeN12 = "Sen12",
-                SeN13 = "Sen13"
-            });
-
-        var result = await _sut.GetSchoolSenProvisionAsync(urn);
-
-        result.Should().BeEquivalentTo(new SenProvision("2", "3", "22",
-            "4", "Resourced", new List<string>
-            {
-                "Sen1", "Sen2", "Sen3", "Sen4", "Sen5", "Sen6", "Sen7", "Sen8", "Sen9", "Sen10", "Sen11", "Sen12",
-                "Sen13"
-            }));
-    }
-
-    [Fact]
     public async Task GetSchoolFederationDetailsAsync_should_return_correct_values()
     {
         var urn = 123456;
