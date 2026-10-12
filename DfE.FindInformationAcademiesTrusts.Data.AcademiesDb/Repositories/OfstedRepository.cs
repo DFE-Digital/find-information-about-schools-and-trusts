@@ -91,89 +91,120 @@ public class OfstedRepository(
     {
         // First pass at getting ofsted ratings from the db
         var allOfstedRatings = await GetOfstedRatingsForTrustOrSchool(urns);
-
-        // A recently changed URN can be identified when it was not returned, or when
-        // short, current and previous inspection dates are all null. Try the predecessor URN.
-        var missingUrns = urns.Where(urn =>
-                !allOfstedRatings.TryGetValue(urn, out var ratings) ||
-                (ratings.ShortInspection.InspectionDate is null &&
-                 ratings.Current.InspectionDate is null &&
-                 ratings.Previous.InspectionDate is null))
-            .ToArray();
-        if (missingUrns.Length > 0)
-        {
-            var previousUrnMapping = await GetPredecessorUrns(missingUrns);
-
-            if (previousUrnMapping.Count > 0)
-            {
-                var oldOfstedRatings = await GetOfstedRatingsForTrustOrSchool(previousUrnMapping);
-
-                foreach (var (urn, rating) in oldOfstedRatings)
-                {
-                    allOfstedRatings[urn] = rating;
-                }
-            }
-        }
+        await AddPredecessorRatingsForMissingUrns(urns, allOfstedRatings);
 
         // Validate that all the ofsted ratings are found and valid
         foreach (var urn in urns)
         {
-            allOfstedRatings.TryGetValue(urn, out var foundRating);
-
-            // Log any URNs that couldn't be found and default to unknown
-            if (foundRating is null)
-            {
-                logger.LogError(
-                    "URN {Urn} was not found in Mis.Establishments or Mis.FurtherEducationEstablishments. This indicates a data integrity issue with the Ofsted data in Academies Db.",
-                    urn);
-                allOfstedRatings.Add(urn,
-                    new AcademyOfstedRatings(int.Parse(urn), OfstedShortInspection.Unknown, OfstedRating.Unknown,
-                        OfstedRating.Unknown, false));
-                continue;
-            }
-
-            //Log any errors that occured during parsing
-            if (foundRating.Current.HasAnyUnknownRating || foundRating.Previous.HasAnyUnknownRating)
-            {
-                logger.LogError(
-                    "URN {Urn} has some unrecognised ofsted ratings. This could be a data integrity issue with the Ofsted data in Academies Db.",
-                    urn);
-            }
-
-            // Ensure that there are no current single headline grades after policy change on 2nd September 2024 - only applies to non-further ed establishments
-            if (!foundRating.IsFurtherEducationalEstablishment && HasShgIssuedAfterPolicyChange(foundRating.Current))
-            {
-                logger.LogError(
-                    "URN {Urn} has a current Ofsted single headline grade of {score} issued on {InspectionDate} which was after single headline grades stopped being issued on 2nd September. This could be a data integrity issue with the Ofsted data in Academies Db.",
-                    urn, foundRating.Current.OverallEffectiveness, foundRating.Current.InspectionDate);
-
-                allOfstedRatings[urn] = foundRating with
-                {
-                    Current = foundRating.Current with
-                    {
-                        OverallEffectiveness = OfstedRatingScore.SingleHeadlineGradeNotAvailable
-                    }
-                };
-            }
-
-            // Ensure that there are no previous single headline grades after policy change on 2nd September 2024 - only applies to non-further ed establishments
-            if (!foundRating.IsFurtherEducationalEstablishment && HasShgIssuedAfterPolicyChange(foundRating.Previous))
-            {
-                logger.LogError(
-                    "URN {Urn} has a previous Ofsted single headline grade of {score} issued on {InspectionDate} which was after single headline grades stopped being issued on 2nd September. This could be a data integrity issue with the Ofsted data in Academies Db.",
-                    urn, foundRating.Previous.OverallEffectiveness, foundRating.Previous.InspectionDate);
-
-                allOfstedRatings[urn] = foundRating with
-                {
-                    Previous = foundRating.Previous with
-                    {
-                        OverallEffectiveness = OfstedRatingScore.SingleHeadlineGradeNotAvailable
-                    }
-                };
-            }
+            ValidateOfstedRating(urn, allOfstedRatings);
         }
 
         return allOfstedRatings;
+    }
+
+    /// <summary>
+    /// A recently changed URN can be identified when it was not returned, or when
+    /// short, current and previous inspection dates are all null. Try the predecessor URN.
+    /// </summary>
+    private async Task AddPredecessorRatingsForMissingUrns(string[] urns,
+        Dictionary<string, AcademyOfstedRatings> allOfstedRatings)
+    {
+        var missingUrns = urns.Where(urn => IsMissingOfstedData(allOfstedRatings, urn)).ToArray();
+        if (missingUrns.Length == 0)
+        {
+            return;
+        }
+
+        var previousUrnMapping = await GetPredecessorUrns(missingUrns);
+        if (previousUrnMapping.Count == 0)
+        {
+            return;
+        }
+
+        var oldOfstedRatings = await GetOfstedRatingsForTrustOrSchool(previousUrnMapping);
+        foreach (var (urn, rating) in oldOfstedRatings)
+        {
+            allOfstedRatings[urn] = rating;
+        }
+    }
+
+    private static bool IsMissingOfstedData(Dictionary<string, AcademyOfstedRatings> allOfstedRatings, string urn)
+    {
+        return !allOfstedRatings.TryGetValue(urn, out var ratings) || HasNoInspectionDates(ratings);
+    }
+
+    private static bool HasNoInspectionDates(AcademyOfstedRatings ratings)
+    {
+        return ratings.ShortInspection.InspectionDate is null
+               && ratings.Current.InspectionDate is null
+               && ratings.Previous.InspectionDate is null;
+    }
+
+    private void ValidateOfstedRating(string urn, Dictionary<string, AcademyOfstedRatings> allOfstedRatings)
+    {
+        // Log any URNs that couldn't be found and default to unknown
+        if (!allOfstedRatings.TryGetValue(urn, out var foundRating))
+        {
+            logger.LogError(
+                "URN {Urn} was not found in Mis.Establishments or Mis.FurtherEducationEstablishments. This indicates a data integrity issue with the Ofsted data in Academies Db.",
+                urn);
+            allOfstedRatings.Add(urn,
+                new AcademyOfstedRatings(int.Parse(urn), OfstedShortInspection.Unknown, OfstedRating.Unknown,
+                    OfstedRating.Unknown, false));
+            return;
+        }
+
+        //Log any errors that occured during parsing
+        if (foundRating.Current.HasAnyUnknownRating || foundRating.Previous.HasAnyUnknownRating)
+        {
+            logger.LogError(
+                "URN {Urn} has some unrecognised ofsted ratings. This could be a data integrity issue with the Ofsted data in Academies Db.",
+                urn);
+        }
+
+        ReplaceSingleHeadlineGradesIssuedAfterPolicyChange(urn, foundRating, allOfstedRatings);
+    }
+
+    private void ReplaceSingleHeadlineGradesIssuedAfterPolicyChange(string urn, AcademyOfstedRatings foundRating,
+        Dictionary<string, AcademyOfstedRatings> allOfstedRatings)
+    {
+        // Single headline grade checks only apply to non-further education establishments
+        if (foundRating.IsFurtherEducationalEstablishment)
+        {
+            return;
+        }
+
+        // Ensure that there are no current single headline grades after policy change on 2nd September 2024
+        if (HasShgIssuedAfterPolicyChange(foundRating.Current))
+        {
+            logger.LogError(
+                "URN {Urn} has a current Ofsted single headline grade of {score} issued on {InspectionDate} which was after single headline grades stopped being issued on 2nd September. This could be a data integrity issue with the Ofsted data in Academies Db.",
+                urn, foundRating.Current.OverallEffectiveness, foundRating.Current.InspectionDate);
+
+            allOfstedRatings[urn] = foundRating with
+            {
+                Current = foundRating.Current with
+                {
+                    OverallEffectiveness = OfstedRatingScore.SingleHeadlineGradeNotAvailable
+                }
+            };
+        }
+
+        // Ensure that there are no previous single headline grades after policy change on 2nd September 2024
+        if (HasShgIssuedAfterPolicyChange(foundRating.Previous))
+        {
+            logger.LogError(
+                "URN {Urn} has a previous Ofsted single headline grade of {score} issued on {InspectionDate} which was after single headline grades stopped being issued on 2nd September. This could be a data integrity issue with the Ofsted data in Academies Db.",
+                urn, foundRating.Previous.OverallEffectiveness, foundRating.Previous.InspectionDate);
+
+            allOfstedRatings[urn] = foundRating with
+            {
+                Previous = foundRating.Previous with
+                {
+                    OverallEffectiveness = OfstedRatingScore.SingleHeadlineGradeNotAvailable
+                }
+            };
+        }
     }
 
     /// <summary>
