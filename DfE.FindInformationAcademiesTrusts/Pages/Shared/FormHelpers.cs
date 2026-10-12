@@ -1,32 +1,22 @@
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-
 namespace DfE.FindInformationAcademiesTrusts.Pages.Shared;
 
 public static class FormHelpers
 {
-    public static string GetErrorClass(this BasePageModel model, string key) => model.ModelState.GetErrorClass(key);
-
-    public static string GenerateErrorAriaDescribedBy(this BasePageModel model, string key) =>
-        model.ModelState.GenerateErrorAriaDescribedBy(key);
-
-    public static (int index, string errorMessage)[] GetErrorList(this BasePageModel model, string key) =>
-        model.ModelState.GetErrorList(key);
-
-    public static string GetErrorClass(this ModelStateDictionary modelState, string key)
+    public static string GetErrorClass(this BasePageModel model, string key)
     {
-        return modelState.ContainsKey(key) && modelState[key]!.Errors.Any() ? "govuk-form-group--error" : string.Empty;
+        return model.ModelState.ContainsKey(key) && model.ModelState[key]!.Errors.Any() ? "govuk-form-group--error" : string.Empty;
     }
 
-    public static string GenerateErrorAriaDescribedBy(this ModelStateDictionary modelState, string key)
+    public static string GenerateErrorAriaDescribedBy(this BasePageModel model, string key)
     {
-        return string.Join(" ", modelState.GetErrorList(key).Select(value => $"error-{key}-{value.index}"));
+        return string.Join(" ", Enumerable.Select<(int index, string errorMessage), string>(model.GetErrorList(key), value => $"error-{key}-{value.index}"));
     }
 
-    public static (int index, string errorMessage)[] GetErrorList(this ModelStateDictionary modelState, string key)
+    public static (int index, string errorMessage)[] GetErrorList(this BasePageModel model, string key)
     {
-        if (modelState.ContainsKey(key))
+        if (model.ModelState.ContainsKey(key))
         {
-            return modelState[key]!.Errors.Select((error, index) => (index, error.ErrorMessage)).ToArray();
+            return model.ModelState[key]!.Errors.Select((error, index) => (index, error.ErrorMessage)).ToArray();
         }
 
         return [];

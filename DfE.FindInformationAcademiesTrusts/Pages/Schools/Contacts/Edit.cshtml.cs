@@ -5,7 +5,6 @@ using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
-using DfE.FindInformationAcademiesTrusts.Pages.Shared.Contact;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.NavMenu;
 using DfE.FindInformationAcademiesTrusts.Services.School;
@@ -17,7 +16,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 
-public class EditModel(IMediator mediator, ISchoolService schoolService) : BasePageModel, ISchoolAreaModel, IEditContactForm
+public class EditModel(IMediator mediator, ISchoolService schoolService) : BasePageModel, ISchoolAreaModel
 {
     [BindProperty(SupportsGet = true)] public int Urn { get; set; }
 
@@ -37,10 +36,6 @@ public class EditModel(IMediator mediator, ISchoolService schoolService) : BaseP
     public string RoleName => Role.MapRoleToViewString();
 
     [TempData] public string ContactUpdatedMessage { get; set; } = string.Empty;
-
-    public string CancelPage => "/Schools/Contacts/InDfe";
-
-    public Dictionary<string, string> CancelRouteValues => new() { { "urn", Urn.ToString() } };
 
     public SchoolSummaryServiceModel SchoolSummary { get; set; } = null!;
     public string SchoolName => SchoolSummary.Name;
@@ -76,7 +71,7 @@ public class EditModel(IMediator mediator, ISchoolService schoolService) : BaseP
 
         ContactUpdatedMessage = result.ToMessage(RoleName);
 
-        return RedirectToPage(CancelPage, new { Urn });
+        return RedirectToPage("/Schools/Contacts/InDfe", new { Urn });
     }
 
     private async Task<bool> LoadSchoolAsync()
