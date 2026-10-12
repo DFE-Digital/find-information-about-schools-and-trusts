@@ -51,7 +51,7 @@ public class SchoolOfstedServiceModelTests
     {
         var sut = _sut with
         {
-            DateAcademyJoinedTrust = null, CurrentOfstedRating = new OfstedRating(1, _joinDate.AddYears(1))
+            DateEstablishmentJoinedGroup = null, CurrentOfstedRating = new OfstedRating(1, _joinDate.AddYears(1))
         };
 
         sut.WhenDidCurrentInspectionHappen.Should().Be(BeforeOrAfterJoining.NotApplicable);
@@ -92,7 +92,7 @@ public class SchoolOfstedServiceModelTests
     {
         var sut = _sut with
         {
-            DateAcademyJoinedTrust = null, PreviousOfstedRating = new OfstedRating(1, _joinDate.AddYears(1))
+            DateEstablishmentJoinedGroup = null, PreviousOfstedRating = new OfstedRating(1, _joinDate.AddYears(1))
         };
 
         sut.WhenDidPreviousInspectionHappen.Should().Be(BeforeOrAfterJoining.NotApplicable);
