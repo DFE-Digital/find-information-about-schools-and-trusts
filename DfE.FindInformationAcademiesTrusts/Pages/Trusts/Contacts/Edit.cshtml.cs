@@ -4,6 +4,7 @@ using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Queries;
 using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
+using DfE.FindInformationAcademiesTrusts.Pages.Shared.Contact;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using DfE.FindInformationAcademiesTrusts.Validation;
@@ -14,7 +15,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Contacts;
 
 public class EditModel(IMediator mediator, IDataSourceService dataSourceService, ITrustService trustService)
-    : TrustsAreaModel(dataSourceService, trustService)
+    : TrustsAreaModel(dataSourceService, trustService), IEditContactForm
 {
     [BindProperty(SupportsGet = true)] public TrustContactRole Role { get; set; }
 
@@ -32,6 +33,11 @@ public class EditModel(IMediator mediator, IDataSourceService dataSourceService,
     public string RoleName => Role.MapRoleToViewString();
 
     [TempData] public string ContactUpdatedMessage { get; set; } = string.Empty;
+
+    public string CancelPage => "/Trusts/Contacts/InDfe";
+
+    public Dictionary<string, string> CancelRouteValues =>
+        new() { { "uid", Uid }, { "referencenumber", ReferenceNumber } };
 
     public override PageMetadata PageMetadata =>
         base.PageMetadata with { PageName = InDfeModel.PageName, SubPageName = $"Edit {RoleName} details" };
@@ -63,6 +69,6 @@ public class EditModel(IMediator mediator, IDataSourceService dataSourceService,
 
         ContactUpdatedMessage = result.ToMessage(RoleName);
 
-        return RedirectToPage("/Trusts/Contacts/InDfe", new { Uid, ReferenceNumber });
+        return RedirectToPage(CancelPage, new { Uid, ReferenceNumber });
     }
 }
