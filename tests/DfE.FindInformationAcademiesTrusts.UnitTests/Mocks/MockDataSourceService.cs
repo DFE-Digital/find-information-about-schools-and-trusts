@@ -1,5 +1,4 @@
 ﻿using DfE.FindInformationAcademiesTrusts.Data.Enums;
-using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
@@ -20,14 +19,6 @@ public static class MockDataSourceService
                 var source = (Source)args[0];
                 return Task.FromResult(GetDummyDataSource(source));
             });
-
-        mockDataSourceService
-            .GetSchoolContactDataSourceAsync(Arg.Any<int>(), Arg.Any<SchoolContactRole>())
-            .Returns(Fiat);
-
-        mockDataSourceService
-            .GetTrustContactDataSourceAsync(Arg.Any<int>(), Arg.Any<TrustContactRole>())
-            .Returns(Fiat);
 
         return mockDataSourceService;
     }

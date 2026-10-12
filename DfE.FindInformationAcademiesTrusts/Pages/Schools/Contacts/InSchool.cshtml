@@ -19,8 +19,7 @@
                     Head teacher
                 </h3>
             </div>
-            <partial name="Contact/_DisplayContact" model="Model.HeadTeacher"
-                view-data='new ViewDataDictionary(ViewData) { { "contactType", "head-teacher" } }' />
+            <partial name="/Pages/Contacts/_ContactDetails.cshtml" model="(Model.HeadTeacher.Name, Model.HeadTeacher.Email)"/>
         </div>
         <hr class="govuk-section-break govuk-section-break--m" data-testid="contacts-section-divider">
     </div>

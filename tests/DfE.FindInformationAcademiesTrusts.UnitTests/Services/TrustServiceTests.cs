@@ -1,10 +1,8 @@
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Domain.Enums;
-using DfE.FindInformationAcademiesTrusts.Data.FiatDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
-using DfE.FindInformationAcademiesTrusts.Data.Repositories.Contacts;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
@@ -30,7 +28,6 @@ public class TrustServiceTests
     private readonly ITrustGovernanceRepository _mockTrustGovernanceRepository =
         Substitute.For<ITrustGovernanceRepository>();
 
-    private readonly IContactRepository _mockContactRepository = Substitute.For<IContactRepository>();
     private readonly ITrustPupilService _mockTrustPupilService = Substitute.For<ITrustPupilService>();
     private readonly IDateTimeProvider _mockDateTimeProvider = Substitute.For<IDateTimeProvider>();
     private readonly MockMemoryCache _mockMemoryCache = new();
@@ -40,7 +37,6 @@ public class TrustServiceTests
         _sut = new TrustService(_mockAcademyRepository,
             _mockTrustRepository,
             _mockTrustGovernanceRepository,
-            _mockContactRepository,
             _mockTrustPupilService,
             _mockMemoryCache.Object,
             _mockDateTimeProvider);
@@ -177,11 +173,6 @@ public class TrustServiceTests
         var person = new Person("First Middle Last", "firstlast@email.com");
         var contacts = new TrustContacts(person, person, person);
         _mockTrustRepository.GetTrustContactsAsync("1234").Returns(contacts);
-        
-        var internalContact =
-            new InternalContact("First Middle Last", "firstlast@email.com", DateTime.Today, "Test@email.com");
-        var internalContacts = new TrustInternalContacts(internalContact, internalContact);
-        _mockContactRepository.GetTrustInternalContactsAsync("1234").Returns(internalContacts);
 
         var result = await _sut.GetTrustContactsAsync("1234", "TR5678");
 
@@ -195,11 +186,6 @@ public class TrustServiceTests
         var person = new Person("First Middle Last", "firstlast@email.com");
         var contacts = new TrustContacts(person, person, person);
         _mockTrustRepository.GetTrustContactsAsync("1234").Returns(contacts);
-        
-        var internalContact =
-            new InternalContact("First Middle Last", "firstlast@email.com", DateTime.Today, "Test@email.com");
-        var internalContacts = new TrustInternalContacts(internalContact, internalContact);
-        _mockContactRepository.GetTrustInternalContactsAsync("1234").Returns(internalContacts);
 
         var result = await _sut.GetTrustContactsAsync("1234", "TR5678");
 
@@ -364,21 +350,6 @@ public class TrustServiceTests
         result.HasIncompleteCapacityData.Should().BeTrue();
     }
 
-    [Theory]
-    [InlineData(true, true)]
-    [InlineData(true, false)]
-    [InlineData(false, true)]
-    [InlineData(false, false)]
-    public async Task UpdateContactsAsync_returns_the_correct_values_changed(bool emailUpdated, bool nameUpdated)
-    {
-        var expected = new InternalContactUpdated(emailUpdated, nameUpdated);
-        _mockContactRepository.UpdateTrustInternalContactsAsync(1234, "Name", "Email", TrustContactRole.SfsoLead)
-            .Returns(expected);
-        var result = await _sut.UpdateContactAsync(1234, "Name", "Email", TrustContactRole.SfsoLead);
-
-        result.Should().BeEquivalentTo(expected);
-    }
-    
     [Fact]
     public async Task GetTrustSummaryAsync_should_return_null_if_trust_uid_is_null()
     {

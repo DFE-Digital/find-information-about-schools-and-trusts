@@ -1,15 +1,41 @@
+using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Queries;
+using DfE.FindInformationAcademiesTrusts.Data;
+using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Trusts.Contacts;
 
-public class InTrustModel(
-    IDataSourceService dataSourceService,
-    ITrustService trustService)
-    : ContactsAreaModel(dataSourceService, trustService)
+public class InTrustModel(IMediator mediator, IDataSourceService dataSourceService, ITrustService trustService)
+    : TrustsAreaModel(dataSourceService, trustService)
 {
     public const string SubPageName = "In this trust";
 
-    public override PageMetadata PageMetadata => base.PageMetadata with { SubPageName = SubPageName };
+    public override PageMetadata PageMetadata =>
+        base.PageMetadata with { PageName = InDfeModel.PageName, SubPageName = SubPageName };
+
+    public Person? AccountingOfficer { get; set; }
+    public Person? ChairOfTrustees { get; set; }
+    public Person? ChiefFinancialOfficer { get; set; }
+
+    public override async Task<IActionResult> OnGetAsync()
+    {
+        var pageResult = await base.OnGetAsync();
+        if (pageResult is NotFoundResult) return pageResult;
+
+        (AccountingOfficer, ChairOfTrustees, ChiefFinancialOfficer) =
+            await TrustService.GetTrustContactsAsync(Uid, ReferenceNumber);
+
+        var uid = int.Parse(Uid);
+        var trustRelationshipManager =
+            await mediator.Send(new GetTrustContactQuery(uid, TrustContactRole.TrustRelationshipManager));
+        var sfsoLead = await mediator.Send(new GetTrustContactQuery(uid, TrustContactRole.SfsoLead));
+
+        DataSourcesPerPage = await ContactsDataSources.GetAsync(DataSourceService, trustRelationshipManager, sfsoLead);
+
+        return pageResult;
+    }
 }

@@ -1,25 +1,51 @@
-using DfE.FindInformationAcademiesTrusts.Data;
+using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Models;
+using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Queries;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
-using DfE.FindInformationAcademiesTrusts.Services.School;
+using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.FeatureManagement;
 using NSubstitute.ReturnsExtensions;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Contacts;
 
-public class InSchoolModelTests : BaseContactsAreaModelTests<InSchoolModel>
+public class InSchoolModelTests : BaseSchoolPageTests<InSchoolModel>
 {
-    private readonly ISchoolContactsService _mockSchoolContactsService = Substitute.For<ISchoolContactsService>();
+    private readonly IMediator _mockMediator = Substitute.For<IMediator>();
+    private readonly ISchoolRepository _mockSchoolRepository = Substitute.For<ISchoolRepository>();
+    private readonly IVariantFeatureManager _mockFeatureManager = Substitute.For<IVariantFeatureManager>();
 
-    private readonly Person _dummyInSchoolContacts = new("Aaron Aaronson", "aa@someschool.com");
+    private readonly SchoolContact _dummyHeadTeacher = new("Aaron Aaronson", "aa@someschool.com");
 
     public InSchoolModelTests()
     {
-        _mockSchoolContactsService.GetInSchoolContactsAsync(Arg.Any<int>()).Returns(_dummyInSchoolContacts);
+        _mockSchoolRepository.GetSchoolContactsAsync(Arg.Any<int>()).Returns(_dummyHeadTeacher);
+        _mockMediator.Send(Arg.Any<GetSchoolDfeContactsQuery>()).Returns(new SchoolDfeContacts(null, null, null));
 
-        Sut = new InSchoolModel(MockSchoolService, MockTrustService, _mockSchoolContactsService, MockDataSourceService,
-                MockSchoolNavMenu, MockFeatureManager)
-        { Urn = SchoolUrn };
+        Sut = new InSchoolModel(_mockMediator, _mockSchoolRepository, MockDataSourceService, _mockFeatureManager,
+                MockSchoolService, MockTrustService, MockSchoolNavMenu)
+            { Urn = SchoolUrn };
+    }
+
+    [Fact]
+    public override async Task OnGetAsync_should_configure_PageMetadata_PageName()
+    {
+        await Sut.OnGetAsync();
+
+        Sut.PageMetadata.PageName.Should().Be("Contacts");
+    }
+
+    [Fact]
+    public override async Task OnGetAsync_sets_correct_data_source_list()
+    {
+        await Sut.OnGetAsync();
+
+        Sut.DataSourcesPerPage.Should().BeEquivalentTo([
+            new DataSourcePageListEntry("In this school",
+                [new DataSourceListEntry(Mocks.MockDataSourceService.Gias, "Head teacher name")])
+        ]);
     }
 
     public override async Task OnGetAsync_should_configure_PageMetadata_SubPageName()
@@ -81,13 +107,13 @@ public class InSchoolModelTests : BaseContactsAreaModelTests<InSchoolModel>
     {
         await Sut.OnGetAsync();
 
-        Sut.HeadTeacher.Should().Be(_dummyInSchoolContacts);
+        Sut.HeadTeacher.Should().Be(_dummyHeadTeacher);
     }
 
     [Fact]
     public async Task OnGetAsync_IfContactsIsNull_ShouldReturnNotFound()
     {
-        _mockSchoolContactsService.GetInSchoolContactsAsync(Arg.Any<int>()).ReturnsNull();
+        _mockSchoolRepository.GetSchoolContactsAsync(Arg.Any<int>()).ReturnsNull();
 
         var response = await Sut.OnGetAsync();
         response.Should().BeOfType<NotFoundResult>();

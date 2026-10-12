@@ -18,7 +18,7 @@
             Accounting officer
           </h3>
         </div>
-        <partial name="Shared/Contact/_DisplayContact" model="Model.AccountingOfficer"/>
+        <partial name="/Pages/Contacts/_ContactDetails.cshtml" model="(Model.AccountingOfficer?.FullName, Model.AccountingOfficer?.Email)"/>
       </div>
       <div class="govuk-summary-card" data-testid="chair-of-trustees">
         <div class="govuk-summary-card__title-wrapper">
@@ -26,7 +26,7 @@
             Chair of trustees
           </h3>
         </div>
-        <partial name="Shared/Contact/_DisplayContact" model="Model.ChairOfTrustees"/>
+        <partial name="/Pages/Contacts/_ContactDetails.cshtml" model="(Model.ChairOfTrustees?.FullName, Model.ChairOfTrustees?.Email)"/>
       </div>
       <div class="govuk-summary-card" data-testid="chief-financial-officer">
         <div class="govuk-summary-card__title-wrapper">
@@ -34,7 +34,7 @@
             Chief financial officer
           </h3>
         </div>
-        <partial name="Shared/Contact/_DisplayContact" model="Model.ChiefFinancialOfficer"/>
+        <partial name="/Pages/Contacts/_ContactDetails.cshtml" model="(Model.ChiefFinancialOfficer?.FullName, Model.ChiefFinancialOfficer?.Email)"/>
       </div>
     </section>
   </div>

@@ -1,6 +1,6 @@
 namespace DfE.FindInformationAcademiesTrusts.Domain.Common;
 
-public class BaseEntity
+public class BaseEntity : BaseAggregateRoot
 {
     public string LastModifiedByName { get; set; } = null!;
     public string LastModifiedByEmail { get; set; } = null!;
