@@ -186,7 +186,7 @@ public class OfstedRepositoryTests
 
         result.Select(a => a.EstablishmentName).Should()
             .BeEquivalentTo(name, anotherName);
-        result.Select(a => a.DateAcademyJoinedTrust)
+        result.Select(a => a.DateEstablishmentJoinedGroup)
             .Should()
             .BeEquivalentTo([
                 new DateTime(2022, 01, 01),
@@ -627,76 +627,6 @@ public class OfstedRepositoryTests
     }
 
     [Fact]
-    public async Task
-        GetOfstedShortInspectionAsync_when_no_establishment_with_urn_exists_then_returns_Unknown_ShortInspection()
-    {
-        var result = await _sut.GetOfstedShortInspectionAsync(123456);
-
-        result.Should().BeEquivalentTo(OfstedShortInspection.Unknown);
-    }
-
-    [Fact]
-    public async Task
-        GetOfstedShortInspectionAsync_when_establishment_exists_then_returns_ShortInspection_with_correct_data()
-    {
-        _mockAcademiesDbContext.MisMstrEstablishmentFiat.AddRange([
-            new MisMstrEstablishmentFiat
-            {
-                Urn = 123456,
-                DateOfLatestSection8Inspection = "01/01/2025",
-                Section8InspectionOverallOutcome = "School remains Good"
-            },
-            new MisMstrEstablishmentFiat
-            {
-                Urn = 987654,
-                DateOfLatestSection8Inspection = "06/06/2023",
-                Section8InspectionOverallOutcome = "School remains Outstanding"
-            }
-        ]);
-
-        var result = await _sut.GetOfstedShortInspectionAsync(123456);
-
-        result.InspectionDate.Should().Be(new DateTime(2025, 1, 1));
-        result.InspectionOutcome.Should().Be("School remains Good");
-    }
-
-    [Fact]
-    public async Task
-        GetOfstedShortInspectionAsync_when_inspection_date_is_missing_then_ShortInspection_has_null_InspectionDate()
-    {
-        _mockAcademiesDbContext.MisMstrEstablishmentFiat.AddRange([
-            new MisMstrEstablishmentFiat
-            {
-                Urn = 123456,
-                DateOfLatestSection8Inspection = null,
-                Section8InspectionOverallOutcome = "School remains Outstanding"
-            }
-        ]);
-
-        var result = await _sut.GetOfstedShortInspectionAsync(123456);
-
-        result.InspectionDate.Should().BeNull();
-    }
-
-    [Fact]
-    public async Task
-        GetOfstedShortInspectionAsync_when_inspection_outcome_is_missing_then_ShortInspection_has_null_InspectionOutcome()
-    {
-        _mockAcademiesDbContext.MisMstrEstablishmentFiat.AddRange([
-            new MisMstrEstablishmentFiat
-            {
-                Urn = 123456,
-                DateOfLatestSection8Inspection = "01/01/2025",
-                Section8InspectionOverallOutcome = null
-            }
-        ]);
-
-        var result = await _sut.GetOfstedShortInspectionAsync(123456);
-
-        result.InspectionOutcome.Should().BeNull();
-    }
-
-    [Fact]
     public async Task GetSchoolOfstedRatingsAsync_should_set_establishment_name_and_joined_date_from_gias_group_link()
     {
         const int urn = 987654;
@@ -708,7 +638,7 @@ public class OfstedRepositoryTests
 
         result.Urn.Should().Be(urn.ToString());
         result.EstablishmentName.Should().Be("Test School");
-        result.DateAcademyJoinedTrust.Should().Be(new DateTime(2023, 6, 13));
+        result.DateEstablishmentJoinedGroup.Should().Be(new DateTime(2023, 6, 13));
         await _mockGetEstablishments.Received(1).GetEstablishment(urn);
     }
 
@@ -721,7 +651,7 @@ public class OfstedRepositoryTests
 
         var result = await _sut.GetSchoolOfstedRatingsAsync(urn);
 
-        result.DateAcademyJoinedTrust.Should().BeNull();
+        result.DateEstablishmentJoinedGroup.Should().BeNull();
     }
 
     [Fact]
@@ -734,6 +664,6 @@ public class OfstedRepositoryTests
 
         var result = await _sut.GetSchoolOfstedRatingsAsync(urn);
 
-        result.DateAcademyJoinedTrust.Should().BeNull();
+        result.DateEstablishmentJoinedGroup.Should().BeNull();
     }
 }

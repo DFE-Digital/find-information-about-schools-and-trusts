@@ -58,13 +58,6 @@ public class OfstedRepository(
         return new OfstedInspectionHistorySummary(currentFullInspection, previousFullInspection);
     }
 
-    public async Task<OfstedShortInspection> GetOfstedShortInspectionAsync(int urn)
-    {
-        return await academiesDbContext.MisMstrEstablishmentsFiat.Where(est => est.Urn == urn).Select(est =>
-            new OfstedShortInspection(est.DateOfLatestSection8Inspection.ParseAsNullableDate(),
-                est.Section8InspectionOverallOutcome)).FirstOrDefaultAsync() ?? OfstedShortInspection.Unknown;
-    }
-
     public async Task<SchoolOfsted> GetSchoolOfstedRatingsAsync(int urn)
     {
         var urnString = urn.ToString();
@@ -73,7 +66,7 @@ public class OfstedRepository(
         var ofstedRatings = result[urnString];
 
         var schoolDetails = await getEstablishments.GetEstablishment(urn);
-        
+
         // temporary fix to get joined date for foundations and federations as well as academies
         var giasGroupLink = await academiesDbContext.GiasGroupLinks
             .Where(gl => gl.Urn == urnString)
@@ -82,7 +75,7 @@ public class OfstedRepository(
                 gl.JoinedDate
             })
             .FirstOrDefaultAsync();
-        
+
         return new SchoolOfsted(
             urnString,
             schoolDetails.Name,
@@ -111,11 +104,14 @@ public class OfstedRepository(
         {
             var previousUrnMapping = await GetPredecessorUrns(missingUrns);
 
-            var oldOfstedRatings = await GetOfstedRatingsForTrustOrSchool(previousUrnMapping);
-
-            foreach (var (urn, rating) in oldOfstedRatings)
+            if (previousUrnMapping.Count > 0)
             {
-                allOfstedRatings[urn] = rating;
+                var oldOfstedRatings = await GetOfstedRatingsForTrustOrSchool(previousUrnMapping);
+
+                foreach (var (urn, rating) in oldOfstedRatings)
+                {
+                    allOfstedRatings[urn] = rating;
+                }
             }
         }
 
