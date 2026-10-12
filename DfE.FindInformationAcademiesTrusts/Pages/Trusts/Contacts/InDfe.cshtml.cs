@@ -1,7 +1,10 @@
 using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Queries;
+using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Domain.Entities;
 using DfE.FindInformationAcademiesTrusts.Domain.Enums;
+using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
+using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using MediatR;
@@ -31,7 +34,30 @@ public class InDfeModel(IMediator mediator, IDataSourceService dataSourceService
             await mediator.Send(new GetTrustContactQuery(uid, TrustContactRole.TrustRelationshipManager));
         SfsoLead = await mediator.Send(new GetTrustContactQuery(uid, TrustContactRole.SfsoLead));
 
-        DataSourcesPerPage = await ContactsDataSources.GetAsync(DataSourceService, TrustRelationshipManager, SfsoLead);
+        var giasDataSource = await DataSourceService.GetAsync(Source.Gias);
+        var mstrDataSource = await DataSourceService.GetAsync(Source.Mstr);
+
+        DataSourcesPerPage =
+        [
+            new DataSourcePageListEntry(SubPageName, [
+                new DataSourceListEntry(
+                    new DataSourceServiceModel(Source.FiatDb, TrustRelationshipManager?.LastModifiedAtTime, null,
+                        TrustRelationshipManager?.LastModifiedByEmail),
+                    TrustContactRole.TrustRelationshipManager.MapRoleToViewString()),
+                new DataSourceListEntry(
+                    new DataSourceServiceModel(Source.FiatDb, SfsoLead?.LastModifiedAtTime, null,
+                        SfsoLead?.LastModifiedByEmail),
+                    TrustContactRole.SfsoLead.MapRoleToViewString())
+            ]),
+            new DataSourcePageListEntry(InTrustModel.SubPageName, [
+                new DataSourceListEntry(giasDataSource, "Accounting officer name"),
+                new DataSourceListEntry(giasDataSource, "Chief financial officer name"),
+                new DataSourceListEntry(giasDataSource, "Chair of trustees name"),
+                new DataSourceListEntry(mstrDataSource, "Accounting officer email"),
+                new DataSourceListEntry(mstrDataSource, "Chief financial officer email"),
+                new DataSourceListEntry(mstrDataSource, "Chair of trustees email")
+            ])
+        ];
 
         return pageResult;
     }

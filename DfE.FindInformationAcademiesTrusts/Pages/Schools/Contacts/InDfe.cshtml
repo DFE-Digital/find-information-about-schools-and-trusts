@@ -46,7 +46,7 @@
                            asp-route-urn="@Model.Urn">Change<span class="govuk-visually-hidden"> details of this contact (@SchoolContactRole.RegionsGroupLocalAuthorityLead.MapRoleToViewString())</span></a>
                     </div>
                 </div>
-                <partial name="/Pages/Contacts/_ContactDetails.cshtml" model="(Model.Contacts.RegionsGroupLocalAuthorityLead?.Name, Model.Contacts.RegionsGroupLocalAuthorityLead?.Email)"/>
+                <partial name="Contact/_DisplayContact" model="(Model.Contacts.RegionsGroupLocalAuthorityLead?.Name, Model.Contacts.RegionsGroupLocalAuthorityLead?.Email)"/>
             </div>
         }
 
@@ -58,7 +58,7 @@
                         Trust relationship manager
                     </h3>
                 </div>
-                <partial name="/Pages/Contacts/_ContactDetails.cshtml" model="(Model.Contacts.TrustRelationshipManager?.Name, Model.Contacts.TrustRelationshipManager?.Email)"/>
+                <partial name="Contact/_DisplayContact" model="(Model.Contacts.TrustRelationshipManager?.Name, Model.Contacts.TrustRelationshipManager?.Email)"/>
             </div>
 
             <div class="govuk-summary-card" data-testid="contact-card-sfso-lead">
@@ -67,7 +67,7 @@
                         SFSO (Schools Financial Support and Oversight) lead
                     </h3>
                 </div>
-                <partial name="/Pages/Contacts/_ContactDetails.cshtml" model="(Model.Contacts.SfsoLead?.Name, Model.Contacts.SfsoLead?.Email)"/>
+                <partial name="Contact/_DisplayContact" model="(Model.Contacts.SfsoLead?.Name, Model.Contacts.SfsoLead?.Email)"/>
             </div>
 
             <div class="govuk-inset-text">

@@ -16,13 +16,14 @@ public class InDfeModelTests : BaseTrustPageTests<InDfeModel>, ITestSubpages
     private readonly TrustContact _trustRelationshipManager = new()
     {
         Uid = 1234, Role = TrustContactRole.TrustRelationshipManager, Name = "Trust Relationship Manager",
-        Email = "trm@test.com", LastModifiedAtTime = new DateTime(2025, 01, 20), LastModifiedByEmail = "test@email.com"
+        Email = "trm@education.gov.uk", LastModifiedAtTime = new DateTime(2025, 1, 20),
+        LastModifiedByEmail = "editor.one@education.gov.uk"
     };
 
     private readonly TrustContact _sfsoLead = new()
     {
-        Uid = 1234, Role = TrustContactRole.SfsoLead, Name = "SFSO Lead", Email = "sfsol@test.com",
-        LastModifiedAtTime = new DateTime(2024, 02, 21), LastModifiedByEmail = "test2@email.com"
+        Uid = 1234, Role = TrustContactRole.SfsoLead, Name = "SFSO Lead", Email = "sfso@education.gov.uk",
+        LastModifiedAtTime = new DateTime(2024, 2, 21), LastModifiedByEmail = "editor.two@education.gov.uk"
     };
 
     public InDfeModelTests()
@@ -30,17 +31,18 @@ public class InDfeModelTests : BaseTrustPageTests<InDfeModel>, ITestSubpages
         Sut = new InDfeModel(_mockMediator, MockDataSourceService, MockTrustService) { Uid = TrustUid };
     }
 
-    private void SetUpContacts()
+    private void GivenTrustHasDfeContacts()
     {
         _mockMediator.Send(new GetTrustContactQuery(1234, TrustContactRole.TrustRelationshipManager))
             .Returns(_trustRelationshipManager);
-        _mockMediator.Send(new GetTrustContactQuery(1234, TrustContactRole.SfsoLead)).Returns(_sfsoLead);
+        _mockMediator.Send(new GetTrustContactQuery(1234, TrustContactRole.SfsoLead))
+            .Returns(_sfsoLead);
     }
 
     [Fact]
-    public async Task OnGetAsync_sets_contacts_from_mediator()
+    public async Task OnGetAsync_sets_dfe_contacts()
     {
-        SetUpContacts();
+        GivenTrustHasDfeContacts();
 
         await Sut.OnGetAsync();
 
@@ -49,7 +51,7 @@ public class InDfeModelTests : BaseTrustPageTests<InDfeModel>, ITestSubpages
     }
 
     [Fact]
-    public async Task OnGetAsync_sets_contacts_to_null_when_there_are_none()
+    public async Task OnGetAsync_leaves_dfe_contacts_null_when_trust_has_none()
     {
         await Sut.OnGetAsync();
 
@@ -81,16 +83,17 @@ public class InDfeModelTests : BaseTrustPageTests<InDfeModel>, ITestSubpages
     }
 
     [Fact]
-    public async Task OnGetAsync_sets_last_modified_details_in_data_source_list()
+    public async Task OnGetAsync_takes_last_updated_details_from_the_dfe_contacts()
     {
-        SetUpContacts();
+        GivenTrustHasDfeContacts();
 
         await Sut.OnGetAsync();
 
-        Sut.DataSourcesPerPage[0].DataSources[0].DataSources[0].Should().Be(
-            new DataSourceServiceModel(Source.FiatDb, new DateTime(2025, 01, 20), null, "test@email.com"));
-        Sut.DataSourcesPerPage[0].DataSources[1].DataSources[0].Should().Be(
-            new DataSourceServiceModel(Source.FiatDb, new DateTime(2024, 02, 21), null, "test2@email.com"));
+        var inDfe = Sut.DataSourcesPerPage[0].DataSources;
+        inDfe[0].DataSources[0].Should().Be(new DataSourceServiceModel(Source.FiatDb, new DateTime(2025, 1, 20),
+            null, "editor.one@education.gov.uk"));
+        inDfe[1].DataSources[0].Should().Be(new DataSourceServiceModel(Source.FiatDb, new DateTime(2024, 2, 21),
+            null, "editor.two@education.gov.uk"));
     }
 
     [Fact]

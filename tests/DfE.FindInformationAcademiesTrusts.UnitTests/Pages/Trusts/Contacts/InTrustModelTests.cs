@@ -1,6 +1,9 @@
+using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Queries;
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
+using DfE.FindInformationAcademiesTrusts.Domain.Entities;
+using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
 using DfE.FindInformationAcademiesTrusts.Pages.Trusts.Contacts;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
@@ -23,9 +26,9 @@ public class InTrustModelTests : BaseTrustPageTests<InTrustModel>, ITestSubpages
     [Fact]
     public async Task OnGetAsync_sets_trust_contacts()
     {
-        var accountingOfficer = new Person("Accounting Officer", "ao@test.com");
-        var chairOfTrustees = new Person("Chair Of Trustees", "cot@test.com");
-        var chiefFinancialOfficer = new Person("Chief Financial Officer", "cfo@test.com");
+        var accountingOfficer = new Person("Accounting Officer", "ao@trust.org.uk");
+        var chairOfTrustees = new Person("Chair Of Trustees", "cot@trust.org.uk");
+        var chiefFinancialOfficer = new Person("Chief Financial Officer", "cfo@trust.org.uk");
         MockTrustService.GetTrustContactsAsync(TrustUid, TrustReference)
             .Returns(new TrustContacts(accountingOfficer, chairOfTrustees, chiefFinancialOfficer));
 
@@ -37,7 +40,7 @@ public class InTrustModelTests : BaseTrustPageTests<InTrustModel>, ITestSubpages
     }
 
     [Fact]
-    public async Task OnGetAsync_sets_trust_contacts_to_null_when_there_are_none()
+    public async Task OnGetAsync_leaves_trust_contacts_null_when_trust_has_none()
     {
         await Sut.OnGetAsync();
 
@@ -67,6 +70,21 @@ public class InTrustModelTests : BaseTrustPageTests<InTrustModel>, ITestSubpages
                 new DataSourceListEntry(MstrDataSource, "Chair of trustees email")
             ])
         ]);
+    }
+
+    [Fact]
+    public async Task OnGetAsync_takes_in_dfe_last_updated_details_from_the_dfe_contacts()
+    {
+        _mockMediator.Send(new GetTrustContactQuery(1234, TrustContactRole.SfsoLead)).Returns(new TrustContact
+        {
+            Uid = 1234, Role = TrustContactRole.SfsoLead, Name = "SFSO Lead", Email = "sfso@education.gov.uk",
+            LastModifiedAtTime = new DateTime(2024, 2, 21), LastModifiedByEmail = "editor@education.gov.uk"
+        });
+
+        await Sut.OnGetAsync();
+
+        Sut.DataSourcesPerPage[0].DataSources[1].DataSources[0].Should().Be(
+            new DataSourceServiceModel(Source.FiatDb, new DateTime(2024, 2, 21), null, "editor@education.gov.uk"));
     }
 
     [Fact]

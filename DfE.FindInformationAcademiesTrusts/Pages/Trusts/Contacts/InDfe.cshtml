@@ -41,7 +41,7 @@
             <a class="govuk-link" asp-page="/Trusts/Contacts/Edit" asp-route-role="@TrustContactRole.TrustRelationshipManager" asp-route-uid="@Model.Uid" asp-route-referencenumber="@Model.ReferenceNumber">Change<span class="govuk-visually-hidden"> details of this contact (@TrustContactRole.TrustRelationshipManager.MapRoleToViewString())</span></a>
           </div>
         </div>
-        <partial name="/Pages/Contacts/_ContactDetails.cshtml" model="(Model.TrustRelationshipManager?.Name, Model.TrustRelationshipManager?.Email)"/>
+        <partial name="Shared/Contact/_DisplayContact" model="(Model.TrustRelationshipManager?.Name, Model.TrustRelationshipManager?.Email)"/>
       </div>
       <div class="govuk-summary-card" data-testid="sfso-lead">
         <div class="govuk-summary-card__title-wrapper">
@@ -52,7 +52,7 @@
             <a class="govuk-link" asp-page="/Trusts/Contacts/Edit" asp-route-role="@TrustContactRole.SfsoLead" asp-route-uid="@Model.Uid" asp-route-referencenumber="@Model.ReferenceNumber">Change<span class="govuk-visually-hidden"> details of this contact (@TrustContactRole.SfsoLead.MapRoleToViewString())</span></a>
           </div>
         </div>
-        <partial name="/Pages/Contacts/_ContactDetails.cshtml" model="(Model.SfsoLead?.Name, Model.SfsoLead?.Email)"/>
+        <partial name="Shared/Contact/_DisplayContact" model="(Model.SfsoLead?.Name, Model.SfsoLead?.Email)"/>
       </div>
     </section>
   </div>

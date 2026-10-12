@@ -1,7 +1,11 @@
 using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Queries;
+using DfE.FindInformationAcademiesTrusts.Configuration;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using DfE.FindInformationAcademiesTrusts.Domain.Enums;
+using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
+using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
@@ -59,10 +63,45 @@ public class InSchoolModel(
 
         HeadTeacher = headTeacher;
 
+        var giasDataSource = await dataSourceService.GetAsync(Source.Gias);
+        var inSchoolDataSources = new DataSourcePageListEntry(SubPageName(SchoolCategory),
+            [new DataSourceListEntry(giasDataSource, "Head teacher name")]);
+
+        if (!await featureManager.IsEnabledAsync(FeatureFlags.ContactsInDfeForSchools))
+        {
+            DataSourcesPerPage = [inSchoolDataSources];
+            return pageResult;
+        }
+
         var trustUid = int.TryParse(TrustSummary?.Uid, out var uid) ? uid : (int?)null;
         var dfeContacts = await mediator.Send(new GetSchoolDfeContactsQuery(Urn, trustUid));
+
+        List<DataSourceListEntry> inDfeDataSources = SchoolCategory == SchoolCategory.Academy
+            ?
+            [
+                new DataSourceListEntry(
+                    new DataSourceServiceModel(Source.FiatDb, dfeContacts.TrustRelationshipManager?.LastModifiedAtTime,
+                        null, dfeContacts.TrustRelationshipManager?.LastModifiedByEmail),
+                    TrustContactRole.TrustRelationshipManager.MapRoleToViewString()),
+                new DataSourceListEntry(
+                    new DataSourceServiceModel(Source.FiatDb, dfeContacts.SfsoLead?.LastModifiedAtTime, null,
+                        dfeContacts.SfsoLead?.LastModifiedByEmail),
+                    TrustContactRole.SfsoLead.MapRoleToViewString())
+            ]
+            :
+            [
+                new DataSourceListEntry(
+                    new DataSourceServiceModel(Source.FiatDb,
+                        dfeContacts.RegionsGroupLocalAuthorityLead?.LastModifiedAtTime, null,
+                        dfeContacts.RegionsGroupLocalAuthorityLead?.LastModifiedByEmail),
+                    "Regions group LA lead")
+            ];
+
         DataSourcesPerPage =
-            await ContactsDataSources.GetAsync(dataSourceService, featureManager, SchoolCategory, dfeContacts);
+        [
+            new DataSourcePageListEntry(InDfeModel.SubPageName, inDfeDataSources),
+            inSchoolDataSources
+        ];
 
         return pageResult;
     }

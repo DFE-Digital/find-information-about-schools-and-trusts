@@ -1,13 +1,16 @@
 using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Models;
 using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Queries;
 using DfE.FindInformationAcademiesTrusts.Configuration;
+using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Domain.Enums;
+using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
+using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.Mvc;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
@@ -16,7 +19,6 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 public class InDfeModel(
     IMediator mediator,
     IDataSourceService dataSourceService,
-    IVariantFeatureManager featureManager,
     ISchoolService schoolService,
     ITrustService trustService,
     ISchoolNavMenu schoolNavMenu)
@@ -35,13 +37,39 @@ public class InDfeModel(
         var pageResult = await base.OnGetAsync();
         if (pageResult is NotFoundResult) return pageResult;
 
-        Contacts = await mediator.Send(new GetSchoolDfeContactsQuery(Urn, TrustUid));
+        var trustUid = int.TryParse(TrustSummary?.Uid, out var uid) ? uid : (int?)null;
+        Contacts = await mediator.Send(new GetSchoolDfeContactsQuery(Urn, trustUid));
+
+        List<DataSourceListEntry> inDfeDataSources = SchoolCategory == SchoolCategory.Academy
+            ?
+            [
+                new DataSourceListEntry(
+                    new DataSourceServiceModel(Source.FiatDb, Contacts.TrustRelationshipManager?.LastModifiedAtTime,
+                        null, Contacts.TrustRelationshipManager?.LastModifiedByEmail),
+                    TrustContactRole.TrustRelationshipManager.MapRoleToViewString()),
+                new DataSourceListEntry(
+                    new DataSourceServiceModel(Source.FiatDb, Contacts.SfsoLead?.LastModifiedAtTime, null,
+                        Contacts.SfsoLead?.LastModifiedByEmail),
+                    TrustContactRole.SfsoLead.MapRoleToViewString())
+            ]
+            :
+            [
+                new DataSourceListEntry(
+                    new DataSourceServiceModel(Source.FiatDb,
+                        Contacts.RegionsGroupLocalAuthorityLead?.LastModifiedAtTime, null,
+                        Contacts.RegionsGroupLocalAuthorityLead?.LastModifiedByEmail),
+                    "Regions group LA lead")
+            ];
+
+        var giasDataSource = await dataSourceService.GetAsync(Source.Gias);
 
         DataSourcesPerPage =
-            await ContactsDataSources.GetAsync(dataSourceService, featureManager, SchoolCategory, Contacts);
+        [
+            new DataSourcePageListEntry(SubPageName, inDfeDataSources),
+            new DataSourcePageListEntry(InSchoolModel.SubPageName(SchoolCategory),
+                [new DataSourceListEntry(giasDataSource, "Head teacher name")])
+        ];
 
         return pageResult;
     }
-
-    private int? TrustUid => int.TryParse(TrustSummary?.Uid, out var uid) ? uid : null;
 }
