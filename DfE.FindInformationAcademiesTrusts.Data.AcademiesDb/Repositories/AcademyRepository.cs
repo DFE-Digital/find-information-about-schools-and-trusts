@@ -96,7 +96,7 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext, IGetEstab
     {
         var result = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
         
-        if (!result.Any())
+        if (result.Length == 0)
         {
             return null;
         }
