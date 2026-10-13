@@ -7,7 +7,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Academy;
 public record SchoolOfstedServiceModel(
     string Urn,
     string? EstablishmentName,
-    DateTime? DateAcademyJoinedTrust,
+    DateTime? DateEstablishmentJoinedGroup,
     OfstedShortInspection ShortInspection,
     OfstedRating? PreviousOfstedRating,
     OfstedRating? CurrentOfstedRating,
@@ -16,7 +16,7 @@ public record SchoolOfstedServiceModel(
 {
     public bool HasRecentShortInspection => ShortInspection.InspectionDate > CurrentOfstedRating?.InspectionDate;
 
-    public BeforeOrAfterJoining WhenDidCurrentInspectionHappen => DateAcademyJoinedTrust.GetBeforeOrAfterJoiningTrust(CurrentOfstedRating?.InspectionDate);
+    public BeforeOrAfterJoining WhenDidCurrentInspectionHappen => DateEstablishmentJoinedGroup.GetBeforeOrAfterJoiningTrust(CurrentOfstedRating?.InspectionDate);
 
-    public BeforeOrAfterJoining WhenDidPreviousInspectionHappen => DateAcademyJoinedTrust.GetBeforeOrAfterJoiningTrust(PreviousOfstedRating?.InspectionDate);
+    public BeforeOrAfterJoining WhenDidPreviousInspectionHappen => DateEstablishmentJoinedGroup.GetBeforeOrAfterJoiningTrust(PreviousOfstedRating?.InspectionDate);
 }

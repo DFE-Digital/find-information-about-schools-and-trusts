@@ -93,7 +93,7 @@ public class AcademiesExportService(ITrustService trustService, IAcademyService 
         SetTextCell(AcademyColumns.Type, academy.TypeOfEstablishment ?? string.Empty);
         SetTextCell(AcademyColumns.RuralOrUrban, academy.UrbanRural ?? string.Empty);
 
-        SetDateCell(AcademyColumns.DateJoined, ofstedData?.DateAcademyJoinedTrust);
+        SetDateCell(AcademyColumns.DateJoined, ofstedData?.DateEstablishmentJoinedGroup);
 
         SetTextCell(AcademyColumns.CurrentOfstedRating,
             currentRating?.OverallEffectiveness.ToDisplayString(true) ?? string.Empty);

@@ -41,7 +41,7 @@ public class AcademyService(
         var academies = await ofstedRepository.GetAcademiesInTrustOfstedAsync(trustReferenceNumber);
 
         return academies.Select(a =>
-            new SchoolOfstedServiceModel(a.Urn, a.EstablishmentName, a.DateAcademyJoinedTrust, a.ShortInspection,
+            new SchoolOfstedServiceModel(a.Urn, a.EstablishmentName, a.DateEstablishmentJoinedGroup, a.ShortInspection,
                 a.PreviousOfstedRating, a.CurrentOfstedRating, a.IsFurtherEducationalEstablishment)).ToArray();
     }
 
