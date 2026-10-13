@@ -62,7 +62,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
 
                 ofstedOverview.Urn = schoolUrn;
                 ofstedOverview.SchoolName = schoolOfstedRating.EstablishmentName ?? "";
-                ofstedOverview.DateJoinedTrust = schoolOfstedRating.DateAcademyJoinedTrust!.Value;
+                ofstedOverview.DateJoinedTrust = schoolOfstedRating.DateEstablishmentJoinedGroup!.Value;
 
                 result.Add(ofstedOverview);
             }
@@ -183,7 +183,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
             ReportCardServiceModel reportCards, SchoolOfsted schoolOfstedRating)
         {
             var safeGuardingAndConcerns =
-                new SafeGuardingAndConcernsServiceModel(schoolOfstedRating.DateAcademyJoinedTrust!.Value);
+                new SafeGuardingAndConcernsServiceModel(schoolOfstedRating.DateEstablishmentJoinedGroup!.Value);
 
             if (TryGetSafeGuarding(safeGuardingAndConcerns, reportCards))
             {

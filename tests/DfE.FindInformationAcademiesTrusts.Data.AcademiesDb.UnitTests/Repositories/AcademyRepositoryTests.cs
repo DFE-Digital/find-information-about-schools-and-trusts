@@ -90,6 +90,16 @@ public class AcademyRepositoryTests
     }
 
     [Fact]
+    public async Task GetUrnForSingleAcademyTrustAsync_should_return_null_if_no_establishments_found()
+    {
+        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns([]);
+
+        var result = await _sut.GetSingleAcademyTrustAcademyUrnAsync(ReferenceNumber);
+
+        result.Should().Be(null);
+    }
+
+    [Fact]
     public async Task GetUrnForSingleAcademyTrustAsync_should_set_singleAcademyTrustAcademyUrn_to_urn_of_SAT_academy()
     {
         _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns(new []

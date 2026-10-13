@@ -3,7 +3,7 @@ namespace DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 public record SchoolOfsted(
     string Urn,
     string? EstablishmentName,
-    DateTime? DateAcademyJoinedTrust,
+    DateTime? DateEstablishmentJoinedGroup,
     OfstedShortInspection ShortInspection,
     OfstedRating PreviousOfstedRating,
     OfstedRating CurrentOfstedRating,

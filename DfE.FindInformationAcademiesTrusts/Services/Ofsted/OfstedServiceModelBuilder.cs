@@ -26,7 +26,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
                     {
                         IsReportCard = false,
                         InspectionDate = DateOnly.FromDateTime(inspectionDate),
-                        BeforeOrAfterJoining = schoolOfstedRatings.DateAcademyJoinedTrust
+                        BeforeOrAfterJoining = schoolOfstedRatings.DateEstablishmentJoinedGroup
                             .GetBeforeOrAfterJoiningTrust(inspectionDate)
                     });
                 }
@@ -40,7 +40,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
                     {
                         IsReportCard = true,
                         InspectionDate = reportCard.InspectionDate,
-                        BeforeOrAfterJoining = schoolOfstedRatings.DateAcademyJoinedTrust
+                        BeforeOrAfterJoining = schoolOfstedRatings.DateEstablishmentJoinedGroup
                             .GetBeforeOrAfterJoiningTrust(reportCard.InspectionDate)
                     });
                 }
@@ -57,7 +57,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
 
             var shortInspectionModel = GetShortInspectionModel(
                 schoolOfstedRatings.ShortInspection,
-                schoolOfstedRatings.DateAcademyJoinedTrust
+                schoolOfstedRatings.DateEstablishmentJoinedGroup
             );
 
             return new OfstedOverviewInspectionServiceModel(
@@ -91,7 +91,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
             return new OlderSchoolOfstedServiceModel(
                 schoolOfstedRatings.Urn,
                 schoolOfstedRatings.EstablishmentName,
-                schoolOfstedRatings.DateAcademyJoinedTrust,
+                schoolOfstedRatings.DateEstablishmentJoinedGroup,
                 schoolOfstedRatings.ShortInspection,
                 withSingleHeadlineGrade,
                 withoutSingleHeadlineGrade,
