@@ -1,4 +1,5 @@
 ﻿using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
@@ -24,7 +25,9 @@ public class GovernanceAreaModel(
 
         if (pageResult.GetType() == typeof(NotFoundResult)) return pageResult;
 
-        TrustGovernance = await TrustService.GetTrustGovernanceAsync(TrustReferenceNumber);
+        var trustGovernance = await TrustService.GetTrustGovernanceAsync(TrustReferenceNumber);
+        
+        TrustGovernance = trustGovernance ?? new TrustGovernanceServiceModel([], [], [], [], 0);
 
         // Add data sources
         var giasDataSource = await DataSourceService.GetAsync(Source.Gias);

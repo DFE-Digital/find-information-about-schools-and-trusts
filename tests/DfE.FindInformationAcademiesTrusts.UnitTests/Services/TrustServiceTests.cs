@@ -164,7 +164,7 @@ public class TrustServiceTests
 
         var result = await _sut.GetTrustGovernanceAsync(trn);
 
-        result.HistoricMembers.Should().ContainSingle().Which.Should().BeEquivalentTo(historic);
+        result!.HistoricMembers.Should().ContainSingle().Which.Should().BeEquivalentTo(historic);
         result.CurrentMembers.Should().ContainSingle().Which.Should().BeEquivalentTo(member);
         result.CurrentTrustees.Should().ContainSingle().Which.Should().BeEquivalentTo(trustee);
         result.CurrentTrustLeadership.Should().ContainSingle().Which.Should().BeEquivalentTo(leader);

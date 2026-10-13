@@ -11,7 +11,7 @@ public abstract class BaseGovernanceAreaModelTests<T> : BaseTrustPageTests<T>, I
 {
     protected BaseGovernanceAreaModelTests()
     {
-        MockTrustService.GetTrustGovernanceAsync(Arg.Any<string>())
+        MockTrustService.GetTrustGovernanceAsync(Arg.Any<string>())!
             .Returns(Task.FromResult(new TrustGovernanceServiceModel([], [], [], [], 0)));
     }
 
@@ -52,7 +52,7 @@ public abstract class BaseGovernanceAreaModelTests<T> : BaseTrustPageTests<T>, I
             GenerateGovernors(false, "Trustee", 1),
             10);
 
-        MockTrustService.GetTrustGovernanceAsync(TrustReference)
+        MockTrustService.GetTrustGovernanceAsync(TrustReference)!
             .Returns(Task.FromResult(trustGovernanceServiceModelWithData));
 
         await Sut.OnGetAsync();
