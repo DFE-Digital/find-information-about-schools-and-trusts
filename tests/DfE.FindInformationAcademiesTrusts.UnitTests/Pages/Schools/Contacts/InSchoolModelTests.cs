@@ -44,13 +44,13 @@ public class InSchoolModelTests : BaseSchoolPageTests<InSchoolModel>
     }
 
     [Fact]
-    public async Task OnGetAsync_returns_not_found_when_there_is_no_head_teacher()
+    public async Task OnGetAsync_sets_headteacher_to_empty_object_when_there_is_no_head_teacher()
     {
         _mockSchoolRepository.GetSchoolContactsAsync(Arg.Any<int>()).ReturnsNull();
 
-        var result = await Sut.OnGetAsync();
+        await Sut.OnGetAsync();
 
-        result.Should().BeOfType<NotFoundResult>();
+        Sut.HeadTeacher.Should().Be(new SchoolContact("", ""));
     }
 
     [Fact]
