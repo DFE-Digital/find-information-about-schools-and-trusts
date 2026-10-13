@@ -1,22 +1,24 @@
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 namespace DfE.FindInformationAcademiesTrusts.Pages.Shared;
 
 public static class FormHelpers
 {
-    public static string GetErrorClass(this BasePageModel model, string key)
+    public static string GetErrorClass(this ModelStateDictionary modelState, string key)
     {
-        return model.ModelState.ContainsKey(key) && model.ModelState[key]!.Errors.Any() ? "govuk-form-group--error" : string.Empty;
+        return modelState.ContainsKey(key) && modelState[key]!.Errors.Any() ? "govuk-form-group--error" : string.Empty;
     }
 
-    public static string GenerateErrorAriaDescribedBy(this BasePageModel model, string key)
+    public static string GenerateErrorAriaDescribedBy(this ModelStateDictionary modelState, string key)
     {
-        return string.Join(" ", Enumerable.Select<(int index, string errorMessage), string>(model.GetErrorList(key), value => $"error-{key}-{value.index}"));
+        return string.Join(" ", modelState.GetErrorList(key).Select(value => $"error-{key}-{value.index}"));
     }
 
-    public static (int index, string errorMessage)[] GetErrorList(this BasePageModel model, string key)
+    public static (int index, string errorMessage)[] GetErrorList(this ModelStateDictionary modelState, string key)
     {
-        if (model.ModelState.ContainsKey(key))
+        if (modelState.ContainsKey(key))
         {
-            return model.ModelState[key]!.Errors.Select((error, index) => (index, error.ErrorMessage)).ToArray();
+            return modelState[key]!.Errors.Select((error, index) => (index, error.ErrorMessage)).ToArray();
         }
 
         return [];

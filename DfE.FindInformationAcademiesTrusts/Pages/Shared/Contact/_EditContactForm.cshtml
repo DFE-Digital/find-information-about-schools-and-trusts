@@ -1,0 +1,41 @@
+@using DfE.FindInformationAcademiesTrusts.Pages.Shared
+@model DfE.FindInformationAcademiesTrusts.Pages.Shared.Contact.EditContactForm
+
+<div class="govuk-form-group @ViewData.ModelState.GetErrorClass(nameof(Model.Name))">
+  <label class="govuk-label govuk-label--m" for="Name">
+    Full name
+  </label>
+  @foreach (var error in ViewData.ModelState.GetErrorList(nameof(Model.Name)))
+  {
+    <p id="error-@nameof(Model.Name)-@error.index" class="govuk-error-message">
+      <span class="govuk-visually-hidden">Error:</span> @error.errorMessage
+    </p>
+  }
+  <input asp-for="Name" class="govuk-input govuk-!-width-two-thirds" id="Name" type="text"
+         spellcheck="false" aria-describedby="@ViewData.ModelState.GenerateErrorAriaDescribedBy(nameof(Model.Name))"/>
+</div>
+<div class="govuk-form-group @ViewData.ModelState.GetErrorClass(nameof(Model.Email))">
+  <label class="govuk-label govuk-label--m" for="Email">
+    Email address
+  </label>
+  <div id="email-hint" class="govuk-hint">
+    Only valid DfE email addresses can be used e.g. joe.bloggs@education.gov.uk
+  </div>
+  @foreach (var error in ViewData.ModelState.GetErrorList(nameof(Model.Email)))
+  {
+    <p id="error-@nameof(Model.Email)-@error.index" class="govuk-error-message">
+      <span class="govuk-visually-hidden">Error:</span> @error.errorMessage
+    </p>
+  }
+  <input asp-for="Email" class="govuk-input govuk-!-width-two-thirds" id="Email" type="email"
+         spellcheck="false" autocomplete="email"
+         aria-describedby="email-hint @ViewData.ModelState.GenerateErrorAriaDescribedBy(nameof(Model.Email))"/>
+</div>
+<div class="govuk-button-group">
+  <button type="submit" class="govuk-button" data-module="govuk-button" formnovalidate>
+    Save and continue
+  </button>
+  <a class="govuk-link" href="@Model.CancelUrl">
+    Cancel
+  </a>
+</div>
