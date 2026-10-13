@@ -4,8 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-10-06.7838...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-10-08.7845...HEAD)
 
+
+---
+## [Release-81][release-81] - 2026-10-08
+
+### Changed
+- 304409 : GetSchoolDetailsAsync removed from repo
+- 304411 : GetSchoolSenProvisionAsync removed from repo
 
 ---
 ## [Release-80][release-80] - 2026-10-06
