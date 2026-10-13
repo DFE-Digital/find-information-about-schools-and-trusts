@@ -229,6 +229,11 @@ public class OfstedRepository(
 
     private async Task<Dictionary<string, AcademyOfstedRatings>> GetOfstedRatingsForTrustOrSchool(string[] urns)
     {
+        if (urns.Length == 0)
+        {
+            return [];
+        }
+
         var parsedUrns = urns.Select(u => int.Parse(u)).ToList();
         var establishments = await getEstablishments.GetEstablishmentsByUrns(parsedUrns);
 

@@ -149,6 +149,7 @@ public class OfstedRepositoryTests
 
         result.Should().BeEmpty();
         await _mockGetEstablishments.Received(1).GetEstablishmentsByTrustReferenceNumber(TrustReferenceNumber);
+        await _mockGetEstablishments.DidNotReceive().GetEstablishmentsByUrns(Arg.Any<List<int>>());
     }
 
     [Fact]
