@@ -95,6 +95,11 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext, IGetEstab
     public async Task<string?> GetSingleAcademyTrustAcademyUrnAsync(string referenceNumber)
     {
         var result = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
+        
+        if (result.Length == 0)
+        {
+            return null;
+        }
 
         return result[0].Urn;
     }
