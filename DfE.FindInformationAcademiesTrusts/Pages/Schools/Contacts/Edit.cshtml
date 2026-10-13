@@ -1,0 +1,31 @@
+@page "/schools/contacts/edit{role}"
+@using DfE.FindInformationAcademiesTrusts.Pages.Shared.Contact
+@model EditModel
+
+@{
+  Layout = "_Layout";
+  ViewData["Title"] = Model.PageMetadata.BrowserTitle;
+  var cancelUrl = Url.Page("/Schools/Contacts/InDfe", new { urn = Model.Urn })!;
+}
+
+<partial name="Schools/_SchoolBanner" model="@Model"/>
+
+<div class="govuk-main-wrapper govuk-!-padding-top-6">
+  <div class="dfe-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-three-quarters">
+        <main id="main-content">
+          <form method="post">
+            <fieldset class="govuk-fieldset">
+              <legend class="govuk-!-padding-0">
+                <h1 class="govuk-heading-l">@Model.PageMetadata.PageName</h1>
+              </legend>
+              <partial name="Shared/_ErrorSummary" model="@Model"/>
+              <partial name="Shared/Contact/_EditContactForm" model="new EditContactForm(Model.Name, Model.Email, cancelUrl)"/>
+            </fieldset>
+          </form>
+        </main>
+      </div>
+    </div>
+  </div>
+</div>

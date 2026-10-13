@@ -1,95 +1,148 @@
-using DfE.FindInformationAcademiesTrusts.Data;
+using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Models;
+using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Queries;
+using DfE.FindInformationAcademiesTrusts.Configuration;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
-using DfE.FindInformationAcademiesTrusts.Services.School;
+using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
+using DfE.FindInformationAcademiesTrusts.Services.DataSource;
+using DfE.FindInformationAcademiesTrusts.Services.Trust;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.FeatureManagement;
 using NSubstitute.ReturnsExtensions;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Contacts;
 
-public class InSchoolModelTests : BaseContactsAreaModelTests<InSchoolModel>
+public class InSchoolModelTests : BaseSchoolPageTests<InSchoolModel>
 {
-    private readonly ISchoolContactsService _mockSchoolContactsService = Substitute.For<ISchoolContactsService>();
+    private readonly IMediator _mockMediator = Substitute.For<IMediator>();
+    private readonly ISchoolRepository _mockSchoolRepository = Substitute.For<ISchoolRepository>();
+    private readonly IVariantFeatureManager _mockFeatureManager = Substitute.For<IVariantFeatureManager>();
 
-    private readonly Person _dummyInSchoolContacts = new("Aaron Aaronson", "aa@someschool.com");
+    private readonly SchoolContact _headTeacher = new("Head Teacher", "head@school.org.uk");
+
+    private static DataSourceServiceModel EmptyContactDataSource => new(Source.FiatDb, null, null);
 
     public InSchoolModelTests()
     {
-        _mockSchoolContactsService.GetInSchoolContactsAsync(Arg.Any<int>()).Returns(_dummyInSchoolContacts);
+        _mockSchoolRepository.GetSchoolContactsAsync(Arg.Any<int>()).Returns(_headTeacher);
+        _mockMediator.Send(Arg.Any<GetSchoolDfeContactsQuery>()).Returns(new SchoolDfeContacts(null, null, null));
+        MockTrustService.GetTrustSummaryAsync(AcademyUrn)
+            .Returns(new TrustSummaryServiceModel("4321", "TR4321", "Some Trust", "Multi-academy trust", 1));
 
-        Sut = new InSchoolModel(MockSchoolService, MockTrustService, _mockSchoolContactsService, MockDataSourceService,
-                MockSchoolNavMenu, MockFeatureManager)
-        { Urn = SchoolUrn };
+        Sut = new InSchoolModel(_mockMediator, _mockSchoolRepository, MockDataSourceService, _mockFeatureManager,
+            MockSchoolService, MockTrustService, MockSchoolNavMenu) { Urn = SchoolUrn };
     }
 
+    [Fact]
+    public async Task OnGetAsync_sets_head_teacher()
+    {
+        await Sut.OnGetAsync();
+
+        Sut.HeadTeacher.Should().Be(_headTeacher);
+    }
+
+    [Fact]
+    public async Task OnGetAsync_returns_not_found_when_there_is_no_head_teacher()
+    {
+        _mockSchoolRepository.GetSchoolContactsAsync(Arg.Any<int>()).ReturnsNull();
+
+        var result = await Sut.OnGetAsync();
+
+        result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Fact]
+    public override async Task OnGetAsync_should_configure_PageMetadata_PageName()
+    {
+        await Sut.OnGetAsync();
+
+        Sut.PageMetadata.PageName.Should().Be("Contacts");
+    }
+
+    [Fact]
     public override async Task OnGetAsync_should_configure_PageMetadata_SubPageName()
     {
-        await OnGetAsync_should_configure_PageMetadata_SubPageName_for_school();
-        await OnGetAsync_should_configure_PageMetadata_SubPageName_for_academy();
-    }
-
-    private async Task OnGetAsync_should_configure_PageMetadata_SubPageName_for_school()
-    {
-        Sut.Urn = SchoolUrn;
-
         await Sut.OnGetAsync();
-
         Sut.PageMetadata.SubPageName.Should().Be("Contacts in this school");
-    }
 
-    private async Task OnGetAsync_should_configure_PageMetadata_SubPageName_for_academy()
-    {
         Sut.Urn = AcademyUrn;
-
         await Sut.OnGetAsync();
-
         Sut.PageMetadata.SubPageName.Should().Be("Contacts in this academy");
     }
 
     [Theory]
-    [InlineData(SchoolCategory.LaMaintainedSchool, "Contacts in this school")]
-    [InlineData(SchoolCategory.Academy, "Contacts in this academy")]
-    public void FullSubPageName_should_include_school_type(SchoolCategory schoolCategory, string expectedSubPageName)
+    [InlineData(SchoolCategory.LaMaintainedSchool, "Contacts in this school", "In this school")]
+    [InlineData(SchoolCategory.Academy, "Contacts in this academy", "In this academy")]
+    public void Sub_page_names_include_school_type(SchoolCategory schoolCategory, string fullSubPageName,
+        string subPageName)
     {
-        InSchoolModel.FullSubPageName(schoolCategory).Should().Be(expectedSubPageName);
+        InSchoolModel.FullSubPageName(schoolCategory).Should().Be(fullSubPageName);
+        InSchoolModel.SubPageName(schoolCategory).Should().Be(subPageName);
     }
 
     [Fact]
-    public void FullSubPageName_should_throw_for_unrecognised_school_type()
+    public void Sub_page_names_throw_for_unrecognised_school_type()
     {
-        var act = () => InSchoolModel.FullSubPageName((SchoolCategory)999);
-        act.Should().Throw<ArgumentOutOfRangeException>();
-    }
+        var fullSubPageName = () => InSchoolModel.FullSubPageName((SchoolCategory)999);
+        var subPageName = () => InSchoolModel.SubPageName((SchoolCategory)999);
 
-    [Theory]
-    [InlineData(SchoolCategory.LaMaintainedSchool, "In this school")]
-    [InlineData(SchoolCategory.Academy, "In this academy")]
-    public void SubPageNavMenuName_should_include_school_type(SchoolCategory schoolCategory, string expectedSubPageName)
-    {
-        InSchoolModel.SubPageName(schoolCategory).Should().Be(expectedSubPageName);
+        fullSubPageName.Should().Throw<ArgumentOutOfRangeException>();
+        subPageName.Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Fact]
-    public void SubPageNavMenuName_should_throw_for_unrecognised_school_type()
-    {
-        var act = () => InSchoolModel.SubPageName((SchoolCategory)999);
-        act.Should().Throw<ArgumentOutOfRangeException>();
-    }
-
-    [Fact]
-    public async Task OnGetAsync_should_set_Headteacher_contact_details()
+    public override async Task OnGetAsync_sets_correct_data_source_list()
     {
         await Sut.OnGetAsync();
 
-        Sut.HeadTeacher.Should().Be(_dummyInSchoolContacts);
+        Sut.DataSourcesPerPage.Should().BeEquivalentTo([
+            new DataSourcePageListEntry("In this school",
+                [new DataSourceListEntry(Mocks.MockDataSourceService.Gias, "Head teacher name")])
+        ]);
     }
 
     [Fact]
-    public async Task OnGetAsync_IfContactsIsNull_ShouldReturnNotFound()
+    public async Task OnGetAsync_does_not_query_dfe_contacts_when_feature_flag_is_disabled()
     {
-        _mockSchoolContactsService.GetInSchoolContactsAsync(Arg.Any<int>()).ReturnsNull();
+        await Sut.OnGetAsync();
 
-        var response = await Sut.OnGetAsync();
-        response.Should().BeOfType<NotFoundResult>();
+        await _mockMediator.DidNotReceive().Send(Arg.Any<GetSchoolDfeContactsQuery>());
+    }
+
+    [Fact]
+    public async Task OnGetAsync_sets_in_dfe_data_sources_for_school_when_feature_flag_is_enabled()
+    {
+        _mockFeatureManager.IsEnabledAsync(FeatureFlags.ContactsInDfeForSchools).Returns(true);
+
+        await Sut.OnGetAsync();
+
+        Sut.DataSourcesPerPage.Should().BeEquivalentTo([
+            new DataSourcePageListEntry("In DfE",
+                [new DataSourceListEntry(EmptyContactDataSource, "Regions group LA lead")]),
+            new DataSourcePageListEntry("In this school",
+                [new DataSourceListEntry(Mocks.MockDataSourceService.Gias, "Head teacher name")])
+        ]);
+        await _mockMediator.Received(1).Send(new GetSchoolDfeContactsQuery(SchoolUrn, null));
+    }
+
+    [Fact]
+    public async Task OnGetAsync_sets_in_dfe_data_sources_for_academy_when_feature_flag_is_enabled()
+    {
+        _mockFeatureManager.IsEnabledAsync(FeatureFlags.ContactsInDfeForSchools).Returns(true);
+        Sut.Urn = AcademyUrn;
+
+        await Sut.OnGetAsync();
+
+        Sut.DataSourcesPerPage.Should().BeEquivalentTo([
+            new DataSourcePageListEntry("In DfE", [
+                new DataSourceListEntry(EmptyContactDataSource, "Trust relationship manager"),
+                new DataSourceListEntry(EmptyContactDataSource, "SFSO (Schools financial support and oversight) lead")
+            ]),
+            new DataSourcePageListEntry("In this academy",
+                [new DataSourceListEntry(Mocks.MockDataSourceService.Gias, "Head teacher name")])
+        ]);
+        await _mockMediator.Received(1).Send(new GetSchoolDfeContactsQuery(AcademyUrn, 4321));
     }
 }

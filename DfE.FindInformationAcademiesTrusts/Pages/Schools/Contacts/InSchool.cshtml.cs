@@ -1,25 +1,33 @@
-using DfE.FindInformationAcademiesTrusts.Data;
+using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Queries;
+using DfE.FindInformationAcademiesTrusts.Configuration;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using DfE.FindInformationAcademiesTrusts.Domain.Enums;
+using DfE.FindInformationAcademiesTrusts.Extensions;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
+using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 
 public class InSchoolModel(
+    IMediator mediator,
+    ISchoolRepository schoolRepository,
+    IDataSourceService dataSourceService,
+    IVariantFeatureManager featureManager,
     ISchoolService schoolService,
     ITrustService trustService,
-    ISchoolContactsService schoolContactsService,
-    IDataSourceService dataSourceService,
-    ISchoolNavMenu schoolNavMenu,
-    IVariantFeatureManager featureManager)
-    : ContactsAreaModel(schoolService, trustService, dataSourceService, schoolNavMenu, featureManager)
+    ISchoolNavMenu schoolNavMenu)
+    : SchoolAreaModel(schoolService, trustService, schoolNavMenu)
 {
     public override PageMetadata PageMetadata => base.PageMetadata with
     {
+        PageName = InDfeModel.PageName,
         SubPageName = FullSubPageName(SchoolCategory)
     };
 
@@ -43,21 +51,57 @@ public class InSchoolModel(
         };
     }
 
-    public Person HeadTeacher { get; private set; } = null!;
+    public SchoolContact HeadTeacher { get; private set; } = null!;
 
     public override async Task<IActionResult> OnGetAsync()
     {
         var pageResult = await base.OnGetAsync();
         if (pageResult is NotFoundResult) return pageResult;
 
-        var contact = await schoolContactsService.GetInSchoolContactsAsync(Urn);
+        var headTeacher = await schoolRepository.GetSchoolContactsAsync(Urn);
+        if (headTeacher is null) return NotFound();
 
-        if (contact is null)
+        HeadTeacher = headTeacher;
+
+        var giasDataSource = await dataSourceService.GetAsync(Source.Gias);
+        var inSchoolDataSources = new DataSourcePageListEntry(SubPageName(SchoolCategory),
+            [new DataSourceListEntry(giasDataSource, "Head teacher name")]);
+
+        if (!await featureManager.IsEnabledAsync(FeatureFlags.ContactsInDfeForSchools))
         {
-            return new NotFoundResult();
+            DataSourcesPerPage = [inSchoolDataSources];
+            return pageResult;
         }
 
-        HeadTeacher = contact;
+        var trustUid = int.TryParse(TrustSummary?.Uid, out var uid) ? uid : (int?)null;
+        var dfeContacts = await mediator.Send(new GetSchoolDfeContactsQuery(Urn, trustUid));
+
+        List<DataSourceListEntry> inDfeDataSources = SchoolCategory == SchoolCategory.Academy
+            ?
+            [
+                new DataSourceListEntry(
+                    new DataSourceServiceModel(Source.FiatDb, dfeContacts.TrustRelationshipManager?.LastModifiedAtTime,
+                        null, dfeContacts.TrustRelationshipManager?.LastModifiedByEmail),
+                    TrustContactRole.TrustRelationshipManager.MapRoleToViewString()),
+                new DataSourceListEntry(
+                    new DataSourceServiceModel(Source.FiatDb, dfeContacts.SfsoLead?.LastModifiedAtTime, null,
+                        dfeContacts.SfsoLead?.LastModifiedByEmail),
+                    TrustContactRole.SfsoLead.MapRoleToViewString())
+            ]
+            :
+            [
+                new DataSourceListEntry(
+                    new DataSourceServiceModel(Source.FiatDb,
+                        dfeContacts.RegionsGroupLocalAuthorityLead?.LastModifiedAtTime, null,
+                        dfeContacts.RegionsGroupLocalAuthorityLead?.LastModifiedByEmail),
+                    "Regions group LA lead")
+            ];
+
+        DataSourcesPerPage =
+        [
+            new DataSourcePageListEntry(InDfeModel.SubPageName, inDfeDataSources),
+            inSchoolDataSources
+        ];
 
         return pageResult;
     }

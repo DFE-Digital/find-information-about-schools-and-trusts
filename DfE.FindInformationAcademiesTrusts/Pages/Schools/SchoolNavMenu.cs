@@ -38,7 +38,8 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
             GetServiceNavLinkTo<OverviewAreaModel>(OverviewAreaModel.PageName, "/Schools/Overview/Details",
                 activePage),
             GetServiceNavLinkTo<PupilsAreaModel>(PupilsAreaModel.PageName, "/Schools/Pupils/Population", activePage),
-            GetServiceNavLinkTo<ContactsAreaModel>(ContactsAreaModel.PageName, contactLink, activePage),
+            GetServiceNavLinkTo(activePage is InDfeModel or InSchoolModel, InDfeModel.PageName, contactLink,
+                activePage),
             GetServiceNavLinkTo<GovernanceAreaModel>(GovernanceAreaModel.PageName, "/Schools/Governance/Current",
                 activePage),
             GetServiceNavLinkTo<OfstedAreaModel>(OfstedAreaModel.PageName, "/Schools/Ofsted/OfstedOverview",
@@ -48,7 +49,13 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
 
     private static NavLink GetServiceNavLinkTo<T>(string linkDisplayText, string aspPage, ISchoolAreaModel activePage)
     {
-        return new NavLink(activePage is T,
+        return GetServiceNavLinkTo(activePage is T, linkDisplayText, aspPage, activePage);
+    }
+
+    private static NavLink GetServiceNavLinkTo(bool isActive, string linkDisplayText, string aspPage,
+        ISchoolAreaModel activePage)
+    {
+        return new NavLink(isActive,
             activePage.SchoolCategory.ToDisplayString(),
             linkDisplayText,
             aspPage,
@@ -62,7 +69,7 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
         {
             OverviewAreaModel => BuildLinksForOverviewPage(activePage),
             PupilsAreaModel => BuildLinksForPupilsPage(activePage),
-            ContactsAreaModel => await BuildLinksForContactsPageAsync(activePage),
+            InDfeModel or InSchoolModel => await BuildLinksForContactsPageAsync(activePage),
             GovernanceAreaModel governanceAreaModel => BuildLinksForGovernancePage(governanceAreaModel),
             OfstedAreaModel => BuildLinksForOfstedPage(activePage),
             _ => throw new ArgumentOutOfRangeException(nameof(activePage), activePage, "Page type is not supported.")
@@ -160,13 +167,13 @@ public class SchoolNavMenu(IVariantFeatureManager featureManager) : ISchoolNavMe
 
     private async Task<NavLink[]> BuildLinksForContactsPageAsync(ISchoolAreaModel activePage)
     {
-        var inSchoolNavLink = GetSubNavLinkTo<InSchoolModel>(ContactsAreaModel.PageName,
+        var inSchoolNavLink = GetSubNavLinkTo<InSchoolModel>(InDfeModel.PageName,
             InSchoolModel.SubPageName(activePage.SchoolCategory), "/Schools/Contacts/InSchool", activePage,
             "contacts-in-this-school-subnav");
         return await ContactsInDfeForSchoolsEnabled()
             ?
             [
-                GetSubNavLinkTo<InDfeModel>(ContactsAreaModel.PageName, InDfeModel.SubPageName,
+                GetSubNavLinkTo<InDfeModel>(InDfeModel.PageName, InDfeModel.SubPageName,
                     "/Schools/Contacts/InDfe", activePage, "contacts-in-dfe-subnav"),
                 inSchoolNavLink
             ]

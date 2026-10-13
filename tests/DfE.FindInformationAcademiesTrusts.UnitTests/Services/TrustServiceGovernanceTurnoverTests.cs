@@ -1,5 +1,4 @@
 using DfE.FindInformationAcademiesTrusts.Data;
-using DfE.FindInformationAcademiesTrusts.Data.FiatDb.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
@@ -14,7 +13,6 @@ public class TrustServiceGovernanceTurnoverTests
     private readonly IAcademyRepository _mockAcademyRepository = Substitute.For<IAcademyRepository>();
     private readonly ITrustRepository _mockTrustRepository = Substitute.For<ITrustRepository>();
     private readonly ITrustGovernanceRepository _mockTrustGovernanceRepository = Substitute.For<ITrustGovernanceRepository>();
-    private readonly IContactRepository _mockContactRepository = Substitute.For<IContactRepository>();
     private readonly ITrustPupilService _mockTrustPupilService = Substitute.For<ITrustPupilService>();
     private readonly IDateTimeProvider _mockDateTimeProvider = Substitute.For<IDateTimeProvider>();
     private readonly MockMemoryCache _mockMemoryCache = new();
@@ -24,7 +22,6 @@ public class TrustServiceGovernanceTurnoverTests
         _sut = new TrustService(_mockAcademyRepository,
             _mockTrustRepository,
             _mockTrustGovernanceRepository,
-            _mockContactRepository,
             _mockTrustPupilService,
             _mockMemoryCache.Object,
             _mockDateTimeProvider);

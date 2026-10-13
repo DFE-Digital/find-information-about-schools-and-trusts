@@ -42,12 +42,11 @@
                         @SchoolContactRole.RegionsGroupLocalAuthorityLead.MapRoleToViewString()
                     </h3>
                     <div class="govuk-summary-card__actions">
-                        <a class="govuk-link" asp-page="/Schools/Contacts/EditRegionsGroupLocalAuthorityLead"
+                        <a class="govuk-link" asp-page="/Schools/Contacts/Edit" asp-route-role="@SchoolContactRole.RegionsGroupLocalAuthorityLead"
                            asp-route-urn="@Model.Urn">Change<span class="govuk-visually-hidden"> details of this contact (@SchoolContactRole.RegionsGroupLocalAuthorityLead.MapRoleToViewString())</span></a>
                     </div>
                 </div>
-                <partial name="Contact/_DisplayContact" model="Model.RegionsGroupLocalAuthorityLead"
-                         view-data='new ViewDataDictionary(ViewData) { { "contactType", "regions-group-local-authority-lead" } }'/>
+                <partial name="Contact/_DisplayContact" model="(Model.Contacts.RegionsGroupLocalAuthorityLead?.Name, Model.Contacts.RegionsGroupLocalAuthorityLead?.Email)"/>
             </div>
         }
 
@@ -59,8 +58,7 @@
                         Trust relationship manager
                     </h3>
                 </div>
-                <partial name="Contact/_DisplayContact" model="Model.TrustRelationshipManager"
-                         view-data='new ViewDataDictionary(ViewData) { { "contactType", "trust-relationship-manager" } }'/>
+                <partial name="Contact/_DisplayContact" model="(Model.Contacts.TrustRelationshipManager?.Name, Model.Contacts.TrustRelationshipManager?.Email)"/>
             </div>
 
             <div class="govuk-summary-card" data-testid="contact-card-sfso-lead">
@@ -69,8 +67,7 @@
                         SFSO (Schools Financial Support and Oversight) lead
                     </h3>
                 </div>
-                <partial name="Contact/_DisplayContact" model="Model.SfsoLead"
-                         view-data='new ViewDataDictionary(ViewData) { { "contactType", "sfso-lead" } }'/>
+                <partial name="Contact/_DisplayContact" model="(Model.Contacts.SfsoLead?.Name, Model.Contacts.SfsoLead?.Email)"/>
             </div>
 
             <div class="govuk-inset-text">

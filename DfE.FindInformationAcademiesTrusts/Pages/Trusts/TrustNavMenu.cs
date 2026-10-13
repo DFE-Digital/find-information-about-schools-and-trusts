@@ -21,7 +21,8 @@ public static class TrustNavMenu
         [
             GetServiceNavLinkTo<OverviewAreaModel>(OverviewAreaModel.PageName, "/Trusts/Overview/TrustDetails",
                 activePage),
-            GetServiceNavLinkTo<ContactsAreaModel>(ContactsAreaModel.PageName, "/Trusts/Contacts/InDfe", activePage),
+            GetServiceNavLinkTo(activePage is InDfeModel or InTrustModel, InDfeModel.PageName,
+                "/Trusts/Contacts/InDfe", activePage),
             GetServiceNavLinkTo<AcademiesAreaModel>(
                 $"{AcademiesAreaModel.PageName} ({activePage.TrustSummary.NumberOfAcademies})",
                 "/Trusts/Academies/InTrust/Details", activePage),
@@ -36,7 +37,13 @@ public static class TrustNavMenu
 
     private static NavLink GetServiceNavLinkTo<T>(string linkDisplayText, string aspPage, ITrustsAreaModel activePage)
     {
-        return new NavLink(activePage is T,
+        return GetServiceNavLinkTo(activePage is T, linkDisplayText, aspPage, activePage);
+    }
+
+    private static NavLink GetServiceNavLinkTo(bool isActive, string linkDisplayText, string aspPage,
+        ITrustsAreaModel activePage)
+    {
+        return new NavLink(isActive,
             "Trust",
             linkDisplayText,
             aspPage,
@@ -71,11 +78,11 @@ public static class TrustNavMenu
                 GetSubNavLinkTo<ReferenceNumbersModel>(OverviewAreaModel.PageName, ReferenceNumbersModel.SubPageName,
                     "/Trusts/Overview/ReferenceNumbers", activePage)
             ],
-            ContactsAreaModel =>
+            InDfeModel or InTrustModel =>
             [
-                GetSubNavLinkTo<InDfeModel>(ContactsAreaModel.PageName, InDfeModel.SubPageName,
+                GetSubNavLinkTo<InDfeModel>(InDfeModel.PageName, InDfeModel.SubPageName,
                     "/Trusts/Contacts/InDfE", activePage),
-                GetSubNavLinkTo<InTrustModel>(ContactsAreaModel.PageName, InTrustModel.SubPageName,
+                GetSubNavLinkTo<InTrustModel>(InDfeModel.PageName, InTrustModel.SubPageName,
                     "/Trusts/Contacts/InTrust", activePage)
             ],
             AcademiesAreaModel academiesAreaModel =>

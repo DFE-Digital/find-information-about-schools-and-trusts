@@ -1,4 +1,4 @@
-﻿using Dfe.CaseAggregationService.Api.Client.Extensions;
+using Dfe.CaseAggregationService.Api.Client.Extensions;
 using Dfe.CaseAggregationService.Client;
 using Dfe.CaseAggregationService.Client.Contracts;
 using Dfe.TramsDataApi.Client.Extensions;
@@ -100,8 +100,8 @@ public static class Dependencies
         builder.Services.AddScoped<ITrustRepository, TrustRepository>();
         builder.Services.AddScoped<ITrustGovernanceRepository, TrustGovernanceRepository>();
         builder.Services.AddScoped<IDataSourceRepository, DataSourceRepository>();
-        builder.Services.AddScoped<IFiatDataSourceRepository, FiatDataSourceRepository>();
-        builder.Services.AddScoped<IContactRepository, ContactRepository>();
+        builder.Services.AddScoped<ITrustContactRepository, TrustContactRepository>();
+        builder.Services.AddScoped<ISchoolContactRepository, SchoolContactRepository>();
         builder.Services.AddScoped<IPipelineEstablishmentRepository, PipelineEstablishmentRepository>();
         builder.Services.AddScoped<ITrustDocumentRepository, TrustDocumentRepository>();
         builder.Services.AddScoped<ISchoolRepository, SchoolRepository>();
@@ -127,7 +127,6 @@ public static class Dependencies
         builder.Services.AddCaseAggregationApiClient<ICasesClient, CasesClient>(builder.Configuration);
 
         builder.Services.AddScoped<ISchoolOverviewDetailsService, SchoolOverviewDetailsService>();
-        builder.Services.AddScoped<ISchoolContactsService, SchoolContactsService>();
 
         builder.Services.AddScoped<ISchoolOverviewSenService, SchoolOverviewSenService>();
         builder.Services.AddScoped<ISchoolOverviewFederationService, SchoolOverviewFederationService>();
