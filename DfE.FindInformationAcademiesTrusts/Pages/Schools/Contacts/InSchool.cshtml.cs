@@ -59,9 +59,8 @@ public class InSchoolModel(
         if (pageResult is NotFoundResult) return pageResult;
 
         var headTeacher = await schoolRepository.GetSchoolContactsAsync(Urn);
-        if (headTeacher is null) return NotFound();
 
-        HeadTeacher = headTeacher;
+        HeadTeacher = headTeacher ?? new SchoolContact("", "");
 
         var giasDataSource = await dataSourceService.GetAsync(Source.Gias);
         var inSchoolDataSources = new DataSourcePageListEntry(SubPageName(SchoolCategory),
