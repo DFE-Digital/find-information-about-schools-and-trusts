@@ -4,10 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-10-14.7859...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-10-14.7863...HEAD)
 
 
 ---
+## [Release-84][release-84] - 2026-10-14
+
+### Fixed
+- 306335 : Link to High quality trust framework SharePoint page archived
+
+--
+
 ## [Release-83][release-83] - 2026-10-14
 
 ### Changed
