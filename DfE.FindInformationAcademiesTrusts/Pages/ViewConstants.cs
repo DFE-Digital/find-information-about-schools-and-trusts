@@ -40,7 +40,7 @@ public static class ViewConstants
 
         new("High quality trust framework",
             "Process guidance and tools for making trust-related project decisions.",
-            "https://educationgovuk.sharepoint.com/sites/lvewp00299/SitePages/RG%20high%20quality%20trust%20framework.aspx"),
+            "https://educationgovuk.sharepoint.com/sites/lvewp00030/SitePages/High_Quality_Trusts_Guidance.aspx"),
         
         new("Regions mapping tool",
         "Create and view maps based on all school locations in England.",
