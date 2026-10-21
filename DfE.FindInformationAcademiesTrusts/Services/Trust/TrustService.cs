@@ -23,7 +23,8 @@ public interface ITrustService
 public class TrustService(
     IAcademyRepository academyRepository,
     ITrustRepository trustRepository,
-    ITrustGovernanceRepository trustGovernanceRepository,
+    ITrustsClient trustsClient,
+    IEstablishmentsClient establishmentsClient,
     ITrustPupilService trustPupilService,
     IMemoryCache memoryCache,
     IDateTimeProvider dateTimeProvider)
@@ -77,8 +78,8 @@ public class TrustService(
         }
 
         var governors = trustType is TrustType.MultiAcademyTrust
-            ? await trustGovernanceRepository.GetTrustGovernanceAsync(trn.ToUpper())
-            : await trustGovernanceRepository.GetSatGovernanceAsync(int.Parse(singleAcademyTrustAcademyUrn!));
+            ? await FetchTrustGovernanceAsync(trn.ToUpper())
+            : await FetchSatGovernanceAsync(int.Parse(singleAcademyTrustAcademyUrn!));
         
         return new TrustGovernanceServiceModel(
             governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleLeadership: true }).ToArray(),
@@ -212,5 +213,45 @@ public class TrustService(
         return items.Count(item => dateSelector(item) != null &&
                                    dateSelector(item) >= rangeStart &&
                                    dateSelector(item) <= rangeEnd);
+    }
+    
+    private async Task<List<Governor>> FetchTrustGovernanceAsync(string trn)
+    {
+        var result = await trustsClient.GetAllPersonsAssociatedWithTrustByTrnOrUkPrnAsync(trn).ConfigureAwait(false);
+        
+        var governors = new List<Governor>();
+
+        foreach (var person in result)
+        {
+            governors.Add(new Governor(
+                FullName: person.DisplayName,
+                Role: person.Roles[0],
+                AppointingBody: person.AppointingBody,
+                DateOfAppointment: person.DateOfAppointment.ParseAsNullableDate(),
+                DateOfTermEnd: person.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
+                Email: person.Email));
+        }
+        
+        return governors;
+    }
+    
+    private async Task<List<Governor>> FetchSatGovernanceAsync(int urn)
+    {
+        var result = await establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(urn);
+        
+        var governors = new List<Governor>();
+
+        foreach (var person in result)
+        {
+            governors.Add(new Governor(
+                FullName: person.DisplayName,
+                Role: person.Roles[0],
+                AppointingBody: person.AppointingBody,
+                DateOfAppointment: person.DateOfAppointment.ParseAsNullableDate(),
+                DateOfTermEnd: person.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
+                Email: person.Email));
+        }
+        
+        return governors;
     }
 }

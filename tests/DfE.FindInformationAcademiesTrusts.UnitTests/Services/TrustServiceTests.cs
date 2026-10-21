@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Domain.Enums;
@@ -6,7 +7,9 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
+using GovUK.Dfe.PersonsApi.Client.Contracts;
 using NSubstitute.ReturnsExtensions;
+using Person = DfE.FindInformationAcademiesTrusts.Data.Person;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services;
 
@@ -24,19 +27,21 @@ public class TrustServiceTests
     private readonly TrustService _sut;
     private readonly IAcademyRepository _mockAcademyRepository = Substitute.For<IAcademyRepository>();
     private readonly ITrustRepository _mockTrustRepository = Substitute.For<ITrustRepository>();
-
-    private readonly ITrustGovernanceRepository _mockTrustGovernanceRepository =
-        Substitute.For<ITrustGovernanceRepository>();
-
+    private readonly ITrustsClient _trustsClient = Substitute.For<ITrustsClient>();
+    private readonly IEstablishmentsClient _establishmentsClient = Substitute.For<IEstablishmentsClient>();
     private readonly ITrustPupilService _mockTrustPupilService = Substitute.For<ITrustPupilService>();
     private readonly IDateTimeProvider _mockDateTimeProvider = Substitute.For<IDateTimeProvider>();
     private readonly MockMemoryCache _mockMemoryCache = new();
+
+    private readonly DateTime _lastYear = DateTime.Today.AddYears(-1);
+    private readonly DateTime _nextYear = DateTime.Today.AddYears(1);
 
     public TrustServiceTests()
     {
         _sut = new TrustService(_mockAcademyRepository,
             _mockTrustRepository,
-            _mockTrustGovernanceRepository,
+            _trustsClient,
+            _establishmentsClient,
             _mockTrustPupilService,
             _mockMemoryCache.Object,
             _mockDateTimeProvider);
@@ -45,6 +50,7 @@ public class TrustServiceTests
             .ReturnsNull();
         _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(Arg.Any<string>())
             .Returns([]);
+        _mockDateTimeProvider.Today.Returns(DateTime.Today);
     }
 
     [Fact]
@@ -156,7 +162,7 @@ public class TrustServiceTests
         );
         _mockTrustRepository.GetTrustOverviewAsync(trn)
             .Returns(BaseTrustOverview with { Type = "Multi-academy trust" });
-        _mockTrustGovernanceRepository.GetTrustGovernanceAsync(trn).Returns([leader, member, trustee, historic]);
+        CreateGovernor(trn, leader, member, trustee, historic);
 
         var result = await _sut.GetTrustGovernanceAsync(trn);
 
@@ -164,6 +170,128 @@ public class TrustServiceTests
         result.CurrentMembers.Should().ContainSingle().Which.Should().BeEquivalentTo(member);
         result.CurrentTrustees.Should().ContainSingle().Which.Should().BeEquivalentTo(trustee);
         result.CurrentTrustLeadership.Should().ContainSingle().Which.Should().BeEquivalentTo(leader);
+    }
+
+    [Fact]
+    public async Task GetTrustGovernanceAsync_should_return_no_governors_when_none_exist_for_multi_academy_trust()
+    {
+        const string trn = "1234";
+        _mockTrustRepository.GetTrustOverviewAsync(trn)
+            .Returns(BaseTrustOverview with { Type = "Multi-academy trust" });
+        _trustsClient.GetAllPersonsAssociatedWithTrustByTrnOrUkPrnAsync(trn)
+            .Returns(new ObservableCollection<TrustGovernance>());
+
+        var result = await _sut.GetTrustGovernanceAsync(trn);
+
+        result.Should().BeEquivalentTo(new TrustGovernanceServiceModel([], [], [], [], 0m));
+    }
+
+    [Fact]
+    public async Task GetTrustGovernanceAsync_should_return_only_governors_for_that_multi_academy_trust()
+    {
+        const string trn = "1234";
+        var unexpectedGovernor1 = new Governor("Billy Willy Boatface", "Member", "Some Org", _lastYear, _nextYear, null);
+        var unexpectedGovernor2 =
+            new Governor("Milly Tilly Planeface", "Trustee", "Some other Org", _lastYear, _nextYear, null);
+        var expectedGovernor = new Governor("Hilly Jilly Trainface", "Member", "Some third Org", _lastYear, _nextYear, null);
+
+        _mockTrustRepository.GetTrustOverviewAsync(trn)
+            .Returns(BaseTrustOverview with { Type = "Multi-academy trust" });
+        CreateGovernor("9876", unexpectedGovernor1, unexpectedGovernor2);
+        CreateGovernor(trn, expectedGovernor);
+
+        var result = await _sut.GetTrustGovernanceAsync(trn);
+
+        result!.CurrentMembers.Should().BeEquivalentTo([expectedGovernor]);
+        result.CurrentTrustees.Should().BeEmpty();
+        result.CurrentTrustLeadership.Should().BeEmpty();
+        result.HistoricMembers.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetTrustGovernanceAsync_should_return_no_governors_when_none_exist_for_single_academy_trust()
+    {
+        const string trn = "TR0012";
+        const int urn = 1234;
+        _mockTrustRepository.GetTrustOverviewAsync(trn).Returns(BaseTrustOverview);
+        _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync(trn).Returns(urn.ToString());
+        _establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(urn)
+            .Returns(new ObservableCollection<AcademyGovernance>());
+
+        var result = await _sut.GetTrustGovernanceAsync(trn);
+
+        result.Should().BeEquivalentTo(new TrustGovernanceServiceModel([], [], [], [], 0m));
+    }
+
+    [Fact]
+    public async Task GetTrustGovernanceAsync_should_return_only_governors_for_that_single_academy_trust()
+    {
+        const string trn = "TR0012";
+        const int urn = 1234;
+        var unexpectedGovernor1 = new Governor("Billy Willy Boatface", "Member", "Some Org", _lastYear, _nextYear, null);
+        var unexpectedGovernor2 =
+            new Governor("Milly Tilly Planeface", "Trustee", "Some other Org", _lastYear, _nextYear, null);
+        var expectedGovernor = new Governor("Hilly Jilly Trainface", "Member", "Some third Org", _lastYear, _nextYear, null);
+
+        _mockTrustRepository.GetTrustOverviewAsync(trn).Returns(BaseTrustOverview);
+        _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync(trn).Returns(urn.ToString());
+        SetupSatGovernors(9876, unexpectedGovernor1, unexpectedGovernor2);
+        SetupSatGovernors(urn, expectedGovernor);
+
+        var result = await _sut.GetTrustGovernanceAsync(trn);
+
+        result!.CurrentMembers.Should().BeEquivalentTo([expectedGovernor]);
+        result.CurrentTrustees.Should().BeEmpty();
+        result.CurrentTrustLeadership.Should().BeEmpty();
+        result.HistoricMembers.Should().BeEmpty();
+    }
+
+    [Fact]
+    public async Task GetTrustGovernanceAsync_should_map_single_academy_trust_governor_details()
+    {
+        const string trn = "TR0012";
+        const int urn = 1234;
+
+        _mockTrustRepository.GetTrustOverviewAsync(trn).Returns(BaseTrustOverview);
+        _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync(trn).Returns(urn.ToString());
+        _establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(urn)
+            .Returns(new ObservableCollection<AcademyGovernance>
+            {
+                new()
+                {
+                    Urn = urn,
+                    DisplayName = "Hilly Jilly Trainface",
+                    Roles = ["Chair of Trustees"],
+                    AppointingBody = "Members",
+                    DateOfAppointment = _lastYear.ToString("dd/MM/yyyy"),
+                    DateTermOfOfficeEndsEnded = _nextYear.ToString("dd/MM/yyyy"),
+                    Email = "hilly@example.com"
+                },
+                new()
+                {
+                    Urn = urn,
+                    DisplayName = "Billy Boatface",
+                    Roles = ["Trustee"],
+                    AppointingBody = "Governing Body",
+                    DateOfAppointment = null,
+                    DateTermOfOfficeEndsEnded = null,
+                    Email = null
+                }
+            });
+
+        var result = await _sut.GetTrustGovernanceAsync(trn);
+
+        result!.CurrentTrustLeadership.Should().BeEquivalentTo(
+        [
+            new Governor("Hilly Jilly Trainface", "Chair of Trustees", "Members", _lastYear, _nextYear,
+                "hilly@example.com")
+        ]);
+        result.CurrentTrustees.Should().BeEquivalentTo(
+        [
+            new Governor("Billy Boatface", "Trustee", "Governing Body", null, null, null)
+        ]);
+        result.CurrentMembers.Should().BeEmpty();
+        result.HistoricMembers.Should().BeEmpty();
     }
 
     [Fact]
@@ -377,5 +505,39 @@ public class TrustServiceTests
 
         var result = await _sut.GetTrustSummaryAsync(referenceNumber);
         result.Should().BeEquivalentTo(new TrustSummaryServiceModel(uid, referenceNumber, name, type, numAcademies));
+    }
+
+    private void CreateGovernor(string trn, params Governor[] governors)
+    {
+        var trustGovernances = governors.Select(governor => new TrustGovernance
+        {
+            Trn = trn,
+            DisplayName = governor.FullName,
+            Roles = [governor.Role],
+            AppointingBody = governor.AppointingBody,
+            DateOfAppointment = governor.DateOfAppointment?.ToString("dd/MM/yyyy"),
+            DateTermOfOfficeEndsEnded = governor.DateOfTermEnd?.ToString("dd/MM/yyyy"),
+            Email = governor.Email
+        });
+
+        _trustsClient.GetAllPersonsAssociatedWithTrustByTrnOrUkPrnAsync(trn)
+            .Returns(new ObservableCollection<TrustGovernance>(trustGovernances));
+    }
+
+    private void SetupSatGovernors(int urn, params Governor[] governors)
+    {
+        var academyGovernances = governors.Select(governor => new AcademyGovernance
+        {
+            Urn = urn,
+            DisplayName = governor.FullName,
+            Roles = [governor.Role],
+            AppointingBody = governor.AppointingBody,
+            DateOfAppointment = governor.DateOfAppointment?.ToString("dd/MM/yyyy"),
+            DateTermOfOfficeEndsEnded = governor.DateOfTermEnd?.ToString("dd/MM/yyyy"),
+            Email = governor.Email
+        });
+
+        _establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(urn)
+            .Returns(new ObservableCollection<AcademyGovernance>(academyGovernances));
     }
 }
