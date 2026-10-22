@@ -14,9 +14,7 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
 public class SchoolRepository(IAcademiesDbContext academiesDbContext,
     IStringFormattingUtilities stringFormattingUtilities,
-    ILogger<SchoolRepository> logger, 
-    IGetEstablishments getEstablishments,
-    IEstablishmentsClient establishmentsClient) : ISchoolRepository
+    ILogger<SchoolRepository> logger) : ISchoolRepository
 { 
     public async Task<SchoolContact?> GetSchoolContactsAsync(int urn)
     {
@@ -74,39 +72,5 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
         }
 
         return schoolFederationDetails;
-    }
-
-    public async Task<SchoolReferenceNumbers?> GetReferenceNumbersAsync(int urn)
-    {
-        var result = await getEstablishments.GetEstablishment(urn);
-
-        return new SchoolReferenceNumbers(result.LocalAuthorityCode, result.EstablishmentNumber, result.Ukprn);
-    }
-
-    public async Task<List<Governor>> GetGovernanceAsync(int urn)
-    {
-        var result = await establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(urn);
-        
-        var governors = new List<Governor>();
-
-        foreach (var person in result)
-        {
-            governors.Add(new Governor(
-                FullName: person.DisplayName,
-                Role: person.Roles[0],
-                AppointingBody: person.AppointingBody,
-                DateOfAppointment: person.DateOfAppointment.ParseAsNullableDate(),
-                DateOfTermEnd: person.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
-                Email: person.Email));
-        }
-        
-        return governors;
-    }
-
-    public async Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn)
-    {
-        var result = await getEstablishments.GetEstablishment(urn);
-        
-        return new ReligiousCharacteristics(result.Diocese.Name, result.ReligiousCharacter.Name, result.ReligousEthos);
     }
 }

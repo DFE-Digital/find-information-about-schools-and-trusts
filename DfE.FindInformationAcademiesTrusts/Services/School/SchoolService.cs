@@ -1,9 +1,10 @@
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
-using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
+using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 using DfE.FindInformationAcademiesTrusts.HttpServices;
-using DfE.FindInformationAcademiesTrusts.Services.Academy;
+using GovUK.Dfe.PersonsApi.Client.Contracts;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.School;
@@ -24,7 +25,8 @@ public interface ISchoolService
 public class SchoolService(
     IMemoryCache memoryCache,
     IGetEstablishmentsTemp getEstablishments,
-    ISchoolRepository schoolRepository) : ISchoolService
+    ISchoolRepository schoolRepository,
+    IEstablishmentsClient establishmentsClient) : ISchoolService
 {
     public async Task<bool> IsPartOfFederationAsync(int urn)
     {
@@ -58,29 +60,43 @@ public class SchoolService(
 
     public async Task<SchoolReferenceNumbersServiceModel> GetReferenceNumbersAsync(int urn)
     {
-        var referenceNumbers = await schoolRepository.GetReferenceNumbersAsync(urn);
+        var result = await getEstablishments.GetEstablishment(urn);
+        var ukprn = result.Ukprn;
 
-        if (referenceNumbers is null) return new SchoolReferenceNumbersServiceModel(urn);
-
-        var laestab = referenceNumbers.LaCode is not null && referenceNumbers.EstablishmentNumber is not null
-            ? $"{referenceNumbers.LaCode}/{referenceNumbers.EstablishmentNumber}"
+        var laestab = result.LocalAuthorityCode is not null && result.EstablishmentNumber is not null
+            ? $"{result.LocalAuthorityCode}/{result.EstablishmentNumber}"
             : null;
 
-        return new SchoolReferenceNumbersServiceModel(urn, laestab, referenceNumbers.Ukprn);
+        return new SchoolReferenceNumbersServiceModel(urn, laestab, ukprn);
     }
 
     public async Task<SchoolGovernanceServiceModel> GetSchoolGovernanceAsync(int urn)
     {
-        var governance = await schoolRepository.GetGovernanceAsync(urn);
+        var result = await establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(urn);
+        
+        var governors = new List<Governor>();
+
+        foreach (var person in result)
+        {
+            governors.Add(new Governor(
+                FullName: person.DisplayName,
+                Role: person.Roles[0],
+                AppointingBody: person.AppointingBody,
+                DateOfAppointment: person.DateOfAppointment.ParseAsNullableDate(),
+                DateOfTermEnd: person.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
+                Email: person.Email));
+        }
 
         return new SchoolGovernanceServiceModel(
-            governance.Where(x => x.IsCurrentOrFutureGovernor).ToArray(),
-            governance.Where(x => !x.IsCurrentOrFutureGovernor).ToArray());
+            governors.Where(x => x.IsCurrentOrFutureGovernor).ToArray(),
+            governors.Where(x => !x.IsCurrentOrFutureGovernor).ToArray());
     }
 
     public async Task<SchoolReligiousCharacteristicsServiceModel> GetReligiousCharacteristicsAsync(int urn)
     {
-        var religiousCharacteristics = await schoolRepository.GetReligiousCharacteristicsAsync(urn);
+        var result = await getEstablishments.GetEstablishment(urn);
+        
+        var religiousCharacteristics = new ReligiousCharacteristics(result.Diocese.Name, result.ReligiousCharacter.Name, result.ReligousEthos);
 
         return new SchoolReligiousCharacteristicsServiceModel(
             GetCharacteristicsValue(nameof(religiousCharacteristics.ReligiousAuthority),

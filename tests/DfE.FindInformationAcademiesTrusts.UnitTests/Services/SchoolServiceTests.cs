@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
@@ -6,6 +7,7 @@ using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
+using GovUK.Dfe.PersonsApi.Client.Contracts;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services;
 
@@ -15,13 +17,15 @@ public class SchoolServiceTests
     private readonly ISchoolRepository _mockSchoolRepository = Substitute.For<ISchoolRepository>();
     private readonly IReportCardsService _mockReportCardsService = Substitute.For<IReportCardsService>();
     private readonly IGetEstablishmentsTemp _mockGetEstablishments;
+    private readonly IEstablishmentsClient _mockEstablishmentsClient;
 
     private readonly MockMemoryCache _mockMemoryCache = new();
 
     public SchoolServiceTests()
     {
         _mockGetEstablishments = Substitute.For<IGetEstablishmentsTemp>();
-        _sut = new SchoolService(_mockMemoryCache.Object, _mockGetEstablishments, _mockSchoolRepository);
+        _mockEstablishmentsClient = Substitute.For<IEstablishmentsClient>();
+        _sut = new SchoolService(_mockMemoryCache.Object, _mockGetEstablishments, _mockSchoolRepository, _mockEstablishmentsClient);
 
         _mockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(new ReportCardServiceModel());
     }
@@ -110,51 +114,50 @@ public class SchoolServiceTests
         await _mockSchoolRepository.Received(1).IsPartOfFederationAsync(urn);
         result.Should().Be(expectedReturnValue);
     }
-
-    [Fact]
-    public async Task GetReferenceNumbersAsync_should_return_only_urn_when_repository_returns_null()
-    {
-        const int urn = 123456;
-        _mockSchoolRepository.GetReferenceNumbersAsync(urn).Returns((SchoolReferenceNumbers?)null);
-
-        var result = await _sut.GetReferenceNumbersAsync(urn);
-
-        result.Urn.Should().Be(urn);
-        result.Laestab.Should().BeNull();
-        result.Ukprn.Should().BeNull();
-        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
-    }
+    
 
     [Theory]
     [InlineData("123", "4567", "123/4567")]
     [InlineData("234", "5678", "234/5678")]
     [InlineData("345", "6789", "345/6789")]
-    public async Task GetReferenceNumbersAsync_should_include_laestab_when_la_code_and_establishment_number_are_present(
+    public async Task GetReferenceNumbersAsync_should_set_laestab_when_la_code_and_establishment_number_are_present(
         string laCode, string establishmentNumber, string expectedLaestab)
     {
-        _mockSchoolRepository.GetReferenceNumbersAsync(123456)
-            .Returns(new SchoolReferenceNumbers(laCode, establishmentNumber, null));
+        var urn = 123456;
+        var name = $"School {urn}";
 
-        var result = await _sut.GetReferenceNumbersAsync(123456);
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
+            {
+                Urn = urn.ToString(),
+                Name = name,
+                LocalAuthorityCode = laCode,
+                EstablishmentNumber = establishmentNumber
+            });
+
+        var result = await _sut.GetReferenceNumbersAsync(urn);
 
         result.Laestab.Should().Be(expectedLaestab);
-        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(123456);
+        await _mockGetEstablishments.Received(1).GetEstablishment(urn);
     }
 
     [Fact]
     public async Task GetReferenceNumbersAsync_should_not_include_laestab_when_la_code_is_missing()
     {
         const int urn = 123456;
-        const string? laCode = null;
         const string establishmentNumber = "4567";
 
-        _mockSchoolRepository.GetReferenceNumbersAsync(urn)
-            .Returns(new SchoolReferenceNumbers(laCode, establishmentNumber, null));
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
+            {
+                Urn = urn.ToString(),
+                EstablishmentNumber = establishmentNumber
+            });
 
         var result = await _sut.GetReferenceNumbersAsync(urn);
 
         result.Laestab.Should().BeNull();
-        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+        await _mockGetEstablishments.Received(1).GetEstablishment(urn);
     }
 
     [Fact]
@@ -162,15 +165,18 @@ public class SchoolServiceTests
     {
         const int urn = 123456;
         const string laCode = "123";
-        const string? establishmentNumber = null;
 
-        _mockSchoolRepository.GetReferenceNumbersAsync(urn)
-            .Returns(new SchoolReferenceNumbers(laCode, establishmentNumber, null));
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
+            {
+                Urn = urn.ToString(),
+                LocalAuthorityCode = laCode
+            });
 
         var result = await _sut.GetReferenceNumbersAsync(urn);
 
         result.Laestab.Should().BeNull();
-        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+        await _mockGetEstablishments.Received(1).GetEstablishment(urn);
     }
 
     [Fact]
@@ -179,26 +185,34 @@ public class SchoolServiceTests
         const int urn = 123456;
         const string ukprn = "12345678";
 
-        _mockSchoolRepository.GetReferenceNumbersAsync(urn).Returns(new SchoolReferenceNumbers(null, null, ukprn));
-
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
+            {
+                Urn = urn.ToString(),
+                Ukprn = ukprn
+            });
         var result = await _sut.GetReferenceNumbersAsync(urn);
 
         result.Ukprn.Should().Be(ukprn);
-        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+        await _mockGetEstablishments.Received(1).GetEstablishment(urn);
     }
 
     [Fact]
     public async Task GetReferenceNumbersAsync_should_not_include_ukprn_when_missing()
     {
         const int urn = 123456;
-        const string? ukprn = null;
 
-        _mockSchoolRepository.GetReferenceNumbersAsync(urn).Returns(new SchoolReferenceNumbers(null, null, ukprn));
-
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
+            {
+                Urn = urn.ToString(),
+                LocalAuthorityCode = "123",
+                EstablishmentNumber = "456"
+            });
         var result = await _sut.GetReferenceNumbersAsync(urn);
 
         result.Ukprn.Should().BeNull();
-        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+        await _mockGetEstablishments.Received(1).GetEstablishment(urn);
     }
 
     [Fact]
@@ -236,7 +250,43 @@ public class SchoolServiceTests
             Email: null
         );
 
-        _mockSchoolRepository.GetGovernanceAsync(urn).Returns([governor, chair, historic]);
+        _mockEstablishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(urn)
+            .Returns(new ObservableCollection<AcademyGovernance>
+            {
+                new AcademyGovernance
+                {
+                    Ukprn = "456",
+                    Urn = urn,
+                    DisplayName = "First Second Last",
+                    Roles = ["Governor"] ,
+                    DateOfAppointment = startDate.ToString("dd/MM/yyyy"),
+                    DateTermOfOfficeEndsEnded = futureEndDate.ToString("dd/MM/yyyy"),
+                    Email = null,
+                    AppointingBody = "School board"
+                },
+                new AcademyGovernance
+                {
+                    Ukprn = "789",
+                    Urn = urn,
+                    DisplayName = "First Second Last",
+                    Roles = ["Chair"] ,
+                    DateOfAppointment = startDate.ToString("dd/MM/yyyy"),
+                    DateTermOfOfficeEndsEnded = futureEndDate.ToString("dd/MM/yyyy"),
+                    Email = null,
+                    AppointingBody = "School board"
+                },
+                new AcademyGovernance
+                {
+                    Ukprn = "789",
+                    Urn = urn,
+                    DisplayName = "First Second Last",
+                    Roles = ["Chair"] ,
+                    DateOfAppointment = startDate.ToString("dd/MM/yyyy"),
+                    DateTermOfOfficeEndsEnded = historicEndDate.ToString("dd/MM/yyyy"),
+                    Email = null,
+                    AppointingBody = "School board"
+                }
+            });
 
         var result = await _sut.GetSchoolGovernanceAsync(urn);
 
@@ -245,17 +295,29 @@ public class SchoolServiceTests
     }
 
     [Theory]
-    [InlineData(null, "Not available")]
     [InlineData("", "Not available")]
     [InlineData("Not applicable", "Does not apply")]
     [InlineData("Roman Catholic", "Roman Catholic")]
-    public async Task GetReligiousCharacteristicsAsync_for_authority_should_return_correct_data(string? authority,
+    public async Task GetReligiousCharacteristicsAsync_for_authority_should_return_correct_data(string authority,
         string expectedResult)
     {
         const int urn = 123456;
-
-        _mockSchoolRepository.GetReligiousCharacteristicsAsync(urn)
-            .Returns(new ReligiousCharacteristics(authority, null, null));
+        
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
+            {
+                Urn = urn.ToString(),
+                Name = "Test School",
+                Diocese = new NameAndCodeDto
+                {
+                    Name = authority
+                },
+                ReligiousCharacter = new NameAndCodeDto
+                {
+                    Name = "Roman Catholic"
+                },
+                ReligousEthos = "Church of England/Roman Catholic"
+            });
 
         var result = await _sut.GetReligiousCharacteristicsAsync(urn);
 
@@ -263,17 +325,29 @@ public class SchoolServiceTests
     }
 
     [Theory]
-    [InlineData(null, "Not available")]
     [InlineData("", "Not available")]
     [InlineData("Not applicable", "Not applicable")]
     [InlineData("Diocese of Nottingham", "Diocese of Nottingham")]
-    public async Task GetReligiousCharacteristicsAsync_for_character_should_return_correct_data(string? character,
+    public async Task GetReligiousCharacteristicsAsync_for_character_should_return_correct_data(string character,
         string expectedResult)
     {
         const int urn = 123456;
-
-        _mockSchoolRepository.GetReligiousCharacteristicsAsync(urn)
-            .Returns(new ReligiousCharacteristics(null, character, null));
+        
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
+            {
+                Urn = urn.ToString(),
+                Name = "Test School",
+                Diocese = new NameAndCodeDto
+                {
+                    Name = "Diocese of Nottingham"
+                },
+                ReligiousCharacter = new NameAndCodeDto
+                {
+                    Name = character
+                },
+                ReligousEthos = "Church of England/Roman Catholic"
+            });
 
         var result = await _sut.GetReligiousCharacteristicsAsync(urn);
 
@@ -281,17 +355,29 @@ public class SchoolServiceTests
     }
 
     [Theory]
-    [InlineData(null, "Not available")]
     [InlineData("", "Not available")]
     [InlineData("Not applicable", "Not applicable")]
     [InlineData("Church of England/Roman Catholic", "Church of England/Roman Catholic")]
-    public async Task GetReligiousCharacteristicsAsync_for_ethos_should_return_correct_data(string? ethos,
+    public async Task GetReligiousCharacteristicsAsync_for_ethos_should_return_correct_data(string ethos,
         string expectedResult)
     {
         const int urn = 123456;
-
-        _mockSchoolRepository.GetReligiousCharacteristicsAsync(urn)
-            .Returns(new ReligiousCharacteristics(null, null, ethos));
+        
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
+            {
+                Urn = urn.ToString(),
+                Name = "Test School",
+                Diocese = new NameAndCodeDto
+                {
+                    Name = "Diocese of Nottingham"
+                },
+                ReligiousCharacter = new NameAndCodeDto
+                {
+                    Name = "Roman Catholic"
+                },
+                ReligousEthos = ethos
+            });
 
         var result = await _sut.GetReligiousCharacteristicsAsync(urn);
 

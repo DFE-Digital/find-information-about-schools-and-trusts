@@ -19,17 +19,13 @@ public class SchoolRepositoryTests
 {
     private readonly SchoolRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
-    private readonly IGetEstablishments _mockGetEstablishments;
-    private readonly IEstablishmentsClient _establishmentsClient = Substitute.For<IEstablishmentsClient>();
 
     private readonly IStringFormattingUtilities _stringFormattingUtilities = new StringFormattingUtilities();
     private readonly ILogger<SchoolRepository> _mockLogger = MockLogger.CreateLogger<SchoolRepository>();
 
     public SchoolRepositoryTests()
     {
-        _mockGetEstablishments = Substitute.For<IGetEstablishments>();
-        _sut = new SchoolRepository(_mockAcademiesDbContext.Object, _stringFormattingUtilities, _mockLogger,
-            _mockGetEstablishments, _establishmentsClient);
+        _sut = new SchoolRepository(_mockAcademiesDbContext.Object, _stringFormattingUtilities, _mockLogger);
     }
 
     [Fact]
@@ -207,128 +203,5 @@ public class SchoolRepositoryTests
         var result = await _sut.IsPartOfFederationAsync(urn);
 
         result.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task GetReferenceNumbersAsync_should_throw_if_not_found()
-    {
-        var urn = 123456;
-
-        _mockGetEstablishments.GetEstablishment(urn)
-            .ThrowsAsync(new ApiResponseException("Request to Api failed | StatusCode - 401"));
-
-        var action = () => _sut.GetReferenceNumbersAsync(urn);
-
-        await action.Should().ThrowAsync<ApiResponseException>()
-            .WithMessage("Request to Api failed | StatusCode - 401");
-    }
-
-    [Theory]
-    [InlineData(123456, "123", "4567", "10012345")]
-    [InlineData(234567, "234", "5678", "10023456")]
-    [InlineData(345678, "345", "6789", "10034567")]
-    [InlineData(456789, "456", "7890", "10045678")]
-    [InlineData(567890, "567", "8901", "10056789")]
-    public async Task GetReferenceNumbersAsync_should_return_reference_numbers_if_found(int urn, string laCode,
-        string establishmentNumber, string ukprn)
-    {
-        var name = $"School {urn}";
-
-        _mockGetEstablishments.GetEstablishment(urn)
-            .Returns(new EstablishmentDto
-            {
-                Urn = urn.ToString(),
-                Name = name,
-                LocalAuthorityCode = laCode,
-                EstablishmentNumber = establishmentNumber,
-                Ukprn = ukprn
-            });
-
-        var result = await _sut.GetReferenceNumbersAsync(urn);
-
-        result.Should().NotBeNull();
-        result!.LaCode.Should().Be(laCode);
-        result.EstablishmentNumber.Should().Be(establishmentNumber);
-        result.Ukprn.Should().Be(ukprn);
-    }
-
-
-    [Fact]
-    public async Task GetGovernanceAsync_ShouldReturnEmpty_WithNoGovernanceSet()
-    {
-        _establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(1234)
-            .Returns(new ObservableCollection<AcademyGovernance>());
-        
-        var result = await _sut.GetGovernanceAsync(1234);
-
-        result.Should().BeEmpty();
-    }
-
-    [Fact]
-    public async Task GetGovernanceAsync_ShouldReturnExpectedData()
-    {
-        var urn = 123;
-        
-        _establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(urn)
-            .Returns(new ObservableCollection<AcademyGovernance>
-            {
-                new AcademyGovernance
-                {
-                    Ukprn = "456",
-                    Urn = urn,
-                    DisplayName = "testy mc testface",
-                    Roles = ["trust member"] ,
-                    DateOfAppointment = DateTime.UtcNow.AddDays(-100).ToString("dd/MM/yyyy"),
-                    DateTermOfOfficeEndsEnded = DateTime.UtcNow.AddDays(100).ToString("dd/MM/yyyy"),
-                    Email = "testy@example.com",
-                    AppointingBody = "trust members"
-                },
-                new AcademyGovernance
-                {
-                    Ukprn = "789",
-                    Urn = urn,
-                    DisplayName = "another governor",
-                    Roles = ["governor"] ,
-                    DateOfAppointment = DateTime.UtcNow.AddDays(-100).ToString("dd/MM/yyyy"),
-                    DateTermOfOfficeEndsEnded = DateTime.UtcNow.AddDays(100).ToString("dd/MM/yyyy"),
-                    Email = "another@example.com",
-                    AppointingBody = "trust members"
-                }
-            });
-
-        var result = await _sut.GetGovernanceAsync(urn);
-
-        result.Should().HaveCount(2);
-        result[0].FullName.Should().Be("testy mc testface");
-        result[0].AppointingBody.Should().Be("trust members");
-        result[0].DateOfAppointment.Should().Be(DateTime.UtcNow.AddDays(-100).Date);
-        result[0].DateOfTermEnd.Should().Be(DateTime.UtcNow.AddDays(100).Date);
-    }
-
-    [Fact]
-    public async Task GetReligiousCharacteristicsAsync_should_return_religious_characteristics()
-    {
-        var urn = 123456;
-
-        _mockGetEstablishments.GetEstablishment(urn)
-            .Returns(new EstablishmentDto
-            {
-                Urn = urn.ToString(),
-                Name = "Test School",
-                Diocese = new NameAndCodeDto
-                {
-                    Name = "Diocese of Nottingham"
-                },
-                ReligiousCharacter = new NameAndCodeDto
-                {
-                    Name = "Roman Catholic"
-                },
-                ReligousEthos = "Church of England/Roman Catholic"
-            });
-
-        var result = await _sut.GetReligiousCharacteristicsAsync(urn);
-
-        result.Should().BeEquivalentTo(new ReligiousCharacteristics("Diocese of Nottingham", "Roman Catholic",
-            "Church of England/Roman Catholic"));
     }
 }
