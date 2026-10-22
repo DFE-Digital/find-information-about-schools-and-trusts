@@ -7,9 +7,7 @@ public interface ISchoolRepository
     Task<bool> IsPartOfFederationAsync(int urn);
 
     Task<FederationDetails> GetSchoolFederationDetailsAsync(int urn);
-
-    Task<SchoolReferenceNumbers?> GetReferenceNumbersAsync(int urn);
-
+    
     Task<List<Governor>> GetGovernanceAsync(int urn);
 
     Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn);

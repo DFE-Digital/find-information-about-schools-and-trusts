@@ -76,12 +76,6 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
         return schoolFederationDetails;
     }
 
-    public async Task<SchoolReferenceNumbers?> GetReferenceNumbersAsync(int urn)
-    {
-        var result = await getEstablishments.GetEstablishment(urn);
-
-        return new SchoolReferenceNumbers(result.LocalAuthorityCode, result.EstablishmentNumber, result.Ukprn);
-    }
 
     public async Task<List<Governor>> GetGovernanceAsync(int urn)
     {

@@ -110,51 +110,50 @@ public class SchoolServiceTests
         await _mockSchoolRepository.Received(1).IsPartOfFederationAsync(urn);
         result.Should().Be(expectedReturnValue);
     }
-
-    [Fact]
-    public async Task GetReferenceNumbersAsync_should_return_only_urn_when_repository_returns_null()
-    {
-        const int urn = 123456;
-        _mockSchoolRepository.GetReferenceNumbersAsync(urn).Returns((SchoolReferenceNumbers?)null);
-
-        var result = await _sut.GetReferenceNumbersAsync(urn);
-
-        result.Urn.Should().Be(urn);
-        result.Laestab.Should().BeNull();
-        result.Ukprn.Should().BeNull();
-        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
-    }
+    
 
     [Theory]
     [InlineData("123", "4567", "123/4567")]
     [InlineData("234", "5678", "234/5678")]
     [InlineData("345", "6789", "345/6789")]
-    public async Task GetReferenceNumbersAsync_should_include_laestab_when_la_code_and_establishment_number_are_present(
+    public async Task GetReferenceNumbersAsync_should_set_laestab_when_la_code_and_establishment_number_are_present(
         string laCode, string establishmentNumber, string expectedLaestab)
     {
-        _mockSchoolRepository.GetReferenceNumbersAsync(123456)
-            .Returns(new SchoolReferenceNumbers(laCode, establishmentNumber, null));
+        var urn = 123456;
+        var name = $"School {urn}";
 
-        var result = await _sut.GetReferenceNumbersAsync(123456);
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
+            {
+                Urn = urn.ToString(),
+                Name = name,
+                LocalAuthorityCode = laCode,
+                EstablishmentNumber = establishmentNumber
+            });
+
+        var result = await _sut.GetReferenceNumbersAsync(urn);
 
         result.Laestab.Should().Be(expectedLaestab);
-        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(123456);
+        await _mockGetEstablishments.Received(1).GetEstablishment(urn);
     }
 
     [Fact]
     public async Task GetReferenceNumbersAsync_should_not_include_laestab_when_la_code_is_missing()
     {
         const int urn = 123456;
-        const string? laCode = null;
         const string establishmentNumber = "4567";
 
-        _mockSchoolRepository.GetReferenceNumbersAsync(urn)
-            .Returns(new SchoolReferenceNumbers(laCode, establishmentNumber, null));
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
+            {
+                Urn = urn.ToString(),
+                EstablishmentNumber = establishmentNumber
+            });
 
         var result = await _sut.GetReferenceNumbersAsync(urn);
 
         result.Laestab.Should().BeNull();
-        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+        await _mockGetEstablishments.Received(1).GetEstablishment(urn);
     }
 
     [Fact]
@@ -162,15 +161,18 @@ public class SchoolServiceTests
     {
         const int urn = 123456;
         const string laCode = "123";
-        const string? establishmentNumber = null;
 
-        _mockSchoolRepository.GetReferenceNumbersAsync(urn)
-            .Returns(new SchoolReferenceNumbers(laCode, establishmentNumber, null));
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
+            {
+                Urn = urn.ToString(),
+                LocalAuthorityCode = laCode
+            });
 
         var result = await _sut.GetReferenceNumbersAsync(urn);
 
         result.Laestab.Should().BeNull();
-        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+        await _mockGetEstablishments.Received(1).GetEstablishment(urn);
     }
 
     [Fact]
@@ -179,26 +181,34 @@ public class SchoolServiceTests
         const int urn = 123456;
         const string ukprn = "12345678";
 
-        _mockSchoolRepository.GetReferenceNumbersAsync(urn).Returns(new SchoolReferenceNumbers(null, null, ukprn));
-
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
+            {
+                Urn = urn.ToString(),
+                Ukprn = ukprn
+            });
         var result = await _sut.GetReferenceNumbersAsync(urn);
 
         result.Ukprn.Should().Be(ukprn);
-        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+        await _mockGetEstablishments.Received(1).GetEstablishment(urn);
     }
 
     [Fact]
     public async Task GetReferenceNumbersAsync_should_not_include_ukprn_when_missing()
     {
         const int urn = 123456;
-        const string? ukprn = null;
 
-        _mockSchoolRepository.GetReferenceNumbersAsync(urn).Returns(new SchoolReferenceNumbers(null, null, ukprn));
-
+        _mockGetEstablishments.GetEstablishment(urn)
+            .Returns(new EstablishmentDto
+            {
+                Urn = urn.ToString(),
+                LocalAuthorityCode = "123",
+                EstablishmentNumber = "456"
+            });
         var result = await _sut.GetReferenceNumbersAsync(urn);
 
         result.Ukprn.Should().BeNull();
-        await _mockSchoolRepository.Received(1).GetReferenceNumbersAsync(urn);
+        await _mockGetEstablishments.Received(1).GetEstablishment(urn);
     }
 
     [Fact]
