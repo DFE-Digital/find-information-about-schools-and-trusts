@@ -1,5 +1,4 @@
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Http;
-using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
 
 namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
@@ -42,26 +41,26 @@ public class GetTrusts(IDfeHttpClientFactory httpClientFactory,
         return result.Body;
     }
     
-    public async Task<TrustDto[]> GetTrustsByReferenceNumbers(
-        IEnumerable<string> referenceNumbers)
-    {
-        string trns = string.Join("&trns=", referenceNumbers);
-
-        string path = $"v4/trusts/trustReferenceNumber/bulk?trns={trns}";
-
-        ApiResponse<TrustDto[]> result =
-            await httpClientService.Get<TrustDto[]>(
-                _httpClient,
-                path);
-
-        if (!result.Success)
-        {
-            throw new ApiResponseException(
-                $"Request to Api failed | StatusCode - {result.StatusCode}");
-        }
-
-        return result.Body;
-    }
+    // public async Task<TrustDto[]> GetTrustsByReferenceNumbers(
+    //     IEnumerable<string> referenceNumbers)
+    // {
+    //     string trns = string.Join("&trns=", referenceNumbers);
+    //
+    //     string path = $"v4/trusts/trustReferenceNumber/bulk?trns={trns}";
+    //
+    //     ApiResponse<TrustDto[]> result =
+    //         await httpClientService.Get<TrustDto[]>(
+    //             _httpClient,
+    //             path);
+    //
+    //     if (!result.Success)
+    //     {
+    //         throw new ApiResponseException(
+    //             $"Request to Api failed | StatusCode - {result.StatusCode}");
+    //     }
+    //
+    //     return result.Body;
+    // }
     
     public async Task<TrustDto?> GetEstablishmentTrust(int urn)
     {

@@ -16,7 +16,7 @@ public class TrustRepositoryTests
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
     private readonly IGetTrusts _mockGetTrusts;
 
-    private readonly StringFormattingUtilities stringFormattingUtilities = new StringFormattingUtilities();
+    private readonly StringFormattingUtilities _stringFormattingUtilities = new ();
 
     private readonly DateTime _lastYear = DateTime.Today.AddYears(-1);
     private readonly DateTime _nextYear = DateTime.Today.AddYears(1);
@@ -27,26 +27,7 @@ public class TrustRepositoryTests
     public TrustRepositoryTests()
     {
         _mockGetTrusts = Substitute.For<IGetTrusts>();
-        _sut = new TrustRepository(_mockAcademiesDbContext.Object, _mockGetTrusts, stringFormattingUtilities);
-    }
-
-    [Theory]
-    [InlineData("TR2806", "2806", "My Trust", "Multi-academy trust")]
-    [InlineData("TR9008", "9008", "Another Trust", "Single-academy trust")]
-    [InlineData("TR9010", "9010", "Trust with no academies", "Multi-academy trust")]
-    public async Task GetTrustSummaryAsync_should_return_trustSummary_if_found(string referenceNumber, string uid,
-        string name, string type)
-    {
-        _mockGetTrusts.GetTrustByReferenceNumber(referenceNumber).Returns(new TrustDto
-        {
-            GroupUid = uid,
-            Name = name,
-            ReferenceNumber = referenceNumber,
-            Type = new NameAndCodeDto { Name = type }
-        });
-
-        var result = await _sut.GetTrustSummaryAsync(referenceNumber);
-        result.Should().BeEquivalentTo(new TrustSummary(name, type, uid, referenceNumber));
+        _sut = new TrustRepository(_mockAcademiesDbContext.Object, _mockGetTrusts, _stringFormattingUtilities);
     }
 
     [Theory]
@@ -94,16 +75,6 @@ public class TrustRepositoryTests
             "12 Academy Way, District, Townville, AB1 2CD",
             region,
             new DateTime(2015, 4, 20)));
-    }
-
-    [Fact]
-    public async Task GetTrustSummaryAsync_should_return_null_if_reference_number_not_found()
-    {
-        const string referenceNumber = "TR0000";
-        _mockGetTrusts.GetTrustByReferenceNumber(referenceNumber).Returns((TrustDto?)null);
-
-        var result = await _sut.GetTrustSummaryAsync(referenceNumber);
-        result.Should().BeNull();
     }
     
     [Fact]

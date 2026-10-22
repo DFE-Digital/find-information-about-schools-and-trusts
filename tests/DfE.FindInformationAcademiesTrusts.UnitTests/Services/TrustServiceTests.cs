@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using DfE.FindInformationAcademiesTrusts.Data;
+using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
@@ -7,6 +8,8 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
 using GovUK.Dfe.PersonsApi.Client.Contracts;
 using NSubstitute.ReturnsExtensions;
 using Person = DfE.FindInformationAcademiesTrusts.Data.Person;
@@ -31,6 +34,7 @@ public class TrustServiceTests
     private readonly IEstablishmentsClient _establishmentsClient = Substitute.For<IEstablishmentsClient>();
     private readonly ITrustPupilService _mockTrustPupilService = Substitute.For<ITrustPupilService>();
     private readonly IDateTimeProvider _mockDateTimeProvider = Substitute.For<IDateTimeProvider>();
+    private readonly IGetTrusts _mockGetTrusts = Substitute.For<IGetTrusts>();
     private readonly MockMemoryCache _mockMemoryCache = new();
 
     private readonly DateTime _lastYear = DateTime.Today.AddYears(-1);
@@ -44,7 +48,8 @@ public class TrustServiceTests
             _establishmentsClient,
             _mockTrustPupilService,
             _mockMemoryCache.Object,
-            _mockDateTimeProvider);
+            _mockDateTimeProvider,
+            _mockGetTrusts);
 
         _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync(Arg.Any<string>())
             .ReturnsNull();
@@ -65,15 +70,17 @@ public class TrustServiceTests
         var result = await _sut.GetTrustSummaryAsync(referencenumber);
         result.Should().Be(cachedResult);
 
-        await _mockTrustRepository.DidNotReceive().GetTrustSummaryAsync(referencenumber);
+        await _mockGetTrusts.DidNotReceive().GetTrustByReferenceNumber(referencenumber);
         await _mockAcademyRepository.DidNotReceive().GetNumberOfAcademiesInTrustAsync(Arg.Any<string>());
     }
 
     [Fact]
     public async Task GetTrustSummaryAsync_should_return_null_if_no_giasGroup_found()
     {
-        _mockTrustRepository.GetTrustSummaryAsync("this uid doesn't exist")
-            .ReturnsNull();
+        // _mockTrustRepository.GetTrustSummaryAsync("this uid doesn't exist")
+        //     .ReturnsNull();
+        
+        _mockGetTrusts.GetTrustByReferenceNumber("this uid doesn't exist").Returns((TrustDto?)null);
 
         var result = await _sut.GetTrustSummaryAsync("this uid doesn't exist");
         result.Should().BeNull();
@@ -86,8 +93,15 @@ public class TrustServiceTests
     public async Task GetTrustSummaryAsync_should_return_trustSummary_if_found(string uid, string referenceNumber,
         string name, string type, int numAcademies)
     {
-        _mockTrustRepository.GetTrustSummaryAsync(referenceNumber)!
-            .Returns(new TrustSummary(name, type, uid, referenceNumber));
+        // _mockTrustRepository.GetTrustSummaryAsync(referenceNumber)!
+        //     .Returns(new TrustSummary(name, type, uid, referenceNumber));
+        _mockGetTrusts.GetTrustByReferenceNumber(referenceNumber).Returns(new TrustDto
+        {
+            GroupUid = uid,
+            Name = name,
+            ReferenceNumber = referenceNumber,
+            Type = new NameAndCodeDto { Name = type }
+        });
         _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(referenceNumber).Returns(numAcademies);
 
         var result = await _sut.GetTrustSummaryAsync(referenceNumber);
@@ -103,8 +117,15 @@ public class TrustServiceTests
     {
         var key = $"{nameof(TrustService)}:{referenceNumber}";
 
-        _mockTrustRepository.GetTrustSummaryAsync(referenceNumber)!
-            .Returns(new TrustSummary(name, type, uid, referenceNumber));
+        // _mockTrustRepository.GetTrustSummaryAsync(referenceNumber)!
+        //     .Returns(new TrustSummary(name, type, uid, referenceNumber));
+        _mockGetTrusts.GetTrustByReferenceNumber(referenceNumber).Returns(new TrustDto
+        {
+            GroupUid = uid,
+            Name = name,
+            ReferenceNumber = referenceNumber,
+            Type = new NameAndCodeDto { Name = type }
+        });
         _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(referenceNumber).Returns(numAcademies);
 
         await _sut.GetTrustSummaryAsync(referenceNumber);
@@ -488,7 +509,7 @@ public class TrustServiceTests
         var result = await _sut.GetTrustSummaryAsync(urn);
 
         result.Should().BeNull();
-        await _mockTrustRepository.Received(0).GetTrustSummaryAsync(Arg.Any<string>());
+        await _mockGetTrusts.Received(0).GetTrustByReferenceNumber(Arg.Any<string>());
     }
 
     [Theory]
@@ -499,8 +520,15 @@ public class TrustServiceTests
         _mockTrustRepository.GetTrustSummaryByEstablishmentUrnAsync(urn)
             .Returns(new TrustSummary(name, type, uid, referenceNumber));
 
-        _mockTrustRepository.GetTrustSummaryAsync(referenceNumber)
-            .Returns(new TrustSummary(name, type, uid, referenceNumber));
+        // _mockTrustRepository.GetTrustSummaryAsync(referenceNumber)
+        //     .Returns(new TrustSummary(name, type, uid, referenceNumber));
+        _mockGetTrusts.GetTrustByReferenceNumber(referenceNumber).Returns(new TrustDto
+        {
+            GroupUid = uid,
+            Name = name,
+            ReferenceNumber = referenceNumber,
+            Type = new NameAndCodeDto { Name = type }
+        });
         _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(referenceNumber).Returns(numAcademies);
 
         var result = await _sut.GetTrustSummaryAsync(referenceNumber);
