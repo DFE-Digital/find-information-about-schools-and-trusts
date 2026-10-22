@@ -73,11 +73,4 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
 
         return schoolFederationDetails;
     }
-
-    // public async Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn)
-    // {
-    //     var result = await getEstablishments.GetEstablishment(urn);
-    //     
-    //     return new ReligiousCharacteristics(result.Diocese.Name, result.ReligiousCharacter.Name, result.ReligousEthos);
-    // }
 }
