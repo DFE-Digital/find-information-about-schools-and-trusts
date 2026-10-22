@@ -94,7 +94,9 @@ public class SchoolService(
 
     public async Task<SchoolReligiousCharacteristicsServiceModel> GetReligiousCharacteristicsAsync(int urn)
     {
-        var religiousCharacteristics = await schoolRepository.GetReligiousCharacteristicsAsync(urn);
+        var result = await getEstablishments.GetEstablishment(urn);
+        
+        var religiousCharacteristics = new ReligiousCharacteristics(result.Diocese.Name, result.ReligiousCharacter.Name, result.ReligousEthos);
 
         return new SchoolReligiousCharacteristicsServiceModel(
             GetCharacteristicsValue(nameof(religiousCharacteristics.ReligiousAuthority),

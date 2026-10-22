@@ -8,5 +8,5 @@ public interface ISchoolRepository
 
     Task<FederationDetails> GetSchoolFederationDetailsAsync(int urn);
     
-    Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn);
+    // Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn);
 }

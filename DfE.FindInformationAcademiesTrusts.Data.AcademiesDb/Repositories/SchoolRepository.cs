@@ -14,8 +14,7 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
 public class SchoolRepository(IAcademiesDbContext academiesDbContext,
     IStringFormattingUtilities stringFormattingUtilities,
-    ILogger<SchoolRepository> logger, 
-    IGetEstablishments getEstablishments) : ISchoolRepository
+    ILogger<SchoolRepository> logger) : ISchoolRepository
 { 
     public async Task<SchoolContact?> GetSchoolContactsAsync(int urn)
     {
@@ -75,10 +74,10 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
         return schoolFederationDetails;
     }
 
-    public async Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn)
-    {
-        var result = await getEstablishments.GetEstablishment(urn);
-        
-        return new ReligiousCharacteristics(result.Diocese.Name, result.ReligiousCharacter.Name, result.ReligousEthos);
-    }
+    // public async Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn)
+    // {
+    //     var result = await getEstablishments.GetEstablishment(urn);
+    //     
+    //     return new ReligiousCharacteristics(result.Diocese.Name, result.ReligiousCharacter.Name, result.ReligousEthos);
+    // }
 }

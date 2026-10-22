@@ -19,16 +19,13 @@ public class SchoolRepositoryTests
 {
     private readonly SchoolRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
-    private readonly IGetEstablishments _mockGetEstablishments;
 
     private readonly IStringFormattingUtilities _stringFormattingUtilities = new StringFormattingUtilities();
     private readonly ILogger<SchoolRepository> _mockLogger = MockLogger.CreateLogger<SchoolRepository>();
 
     public SchoolRepositoryTests()
     {
-        _mockGetEstablishments = Substitute.For<IGetEstablishments>();
-        _sut = new SchoolRepository(_mockAcademiesDbContext.Object, _stringFormattingUtilities, _mockLogger,
-            _mockGetEstablishments);
+        _sut = new SchoolRepository(_mockAcademiesDbContext.Object, _stringFormattingUtilities, _mockLogger);
     }
 
     [Fact]
@@ -206,32 +203,5 @@ public class SchoolRepositoryTests
         var result = await _sut.IsPartOfFederationAsync(urn);
 
         result.Should().BeTrue();
-    }
-    
-    [Fact]
-    public async Task GetReligiousCharacteristicsAsync_should_return_religious_characteristics()
-    {
-        var urn = 123456;
-
-        _mockGetEstablishments.GetEstablishment(urn)
-            .Returns(new EstablishmentDto
-            {
-                Urn = urn.ToString(),
-                Name = "Test School",
-                Diocese = new NameAndCodeDto
-                {
-                    Name = "Diocese of Nottingham"
-                },
-                ReligiousCharacter = new NameAndCodeDto
-                {
-                    Name = "Roman Catholic"
-                },
-                ReligousEthos = "Church of England/Roman Catholic"
-            });
-
-        var result = await _sut.GetReligiousCharacteristicsAsync(urn);
-
-        result.Should().BeEquivalentTo(new ReligiousCharacteristics("Diocese of Nottingham", "Roman Catholic",
-            "Church of England/Roman Catholic"));
     }
 }
