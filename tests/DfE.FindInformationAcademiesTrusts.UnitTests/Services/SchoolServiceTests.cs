@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
@@ -6,6 +7,7 @@ using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
+using GovUK.Dfe.PersonsApi.Client.Contracts;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services;
 
@@ -15,13 +17,15 @@ public class SchoolServiceTests
     private readonly ISchoolRepository _mockSchoolRepository = Substitute.For<ISchoolRepository>();
     private readonly IReportCardsService _mockReportCardsService = Substitute.For<IReportCardsService>();
     private readonly IGetEstablishmentsTemp _mockGetEstablishments;
+    private readonly IEstablishmentsClient _mockEstablishmentsClient;
 
     private readonly MockMemoryCache _mockMemoryCache = new();
 
     public SchoolServiceTests()
     {
         _mockGetEstablishments = Substitute.For<IGetEstablishmentsTemp>();
-        _sut = new SchoolService(_mockMemoryCache.Object, _mockGetEstablishments, _mockSchoolRepository);
+        _mockEstablishmentsClient = Substitute.For<IEstablishmentsClient>();
+        _sut = new SchoolService(_mockMemoryCache.Object, _mockGetEstablishments, _mockSchoolRepository, _mockEstablishmentsClient);
 
         _mockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(new ReportCardServiceModel());
     }
@@ -246,7 +250,43 @@ public class SchoolServiceTests
             Email: null
         );
 
-        _mockSchoolRepository.GetGovernanceAsync(urn).Returns([governor, chair, historic]);
+        _mockEstablishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(urn)
+            .Returns(new ObservableCollection<AcademyGovernance>
+            {
+                new AcademyGovernance
+                {
+                    Ukprn = "456",
+                    Urn = urn,
+                    DisplayName = "First Second Last",
+                    Roles = ["Governor"] ,
+                    DateOfAppointment = startDate.ToString("dd/MM/yyyy"),
+                    DateTermOfOfficeEndsEnded = futureEndDate.ToString("dd/MM/yyyy"),
+                    Email = null,
+                    AppointingBody = "School board"
+                },
+                new AcademyGovernance
+                {
+                    Ukprn = "789",
+                    Urn = urn,
+                    DisplayName = "First Second Last",
+                    Roles = ["Chair"] ,
+                    DateOfAppointment = startDate.ToString("dd/MM/yyyy"),
+                    DateTermOfOfficeEndsEnded = futureEndDate.ToString("dd/MM/yyyy"),
+                    Email = null,
+                    AppointingBody = "School board"
+                },
+                new AcademyGovernance
+                {
+                    Ukprn = "789",
+                    Urn = urn,
+                    DisplayName = "First Second Last",
+                    Roles = ["Chair"] ,
+                    DateOfAppointment = startDate.ToString("dd/MM/yyyy"),
+                    DateTermOfOfficeEndsEnded = historicEndDate.ToString("dd/MM/yyyy"),
+                    Email = null,
+                    AppointingBody = "School board"
+                }
+            });
 
         var result = await _sut.GetSchoolGovernanceAsync(urn);
 

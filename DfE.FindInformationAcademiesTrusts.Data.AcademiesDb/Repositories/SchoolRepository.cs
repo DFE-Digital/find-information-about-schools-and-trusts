@@ -15,8 +15,7 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 public class SchoolRepository(IAcademiesDbContext academiesDbContext,
     IStringFormattingUtilities stringFormattingUtilities,
     ILogger<SchoolRepository> logger, 
-    IGetEstablishments getEstablishments,
-    IEstablishmentsClient establishmentsClient) : ISchoolRepository
+    IGetEstablishments getEstablishments) : ISchoolRepository
 { 
     public async Task<SchoolContact?> GetSchoolContactsAsync(int urn)
     {
@@ -74,27 +73,6 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
         }
 
         return schoolFederationDetails;
-    }
-
-
-    public async Task<List<Governor>> GetGovernanceAsync(int urn)
-    {
-        var result = await establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(urn);
-        
-        var governors = new List<Governor>();
-
-        foreach (var person in result)
-        {
-            governors.Add(new Governor(
-                FullName: person.DisplayName,
-                Role: person.Roles[0],
-                AppointingBody: person.AppointingBody,
-                DateOfAppointment: person.DateOfAppointment.ParseAsNullableDate(),
-                DateOfTermEnd: person.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
-                Email: person.Email));
-        }
-        
-        return governors;
     }
 
     public async Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn)

@@ -8,7 +8,5 @@ public interface ISchoolRepository
 
     Task<FederationDetails> GetSchoolFederationDetailsAsync(int urn);
     
-    Task<List<Governor>> GetGovernanceAsync(int urn);
-
     Task<ReligiousCharacteristics> GetReligiousCharacteristicsAsync(int urn);
 }

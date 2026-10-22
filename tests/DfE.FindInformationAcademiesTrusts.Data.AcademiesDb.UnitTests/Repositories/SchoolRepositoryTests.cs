@@ -20,7 +20,6 @@ public class SchoolRepositoryTests
     private readonly SchoolRepository _sut;
     private readonly MockAcademiesDbContext _mockAcademiesDbContext = new();
     private readonly IGetEstablishments _mockGetEstablishments;
-    private readonly IEstablishmentsClient _establishmentsClient = Substitute.For<IEstablishmentsClient>();
 
     private readonly IStringFormattingUtilities _stringFormattingUtilities = new StringFormattingUtilities();
     private readonly ILogger<SchoolRepository> _mockLogger = MockLogger.CreateLogger<SchoolRepository>();
@@ -29,7 +28,7 @@ public class SchoolRepositoryTests
     {
         _mockGetEstablishments = Substitute.For<IGetEstablishments>();
         _sut = new SchoolRepository(_mockAcademiesDbContext.Object, _stringFormattingUtilities, _mockLogger,
-            _mockGetEstablishments, _establishmentsClient);
+            _mockGetEstablishments);
     }
 
     [Fact]
@@ -208,59 +207,7 @@ public class SchoolRepositoryTests
 
         result.Should().BeTrue();
     }
-
-    [Fact]
-    public async Task GetGovernanceAsync_ShouldReturnEmpty_WithNoGovernanceSet()
-    {
-        _establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(1234)
-            .Returns(new ObservableCollection<AcademyGovernance>());
-        
-        var result = await _sut.GetGovernanceAsync(1234);
-
-        result.Should().BeEmpty();
-    }
-
-    [Fact]
-    public async Task GetGovernanceAsync_ShouldReturnExpectedData()
-    {
-        var urn = 123;
-        
-        _establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(urn)
-            .Returns(new ObservableCollection<AcademyGovernance>
-            {
-                new AcademyGovernance
-                {
-                    Ukprn = "456",
-                    Urn = urn,
-                    DisplayName = "testy mc testface",
-                    Roles = ["trust member"] ,
-                    DateOfAppointment = DateTime.UtcNow.AddDays(-100).ToString("dd/MM/yyyy"),
-                    DateTermOfOfficeEndsEnded = DateTime.UtcNow.AddDays(100).ToString("dd/MM/yyyy"),
-                    Email = "testy@example.com",
-                    AppointingBody = "trust members"
-                },
-                new AcademyGovernance
-                {
-                    Ukprn = "789",
-                    Urn = urn,
-                    DisplayName = "another governor",
-                    Roles = ["governor"] ,
-                    DateOfAppointment = DateTime.UtcNow.AddDays(-100).ToString("dd/MM/yyyy"),
-                    DateTermOfOfficeEndsEnded = DateTime.UtcNow.AddDays(100).ToString("dd/MM/yyyy"),
-                    Email = "another@example.com",
-                    AppointingBody = "trust members"
-                }
-            });
-
-        var result = await _sut.GetGovernanceAsync(urn);
-
-        result.Should().HaveCount(2);
-        result[0].FullName.Should().Be("testy mc testface");
-        result[0].AppointingBody.Should().Be("trust members");
-        result[0].DateOfAppointment.Should().Be(DateTime.UtcNow.AddDays(-100).Date);
-        result[0].DateOfTermEnd.Should().Be(DateTime.UtcNow.AddDays(100).Date);
-    }
-
+    
     [Fact]
     public async Task GetReligiousCharacteristicsAsync_should_return_religious_characteristics()
     {
