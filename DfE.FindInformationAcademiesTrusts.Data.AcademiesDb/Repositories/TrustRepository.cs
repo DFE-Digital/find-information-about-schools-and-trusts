@@ -9,33 +9,8 @@ namespace DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Repositories;
 
 public class TrustRepository(
     IAcademiesDbContext academiesDbContext,
-    IGetTrusts getTrusts,
     IStringFormattingUtilities stringFormattingUtilities) : ITrustRepository
 {
-    public async Task<TrustOverview> GetTrustOverviewAsync(string trustReferenceNumber)
-    {
-        var result = await getTrusts.GetTrustByReferenceNumber(trustReferenceNumber) ?? throw new InvalidOperationException(
-        $"Trust with reference number {trustReferenceNumber} was not found.");
-
-        var trustOverview = new TrustOverview(
-            result.GroupUid!,
-            trustReferenceNumber,
-            result.Ukprn,
-            result.CompaniesHouseNumber,
-            result.Type.Name,
-            stringFormattingUtilities.BuildAddressString(
-                result.Address.Street,
-                result.Address.Locality,
-                result.Address.Town,
-                result.Address.Postcode
-            ),
-            result.Gor,
-            result.OpenDate.ParseAsNullableDate()
-        );
-
-        return trustOverview;
-    }
-
     public static IQueryable<GiasGovernance> FilterBySatOrMat(string uid, string? urn, IQueryable<GiasGovernance> query)
     {
         if (!string.IsNullOrEmpty(urn))

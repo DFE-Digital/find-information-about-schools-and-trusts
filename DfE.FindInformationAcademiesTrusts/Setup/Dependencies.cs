@@ -107,6 +107,7 @@ public static class Dependencies
         builder.Services.AddScoped<IPupilCensusRepository, PupilCensusRepository>();
         builder.Services.AddScoped<ErrorService>();
         builder.Services.AddScoped<IDataSourceService, DataSourceService>();
+        builder.Services.AddScoped<ITrustOverviewProvider, TrustOverviewProvider>();
         builder.Services.AddScoped<ITrustGovernanceProvider, TrustGovernanceProvider>();
         builder.Services.AddScoped<ITrustService, TrustService>();
         builder.Services.AddScoped<IAcademyService, AcademyService>();

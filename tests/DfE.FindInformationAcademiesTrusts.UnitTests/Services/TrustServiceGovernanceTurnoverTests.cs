@@ -1,5 +1,4 @@
 using DfE.FindInformationAcademiesTrusts.Data;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
@@ -14,7 +13,6 @@ public class TrustServiceGovernanceTurnoverTests
     private readonly ITrustRepository _mockTrustRepository = Substitute.For<ITrustRepository>();
     private readonly ITrustPupilService _mockTrustPupilService = Substitute.For<ITrustPupilService>();
     private readonly IDateTimeProvider _mockDateTimeProvider = Substitute.For<IDateTimeProvider>();
-    private readonly IGetTrusts _mockGetTrusts = Substitute.For<IGetTrusts>();
 
     private readonly MockMemoryCache _mockMemoryCache = new();
 
@@ -26,7 +24,7 @@ public class TrustServiceGovernanceTurnoverTests
             _mockTrustPupilService,
             _mockMemoryCache.Object,
             _mockDateTimeProvider,
-            _mockGetTrusts);
+            Substitute.For<ITrustOverviewProvider>());
     }
 
     [Fact]

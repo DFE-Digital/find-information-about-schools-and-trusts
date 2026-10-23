@@ -1,5 +1,4 @@
 using DfE.FindInformationAcademiesTrusts.Data;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
@@ -27,12 +26,12 @@ public class TrustService(
     ITrustPupilService trustPupilService,
     IMemoryCache memoryCache,
     IDateTimeProvider dateTimeProvider,
-    IGetTrusts getTrusts)
+    ITrustOverviewProvider trustOverviewProvider)
     : ITrustService
 {
     public async Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(int urn)
     {
-        var details = await getTrusts.GetEstablishmentTrust(urn);
+        var details = await trustOverviewProvider.GetEstablishmentTrust(urn);
 
         if (details is null)
         {
@@ -58,7 +57,7 @@ public class TrustService(
             return cachedTrustSummary!;
         }
 
-        details ??= await getTrusts.GetTrustByReferenceNumber(referenceNumber);
+        details ??= await trustOverviewProvider.GetTrustByReferenceNumber(referenceNumber);
 
         if (details is null)
         {
@@ -145,7 +144,8 @@ public class TrustService(
     private async Task<(TrustOverview Overview, TrustType Type, string? SingleAcademyTrustAcademyUrn)>
         GetTrustOverviewWithTypeAsync(string trustReferenceNumber)
     {
-        var trustOverview = await trustRepository.GetTrustOverviewAsync(trustReferenceNumber);
+        var trustOverview = await trustOverviewProvider.GetTrustOverviewAsync(trustReferenceNumber);
+
         var trustType = trustOverview.Type switch
         {
             "Single-academy trust" => TrustType.SingleAcademyTrust,
