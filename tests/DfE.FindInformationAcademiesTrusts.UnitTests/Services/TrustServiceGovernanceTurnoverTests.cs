@@ -4,8 +4,6 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
-using GovUK.Dfe.PersonsApi.Client.Contracts;
-
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services;
 
 public class TrustServiceGovernanceTurnoverTests
@@ -15,17 +13,18 @@ public class TrustServiceGovernanceTurnoverTests
     private readonly ITrustRepository _mockTrustRepository = Substitute.For<ITrustRepository>();
     private readonly ITrustPupilService _mockTrustPupilService = Substitute.For<ITrustPupilService>();
     private readonly IDateTimeProvider _mockDateTimeProvider = Substitute.For<IDateTimeProvider>();
+
     private readonly MockMemoryCache _mockMemoryCache = new();
 
     public TrustServiceGovernanceTurnoverTests()
     {
         _sut = new TrustService(_mockAcademyRepository,
             _mockTrustRepository,
-            Substitute.For<ITrustsClient>(),
-            Substitute.For<IEstablishmentsClient>(),
+            Substitute.For<ITrustGovernanceProvider>(),
             _mockTrustPupilService,
             _mockMemoryCache.Object,
-            _mockDateTimeProvider);
+            _mockDateTimeProvider,
+            Substitute.For<ITrustOverviewProvider>());
     }
 
     [Fact]

@@ -4,9 +4,8 @@ using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
-using GovUK.Dfe.PersonsApi.Client.Contracts;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
 using Microsoft.Extensions.Caching.Memory;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Trust;
@@ -23,26 +22,33 @@ public interface ITrustService
 public class TrustService(
     IAcademyRepository academyRepository,
     ITrustRepository trustRepository,
-    ITrustsClient trustsClient,
-    IEstablishmentsClient establishmentsClient,
+    ITrustGovernanceProvider trustGovernanceProvider,
     ITrustPupilService trustPupilService,
     IMemoryCache memoryCache,
-    IDateTimeProvider dateTimeProvider)
+    IDateTimeProvider dateTimeProvider,
+    ITrustOverviewProvider trustOverviewProvider)
     : ITrustService
 {
     public async Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(int urn)
     {
-        var summary =  await trustRepository.GetTrustSummaryByEstablishmentUrnAsync(urn);
+        var details = await trustOverviewProvider.GetEstablishmentTrust(urn);
 
-        if (summary is null)
+        if (details is null)
         {
             return null;
         }
 
-        return await GetTrustSummaryAsync(summary.ReferenceNumber);
+        return await GetOrCreateCachedTrustSummaryAsync(details.ReferenceNumber, details);
     }
 
     public async Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(string referenceNumber)
+    {
+        return await GetOrCreateCachedTrustSummaryAsync(referenceNumber);
+    }
+
+    private async Task<TrustSummaryServiceModel?> GetOrCreateCachedTrustSummaryAsync(
+        string referenceNumber,
+        TrustDto? details = null)
     {
         var cacheKey = $"{nameof(TrustService)}:{referenceNumber}";
 
@@ -51,16 +57,17 @@ public class TrustService(
             return cachedTrustSummary!;
         }
 
-        var summary = await trustRepository.GetTrustSummaryAsync(referenceNumber);
+        details ??= await trustOverviewProvider.GetTrustByReferenceNumber(referenceNumber);
 
-        if (summary is null)
+        if (details is null)
         {
             return null;
         }
 
-        var count = await academyRepository.GetNumberOfAcademiesInTrustAsync(summary.ReferenceNumber);
+        var count = await academyRepository.GetNumberOfAcademiesInTrustAsync(details.ReferenceNumber);
 
-        var trustSummaryServiceModel = new TrustSummaryServiceModel(summary.Uid,summary.ReferenceNumber, summary.Name, summary.Type, count);
+        var trustSummaryServiceModel = new TrustSummaryServiceModel(details.GroupUid ?? string.Empty, details.ReferenceNumber,
+            details.Name, details.Type.Name, count);
 
         memoryCache.Set(cacheKey, trustSummaryServiceModel,
             new MemoryCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(10) });
@@ -71,16 +78,16 @@ public class TrustService(
     public async Task<TrustGovernanceServiceModel?> GetTrustGovernanceAsync(string trn)
     {
         var (_, trustType, singleAcademyTrustAcademyUrn) = await GetTrustOverviewWithTypeAsync(trn);
-        
+
         if (trustType == TrustType.SingleAcademyTrust && singleAcademyTrustAcademyUrn is null)
         {
             return null;
         }
 
         var governors = trustType is TrustType.MultiAcademyTrust
-            ? await FetchTrustGovernanceAsync(trn.ToUpper())
-            : await FetchSatGovernanceAsync(int.Parse(singleAcademyTrustAcademyUrn!));
-        
+            ? await trustGovernanceProvider.GetMultiAcademyTrustGovernorsAsync(trn.ToUpper())
+            : await trustGovernanceProvider.GetSingleAcademyTrustGovernorsAsync(int.Parse(singleAcademyTrustAcademyUrn!));
+
         return new TrustGovernanceServiceModel(
             governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleLeadership: true }).ToArray(),
             governors.Where(g => g is { IsCurrentOrFutureGovernor: true, HasRoleMember: true }).ToArray(),
@@ -137,7 +144,8 @@ public class TrustService(
     private async Task<(TrustOverview Overview, TrustType Type, string? SingleAcademyTrustAcademyUrn)>
         GetTrustOverviewWithTypeAsync(string trustReferenceNumber)
     {
-        var trustOverview = await trustRepository.GetTrustOverviewAsync(trustReferenceNumber);
+        var trustOverview = await trustOverviewProvider.GetTrustOverviewAsync(trustReferenceNumber);
+
         var trustType = trustOverview.Type switch
         {
             "Single-academy trust" => TrustType.SingleAcademyTrust,
@@ -203,7 +211,7 @@ public class TrustService(
 
         return result;
     }
-    
+
     private static int CountEventsWithinDateRange<T>(
         IEnumerable<T> items,
         Func<T, DateTime?> dateSelector,
@@ -214,44 +222,5 @@ public class TrustService(
                                    dateSelector(item) >= rangeStart &&
                                    dateSelector(item) <= rangeEnd);
     }
-    
-    private async Task<List<Governor>> FetchTrustGovernanceAsync(string trn)
-    {
-        var result = await trustsClient.GetAllPersonsAssociatedWithTrustByTrnOrUkPrnAsync(trn).ConfigureAwait(false);
-        
-        var governors = new List<Governor>();
 
-        foreach (var person in result)
-        {
-            governors.Add(new Governor(
-                FullName: person.DisplayName,
-                Role: person.Roles[0],
-                AppointingBody: person.AppointingBody,
-                DateOfAppointment: person.DateOfAppointment.ParseAsNullableDate(),
-                DateOfTermEnd: person.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
-                Email: person.Email));
-        }
-        
-        return governors;
-    }
-    
-    private async Task<List<Governor>> FetchSatGovernanceAsync(int urn)
-    {
-        var result = await establishmentsClient.GetAllPersonsAssociatedWithAcademyByUrnAsync(urn);
-        
-        var governors = new List<Governor>();
-
-        foreach (var person in result)
-        {
-            governors.Add(new Governor(
-                FullName: person.DisplayName,
-                Role: person.Roles[0],
-                AppointingBody: person.AppointingBody,
-                DateOfAppointment: person.DateOfAppointment.ParseAsNullableDate(),
-                DateOfTermEnd: person.DateTermOfOfficeEndsEnded.ParseAsNullableDate(),
-                Email: person.Email));
-        }
-        
-        return governors;
-    }
 }
