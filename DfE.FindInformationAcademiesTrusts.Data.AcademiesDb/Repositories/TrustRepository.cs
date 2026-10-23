@@ -12,15 +12,6 @@ public class TrustRepository(
     IGetTrusts getTrusts,
     IStringFormattingUtilities stringFormattingUtilities) : ITrustRepository
 {
-    public async Task<TrustSummary?> GetTrustSummaryByEstablishmentUrnAsync(int urn)
-    {
-        var details = await getTrusts.GetEstablishmentTrust(urn);
-        return details is null
-            ? null
-            : new TrustSummary(details.Name ?? string.Empty, details.Type.Name ?? string.Empty,details.GroupUid ?? string.Empty,details.ReferenceNumber?.ToString() ?? string.Empty);
-
-    }
-
     public async Task<TrustOverview> GetTrustOverviewAsync(string trustReferenceNumber)
     {
         var result = await getTrusts.GetTrustByReferenceNumber(trustReferenceNumber) ?? throw new InvalidOperationException(

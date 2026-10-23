@@ -500,11 +500,12 @@ public class TrustServiceTests
     }
 
     [Fact]
-    public async Task GetTrustSummaryAsync_should_return_null_if_trust_uid_is_null()
+    public async Task GetTrustSummaryAsync_should_return_null_if_trust_reference_is_null()
     {
         var urn = 123;
+        var referenceNumber = "1234";
 
-        _mockTrustRepository.GetTrustSummaryByEstablishmentUrnAsync(urn).ReturnsNull();
+        _mockGetTrusts.GetTrustByReferenceNumber(referenceNumber).ReturnsNull();
 
         var result = await _sut.GetTrustSummaryAsync(urn);
 
@@ -517,11 +518,14 @@ public class TrustServiceTests
     public async Task GetTrustSummaryAsync_should_return_trust_summary_if_found(int urn, string uid,
         string referenceNumber, string name, string type, int numAcademies)
     {
-        _mockTrustRepository.GetTrustSummaryByEstablishmentUrnAsync(urn)
-            .Returns(new TrustSummary(name, type, uid, referenceNumber));
+        _mockGetTrusts.GetEstablishmentTrust(urn).Returns(new TrustDto
+        {
+            GroupUid = uid,
+            Name = name,
+            ReferenceNumber = referenceNumber,
+            Type = new NameAndCodeDto { Name = type }
+        });
 
-        // _mockTrustRepository.GetTrustSummaryAsync(referenceNumber)
-        //     .Returns(new TrustSummary(name, type, uid, referenceNumber));
         _mockGetTrusts.GetTrustByReferenceNumber(referenceNumber).Returns(new TrustDto
         {
             GroupUid = uid,
@@ -530,7 +534,7 @@ public class TrustServiceTests
             Type = new NameAndCodeDto { Name = type }
         });
         _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(referenceNumber).Returns(numAcademies);
-
+    
         var result = await _sut.GetTrustSummaryAsync(referenceNumber);
         result.Should().BeEquivalentTo(new TrustSummaryServiceModel(uid, referenceNumber, name, type, numAcademies));
     }

@@ -5,6 +5,7 @@ using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
 using GovUK.Dfe.PersonsApi.Client.Contracts;
 using Microsoft.Extensions.Caching.Memory;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
@@ -34,17 +35,24 @@ public class TrustService(
 {
     public async Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(int urn)
     {
-        var summary = await trustRepository.GetTrustSummaryByEstablishmentUrnAsync(urn);
+        var details = await getTrusts.GetEstablishmentTrust(urn);
 
-        if (summary is null)
+        if (details is null)
         {
             return null;
         }
 
-        return await GetTrustSummaryAsync(summary.ReferenceNumber);
+        return await GetOrCreateCachedTrustSummaryAsync(details.ReferenceNumber, details);
     }
 
     public async Task<TrustSummaryServiceModel?> GetTrustSummaryAsync(string referenceNumber)
+    {
+        return await GetOrCreateCachedTrustSummaryAsync(referenceNumber);
+    }
+
+    private async Task<TrustSummaryServiceModel?> GetOrCreateCachedTrustSummaryAsync(
+        string referenceNumber,
+        TrustDto? details = null)
     {
         var cacheKey = $"{nameof(TrustService)}:{referenceNumber}";
 
@@ -53,7 +61,7 @@ public class TrustService(
             return cachedTrustSummary!;
         }
 
-        var details = await getTrusts.GetTrustByReferenceNumber(referenceNumber);
+        details ??= await getTrusts.GetTrustByReferenceNumber(referenceNumber);
 
         if (details is null)
         {

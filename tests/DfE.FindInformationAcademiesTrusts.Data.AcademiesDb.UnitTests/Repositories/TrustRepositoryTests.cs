@@ -78,27 +78,6 @@ public class TrustRepositoryTests
     }
     
     [Fact]
-    public async Task GetTrustSummaryByEstablishmentByUrnAsync_should_return_trustSummary_if_found()
-    {
-        const int urn = 123;
-        const string name = "My Trust";
-        const string uid = "12";
-        const string type = "Multi-academy trust";
-        const string referenceNumber = "TR2806";
-        
-        _mockGetTrusts.GetEstablishmentTrust(123).Returns(new TrustDto
-        {
-            GroupUid = uid,
-            Name = name,
-            ReferenceNumber = referenceNumber,
-            Type = new NameAndCodeDto { Name = type }
-        });
-
-        var result = await _sut.GetTrustSummaryByEstablishmentUrnAsync(urn);
-        result.Should().BeEquivalentTo(new TrustSummary(name, type, uid, referenceNumber));
-    }
-    
-    [Fact]
     public async Task GetTrustContactsAsync_Should_Return_Valid_ChairOfTrustees_WhenOneIsPresentForTheTrust()
     {
         var governor = CreateGovernor("1234", "9876", null, _tomorrow, "Chair of Trustees");
