@@ -2,6 +2,7 @@ using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
+using DfE.FindInformationAcademiesTrusts.HttpServices;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services;
@@ -19,6 +20,7 @@ public class TrustServiceGovernanceTurnoverTests
     public TrustServiceGovernanceTurnoverTests()
     {
         _sut = new TrustService(_mockAcademyRepository,
+            Substitute.For<IGetEstablishmentsTemp>(),
             _mockTrustRepository,
             Substitute.For<ITrustGovernanceProvider>(),
             _mockTrustPupilService,

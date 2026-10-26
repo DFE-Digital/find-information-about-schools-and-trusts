@@ -86,24 +86,6 @@ public class AcademyRepository(IAcademiesDbContext academiesDbContext, IGetEstab
     }
     
 
-    public async Task<int> GetNumberOfAcademiesInTrustAsync(string referenceNumber)
-    {
-        var result =  await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
-        return result.Length;
-    }
-
-    public async Task<string?> GetSingleAcademyTrustAcademyUrnAsync(string referenceNumber)
-    {
-        var result = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
-        
-        if (result.Length == 0)
-        {
-            return null;
-        }
-
-        return result[0].Urn;
-    }
-
     public async Task<AcademyOverview[]> GetOverviewOfAcademiesInTrustAsync(string referenceNumber)
     {
         var result = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);

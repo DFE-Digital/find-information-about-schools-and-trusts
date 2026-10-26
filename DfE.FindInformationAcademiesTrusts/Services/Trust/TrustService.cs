@@ -5,8 +5,9 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Caching.Memory; 
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+using DfE.FindInformationAcademiesTrusts.HttpServices;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Trust;
 
@@ -21,6 +22,7 @@ public interface ITrustService
 
 public class TrustService(
     IAcademyRepository academyRepository,
+    IGetEstablishmentsTemp getEstablishments,
     ITrustRepository trustRepository,
     ITrustGovernanceProvider trustGovernanceProvider,
     ITrustPupilService trustPupilService,
@@ -64,8 +66,8 @@ public class TrustService(
             return null;
         }
 
-        var count = await academyRepository.GetNumberOfAcademiesInTrustAsync(details.ReferenceNumber);
-
+        var count = (await getEstablishments.GetEstablishmentsByTrustReferenceNumber(details.ReferenceNumber)).Length;
+        
         var trustSummaryServiceModel = new TrustSummaryServiceModel(details.GroupUid ?? string.Empty, details.ReferenceNumber,
             details.Name, details.Type.Name, count);
 
@@ -154,7 +156,8 @@ public class TrustService(
         };
 
         var singleAcademyTrustAcademyUrn = trustType is TrustType.SingleAcademyTrust
-            ? await academyRepository.GetSingleAcademyTrustAcademyUrnAsync(trustReferenceNumber)
+            ? (await getEstablishments.GetEstablishmentsByTrustReferenceNumber(trustReferenceNumber))
+            .FirstOrDefault()?.Urn
             : null;
 
         return (trustOverview, trustType, singleAcademyTrustAcademyUrn);
