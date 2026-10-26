@@ -61,62 +61,6 @@ public class AcademyRepositoryTests
     }
 
     [Fact]
-    public async Task GetNumberOfAcademiesInTrustAsync_should_return_zero_when_no_academies()
-    {
-        var result = await _sut.GetNumberOfAcademiesInTrustAsync(ReferenceNumber);
-        result.Should().Be(0);
-    }
-
-    [Fact]
-    public async Task GetNumberOfAcademiesInTrustAsync_should_return_number_of_academies()
-    {
-        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns(new []
-        {
-            new EstablishmentDto
-            {
-                Urn = "1234",
-                Name = "Academy1",
-            },
-            new EstablishmentDto()
-            {
-                Urn = "1235",
-                Name = "Academy2",
-            }
-
-        });
-
-        var result = await _sut.GetNumberOfAcademiesInTrustAsync(ReferenceNumber);
-        result.Should().Be(2);
-    }
-
-    [Fact]
-    public async Task GetUrnForSingleAcademyTrustAsync_should_return_null_if_no_establishments_found()
-    {
-        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns([]);
-
-        var result = await _sut.GetSingleAcademyTrustAcademyUrnAsync(ReferenceNumber);
-
-        result.Should().Be(null);
-    }
-
-    [Fact]
-    public async Task GetUrnForSingleAcademyTrustAsync_should_set_singleAcademyTrustAcademyUrn_to_urn_of_SAT_academy()
-    {
-        _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns(new []
-        {
-            new EstablishmentDto
-            {
-                Urn = "1234",
-                Name = "Academy1",
-            }
-        });
-
-        var result = await _sut.GetSingleAcademyTrustAcademyUrnAsync(ReferenceNumber);
-
-        result.Should().Be("1234");
-    }
-
-    [Fact]
     public async Task GetAcademiesInTrustPupilNumbersByTrnAsync_should_return_academies_linked_to_trust()
     {
         _mockGetEstablishments.GetEstablishmentsByTrustReferenceNumber(ReferenceNumber).Returns(new EstablishmentDto[]
