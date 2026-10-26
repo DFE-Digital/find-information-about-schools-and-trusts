@@ -22,7 +22,7 @@ public interface ITrustService
 
 public class TrustService(
     IAcademyRepository academyRepository,
-    IGetEstablishmentsTemp getEstablishments,
+    //IGetEstablishmentsTemp getEstablishments,
     ITrustRepository trustRepository,
     ITrustGovernanceProvider trustGovernanceProvider,
     ITrustPupilService trustPupilService,
@@ -66,7 +66,7 @@ public class TrustService(
             return null;
         }
 
-        var count = (await getEstablishments.GetEstablishmentsByTrustReferenceNumber(details.ReferenceNumber)).Length;
+        var count = (await trustOverviewProvider.GetEstablishmentsInTrustCount(details.ReferenceNumber)) ?? 0;
         
         var trustSummaryServiceModel = new TrustSummaryServiceModel(details.GroupUid ?? string.Empty, details.ReferenceNumber,
             details.Name, details.Type.Name, count);
@@ -156,8 +156,7 @@ public class TrustService(
         };
 
         var singleAcademyTrustAcademyUrn = trustType is TrustType.SingleAcademyTrust
-            ? (await getEstablishments.GetEstablishmentsByTrustReferenceNumber(trustReferenceNumber))
-            .FirstOrDefault()?.Urn
+            ? (await trustOverviewProvider.GetSingleAcademyTrustUrn(trustReferenceNumber))?.ToString()
             : null;
 
         return (trustOverview, trustType, singleAcademyTrustAcademyUrn);
