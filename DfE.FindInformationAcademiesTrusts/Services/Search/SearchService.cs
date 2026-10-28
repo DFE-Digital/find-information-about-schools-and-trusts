@@ -142,7 +142,7 @@ public class SearchService(
 
         var filteredEstablishments = establishments
             .Where(IsAllowedEstablishmentGroupType)
-            .OrderBy(x => x.Name!.StartsWith(text, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+            .OrderBy(x => x.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase) ? 0 : 1)
             .ToList();
 
         var filteredTrusts = trusts
@@ -185,11 +185,11 @@ public class SearchService(
     private SearchResult MapSchool(EstablishmentDto e)
     {
         return new SearchResult(
-            e.Urn!.ToString(),
+            e.Urn.ToString(),
             null,
-            e.Name!,
-            e.EstablishmentType!.Name!,
-            BuildAddress(e.Address!.Street, e.Address.Locality, e.Address.Town, e.Address.Postcode),
+            e.Name,
+            e.EstablishmentType.Name,
+            BuildAddress(e.Address.Street, e.Address.Locality, e.Address.Town, e.Address.Postcode),
             false,
             e.EstablishmentNumber);
     }
@@ -199,9 +199,9 @@ public class SearchService(
         return new SearchResult(
             t.GroupUid!.ToString(),
             t.ReferenceNumber.ToString(),
-            t.Name!,
+            t.Name,
             t.Type.Name,
-            BuildAddress(t.Address!.Street, t.Address.Locality, t.Address.Town, t.Address.Postcode),
+            BuildAddress(t.Address.Street, t.Address.Locality, t.Address.Town, t.Address.Postcode),
             true,
             t.ReferenceNumber);
     }
