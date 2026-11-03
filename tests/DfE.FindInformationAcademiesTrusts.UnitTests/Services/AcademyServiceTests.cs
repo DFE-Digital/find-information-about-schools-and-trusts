@@ -4,6 +4,7 @@ using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PipelineAcademy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
+using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services;
@@ -12,7 +13,6 @@ public class AcademyServiceTests
 {
     private readonly AcademyService _sut;
     private readonly IAcademyRepository _mockAcademyRepository = Substitute.For<IAcademyRepository>();
-    private readonly IOfstedRepository _mockOfstedRepository = Substitute.For<IOfstedRepository>();
     
     private readonly ITrustPupilService _mockTrustPupilService = Substitute.For<ITrustPupilService>();
 
@@ -21,11 +21,13 @@ public class AcademyServiceTests
 
     private readonly IFreeSchoolMealsAverageProvider _mockFreeSchoolMealsAverageProvider =
         Substitute.For<IFreeSchoolMealsAverageProvider>();
+    
+    private readonly IOfstedHelperService _mockOfstedHelperService = Substitute.For<IOfstedHelperService>();
 
     public AcademyServiceTests()
     {
-        _sut = new AcademyService(_mockAcademyRepository, _mockOfstedRepository, _mockPipelineEstablishmentRepository,
-            _mockTrustPupilService, _mockFreeSchoolMealsAverageProvider);
+        _sut = new AcademyService(_mockAcademyRepository, _mockPipelineEstablishmentRepository,
+            _mockTrustPupilService, _mockFreeSchoolMealsAverageProvider, _mockOfstedHelperService);
     }
 
     [Fact]
@@ -76,7 +78,7 @@ public class AcademyServiceTests
                 new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2023, 4, 1)), true)
         };
 
-        _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(academies);
+        _mockOfstedHelperService.GetAcademiesOfstedAsync(uid).Returns(academies);
 
         var result = await _sut.GetAcademiesInTrustOfstedAsync(uid);
 

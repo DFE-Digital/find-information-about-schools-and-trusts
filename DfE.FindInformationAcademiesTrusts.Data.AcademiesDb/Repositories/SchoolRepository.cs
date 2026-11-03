@@ -73,4 +73,12 @@ public class SchoolRepository(IAcademiesDbContext academiesDbContext,
 
         return schoolFederationDetails;
     }
+    
+    public async Task<string?> GetJoinedDate(string urn)
+    {
+        return await academiesDbContext.GiasGroupLinks
+            .Where(gl => gl.Urn == urn)
+            .Select(gl => gl.JoinedDate)
+            .FirstOrDefaultAsync();
+    }
 }

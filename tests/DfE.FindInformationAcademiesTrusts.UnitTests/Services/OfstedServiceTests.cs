@@ -1,4 +1,4 @@
-﻿using DfE.FindInformationAcademiesTrusts.Data.Enums;
+using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using Microsoft.Extensions.Logging;
 using System.Globalization;
@@ -7,6 +7,8 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 {
     using DfE.FindInformationAcademiesTrusts.Data;
     using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
+    using DfE.FindInformationAcademiesTrusts.Data.Repositories.School;
+    using DfE.FindInformationAcademiesTrusts.HttpServices;
     using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
     using DfE.FindInformationAcademiesTrusts.Services.School;
     using DfE.FindInformationAcademiesTrusts.UnitTests.Mocks;
@@ -15,20 +17,29 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
     public class OfstedServiceTests
     {
         private readonly OfstedService _sut;
-        private readonly IOfstedRepository _mockOfstedRepository = Substitute.For<IOfstedRepository>();
         private readonly IReportCardsService _mockReportCardsService = Substitute.For<IReportCardsService>();
         private readonly IOfstedServiceModelBuilder _mockOfstedServiceModelBuilder = Substitute.For<IOfstedServiceModelBuilder>();
         private readonly IAcademyService _mockAcademyService = Substitute.For<IAcademyService>();
+        private readonly IOfstedHelperService _mockOfstedHelperService = Substitute.For<IOfstedHelperService>();
         private readonly ILogger<OfstedService> _mockLogger = Substitute.For<ILogger<OfstedService>>();
 
         public OfstedServiceTests()
         {
-            _sut = new OfstedService(_mockReportCardsService, _mockOfstedRepository, _mockOfstedServiceModelBuilder, _mockAcademyService, _mockLogger);
-
+            _sut = new OfstedService(_mockReportCardsService, _mockOfstedServiceModelBuilder, _mockAcademyService, _mockOfstedHelperService, _mockLogger);
             _mockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(new ReportCardServiceModel());
             _mockReportCardsService.GetReportCardsAsync(Arg.Any<List<string>>()).Returns([]);
-        }
 
+            var ofstedHelperService = new OfstedHelperService(
+                Substitute.For<IGetEstablishmentsTemp>(),
+                Substitute.For<ISchoolRepository>(),
+                Substitute.For<ILogger<OfstedHelperService>>());
+
+            _mockOfstedHelperService
+                .GetLatestSafeGuardingInspection(Arg.Any<ReportCardServiceModel>(), Arg.Any<SchoolOfsted>())
+                .Returns(call => ofstedHelperService.GetLatestSafeGuardingInspection(
+                    call.Arg<ReportCardServiceModel>(),
+                    call.Arg<SchoolOfsted>()));
+        }
 
         [Fact]
         public async Task GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync_Should_CallBuilderWithCorrectParameters()
@@ -40,9 +51,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
                 new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2025, 7, 1, 0, 0, 0, DateTimeKind.Local)),
                 new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2024, 6, 1, 0, 0, 0, DateTimeKind.Local)), false);
 
-            _mockOfstedRepository.GetSchoolOfstedRatingsAsync(urn)
-                .Returns(expectedSchoolOfsted);
-
+            _mockOfstedHelperService.GetSchoolOfstedAsync(urn).Returns(expectedSchoolOfsted);
 
             await _sut.GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(urn);
 
@@ -66,8 +75,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
                 PreviousReportCard = null
             };
 
-            _mockOfstedRepository.GetSchoolOfstedRatingsAsync(urn)
-                .Returns(expectedSchoolOfsted);
+            _mockOfstedHelperService.GetSchoolOfstedAsync(urn).Returns(expectedSchoolOfsted);
             _mockReportCardsService.GetReportCardsAsync(urn)
                 .Returns(expectedReportCards);
 
@@ -84,8 +92,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             const string trustUid = "1234";
             var emptySchoolOfstedRatings = Array.Empty<SchoolOfsted>();
 
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
-                .Returns(emptySchoolOfstedRatings);
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(trustUid).Returns(emptySchoolOfstedRatings);
 
             var result = await _sut.GetOfstedOverviewInspectionForTrustAsync(trustUid);
 
@@ -123,11 +130,12 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 
             var expectedOfstedOverview1 = new OfstedOverviewInspectionServiceModel(null, null, null);
             var expectedOfstedOverview2 = new OfstedOverviewInspectionServiceModel(null, null, null);
+            
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(trustUid).Returns([schoolOfstedRating1, schoolOfstedRating2]);
 
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
-                .Returns([schoolOfstedRating1, schoolOfstedRating2]);
-
-            _mockReportCardsService.GetReportCardsAsync(Arg.Any<List<string>>()).Returns([reportCards1, reportCards2]);
+            var receivedUrns = new List<string>();
+            _mockReportCardsService.GetReportCardsAsync(Arg.Do<List<string>>(urns => receivedUrns = urns))
+                .Returns([reportCards1, reportCards2]);
 
             _mockOfstedServiceModelBuilder.BuildOfstedOverviewInspection(schoolOfstedRating1, reportCards1)
                 .Returns(expectedOfstedOverview1);
@@ -145,6 +153,8 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             result[1].Urn.Should().Be(schoolUrn2);
             result[1].SchoolName.Should().Be("Second Academy");
             result[1].DateJoinedTrust.Should().Be(new DateTime(2023, 9, 15, 0, 0, 0, DateTimeKind.Local));
+
+            receivedUrns.Should().BeEquivalentTo([schoolUrn1.ToString(), schoolUrn2.ToString()]);
         }
 
         [Fact]
@@ -164,9 +174,8 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 
             var reportCards = new ReportCardServiceModel() { Urn = schoolUrn };
             var expectedOfstedOverview = new OfstedOverviewInspectionServiceModel(null, null, null);
-
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
-                .Returns([schoolOfstedRating]);
+            
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(trustUid).Returns([schoolOfstedRating]);
 
             _mockReportCardsService.GetReportCardsAsync(Arg.Any<List<string>>()).Returns([reportCards]);
 
@@ -177,41 +186,6 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 
             result.Should().HaveCount(1);
             result[0].SchoolName.Should().Be(string.Empty);
-        }
-
-        [Fact]
-        public async Task GetOfstedOverviewInspectionForTrustAsync_ShouldCallDependenciesWithCorrectParameters()
-        {
-            const string trustUid = "1234";
-            const int schoolUrn = 123456;
-
-            var schoolOfstedRating = new SchoolOfsted(
-                schoolUrn.ToString(),
-                "Test Academy",
-                new DateTime(2024, 8, 1, 0, 0, 0, DateTimeKind.Local),
-                new OfstedShortInspection(new DateTime(2024, 7, 1, 0, 0, 0, DateTimeKind.Local), "School remains Good"),
-                new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2025, 7, 1, 0, 0, 0, DateTimeKind.Local)),
-                new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2024, 6, 1, 0, 0, 0, DateTimeKind.Local)),
-                false);
-
-            var reportCards = new ReportCardServiceModel() { Urn = schoolUrn };
-            var expectedOfstedOverview = new OfstedOverviewInspectionServiceModel(null, null, null);
-
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
-                .Returns([schoolOfstedRating]);
-
-            var receivedValues = new List<string>();
-            _mockReportCardsService.GetReportCardsAsync(Arg.Do<List<string>>(x => receivedValues = x)).Returns([reportCards]);
-            
-            _mockOfstedServiceModelBuilder.BuildOfstedOverviewInspection(schoolOfstedRating, reportCards)
-                .Returns(expectedOfstedOverview);
-
-            await _sut.GetOfstedOverviewInspectionForTrustAsync(trustUid);
-
-            await _mockOfstedRepository.Received(1).GetAcademiesInTrustOfstedAsync(trustUid);
-            receivedValues.Should().BeEquivalentTo([schoolUrn.ToString()]);
-
-            _mockOfstedServiceModelBuilder.Received(1).BuildOfstedOverviewInspection(schoolOfstedRating, reportCards);
         }
 
         [Fact]
@@ -231,8 +205,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 
             var expectedOfstedOverview = new OfstedOverviewInspectionServiceModel(null, null, null);
 
-
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid).Returns([schoolOfstedRating]);
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(trustUid).Returns([schoolOfstedRating]);
 
             _mockReportCardsService.GetReportCardsAsync(Arg.Any<List<string>>()).Returns([]);
 
@@ -243,7 +216,6 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 
             await _sut.GetOfstedOverviewInspectionForTrustAsync(trustUid);
 
-            await _mockOfstedRepository.Received(1).GetAcademiesInTrustOfstedAsync(trustUid);
             _mockOfstedServiceModelBuilder.Received(1).BuildOfstedOverviewInspection(schoolOfstedRating, Arg.Any<ReportCardServiceModel>());
 
             receivedReportCard.Should().BeEquivalentTo(new ReportCardServiceModel { Urn = schoolUrn });
@@ -258,46 +230,6 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             var result = await _sut.GetEstablishmentsInTrustReportCardsAsync(uid);
 
             result.Should().BeEmpty();
-        }
-
-        [Fact]
-        public async Task GetEstablishmentsInTrustReportCardsAsync_should_return_trust_report_cards_for_single_academy()
-        {
-            const string uid = "TEST123";
-            const string urn = "12345";
-            const string establishmentName = "Test Academy";
-            var joinDate = new DateOnly(2020, 9, 1);
-
-            var academies = new List<AcademyDetailsServiceModel>
-            {
-                new(urn, establishmentName, "Test LA", "Academy", "Urban", joinDate)
-            };
-
-            var reportCard = new ReportCardServiceModel
-            {
-                Urn = 12345,
-                LatestReportCard = new ReportCardDetails(
-                    new DateOnly(2023, 1, 15),
-                    "https://reports.ofsted.gov.uk/provider/files/12345/urn/12345.pdf",
-                    "Good", "Good", "Good", "Good", "Good", "Good", null, "Met", "Good", "None")
-            };
-
-            _mockAcademyService.GetAcademiesInTrustDetailsAsync(uid).Returns(academies.ToArray());
-
-            var receivedValues = new List<string>();
-            _mockReportCardsService.GetReportCardsAsync(Arg.Do<List<string>>(x => receivedValues = x)).Returns([reportCard]);
-
-            var result = await _sut.GetEstablishmentsInTrustReportCardsAsync(uid);
-
-            result.Should().HaveCount(1);
-            var trustReportCard = result[0];
-            trustReportCard.Urn.Should().Be(12345);
-            trustReportCard.SchoolName.Should().Be(establishmentName);
-            trustReportCard.ReportDetails.Should().Be(reportCard);
-
-            await _mockAcademyService.Received(1).GetAcademiesInTrustDetailsAsync(uid);
-
-            receivedValues.Should().BeEquivalentTo([urn]);
         }
 
         [Fact]
@@ -373,70 +305,12 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
         }
 
         [Fact]
-        public async Task GetEstablishmentsInTrustReportCardsAsync_should_handle_empty_establishment_name()
-        {
-            const string uid = "TEST123";
-            const string urn = "12345";
-            var joinDate = new DateOnly(2020, 9, 1);
-
-            var academies = new List<AcademyDetailsServiceModel>
-            {
-                new(urn, "", "Test LA", "Academy", "Urban", joinDate)
-            };
-
-            var reportCard = new ReportCardServiceModel { Urn = 12345 };
-            ;
-
-            _mockAcademyService.GetAcademiesInTrustDetailsAsync(uid).Returns(academies.ToArray());
-            _mockReportCardsService.GetReportCardsAsync(Arg.Any<List<string>>()).Returns([reportCard]);
-
-            var result = await _sut.GetEstablishmentsInTrustReportCardsAsync(uid);
-
-            result.Should().HaveCount(1);
-            var trustReportCard = result[0];
-            trustReportCard.Urn.Should().Be(12345);
-            trustReportCard.SchoolName.Should().Be("");
-            trustReportCard.ReportDetails.Should().Be(reportCard);
-        }
-
-
-        [Fact]
-        public async Task GetEstablishmentsInTrustReportCardsAsync_should_call_dependencies_with_correct_parameters()
-        {
-            const string uid = "TEST123";
-            const string urn = "12345";
-            const string establishmentName = "Test Academy";
-            var joinDate = new DateOnly(2020, 9, 1);
-
-            var academies = new List<AcademyDetailsServiceModel>
-            {
-                new(urn, establishmentName, "Test LA", "Academy", "Urban", joinDate)
-            };
-
-            var reportCard = new ReportCardServiceModel { Urn = 12345 };
-
-            _mockAcademyService.GetAcademiesInTrustDetailsAsync(uid).Returns(academies.ToArray());
-            _mockReportCardsService.GetReportCardsAsync(Arg.Any<List<string>>()).Returns([reportCard]);
-
-            var receivedValue = new List<string>();
-            _mockReportCardsService.GetReportCardsAsync(Arg.Do<List<string>>(x => receivedValue = x)).Returns([reportCard]);
-
-            await _sut.GetEstablishmentsInTrustReportCardsAsync(uid);
-
-            await _mockAcademyService.Received(1).GetAcademiesInTrustDetailsAsync(uid);
-            await _mockReportCardsService.Received(1).GetReportCardsAsync(Arg.Any<List<string>>());
-
-            receivedValue.Should().BeEquivalentTo(urn);
-        }
-
-        [Fact]
         public async Task GetEstablishmentsInTrustOlderOfstedRatings_ShouldReturnEmptyList_WhenNoAcademiesInTrust()
         {
             const string trustUid = "1234";
             var emptyAcademies = Array.Empty<SchoolOfsted>();
 
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
-                .Returns(emptyAcademies);
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(trustUid).Returns(emptyAcademies);
 
             var result = await _sut.GetEstablishmentsInTrustOlderOfstedRatings(trustUid);
 
@@ -475,8 +349,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
                 currentRating2,
                 false);
 
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
-                .Returns([academy1, academy2]);
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(trustUid).Returns([academy1, academy2]);
 
             var result = await _sut.GetEstablishmentsInTrustOlderOfstedRatings(trustUid);
 
@@ -515,8 +388,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
                 previousRating,
                 false);
 
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
-                .Returns([academy]);
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(trustUid).Returns([academy]);
 
             var result = await _sut.GetEstablishmentsInTrustOlderOfstedRatings(trustUid);
 
@@ -524,33 +396,6 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             result[0].SchoolName.Should().Be(string.Empty);
             result[0].Urn.Should().Be(urn);
             result[0].ReportDetails.Ratings.Should().HaveCount(2);
-        }
-
-        [Fact]
-        public async Task GetEstablishmentsInTrustOlderOfstedRatings_ShouldLogError_WhenUrnCannotBeParsed()
-        {
-            const string trustUid = "1234";
-            const string invalidUrn = "invalid-urn";
-
-            var currentRating = new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2025, 7, 1, 0, 0, 0, DateTimeKind.Local));
-            var previousRating = new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2024, 6, 1, 0, 0, 0, DateTimeKind.Local));
-
-            var academy = new SchoolOfsted(
-                invalidUrn,
-                "Test Academy",
-                new DateTime(2024, 8, 1, 0, 0, 0, DateTimeKind.Local),
-                new OfstedShortInspection(new DateTime(2024, 7, 1, 0, 0, 0, DateTimeKind.Local), "School remains Good"),
-                currentRating,
-                previousRating,
-                false);
-
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
-                .Returns([academy]);
-
-            var result = await _sut.GetEstablishmentsInTrustOlderOfstedRatings(trustUid);
-
-            result.Should().BeEmpty();
-            _mockLogger.VerifyLogError($"Unable to parse academy urn {invalidUrn} for trust {trustUid}");
         }
 
         [Fact]
@@ -581,7 +426,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
                 previousRating,
                 false);
 
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(trustUid)
                 .Returns([validAcademy, invalidAcademy]);
 
             var result = await _sut.GetEstablishmentsInTrustOlderOfstedRatings(trustUid);
@@ -591,53 +436,6 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             result[0].SchoolName.Should().Be("Valid Academy");
 
             _mockLogger.VerifyLogError($"Unable to parse academy urn {invalidUrn} for trust {trustUid}");
-        }
-
-        [Fact]
-        public async Task GetEstablishmentsInTrustOlderOfstedRatings_ShouldCallRepositoryWithCorrectTrustUid()
-        {
-            const string trustUid = "1234";
-            var emptyAcademies = Array.Empty<SchoolOfsted>();
-
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
-                .Returns(emptyAcademies);
-
-            await _sut.GetEstablishmentsInTrustOlderOfstedRatings(trustUid);
-
-            await _mockOfstedRepository.Received(1).GetAcademiesInTrustOfstedAsync(trustUid);
-        }
-
-        [Fact]
-        public async Task GetEstablishmentsInTrustOlderOfstedRatings_ShouldCreateCorrectOlderInspectionServiceModel()
-        {
-            const string trustUid = "1234";
-            const int urn = 123456;
-
-            var currentRating = new OfstedRating((int)OfstedRatingScore.Good, new DateTime(2025, 7, 1, 0, 0, 0, DateTimeKind.Local));
-            var previousRating = new OfstedRating((int)OfstedRatingScore.RequiresImprovement, new DateTime(2024, 6, 1, 0, 0, 0, DateTimeKind.Local));
-
-            var academy = new SchoolOfsted(
-                urn.ToString(),
-                "Test Academy",
-                new DateTime(2024, 8, 1, 0, 0, 0, DateTimeKind.Local),
-                new OfstedShortInspection(new DateTime(2024, 7, 1, 0, 0, 0, DateTimeKind.Local), "School remains Good"),
-                currentRating,
-                previousRating,
-                false);
-
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(trustUid)
-                .Returns([academy]);
-
-            var result = await _sut.GetEstablishmentsInTrustOlderOfstedRatings(trustUid);
-
-            result.Should().HaveCount(1);
-            var trustReport = result[0];
-
-            trustReport.Should().BeOfType<TrustOfstedReportServiceModel<OlderInspectionServiceModel>>();
-            trustReport.ReportDetails.Should().BeOfType<OlderInspectionServiceModel>();
-            trustReport.ReportDetails.Ratings.Should().Contain(currentRating);
-            trustReport.ReportDetails.Ratings.Should().Contain(previousRating);
-            trustReport.ReportDetails.Ratings.Should().HaveCount(2);
         }
 
         // GetOfstedOverviewSafeguardingAndConcerns tests
@@ -690,9 +488,11 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
                     "Outstanding", "Outstanding", "Outstanding", "Outstanding", "Outstanding", "Outstanding", null, "Met", "Yes", "None")
             };
 
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
-            _mockReportCardsService.GetReportCardsAsync(Arg.Any<List<string>>()).Returns([reportCards1, reportCards2]);
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
 
+            var receivedUrns = new List<string>();
+            _mockReportCardsService.GetReportCardsAsync(Arg.Do<List<string>>(urns => receivedUrns = urns))
+                .Returns([reportCards1, reportCards2]);
 
             var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
 
@@ -709,6 +509,8 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
             secondResult.ReportDetails.Should().NotBeNull();
             secondResult.ReportDetails.SafeGuarding.Should().Be("Met");
             secondResult.ReportDetails.Concerns.Should().Be("None");
+
+            receivedUrns.Should().BeEquivalentTo([schoolUrn1.ToString(), schoolUrn2.ToString()]);
         }
 
         [Fact]
@@ -740,7 +542,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
                     "Good", "Good", "Good", "Good", "Good", "Good", null, "Met", "Yes", "None")
             };
 
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
             _mockReportCardsService.GetReportCardsAsync(Arg.Any<List<string>>()).Returns([reportCards]);
 
             var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
@@ -775,7 +577,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
                 PreviousReportCard = null
             };
 
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
             _mockReportCardsService.GetReportCardsAsync(Arg.Any<List<string>>()).Returns([reportCards]);
 
             var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
@@ -817,7 +619,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
                     "Good", "Good", "Good", "Good", "Good", "Good", null, "Met", "No", "Special Measures")
             };
 
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
             _mockReportCardsService.GetReportCardsAsync(Arg.Any<List<string>>()).Returns([reportCards]);
 
             var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
@@ -834,25 +636,11 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
         {
             const string uid = "12345";
 
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns([]);
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(uid).Returns([]);
 
             var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
 
             result.Should().BeEmpty();
-        }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData("   ")]
-        [InlineData("\t")]
-        public async Task GetOfstedOverviewSafeguardingAndConcerns_WhenUidIsWhitespace_StillCallsRepository(string uid)
-        {
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns([]);
-
-            var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
-
-            result.Should().BeEmpty();
-            await _mockOfstedRepository.Received(1).GetAcademiesInTrustOfstedAsync(uid);
         }
 
         [Fact]
@@ -876,43 +664,13 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 
             var reportCards = new ReportCardServiceModel();
 
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
             _mockReportCardsService.GetReportCardsAsync(Arg.Any<int>()).Returns(reportCards);
 
             var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
 
             result.Should().BeEmpty();
             _mockLogger.VerifyLogError($"Unable to parse academy urn {invalidUrn} for trust {uid}");
-        }
-
-        [Fact]
-        public async Task GetOfstedOverviewSafeguardingAndConcerns_ShouldCallDependenciesWithCorrectParameters()
-        {
-            const string uid = "12345";
-            const int schoolUrn = 123456;
-            var dateJoinedTrust = new DateTime(2020, 1, 1, 0, 0, 0, DateTimeKind.Local);
-
-            var schoolOfstedRatings = new List<SchoolOfsted>
-            {
-                new(schoolUrn.ToString(), "Test School", dateJoinedTrust,
-                    new OfstedShortInspection(new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local),
-                        "School remains Good"),
-                    new OfstedRating((int)OfstedRatingScore.RequiresImprovement,
-                        new DateTime(2022, 1, 1, 0, 0, 0, DateTimeKind.Local)),
-                    new OfstedRating((int)OfstedRatingScore.Good,
-                        new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Local)),
-                    false)
-            };
-
-            var reportCards = new ReportCardServiceModel(){ Urn = schoolUrn };
-
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
-            _mockReportCardsService.GetReportCardsAsync(Arg.Any<List<string>>()).Returns([reportCards]);
-
-            await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
-
-            await _mockOfstedRepository.Received(1).GetAcademiesInTrustOfstedAsync(uid);
-            await _mockReportCardsService.Received(1).GetReportCardsAsync(Arg.Is<List<string>>(x => x.Contains(schoolUrn.ToString())));
         }
 
         [Fact]
@@ -936,7 +694,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 
             var reportCards = new ReportCardServiceModel(){Urn = schoolUrn};
 
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
             _mockReportCardsService.GetReportCardsAsync(Arg.Any<List<string>>()).Returns([reportCards]);
 
             var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);
@@ -963,7 +721,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Services
 
             var reportCards = new ReportCardServiceModel(){ Urn = schoolUrn };
 
-            _mockOfstedRepository.GetAcademiesInTrustOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
+            _mockOfstedHelperService.GetAcademiesOfstedAsync(uid).Returns(schoolOfstedRatings.ToArray());
             _mockReportCardsService.GetReportCardsAsync(Arg.Any<List<string>>()).Returns([reportCards]);
 
             var result = await _sut.GetOfstedOverviewSafeguardingAndConcerns(uid);

@@ -204,4 +204,31 @@ public class SchoolRepositoryTests
 
         result.Should().BeTrue();
     }
+
+    [Fact]
+    public async Task GetJoinedDate_should_return_joined_date_string()
+    {
+        const string urn = "123456";
+        const string joinedDate = "01/09/2026";
+
+        _mockAcademiesDbContext.GiasGroupLinks.Add(new GiasGroupLink
+        {
+            Urn = urn,
+            GroupUid = "12345",
+            GroupStatusCode = "OPEN",
+            JoinedDate = joinedDate
+        });
+
+        var result = await _sut.GetJoinedDate(urn);
+
+        result.Should().Be(joinedDate);
+    }
+
+    [Fact]
+    public async Task GetJoinedDate_should_return_null_when_school_has_no_group_link()
+    {
+        var result = await _sut.GetJoinedDate("999999");
+
+        result.Should().BeNull();
+    }
 }

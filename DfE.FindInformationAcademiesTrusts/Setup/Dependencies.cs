@@ -95,7 +95,6 @@ public static class Dependencies
         builder.Services.AddScoped<IStringFormattingUtilities, StringFormattingUtilities>();
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<IAcademyRepository, AcademyRepository>();
-        builder.Services.AddScoped<IOfstedRepository, OfstedRepository>();
         builder.Services.AddScoped<IWatchlistRepository, WatchlistRepository>();
         builder.Services.AddScoped<ITrustRepository, TrustRepository>();
         builder.Services.AddScoped<IDataSourceRepository, DataSourceRepository>();
@@ -151,6 +150,7 @@ public static class Dependencies
         builder.Services.AddScoped<IReportCardsService, ReportCardsService>();
         builder.Services.AddScoped<IOfstedService, OfstedService>();
         builder.Services.AddScoped<IOfstedServiceModelBuilder, OfstedServiceModelBuilder>();
+        builder.Services.AddScoped<IOfstedHelperService, OfstedHelperService>();
         builder.Services.AddScoped<IPowerBiLinkBuilderService, PowerBiLinkBuilderService>();
 
 

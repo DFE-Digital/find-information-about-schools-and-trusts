@@ -1,6 +1,4 @@
-﻿using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
-using DfE.FindInformationAcademiesTrusts.Extensions;
-using DfE.FindInformationAcademiesTrusts.Services.Academy;
+﻿using DfE.FindInformationAcademiesTrusts.Services.Academy;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
@@ -26,14 +24,14 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
 
     public class OfstedService(
         IReportCardsService reportCardsService,
-        IOfstedRepository ofstedRepository,
         IOfstedServiceModelBuilder ofstedServiceModelBuilder,
         IAcademyService academyService,
+        IOfstedHelperService ofstedHelperService,
         ILogger<OfstedService> logger) : IOfstedService
     {
         public async Task<OfstedOverviewInspectionServiceModel> GetOfstedOverviewInspectionAsync(int urn)
         {
-            var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
+            var schoolOfstedRatings = await ofstedHelperService.GetSchoolOfstedAsync(urn);
             var reportCards = await reportCardsService.GetReportCardsAsync(urn);
 
             return ofstedServiceModelBuilder.BuildOfstedOverviewInspection(schoolOfstedRatings, reportCards);
@@ -42,7 +40,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
         public async Task<List<OfstedOverviewInspectionServiceModel>> GetOfstedOverviewInspectionForTrustAsync(
             string trustReferenceNumber)
         {
-            var schoolOfstedRatings = await ofstedRepository.GetAcademiesInTrustOfstedAsync(trustReferenceNumber);
+            var schoolOfstedRatings = await ofstedHelperService.GetAcademiesOfstedAsync(trustReferenceNumber);
 
             var reportCards =
                 await reportCardsService.GetReportCardsAsync(schoolOfstedRatings.Select(x => x.Urn).ToList());
@@ -73,7 +71,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
         public async Task<OlderSchoolOfstedServiceModel>
             GetSchoolOfstedRatingsAsBeforeAndAfterSeptemberGradeAsync(int urn)
         {
-            var schoolOfstedRatings = await ofstedRepository.GetSchoolOfstedRatingsAsync(urn);
+            var schoolOfstedRatings = await ofstedHelperService.GetSchoolOfstedAsync(urn);
 
             return ofstedServiceModelBuilder
                 .BuildSchoolOfstedRatingsAsBeforeAndAfterSeptemberGrade(schoolOfstedRatings);
@@ -109,7 +107,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
         public async Task<List<TrustOfstedReportServiceModel<OlderInspectionServiceModel>>>
             GetEstablishmentsInTrustOlderOfstedRatings(string trustReferenceNumber)
         {
-            var academies = await ofstedRepository.GetAcademiesInTrustOfstedAsync(trustReferenceNumber);
+            var academies = await ofstedHelperService.GetAcademiesOfstedAsync(trustReferenceNumber);
 
             var trustOfstedReports = new List<TrustOfstedReportServiceModel<OlderInspectionServiceModel>>();
 
@@ -142,7 +140,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
         public async Task<List<TrustOfstedReportServiceModel<SafeGuardingAndConcernsServiceModel>>>
             GetOfstedOverviewSafeguardingAndConcerns(string trustReferenceNumber)
         {
-            var schoolOfstedRatings = await ofstedRepository.GetAcademiesInTrustOfstedAsync(trustReferenceNumber);
+            var schoolOfstedRatings = await ofstedHelperService.GetAcademiesOfstedAsync(trustReferenceNumber);
 
             var reportCards =
                 await reportCardsService.GetReportCardsAsync(schoolOfstedRatings.Select(x => x.Urn).ToList());
@@ -158,7 +156,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
                         Urn = urn
                     };
 
-                    var latestInspection = GetLatestSafeGuardingInspection(reportCard, schoolOfstedRating);
+                    var latestInspection = ofstedHelperService.GetLatestSafeGuardingInspection(reportCard, schoolOfstedRating);
 
                     var safeGuarding = new TrustOfstedReportServiceModel<SafeGuardingAndConcernsServiceModel>
                     {
@@ -177,74 +175,6 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
             }
 
             return result;
-        }
-
-        private static SafeGuardingAndConcernsServiceModel GetLatestSafeGuardingInspection(
-            ReportCardServiceModel reportCards, SchoolOfsted schoolOfstedRating)
-        {
-            var safeGuardingAndConcerns =
-                new SafeGuardingAndConcernsServiceModel(schoolOfstedRating.DateEstablishmentJoinedGroup!.Value);
-
-            if (TryGetSafeGuarding(safeGuardingAndConcerns, reportCards))
-            {
-                return safeGuardingAndConcerns;
-            }
-
-            return GetSafeGuardingFromOlderInspections(safeGuardingAndConcerns, schoolOfstedRating);
-        }
-
-        private static bool TryGetSafeGuarding(SafeGuardingAndConcernsServiceModel safeGuardingAndConcerns,
-            ReportCardServiceModel reportCards)
-        {
-            var recentReportCard = reportCards.LatestReportCard;
-            var previousReportCard = reportCards.PreviousReportCard;
-
-            var latestInspection = recentReportCard;
-
-            if (previousReportCard?.InspectionDate is { } prevDate &&
-                recentReportCard?.InspectionDate is { } recentDate &&
-                prevDate > recentDate)
-            {
-                latestInspection = previousReportCard;
-            }
-
-            if (latestInspection == null)
-            {
-                return false;
-            }
-
-            safeGuardingAndConcerns.Concerns = latestInspection.CategoryOfConcern;
-            safeGuardingAndConcerns.SafeGuarding = latestInspection.Safeguarding;
-            safeGuardingAndConcerns.InspectionDate = latestInspection.InspectionDate;
-
-            return true;
-        }
-
-        private static SafeGuardingAndConcernsServiceModel GetSafeGuardingFromOlderInspections(
-            SafeGuardingAndConcernsServiceModel safeGuardingAndConcerns, SchoolOfsted schoolOfstedRating)
-        {
-            var recent = schoolOfstedRating.CurrentOfstedRating;
-            var previous = schoolOfstedRating.PreviousOfstedRating;
-
-            var latestInspection = recent;
-
-            if (previous.InspectionDate is { } prevDate &&
-                recent.InspectionDate is { } recentDate &&
-                prevDate > recentDate)
-            {
-                latestInspection = previous;
-            }
-
-            if (latestInspection.InspectionDate == null)
-            {
-                return safeGuardingAndConcerns;
-            }
-
-            safeGuardingAndConcerns.Concerns = latestInspection.CategoryOfConcern.ToDisplayString();
-            safeGuardingAndConcerns.SafeGuarding = latestInspection.SafeguardingIsEffective.ToDisplayString();
-            safeGuardingAndConcerns.InspectionDate = DateOnly.FromDateTime(latestInspection.InspectionDate.Value);
-
-            return safeGuardingAndConcerns;
         }
     }
 }

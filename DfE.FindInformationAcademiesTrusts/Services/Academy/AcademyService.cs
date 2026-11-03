@@ -1,8 +1,11 @@
+using System.Globalization;
 using DfE.FindInformationAcademiesTrusts.Data;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Academy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PipelineAcademy;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.PupilCensus;
+using DfE.FindInformationAcademiesTrusts.HttpServices;
+using DfE.FindInformationAcademiesTrusts.Services.Ofsted;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Academy;
@@ -21,10 +24,10 @@ public interface IAcademyService
 
 public class AcademyService(
     IAcademyRepository academyRepository,
-    IOfstedRepository ofstedRepository,
     IPipelineEstablishmentRepository pipelineEstablishmentRepository,
     ITrustPupilService trustPupilService,
-    IFreeSchoolMealsAverageProvider freeSchoolMealsAverageProvider): IAcademyService
+    IFreeSchoolMealsAverageProvider freeSchoolMealsAverageProvider,
+    IOfstedHelperService ofstedHelperService): IAcademyService
 {
 
     public async Task<AcademyDetailsServiceModel[]> GetAcademiesInTrustDetailsAsync(string uid)
@@ -38,9 +41,9 @@ public class AcademyService(
 
     public async Task<SchoolOfstedServiceModel[]> GetAcademiesInTrustOfstedAsync(string trustReferenceNumber)
     {
-        var academies = await ofstedRepository.GetAcademiesInTrustOfstedAsync(trustReferenceNumber);
+        var academyOfsteds = await ofstedHelperService.GetAcademiesOfstedAsync(trustReferenceNumber);
 
-        return academies.Select(a =>
+        return academyOfsteds.Select(a =>
             new SchoolOfstedServiceModel(a.Urn, a.EstablishmentName, a.DateEstablishmentJoinedGroup, a.ShortInspection,
                 a.PreviousOfstedRating, a.CurrentOfstedRating, a.IsFurtherEducationalEstablishment)).ToArray();
     }
