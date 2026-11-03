@@ -2,6 +2,7 @@ using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
 using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.Extensions;
 using DfE.FindInformationAcademiesTrusts.Data.Repositories.Trust;
+using DfE.FindInformationAcademiesTrusts.HttpServices;
 using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Trusts;
 
 namespace DfE.FindInformationAcademiesTrusts.Services.Trust;
@@ -9,12 +10,17 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Trust;
 public interface ITrustOverviewProvider
 {
     Task<TrustDto?> GetEstablishmentTrust(int urn);
+    
+    Task<int?> GetEstablishmentsInTrustCount(string referenceNumber);
+    
+    Task<String?> GetSingleAcademyTrustUrn(string referenceNumber);
     Task<TrustDto?> GetTrustByReferenceNumber(string referenceNumber);
     Task<TrustOverview> GetTrustOverviewAsync(string trustReferenceNumber);
 }
 
 public class TrustOverviewProvider(
-    IGetTrusts getTrusts,
+    IGetTrustsTemp getTrusts,
+    IGetEstablishmentsTemp getEstablishments,
     IStringFormattingUtilities stringFormattingUtilities) : ITrustOverviewProvider
 {
     public Task<TrustDto?> GetEstablishmentTrust(int urn)
@@ -48,4 +54,25 @@ public class TrustOverviewProvider(
             result.OpenDate.ParseAsNullableDate()
         );
     }
+    
+    public async Task<int?> GetEstablishmentsInTrustCount(string referenceNumber)
+    {
+        var result = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
+
+        return result?.Length;
+    }
+
+    public async Task<string?> GetSingleAcademyTrustUrn(string referenceNumber)
+    {
+        var result = await getEstablishments.GetEstablishmentsByTrustReferenceNumber(referenceNumber);
+
+        if (result is null || result.Length != 1)
+        {
+            return null;
+        }
+
+        return result[0].Urn;
+    }
+
+
 }

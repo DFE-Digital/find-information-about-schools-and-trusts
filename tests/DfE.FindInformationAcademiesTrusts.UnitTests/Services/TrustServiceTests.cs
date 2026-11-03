@@ -46,7 +46,7 @@ public class TrustServiceTests
             _mockDateTimeProvider,
             _mockTrustOverviewProvider);
 
-        _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync(Arg.Any<string>())
+        _mockTrustOverviewProvider.GetSingleAcademyTrustUrn(Arg.Any<string>())
             .ReturnsNull();
         _mockAcademyRepository.GetOverviewOfAcademiesInTrustAsync(Arg.Any<string>())
             .Returns([]);
@@ -66,7 +66,7 @@ public class TrustServiceTests
         result.Should().Be(cachedResult);
 
         await _mockTrustOverviewProvider.DidNotReceive().GetTrustByReferenceNumber(referencenumber);
-        await _mockAcademyRepository.DidNotReceive().GetNumberOfAcademiesInTrustAsync(Arg.Any<string>());
+        await _mockTrustOverviewProvider.DidNotReceive().GetEstablishmentsInTrustCount(Arg.Any<string>());
     }
 
     [Fact]
@@ -97,7 +97,7 @@ public class TrustServiceTests
             ReferenceNumber = referenceNumber,
             Type = new NameAndCodeDto { Name = type }
         });
-        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(referenceNumber).Returns(numAcademies);
+        _mockTrustOverviewProvider.GetEstablishmentsInTrustCount(referenceNumber).Returns(numAcademies);
 
         var result = await _sut.GetTrustSummaryAsync(referenceNumber);
         result.Should().BeEquivalentTo(new TrustSummaryServiceModel(uid, referenceNumber, name, type, numAcademies));
@@ -121,7 +121,7 @@ public class TrustServiceTests
             ReferenceNumber = referenceNumber,
             Type = new NameAndCodeDto { Name = type }
         });
-        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(referenceNumber).Returns(numAcademies);
+        _mockTrustOverviewProvider.GetEstablishmentsInTrustCount(referenceNumber).Returns(numAcademies);
 
         await _sut.GetTrustSummaryAsync(referenceNumber);
 
@@ -229,7 +229,7 @@ public class TrustServiceTests
         const string trn = "TR0012";
         const int urn = 1234;
         _mockTrustOverviewProvider.GetTrustOverviewAsync(trn).Returns(BaseTrustOverview);
-        _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync(trn).Returns(urn.ToString());
+        _mockTrustOverviewProvider.GetSingleAcademyTrustUrn(trn).Returns(urn.ToString());
         SetupSatGovernors(urn);
 
         var result = await _sut.GetTrustGovernanceAsync(trn);
@@ -248,7 +248,7 @@ public class TrustServiceTests
         var expectedGovernor = new Governor("Hilly Jilly Trainface", "Member", "Some third Org", _lastYear, _nextYear, null);
 
         _mockTrustOverviewProvider.GetTrustOverviewAsync(trn).Returns(BaseTrustOverview);
-        _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync(trn).Returns(urn.ToString());
+        _mockTrustOverviewProvider.GetSingleAcademyTrustUrn(trn).Returns(urn.ToString());
         SetupSatGovernors(9876, unexpectedGovernor1, unexpectedGovernor2);
         SetupSatGovernors(urn, expectedGovernor);
 
@@ -291,11 +291,10 @@ public class TrustServiceTests
     [InlineData("123456")]
     [InlineData("567890")]
     public async Task
-        GetTrustOverviewAsync_should_get_singleAcademyTrustAcademyUrn_from_academy_repository_when_trust_is_single_academy_trust(
+        GetTrustOverviewAsync_should_get_singleAcademyTrustAcademyUrn_from_establishments_in_trust_when_trust_is_single_academy_trust(
             string? singleAcademyTrustAcademyUrn)
     {
-        _mockAcademyRepository.GetSingleAcademyTrustAcademyUrnAsync("TR0012")
-            .Returns(singleAcademyTrustAcademyUrn);
+        _mockTrustOverviewProvider.GetSingleAcademyTrustUrn("TR0012").Returns(singleAcademyTrustAcademyUrn);
         _mockTrustOverviewProvider.GetTrustOverviewAsync("TR0012").Returns(BaseTrustOverview);
 
         var result = await _sut.GetTrustOverviewAsync("TR0012", "2806");
@@ -313,7 +312,7 @@ public class TrustServiceTests
         var result = await _sut.GetTrustOverviewAsync("TR0012", "2806");
 
         result.SingleAcademyTrustAcademyUrn.Should().BeNull();
-        await _mockAcademyRepository.DidNotReceive().GetSingleAcademyTrustAcademyUrnAsync(Arg.Any<string>());
+        await _mockTrustOverviewProvider.DidNotReceive().GetSingleAcademyTrustUrn(Arg.Any<string>());
     }
 
     [Fact]
@@ -478,7 +477,7 @@ public class TrustServiceTests
             ReferenceNumber = referenceNumber,
             Type = new NameAndCodeDto { Name = type }
         });
-        _mockAcademyRepository.GetNumberOfAcademiesInTrustAsync(referenceNumber).Returns(numAcademies);
+        _mockTrustOverviewProvider.GetEstablishmentsInTrustCount(referenceNumber).Returns(numAcademies);
     
         var result = await _sut.GetTrustSummaryAsync(referenceNumber);
         result.Should().BeEquivalentTo(new TrustSummaryServiceModel(uid, referenceNumber, name, type, numAcademies));

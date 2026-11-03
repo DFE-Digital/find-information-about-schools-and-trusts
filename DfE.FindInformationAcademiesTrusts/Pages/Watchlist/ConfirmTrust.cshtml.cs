@@ -1,5 +1,5 @@
 using DfE.FindInformationAcademiesTrusts.Application.WatchlistCommands.Commands;
-using DfE.FindInformationAcademiesTrusts.Data.AcademiesDb.AcademiesDbServices;
+using DfE.FindInformationAcademiesTrusts.HttpServices;
 using Dfe.FindInformationAcademiesTrusts.Models;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using Dfe.FindInformationAcademiesTrusts.Services;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Watchlist;
 
-public class ConfirmTrust(IGetTrusts getTrusts,IMediator mediator,ErrorService errorService) : ContentPageModel
+public class ConfirmTrust(IGetTrustsTemp getTrusts,IMediator mediator,ErrorService errorService) : ContentPageModel
 {
     public string? ReferenceNumber { get; set; }
     
