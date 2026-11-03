@@ -230,7 +230,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
             if (HasShgIssuedAfterPolicyChange(foundRating.Current))
             {
                 logger.LogError(
-                    "URN {Urn} has a current Ofsted single headline grade of {score} issued on {InspectionDate} which was after single headline grades stopped being issued on 2nd September. This could be a data integrity issue with the Ofsted data in Academies Db.",
+                    "URN {Urn} has a current Ofsted single headline grade of {Score} issued on {InspectionDate} which was after single headline grades stopped being issued on 2nd September. This could be a data integrity issue with the Ofsted data in Academies Db.",
                     urn, foundRating.Current.OverallEffectiveness, foundRating.Current.InspectionDate);
 
                 updatedRating = updatedRating with
@@ -246,7 +246,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
             if (HasShgIssuedAfterPolicyChange(foundRating.Previous))
             {
                 logger.LogError(
-                    "URN {Urn} has a previous Ofsted single headline grade of {score} issued on {InspectionDate} which was after single headline grades stopped being issued on 2nd September. This could be a data integrity issue with the Ofsted data in Academies Db.",
+                    "URN {Urn} has a previous Ofsted single headline grade of {Score} issued on {InspectionDate} which was after single headline grades stopped being issued on 2nd September. This could be a data integrity issue with the Ofsted data in Academies Db.",
                     urn, foundRating.Previous.OverallEffectiveness, foundRating.Previous.InspectionDate);
 
                 updatedRating = updatedRating with
