@@ -311,12 +311,13 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
                 rating => rating.Value);
         }
 
+        
         private static Dictionary<string, AcademyOfstedRatings> CreateOfstedRatings(
             List<EstablishmentDto> establishments,
             List<int> urns)
         {
             var ofstedRatings = establishments
-                .Where(e => !e.MISEstablishment.DateOfLatestSection8Inspection.IsWhiteSpace() || !e.MISEstablishment.InspectionStartDate.IsWhiteSpace())
+                .Where(e => !string.IsNullOrEmpty(e.MISEstablishment.DateOfLatestSection8Inspection) || !string.IsNullOrEmpty(e.MISEstablishment.InspectionStartDate))
                 .Select(e => new AcademyOfstedRatings(
                     int.Parse(e.Urn),
                     new OfstedShortInspection(
@@ -356,7 +357,7 @@ namespace DfE.FindInformationAcademiesTrusts.Services.Ofsted
             if (missingUrns.Count != 0)
             {
                 ofstedRatings.AddRange(establishments
-                    .Where(e => !e.MisFurtherEducationEstablishment.DateOfLatestSection8Inspection.IsWhiteSpace() || !e.MisFurtherEducationEstablishment.LastDayOfInspection.IsWhiteSpace()
+                    .Where(e => !string.IsNullOrEmpty(e.MisFurtherEducationEstablishment.DateOfLatestSection8Inspection) || !string.IsNullOrEmpty(e.MisFurtherEducationEstablishment.LastDayOfInspection)
                                 && int.TryParse(e.Urn, out var urn)
                                 && missingUrns.Contains(urn))
                     .Select(e => new AcademyOfstedRatings(

@@ -243,10 +243,14 @@ public class OfstedHelperServiceTests
         SetupAcademiesInTrust("900001", "900002");
         AddSchoolOfsted(900001, new MisEstablishmentDto
         {
-            EarlyYearsProvision = "1"
+            EarlyYearsProvision = "1",
+            InspectionStartDate = "15/05/2023"
         });
         AddFurtherEducationOfsted(900001, new MisFurtherEducationEstablishmentDto());
-        AddFurtherEducationOfsted(900002, new MisFurtherEducationEstablishmentDto());
+        AddFurtherEducationOfsted(900002, new MisFurtherEducationEstablishmentDto
+        {
+            LastDayOfInspection = "10/03/2023"
+        });
 
         var result = await _sut.GetAcademiesOfstedAsync(TrustReferenceNumber);
 
@@ -263,7 +267,7 @@ public class OfstedHelperServiceTests
     }
 
     [Fact]
-    public async Task GetAcademiesOfstedAsync_should_return_not_inspected_when_ofsted_row_exists_without_ratings()
+    public async Task GetAcademiesOfstedAsync_should_treat_ofsted_rows_without_inspection_dates_as_missing()
     {
         SetupAcademiesInTrust("500001", "500002");
         AddSchoolOfsted(500001, new MisEstablishmentDto());
@@ -271,10 +275,24 @@ public class OfstedHelperServiceTests
 
         var result = await _sut.GetAcademiesOfstedAsync(TrustReferenceNumber);
 
-        result.Should().ContainSingle(a => a.Urn == "500001").Which.CurrentOfstedRating
-            .Should().Be(OfstedRating.NotInspected);
-        result.Should().ContainSingle(a => a.Urn == "500002").Which.CurrentOfstedRating
-            .Should().Be(OfstedRating.NotInspected with { CategoryOfConcern = CategoriesOfConcern.DoesNotApply });
+        using (new AssertionScope())
+        {
+            var fromMis = result.Should().ContainSingle(a => a.Urn == "500001").Subject;
+            fromMis.CurrentOfstedRating.Should().Be(OfstedRating.Unknown);
+            fromMis.PreviousOfstedRating.Should().Be(OfstedRating.Unknown);
+            fromMis.ShortInspection.Should().Be(OfstedShortInspection.Unknown);
+            fromMis.IsFurtherEducationalEstablishment.Should().BeFalse();
+
+            var fromFurtherEd = result.Should().ContainSingle(a => a.Urn == "500002").Subject;
+            fromFurtherEd.CurrentOfstedRating.Should().Be(OfstedRating.Unknown);
+            fromFurtherEd.PreviousOfstedRating.Should().Be(OfstedRating.Unknown);
+            fromFurtherEd.ShortInspection.Should().Be(OfstedShortInspection.Unknown);
+            fromFurtherEd.IsFurtherEducationalEstablishment.Should().BeFalse();
+        }
+
+        _mockLogger.VerifyLogErrors(
+            "URN 500001 was not found in Mis.Establishments or Mis.FurtherEducationEstablishments. This indicates a data integrity issue with the Ofsted data in Academies Db.",
+            "URN 500002 was not found in Mis.Establishments or Mis.FurtherEducationEstablishments. This indicates a data integrity issue with the Ofsted data in Academies Db.");
     }
 
     [Fact]
@@ -311,6 +329,7 @@ public class OfstedHelperServiceTests
         AddSchoolOfsted(899999, new MisEstablishmentDto
         {
             QualityOfEducation = "1",
+            InspectionStartDate = "15/05/2023",
             PreviousQualityOfEducation = "3"
         });
 
@@ -391,7 +410,11 @@ public class OfstedHelperServiceTests
     public async Task GetAcademiesOfstedAsync_should_log_error_when_ofsted_ratings_are_unrecognised()
     {
         SetupAcademiesInTrust("600001", "600002");
-        AddSchoolOfsted(600001, new MisEstablishmentDto { OverallEffectiveness = "not a valid score" });
+        AddSchoolOfsted(600001, new MisEstablishmentDto
+        {
+            OverallEffectiveness = "not a valid score",
+            InspectionStartDate = "01/01/2022"
+        });
         AddSchoolOfsted(600002, new MisEstablishmentDto
         {
             OverallEffectiveness = "1",
@@ -698,15 +721,10 @@ public class OfstedHelperServiceTests
                 : new PreviousEstablishmentDto { Urn = predecessorUrn }
         };
 
-        if (ofsted?.MISEstablishment is not null)
-        {
-            establishment.MISEstablishment = ofsted.MISEstablishment;
-        }
-
-        if (ofsted?.MisFurtherEducationEstablishment is not null)
-        {
-            establishment.MisFurtherEducationEstablishment = ofsted.MisFurtherEducationEstablishment;
-        }
+        // The rating filters read both nested records, so a missing one must be an empty object.
+        establishment.MISEstablishment = ofsted?.MISEstablishment ?? new MisEstablishmentDto();
+        establishment.MisFurtherEducationEstablishment =
+            ofsted?.MisFurtherEducationEstablishment ?? new MisFurtherEducationEstablishmentDto();
 
         return establishment;
     }
