@@ -7,4 +7,6 @@ public interface ISchoolRepository
     Task<bool> IsPartOfFederationAsync(int urn);
 
     Task<FederationDetails> GetSchoolFederationDetailsAsync(int urn);
+    
+    Task<string?> GetJoinedDate(string urn);
 }
