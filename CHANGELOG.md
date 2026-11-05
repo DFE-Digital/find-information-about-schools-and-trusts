@@ -4,9 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-10-28.7878...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-10-28.7883...HEAD)
 
 ---
+## [Release-86][release-86] - 2026-11-04
+
+### Fixed
+- 313020 : Trust uid is not rendered in the url when navigated through academy( data missing)
+
+### Changed
+- 309868 : Move methods in Ofsted Repository to service layer
+
+--
 ## [Release-85][release-85] - 2026-10-28
 
 ### Changed
