@@ -1,8 +1,16 @@
-﻿@using Dfe.FindInformationAcademiesTrusts.Models
+﻿@using DfE.FindInformationAcademiesTrusts.Extensions
+@using Dfe.FindInformationAcademiesTrusts.Models
+
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Hosting
+@inject IWebHostEnvironment HostEnvironment
 
 @{
     var currentPath = Context.Request.Path.Value ?? "";
     var isWatchlistActive = currentPath.StartsWith("/watchlist", StringComparison.OrdinalIgnoreCase);
+    var isLocalAuthoritiesActive = currentPath.StartsWith("/localauthorities", StringComparison.OrdinalIgnoreCase);
+
+    var isDevelopment = HostEnvironment.IsDevelopment() || HostEnvironment.IsLocalDevelopment();
 }
 
 <section aria-label="Service information" class="govuk-service-navigation" data-module="govuk-service-navigation">
@@ -15,11 +23,19 @@
             </span>
             <nav aria-label="Service navigation">
                 <ul class="govuk-service-navigation__list">
-                    <li class="govuk-service-navigation__item @(!isWatchlistActive ? "govuk-service-navigation__item--active" : "")">
-                        <a href="/" class="govuk-service-navigation__link" aria-current="@(!isWatchlistActive ? "page" : null)">
+                    <li class="govuk-service-navigation__item @(!isWatchlistActive && !isLocalAuthoritiesActive ? "govuk-service-navigation__item--active" : "")">
+                        <a href="/" class="govuk-service-navigation__link" aria-current="@(!isWatchlistActive && !isLocalAuthoritiesActive ? "page" : null)">
                             Trusts and schools
                         </a>
                     </li>
+                    @if (isDevelopment)
+                    {
+                        <li class="govuk-service-navigation__item @(isLocalAuthoritiesActive ? "govuk-service-navigation__item--active" : "")">
+                            <a href="@Links.LocalAuthorities.LocalAuthoritiesSearch.Page" class="govuk-service-navigation__link" aria-current="@(isLocalAuthoritiesActive ? "page" : null)">
+                                Local authorities
+                            </a>
+                        </li>
+                    }
                     <li class="govuk-service-navigation__item @(isWatchlistActive ? "govuk-service-navigation__item--active" : "")">
                         <a href="@Links.Watchlist.TrustsWatchlist.Page" class="govuk-service-navigation__link" aria-current="@(isWatchlistActive ? "page" : null)">
                             Watchlist
