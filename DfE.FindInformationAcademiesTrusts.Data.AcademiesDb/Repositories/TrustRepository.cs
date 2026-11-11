@@ -54,7 +54,12 @@ public class TrustRepository(
                 .ToArrayAsync())
             .Where(g => (g.EndDate == null || g.EndDate >= DateTime.Today) && g.StartDate <= DateTime.Today).ToArray();
 
+        // Exclude the governor with Gid 1310847 this needs to be removed eventually once new contact is added
+        governors = governors.Where(g => g.Gid != "1310847").ToArray();
+        
         var gids = governors.Select(g => g.Gid).ToArray();
+        
+        
 
         var governorEmails = await academiesDbContext.TadTrustGovernances
             .Where(tadTrustGovernance => gids.Contains(tadTrustGovernance.Gid))
