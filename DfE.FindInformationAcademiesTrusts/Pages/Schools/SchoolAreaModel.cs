@@ -14,6 +14,8 @@ public class SchoolAreaModel(
     ISchoolNavMenu schoolNavMenu) : BasePageModel, ISchoolAreaModel
 {
     [BindProperty(SupportsGet = true)] public int Urn { get; set; }
+    
+    [BindProperty(SupportsGet = true)] public int LaCode { get; set; }
 
     public List<DataSourcePageListEntry> DataSourcesPerPage { get; set; } = [];
     public virtual PageMetadata PageMetadata => new(SchoolName, ModelState.IsValid);

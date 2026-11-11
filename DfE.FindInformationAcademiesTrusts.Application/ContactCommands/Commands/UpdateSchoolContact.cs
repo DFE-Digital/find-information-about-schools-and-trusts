@@ -7,7 +7,7 @@ using MediatR;
 namespace DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Commands;
 
 public record UpdateSchoolContactCommand(
-    int Urn,
+    int LaCode,
     SchoolContactRole Role,
     string? Name,
     string? Email
@@ -24,13 +24,12 @@ public class UpdateSchoolContact
             var name = request.Name ?? string.Empty;
             var email = request.Email ?? string.Empty;
 
-            var contact = await contactRepository.GetSchoolContactAsync(request.Urn, request.Role, cancellationToken);
-
+            var contact = await contactRepository.GetSchoolContactAsync(request.LaCode, request.Role, cancellationToken);
             if (contact is null)
             {
                 await contactRepository.AddAsync(new SchoolContact
                 {
-                    Urn = request.Urn,
+                    LaCode = request.LaCode,
                     Role = request.Role,
                     Name = name,
                     Email = email

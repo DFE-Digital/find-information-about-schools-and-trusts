@@ -38,7 +38,7 @@ public class InDfeModel(
         if (pageResult is NotFoundResult) return pageResult;
 
         var trustUid = int.TryParse(TrustSummary?.Uid, out var uid) ? uid : (int?)null;
-        Contacts = await mediator.Send(new GetSchoolDfeContactsQuery(Urn, trustUid));
+        Contacts = await mediator.Send(new GetSchoolDfeContactsQuery(LaCode, trustUid));
 
         List<DataSourceListEntry> inDfeDataSources = SchoolCategory == SchoolCategory.Academy
             ?
