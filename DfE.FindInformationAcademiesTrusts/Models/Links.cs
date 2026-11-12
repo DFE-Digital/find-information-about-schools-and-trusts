@@ -34,6 +34,11 @@ public static class Links
     {
         public static readonly LinkItem TrustDetails = AddLinkItem(backText: "Back", page: "/Trusts/Overview/TrustDetails");
     }
+
+    public static class LocalAuthorities
+    {
+        public static readonly LinkItem LocalAuthoritiesSearch = AddLinkItem(backText: "Back", page: "/localauthorities/search");
+    }
     
 }
 

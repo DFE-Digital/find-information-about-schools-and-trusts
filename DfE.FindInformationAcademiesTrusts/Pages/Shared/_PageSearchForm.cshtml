@@ -1,15 +1,15 @@
 @model IPageSearchFormModel
 @{
-    var placeholderText = Html.Raw("e.g. st mary's primary school");
+    var placeholderText = Html.Raw(Model.PlaceholderText);
     var keywords = Html.Raw(Model.KeyWords);
 }
 
 <div data-testid="app-search-form">
     <label class="govuk-heading-m govuk-!-margin-bottom-3" for="@Model.PageSearchFormInputId">
-        Search for a trust or school <span class="govuk-visually-hidden">@placeholderText</span>
+        @Model.LabelText<span class="govuk-visually-hidden">@placeholderText</span>
     </label>
     <div class="govuk-hint">
-        Search by URN (unique reference number), TRN (trust reference number) or name. Include any punctuation in names.
+        @Model.HintText
     </div>
 
     @* This is used by the no javascript users *@
