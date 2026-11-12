@@ -14,9 +14,6 @@ public class GetTrustsTemp(IDfeHttpClientFactoryTemp httpClientFactoryTemp,
         
         string path = $"v4/trusts?groupName={searchQuery}&urn={searchQuery}&page=1&count=10&status=Open";
         
-        _httpClient.DefaultRequestHeaders.Add("x-correlationId", Guid.NewGuid().ToString());
-        
-        
         ApiResponseTemp<TrustListResponseTemp<TrustDto>> result = await httpClientServiceTemp.Get<TrustListResponseTemp<TrustDto>>(_httpClient, path);
 
         if (!result.Success) throw new ApiResponseTempException($"Request to Api failed | StatusCode - {result.StatusCode}");

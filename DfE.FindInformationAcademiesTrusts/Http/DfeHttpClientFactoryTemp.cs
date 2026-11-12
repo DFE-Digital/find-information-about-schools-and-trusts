@@ -1,5 +1,5 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using ICorrelationContext = GovUK.Dfe.CoreLibs.Http.Interfaces.ICorrelationContext;
 
 namespace DfE.FindInformationAcademiesTrusts.Http;
 [ExcludeFromCodeCoverage]
@@ -9,15 +9,13 @@ namespace DfE.FindInformationAcademiesTrusts.Http;
 public class DfeHttpClientFactoryTemp : IDfeHttpClientFactoryTemp
 {
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly ICorrelationContext _correlationContext;
 
     public const string AcademiesClientName = "AcademiesClient";
     private const string CorrelationIdHeaderKey = "x-correlationId";
 
-    public DfeHttpClientFactoryTemp(IHttpClientFactory httpClientFactory, ICorrelationContext correlationContext)
+    public DfeHttpClientFactoryTemp(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
-        _correlationContext = correlationContext;
     }
 
     /// <summary>
@@ -37,7 +35,9 @@ public class DfeHttpClientFactoryTemp : IDfeHttpClientFactoryTemp
     public HttpClient CreateClient(string name)
     {
         var httpClient = _httpClientFactory.CreateClient(name);
-        httpClient.DefaultRequestHeaders.Add(CorrelationIdHeaderKey, _correlationContext.CorrelationId.ToString());
+        var correlationId = Activity.Current?.TraceId.ToString() ?? Guid.NewGuid().ToString();
+        httpClient.DefaultRequestHeaders.Remove(CorrelationIdHeaderKey);
+        httpClient.DefaultRequestHeaders.Add(CorrelationIdHeaderKey, correlationId);
         return httpClient;
     }
 }
