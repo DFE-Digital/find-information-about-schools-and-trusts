@@ -5,6 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <NoWarn>$(NoWarn);NU1903</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,7 +16,7 @@
         </PackageReference>
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.22" />
         <PackageReference Include="GovUK.Dfe.CoreLibs.Contracts" Version="1.0.107" />
-        <PackageReference Include="GovUK.Dfe.CoreLibs.http" Version="1.0.14" />
+        <PackageReference Include="GovUK.Dfe.CoreLibs.http" Version="1.0.1" />
     </ItemGroup>
 
     <ItemGroup>
