@@ -66,6 +66,7 @@ public class FindInformationAcademiesTrustsContext(
             entity.Property(c => c.LastModifiedAtTime).HasComputedColumnSql("[PeriodStart]");
 
             entity.HasIndex(c => c.Urn);
+            entity.HasIndex(c=> c.LaCode);
             entity.HasIndex(c => new { c.Urn, c.Role }).IsUnique();
         });
     }

@@ -4,6 +4,7 @@ using DfE.FindInformationAcademiesTrusts.Configuration;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Extensions;
+using DfE.FindInformationAcademiesTrusts.HttpServices;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
@@ -19,6 +20,7 @@ namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 public class InDfeModel(
     IMediator mediator,
     IDataSourceService dataSourceService,
+    IGetEstablishmentsTemp getEstablishments,
     ISchoolService schoolService,
     ITrustService trustService,
     ISchoolNavMenu schoolNavMenu)
@@ -35,6 +37,8 @@ public class InDfeModel(
     public override async Task<IActionResult> OnGetAsync()
     {
         var pageResult = await base.OnGetAsync();
+        var establishment = await getEstablishments.GetEstablishment(Urn);
+        LaCode = int.TryParse(establishment.LocalAuthorityCode, out var laCode) ? laCode : 0;
         if (pageResult is NotFoundResult) return pageResult;
 
         var trustUid = int.TryParse(TrustSummary?.Uid, out var uid) ? uid : (int?)null;

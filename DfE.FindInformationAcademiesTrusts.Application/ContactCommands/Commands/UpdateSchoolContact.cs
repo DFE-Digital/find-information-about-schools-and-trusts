@@ -32,7 +32,7 @@ public class UpdateSchoolContact
                     LaCode = request.LaCode,
                     Role = request.Role,
                     Name = name,
-                    Email = email
+                    Email = email,
                 }, cancellationToken);
 
                 return new ContactUpdated(true, true);

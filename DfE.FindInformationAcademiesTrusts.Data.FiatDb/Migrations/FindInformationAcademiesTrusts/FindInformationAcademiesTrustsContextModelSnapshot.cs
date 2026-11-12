@@ -35,6 +35,9 @@ namespace DfE.FindInformationAcademiesTrusts.Data.FiatDb.Migrations.FindInformat
                         .HasMaxLength(320)
                         .HasColumnType("nvarchar(320)");
 
+                    b.Property<int>("LaCode")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("LastModifiedAtTime")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2")
