@@ -7,6 +7,8 @@ You can copy the connection string from Azure. Go the the app insights instance 
 
 ## Tracking events
 
+Both Academies API HTTP client factories set `x-correlationId` to the current .NET `Activity` trace ID. If no activity is active, they generate a GUID. Incoming `x-correlationId` headers are not propagated; correlation uses .NET tracing rather than CoreLibs HTTP middleware.
+
 We are tracking page views and requests automatically. If you would like to track your own events then us the TrackEvent method.
 You can track events in the client using javascript or on the server using the app insights module.
 

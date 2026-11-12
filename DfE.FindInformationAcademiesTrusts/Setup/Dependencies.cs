@@ -43,8 +43,6 @@ using DfE.FindInformationAcademiesTrusts.HttpServices;
 using Dfe.FindInformationAcademiesTrusts.Services;
 using GovUK.Dfe.AcademiesApi.Client;
 using GovUK.Dfe.AcademiesApi.Client.Contracts;
-using GovUK.Dfe.CoreLibs.Http.Interfaces;
-using GovUK.Dfe.CoreLibs.Http.Middlewares.CorrelationId;
 using MediatR;
 
 namespace DfE.FindInformationAcademiesTrusts.Setup;
@@ -142,7 +140,6 @@ public static class Dependencies
         builder.Services.AddScoped<IGetTrustsTemp, GetTrustsTemp>();
         builder.Services.AddScoped<IDfeHttpClientFactory, DfeHttpClientFactory>();
         builder.Services.AddScoped<IDfeHttpClientFactoryTemp, DfeHttpClientFactoryTemp>();
-        builder.Services.AddScoped<ICorrelationContext, CorrelationContext>();
         builder.Services.AddScoped<IHttpClientService, HttpClientService>();
         builder.Services.AddScoped<IHttpClientServiceTemp, HttpClientServiceTemp>();
         builder.Services.AddAcademiesApiClient<ITrustsV4Client, TrustsV4Client>(builder.Configuration);
