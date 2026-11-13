@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Release-87][release-87] - 2026-11-12
 
 ### Changed
-- 314598 : Hide contact in trusts(BRIGANTIA LEARNING TRUST LIMITED)
+- 314598 : Hide contact in trust
 
 --
 ## [Release-86][release-86] - 2026-11-04
