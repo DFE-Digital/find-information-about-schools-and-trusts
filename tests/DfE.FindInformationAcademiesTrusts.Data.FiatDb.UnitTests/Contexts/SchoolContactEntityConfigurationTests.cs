@@ -22,14 +22,14 @@ public class SchoolContactEntityConfigurationTests(FiatDbContainerFixture fiatDb
             {
                 Name = "My RegionsGroupLocalAuthorityLead2",
                 Email = "my.RegionsGroupLocalAuthorityLead2@education.gov.uk",
-                LaCode = 102345,
+                LaCode = 102,
                 Role = SchoolContactRole.RegionsGroupLocalAuthorityLead
             },
             new SchoolContact
             {
                 Name = "My RegionsGroupLocalAuthorityLead3",
                 Email = "my.RegionsGroupLocalAuthorityLead2@education.gov.uk",
-                LaCode = 101,
+                LaCode = 103,
                 Role = SchoolContactRole.RegionsGroupLocalAuthorityLead
             });
 
