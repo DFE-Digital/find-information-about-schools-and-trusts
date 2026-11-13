@@ -37,9 +37,10 @@ public class InDfeModel(
     public override async Task<IActionResult> OnGetAsync()
     {
         var pageResult = await base.OnGetAsync();
+        if (pageResult is NotFoundResult) return pageResult;
+
         var establishment = await getEstablishments.GetEstablishment(Urn);
         LaCode = int.TryParse(establishment.LocalAuthorityCode, out var laCode) ? laCode : 0;
-        if (pageResult is NotFoundResult) return pageResult;
 
         var trustUid = int.TryParse(TrustSummary?.Uid, out var uid) ? uid : (int?)null;
         Contacts = await mediator.Send(new GetSchoolDfeContactsQuery(LaCode, trustUid));
