@@ -19,14 +19,14 @@ public class UpdateSchoolContactTests
     [Fact]
     public async Task Handle_NoExistingContact_AddsContactAndReportsBothUpdated()
     {
-        var command = new UpdateSchoolContactCommand(123456, SchoolContactRole.RegionsGroupLocalAuthorityLead, "Name", "name@education.gov.uk");
+        var command = new UpdateSchoolContactCommand(123, SchoolContactRole.RegionsGroupLocalAuthorityLead, "Name", "name@education.gov.uk");
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.NameUpdated);
         Assert.True(result.EmailUpdated);
         _mockContactRepository.Verify(repo => repo.AddAsync(
-            It.Is<SchoolContact>(c => c.Urn == 123456 && c.Role == SchoolContactRole.RegionsGroupLocalAuthorityLead && c.Name == "Name" &&
+            It.Is<SchoolContact>(c => c.LaCode == 123 && c.Role == SchoolContactRole.RegionsGroupLocalAuthorityLead && c.Name == "Name" &&
                                      c.Email == "name@education.gov.uk"),
             It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -40,7 +40,7 @@ public class UpdateSchoolContactTests
         bool expectedNameUpdated, bool expectedEmailUpdated)
     {
         var existing = new SchoolContact
-            { Urn = 123456, Role = SchoolContactRole.RegionsGroupLocalAuthorityLead, Name = "Old", Email = "old@education.gov.uk" };
+            { LaCode = 123, Role = SchoolContactRole.RegionsGroupLocalAuthorityLead, Name = "Old", Email = "old@education.gov.uk" };
         _mockContactRepository
             .Setup(repo => repo.GetSchoolContactAsync(123456, SchoolContactRole.RegionsGroupLocalAuthorityLead, It.IsAny<CancellationToken>()))
             .ReturnsAsync(existing);

@@ -4,6 +4,7 @@ using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Queries;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Domain.Enums;
 using DfE.FindInformationAcademiesTrusts.Extensions;
+using DfE.FindInformationAcademiesTrusts.HttpServices;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.NavMenu;
@@ -16,10 +17,11 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 
-public class EditModel(IMediator mediator, ISchoolService schoolService) : BasePageModel, ISchoolAreaModel
+public class EditModel(IMediator mediator, ISchoolService schoolService,IGetEstablishmentsTemp getEstablishments) : BasePageModel, ISchoolAreaModel
 {
     [BindProperty(SupportsGet = true)] public int Urn { get; set; }
-
+     
+    public int LaCode { get; set; }
     [BindProperty(SupportsGet = true)] public SchoolContactRole Role { get; set; }
 
     [BindProperty]
@@ -50,11 +52,14 @@ public class EditModel(IMediator mediator, ISchoolService schoolService) : BaseP
     public PageMetadata PageMetadata =>
         new(SchoolName, ModelState.IsValid, InDfeModel.PageName, $"Edit {RoleName} details");
 
+    
     public async Task<IActionResult> OnGetAsync()
     {
         if (!await LoadSchoolAsync()) return NotFound();
 
-        var contact = await mediator.Send(new GetSchoolContactQuery(Urn, Role));
+        var establishment = await getEstablishments.GetEstablishment(Urn);
+        LaCode = int.TryParse(establishment.LocalAuthorityCode, out var laCode) ? laCode : 0;
+        var contact = await mediator.Send(new GetSchoolContactQuery(LaCode, Role));
         Name = contact?.Name;
         Email = contact?.Email;
 
@@ -66,8 +71,9 @@ public class EditModel(IMediator mediator, ISchoolService schoolService) : BaseP
         if (!await LoadSchoolAsync()) return NotFound();
 
         if (!ModelState.IsValid) return Page();
-
-        var result = await mediator.Send(new UpdateSchoolContactCommand(Urn, Role, Name, Email));
+        var establishment = await getEstablishments.GetEstablishment(Urn);
+        LaCode = int.TryParse(establishment.LocalAuthorityCode, out var laCode) ? laCode : 0;
+        var result = await mediator.Send(new UpdateSchoolContactCommand(LaCode, Role, Name, Email));
 
         ContactUpdatedMessage = result.ToMessage(RoleName);
 

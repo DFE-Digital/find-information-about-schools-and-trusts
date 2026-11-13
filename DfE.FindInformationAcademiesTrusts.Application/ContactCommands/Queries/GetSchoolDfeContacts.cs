@@ -9,7 +9,7 @@ namespace DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Queries
 /// DfE contacts shown for a school: its own regions group LA lead, plus its trust's contacts when it is in a trust
 /// </summary>
 public record GetSchoolDfeContactsQuery(
-    int Urn,
+    int LaCode,
     int? TrustUid
 ) : IRequest<SchoolDfeContacts>;
 
@@ -23,7 +23,7 @@ public class GetSchoolDfeContacts
         public async Task<SchoolDfeContacts> Handle(GetSchoolDfeContactsQuery request,
             CancellationToken cancellationToken)
         {
-            var regionsGroupLocalAuthorityLead = await schoolContactRepository.GetSchoolContactAsync(request.Urn,
+            var regionsGroupLocalAuthorityLead = await schoolContactRepository.GetSchoolContactAsync(request.LaCode,
                 SchoolContactRole.RegionsGroupLocalAuthorityLead, cancellationToken);
 
             if (request.TrustUid is not { } trustUid)

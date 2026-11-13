@@ -16,19 +16,21 @@ do
 done
 
 echo "Merging FIAT database migrations history ..."
-until /opt/mssql-tools18/bin/sqlcmd -S "${mssqlconn[Server]}" -U "${mssqlconn[UserId]}" -P "${mssqlconn[Password]}" -d "${mssqlconn[Database]}" -C -I -i /app/sql/MergeMigrationsHistoryScript.sql -o /app/sql/MergeMigrationsHistoryScriptOutput.txt
-do
+if /opt/mssql-tools18/bin/sqlcmd -S "${mssqlconn[Server]}" -U "${mssqlconn[UserId]}" -P "${mssqlconn[Password]}" -d "${mssqlconn[Database]}" -b -C -I -i /app/sql/MergeMigrationsHistoryScript.sql -o /app/sql/MergeMigrationsHistoryScriptOutput.txt; then
   cat /app/sql/MergeMigrationsHistoryScriptOutput.txt
-  echo "Retrying FIAT database migrations history merge ..."
-  sleep 5
-done
+else
+  cat /app/sql/MergeMigrationsHistoryScriptOutput.txt
+  echo "FIAT database migrations history merge failed." >&2
+  exit 1
+fi
 
 echo "Running FIAT database migrations ..."
-until /opt/mssql-tools18/bin/sqlcmd -S "${mssqlconn[Server]}" -U "${mssqlconn[UserId]}" -P "${mssqlconn[Password]}" -d "${mssqlconn[Database]}" -C -I -i /app/sql/FiatDbMigrationScript.sql -o /app/sql/FiatDbMigrationScriptOutput.txt
-do
+if /opt/mssql-tools18/bin/sqlcmd -S "${mssqlconn[Server]}" -U "${mssqlconn[UserId]}" -P "${mssqlconn[Password]}" -d "${mssqlconn[Database]}" -b -C -I -i /app/sql/FiatDbMigrationScript.sql -o /app/sql/FiatDbMigrationScriptOutput.txt; then
   cat /app/sql/FiatDbMigrationScriptOutput.txt
-  echo "Retrying FIAT database migrations ..."
-  sleep 5
-done
+else
+  cat /app/sql/FiatDbMigrationScriptOutput.txt
+  echo "FIAT database migrations failed." >&2
+  exit 1
+fi
 
 echo "Done!"
