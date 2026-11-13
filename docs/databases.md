@@ -69,6 +69,16 @@ dotnet ef migrations list --context FindInformationAcademiesTrustsContext --proj
 
 ### Adding and applying migrations
 
+`RepairSchoolContactsMigration` drops and recreates only `SchoolContacts` and
+`SchoolContactsHistory`, with `LaCode` instead of `Urn` and a unique `(LaCode, Role)` index.
+It permanently deletes all school contacts and their history in every environment where it runs.
+Back up the database before deploying; rollback requires restoring the backup. `Watchlist`,
+`Contacts` and `ContactsHistory` are unchanged.
+
+The deployment runner stops on SQL errors and prints SQL output to the initcontainer logs.
+If an earlier migration fails before the repair is reached, investigate that failure rather than
+manually marking it as applied.
+
 ```bash
 ### These commands should be run from repository root
 

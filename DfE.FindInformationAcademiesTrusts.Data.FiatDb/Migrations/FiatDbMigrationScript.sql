@@ -357,3 +357,79 @@ GO
 COMMIT;
 GO
 
+BEGIN TRANSACTION;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261113145427_RepairSchoolContactsMigration'
+)
+BEGIN
+    ALTER TABLE [SchoolContacts] SET (SYSTEM_VERSIONING = OFF)
+
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261113145427_RepairSchoolContactsMigration'
+)
+BEGIN
+    DROP TABLE [SchoolContacts];
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261113145427_RepairSchoolContactsMigration'
+)
+BEGIN
+    DROP TABLE [SchoolContactsHistory];
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261113145427_RepairSchoolContactsMigration'
+)
+BEGIN
+    DECLARE @historyTableSchema sysname = SCHEMA_NAME()
+    EXEC(N'CREATE TABLE [SchoolContacts] (
+        [Id] int NOT NULL IDENTITY,
+        [LaCode] int NOT NULL,
+        [Role] nvarchar(450) NOT NULL,
+        [Name] nvarchar(500) NOT NULL,
+        [Email] nvarchar(320) NOT NULL,
+        [PeriodEnd] datetime2 GENERATED ALWAYS AS ROW END HIDDEN NOT NULL,
+        [PeriodStart] datetime2 GENERATED ALWAYS AS ROW START HIDDEN NOT NULL,
+        [LastModifiedByName] nvarchar(500) NOT NULL,
+        [LastModifiedByEmail] nvarchar(320) NOT NULL,
+        [LastModifiedAtTime] AS [PeriodStart],
+        CONSTRAINT [PK_SchoolContacts] PRIMARY KEY ([Id]),
+        PERIOD FOR SYSTEM_TIME([PeriodStart], [PeriodEnd])
+    ) WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [' + @historyTableSchema + N'].[SchoolContactsHistory]))');
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261113145427_RepairSchoolContactsMigration'
+)
+BEGIN
+    CREATE UNIQUE INDEX [IX_SchoolContacts_LaCode_Role] ON [SchoolContacts] ([LaCode], [Role]);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261113145427_RepairSchoolContactsMigration'
+)
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20261113145427_RepairSchoolContactsMigration', N'8.0.22');
+END;
+GO
+
+COMMIT;
+GO
+
