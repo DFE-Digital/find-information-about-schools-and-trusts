@@ -4,9 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/). To see an example from a mature product in the program [see the Complete products changelog that follows the same methodology](https://github.com/DFE-Digital/complete-conversions-transfers-changes/blob/main/CHANGELOG.md).
 
-## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-10-28.7883...HEAD)
+## [Unreleased](https://github.com/DFE-Digital/find-information-about-schools-and-trusts/releases/tag/production-2026-11-13.7990...HEAD)
 
 ---
+## [Release-88][release-88] - 2026-11-13
+
+### Changed
+- 311247 : Access the Local Authorities page
+
+--
+## [Release-87][release-87] - 2026-11-12
+
+### Changed
+- 314598 : Hide contact in trusts(BRIGANTIA LEARNING TRUST LIMITED)
+
+--
 ## [Release-86][release-86] - 2026-11-04
 
 ### Fixed
