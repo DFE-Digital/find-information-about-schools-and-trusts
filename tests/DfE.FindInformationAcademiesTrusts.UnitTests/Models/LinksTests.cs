@@ -165,6 +165,18 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Models
             Assert.Equal("/Trusts/Overview/TrustDetails", linkItem.Page);
             Assert.Equal("Back", linkItem.BackText);
         }
+        
+        [Fact]
+        public void LocalAuthorities_LocalAuthoritiesSearch_ShouldHaveCorrectValues()
+        {
+            // Arrange & Act
+            var linkItem = LocalAuthorities.LocalAuthoritiesSearch;
+
+            // Assert
+            Assert.NotNull(linkItem);
+            Assert.Equal("/localauthorities/search", linkItem.Page);
+            Assert.Equal("Back", linkItem.BackText);
+        }
 
         [Fact]
         public void NestedLinkItems_ShouldBeRegistered()
