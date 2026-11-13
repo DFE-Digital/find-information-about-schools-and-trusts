@@ -15,21 +15,21 @@ public class SchoolContactEntityConfigurationTests(FiatDbContainerFixture fiatDb
             {
                 Name = "My RegionsGroupLocalAuthorityLead",
                 Email = "my.RegionsGroupLocalAuthorityLead@education.gov.uk",
-                Urn = 101234,
+                LaCode = 101,
                 Role = SchoolContactRole.RegionsGroupLocalAuthorityLead
             },
             new SchoolContact
             {
                 Name = "My RegionsGroupLocalAuthorityLead2",
                 Email = "my.RegionsGroupLocalAuthorityLead2@education.gov.uk",
-                Urn = 102345,
+                LaCode = 102345,
                 Role = SchoolContactRole.RegionsGroupLocalAuthorityLead
             },
             new SchoolContact
             {
                 Name = "My RegionsGroupLocalAuthorityLead3",
                 Email = "my.RegionsGroupLocalAuthorityLead2@education.gov.uk",
-                Urn = 103567,
+                LaCode = 101,
                 Role = SchoolContactRole.RegionsGroupLocalAuthorityLead
             });
 
@@ -45,7 +45,7 @@ public class SchoolContactEntityConfigurationTests(FiatDbContainerFixture fiatDb
         {
             Name = "My RegionsGroupLocalAuthorityLead",
             Email = "my.RegionsGroupLocalAuthorityLead@education.gov.uk",
-            Urn = 101234,
+            LaCode = 101,
             Role = SchoolContactRole.RegionsGroupLocalAuthorityLead
         }).Entity;
 
@@ -61,14 +61,14 @@ public class SchoolContactEntityConfigurationTests(FiatDbContainerFixture fiatDb
         {
             Name = "My RegionsGroupLocalAuthorityLead",
             Email = "my.RegionsGroupLocalAuthorityLead@education.gov.uk",
-            Urn = 101234,
+            LaCode = 101,
             Role = SchoolContactRole.RegionsGroupLocalAuthorityLead
         });
         DbContext.SchoolContacts.Add(new SchoolContact
         {
             Name = "other RegionsGroupLocalAuthorityLead",
             Email = "other.RegionsGroupLocalAuthorityLead@education.gov.uk",
-            Urn = 101234,
+            LaCode = 101,
             Role = SchoolContactRole.RegionsGroupLocalAuthorityLead
         });
 
@@ -84,7 +84,7 @@ public class SchoolContactEntityConfigurationTests(FiatDbContainerFixture fiatDb
         {
             Name = "original name",
             Email = "original.email@education.gov.uk",
-            Urn = 101234,
+            LaCode = 101,
             Role = SchoolContactRole.RegionsGroupLocalAuthorityLead
         }).Entity;
 
@@ -104,7 +104,7 @@ public class SchoolContactEntityConfigurationTests(FiatDbContainerFixture fiatDb
         await DbContext.SaveChangesAsync();
         await Task.Delay(10);
 
-        var allVersions = await DbContext.SchoolContacts.TemporalAll().Where(c => c.Urn == 101234).ToArrayAsync();
+        var allVersions = await DbContext.SchoolContacts.TemporalAll().Where(c => c.LaCode == 101).ToArrayAsync();
 
         allVersions.Should().Satisfy(
             [

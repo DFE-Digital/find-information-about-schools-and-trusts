@@ -40,7 +40,7 @@ public class ContactAuditFieldsTests(FiatDbContainerFixture fiatDbContainerFixtu
         {
             Name = "My RegionsGroupLocalAuthorityLead",
             Email = "my.RegionsGroupLocalAuthorityLead@education.gov.uk",
-            Urn = 101234,
+            LaCode = 101,
             Role = SchoolContactRole.RegionsGroupLocalAuthorityLead
         }).Entity;
 

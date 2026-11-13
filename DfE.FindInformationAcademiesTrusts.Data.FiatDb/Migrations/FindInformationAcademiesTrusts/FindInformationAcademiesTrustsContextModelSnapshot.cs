@@ -70,12 +70,12 @@ namespace DfE.FindInformationAcademiesTrusts.Data.FiatDb.Migrations.FindInformat
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Urn")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LaCode", "Role")
+                        .IsUnique();
 
                     b.ToTable("SchoolContacts", (string)null);
 
