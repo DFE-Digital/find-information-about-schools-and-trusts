@@ -73,7 +73,7 @@ public class InSchoolModel(
         }
 
         var trustUid = int.TryParse(TrustSummary?.Uid, out var uid) ? uid : (int?)null;
-        var dfeContacts = await mediator.Send(new GetSchoolDfeContactsQuery(Urn, trustUid));
+        var dfeContacts = await mediator.Send(new GetSchoolDfeContactsQuery(LaCode, trustUid));
 
         List<DataSourceListEntry> inDfeDataSources = SchoolCategory == SchoolCategory.Academy
             ?
