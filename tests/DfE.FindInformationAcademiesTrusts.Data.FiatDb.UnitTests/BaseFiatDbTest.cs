@@ -39,7 +39,7 @@ public abstract class BaseFiatDbTest : IDisposable
             {
                 Name = "Other TrustRelationshipManager",
                 Email = "other.TrustRelationshipManager@education.gov.uk",
-                Urn = 424242,
+                LaCode = 424,
                 Role = SchoolContactRole.RegionsGroupLocalAuthorityLead
             }
         );
