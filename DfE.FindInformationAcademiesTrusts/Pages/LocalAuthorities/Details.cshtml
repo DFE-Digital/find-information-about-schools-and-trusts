@@ -1,0 +1,19 @@
+@page "/localauthorities/details"
+@model DfE.FindInformationAcademiesTrusts.Pages.LocalAuthorities.DetailsModel
+
+@{
+    ViewData["Title"] = Model.LocalAuthority.Name;
+}
+
+<main id="main-content" class="govuk-main-wrapper">
+  <div class="govuk-width-container">
+    <a asp-page="/LocalAuthorities/Search" class="govuk-back-link">Back to search</a>
+    <h1 class="govuk-heading-xl" data-testid="la-name">@Model.LocalAuthority.Name</h1>
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dt class="govuk-summary-list__key">Local authority code</dt>
+        <dd class="govuk-summary-list__value" data-testid="la-code">@Model.LocalAuthority.Code</dd>
+      </div>
+    </dl>
+  </div>
+</main>
