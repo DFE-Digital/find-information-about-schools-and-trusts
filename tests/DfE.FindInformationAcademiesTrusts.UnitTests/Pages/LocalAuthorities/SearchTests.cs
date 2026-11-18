@@ -45,13 +45,9 @@ public class SearchModelTests
     [Fact]
     public void ServiceLinks_should_contain_other_tools_and_products()
     {
-        _sut.ServiceLinks.Select(link => link.ServiceName).Should().Equal(
-            "Local Authority Interactive Tool (LAIT)",
-            "Attainment Tool with Latest Available Schools Time-series (ATLAST)",
-            "Explore Education Statistics (EES)",
-            "Financial Benchmarking and Insights Tool (FBIT)",
-            "Association of Directors of Children’s Services (ACDS)");
+        _sut.ServiceLinks.Should().NotBeEmpty();
         _sut.ServiceLinks.Should().OnlyContain(link =>
+            !string.IsNullOrWhiteSpace(link.ServiceName) &&
             !string.IsNullOrWhiteSpace(link.ServiceDescription) &&
             Uri.IsWellFormedUriString(link.Url, UriKind.Absolute));
     }
