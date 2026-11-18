@@ -21,4 +21,30 @@
       </div>
     </div>
   </div>
+    <div class="dfe-width-container govuk-!-padding-top-6 govuk-!-padding-bottom-2">
+      <h2 class="govuk-heading-l">
+        Other tools and products (links open in a new tab)
+      </h2>
+        <div class="dfe-grid-container dfe-grid-container__fit">
+        @foreach (var serviceLink in Model.ServiceLinks)
+        {
+            DisplayLinkInCard(serviceLink);
+        }
+      </div>
+    </div>
 </main>
+
+@functions
+{
+  private void DisplayLinkInCard(DfE.FindInformationAcademiesTrusts.Data.ExternalServiceLink serviceLink)
+  {
+    <div class="dfe-card dfe-card__auto-width">
+      <div class="dfe-card-container">
+        <h3 class="govuk-heading-m">
+          <a href="@serviceLink.Url" class="govuk-link govuk-link--no-visited-state dfe-card-link--header" rel="noopener" target="_blank" aria-label="@serviceLink.ServiceName (opens in a new tab)">@serviceLink.ServiceName</a>
+        </h3>
+        <p>@serviceLink.ServiceDescription</p>
+      </div>
+    </div>
+  }
+}
