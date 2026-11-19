@@ -1,5 +1,6 @@
 import { initAll as govukFrontendInitAll } from 'govuk-frontend'
 import { Autocomplete } from './javascripts/autocomplete'
+import { loadLocalAuthorityAutocomplete } from './javascripts/local-authority-autocomplete'
 import $ from 'jquery'
 import { initAll as MOJFrontendInitAll } from '@ministryofjustice/frontend'
 
@@ -93,3 +94,4 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Add Autocomplete namespace so that exposed methods can be invoked from Razor Partial
 window.Autocomplete = new Autocomplete()
+window.loadLocalAuthorityAutocomplete = loadLocalAuthorityAutocomplete

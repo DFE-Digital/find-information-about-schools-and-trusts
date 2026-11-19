@@ -1,0 +1,39 @@
+@model IPageSearchFormModel
+@{
+    var placeholderText = Html.Raw(Model.PlaceholderText);
+    var autocompleteEndpoint = Url.Page("/LocalAuthorities/Search", pageHandler: "PopulateAutocomplete");
+}
+
+<div data-testid="app-search-form">
+    <label class="govuk-heading-m govuk-!-margin-bottom-3" for="@Model.PageSearchFormInputId">
+        @Model.LabelText<span class="govuk-visually-hidden">@placeholderText</span>
+    </label>
+    <div class="govuk-hint">
+        @Model.HintText
+    </div>
+
+    @* This is used by the no javascript users *@
+    <div class="app-search__wrapper">
+        <div id="@Model.PageSearchFormInputId-no-js-container">
+            <input class="govuk-input app-search__input" id="@Model.PageSearchFormInputId" type="search" name="keywords" value="@Model.KeyWords" placeholder="@placeholderText">
+        </div>
+        <button class="govuk-button app-search__button app-search__button--blue" data-testid="search" type="submit">
+            <svg class="app-search__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M19.71 18.29l-4.11-4.1a7 7 0 1 0-1.41 1.41l4.1 4.11a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42zM5 10a5 5 0 1 1 5 5 5 5 0 0 1-5-5z"></path>
+            </svg>
+            <span class="govuk-visually-hidden">Search</span>
+        </button>
+    </div>
+</div>
+@* This template is used by a script to implement autocomplete *@
+<template id="@Model.PageSearchFormInputId-js-autocomplete-template">
+    <div>
+        <div id="@Model.PageSearchFormInputId-autocomplete-container"></div>
+        <input type="hidden" id="@Model.PageSearchFormInputId-selected-code" name="laCode"/>
+    </div>
+</template>
+
+<script asp-add-nonce type="application/javascript">
+    window.addEventListener("load", () =>
+        loadLocalAuthorityAutocomplete("@Model.PageSearchFormInputId", "@autocompleteEndpoint", "@Model.KeyWords"));
+</script>
