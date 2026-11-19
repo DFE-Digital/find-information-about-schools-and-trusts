@@ -21,6 +21,9 @@ locals {
   container_scale_http_concurrency                = var.container_scale_http_concurrency
   enable_redis_cache                              = var.enable_redis_cache
   enable_mssql_database                           = var.enable_mssql_database
+  enable_mssql_audit_logs                         = var.enable_mssql_audit_logs
+  enable_mssql_security_audit_events              = var.enable_mssql_security_audit_events
+  mssql_server_name_override                      = var.mssql_server_name_override
   mssql_server_admin_password                     = var.mssql_server_admin_password
   mssql_database_name                             = var.mssql_database_name
   mssql_firewall_ipv4_allow_list                  = var.mssql_firewall_ipv4_allow_list
