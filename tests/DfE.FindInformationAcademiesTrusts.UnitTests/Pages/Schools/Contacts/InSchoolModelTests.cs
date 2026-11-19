@@ -16,6 +16,7 @@ namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Contacts;
 
 public class InSchoolModelTests : BaseSchoolPageTests<InSchoolModel>
 {
+    private const int LaCode = 123;
     private readonly IMediator _mockMediator = Substitute.For<IMediator>();
     private readonly ISchoolRepository _mockSchoolRepository = Substitute.For<ISchoolRepository>();
     private readonly IVariantFeatureManager _mockFeatureManager = Substitute.For<IVariantFeatureManager>();
@@ -32,7 +33,7 @@ public class InSchoolModelTests : BaseSchoolPageTests<InSchoolModel>
             .Returns(new TrustSummaryServiceModel("4321", "TR4321", "Some Trust", "Multi-academy trust", 1));
 
         Sut = new InSchoolModel(_mockMediator, _mockSchoolRepository, MockDataSourceService, _mockFeatureManager,
-            MockSchoolService, MockTrustService, MockSchoolNavMenu) { Urn = SchoolUrn };
+            MockSchoolService, MockTrustService, MockSchoolNavMenu) { Urn = SchoolUrn, LaCode = LaCode };
     }
 
     [Fact]
@@ -124,7 +125,7 @@ public class InSchoolModelTests : BaseSchoolPageTests<InSchoolModel>
             new DataSourcePageListEntry("In this school",
                 [new DataSourceListEntry(Mocks.MockDataSourceService.Gias, "Head teacher name")])
         ]);
-        await _mockMediator.Received(1).Send(new GetSchoolDfeContactsQuery(SchoolUrn, null));
+        await _mockMediator.Received(1).Send(new GetSchoolDfeContactsQuery(LaCode, null));
     }
 
     [Fact]
@@ -143,6 +144,21 @@ public class InSchoolModelTests : BaseSchoolPageTests<InSchoolModel>
             new DataSourcePageListEntry("In this academy",
                 [new DataSourceListEntry(Mocks.MockDataSourceService.Gias, "Head teacher name")])
         ]);
-        await _mockMediator.Received(1).Send(new GetSchoolDfeContactsQuery(AcademyUrn, 4321));
+        await _mockMediator.Received(1).Send(new GetSchoolDfeContactsQuery(LaCode, 4321));
+    }
+
+    [Theory]
+    [InlineData(SchoolUrn, 456, null)]
+    [InlineData(AcademyUrn, 789, 4321)]
+    public async Task OnGetAsync_queries_dfe_contacts_using_la_code_instead_of_urn(int urn, int laCode, int? trustUid)
+    {
+        _mockFeatureManager.IsEnabledAsync(FeatureFlags.ContactsInDfeForSchools).Returns(true);
+        Sut.Urn = urn;
+        Sut.LaCode = laCode;
+
+        await Sut.OnGetAsync();
+
+        await _mockMediator.Received(1).Send(new GetSchoolDfeContactsQuery(laCode, trustUid));
+        await _mockMediator.DidNotReceive().Send(new GetSchoolDfeContactsQuery(urn, trustUid));
     }
 }

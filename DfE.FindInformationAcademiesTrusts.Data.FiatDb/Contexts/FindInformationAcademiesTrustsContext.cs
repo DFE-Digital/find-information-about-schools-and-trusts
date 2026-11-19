@@ -64,9 +64,9 @@ public class FindInformationAcademiesTrustsContext(
             entity.Property(c => c.LastModifiedByName).HasMaxLength(500);
             entity.Property(c => c.LastModifiedByEmail).HasMaxLength(320);
             entity.Property(c => c.LastModifiedAtTime).HasComputedColumnSql("[PeriodStart]");
-
-            entity.HasIndex(c => c.Urn);
-            entity.HasIndex(c => new { c.Urn, c.Role }).IsUnique();
+            
+            entity.HasIndex(c => new { c.LaCode, c.Role })
+                .IsUnique();
         });
     }
 

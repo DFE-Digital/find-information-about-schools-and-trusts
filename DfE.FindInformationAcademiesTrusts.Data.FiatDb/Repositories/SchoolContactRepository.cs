@@ -9,11 +9,11 @@ namespace DfE.FindInformationAcademiesTrusts.Data.FiatDb.Repositories;
 public class SchoolContactRepository(FindInformationAcademiesTrustsContext dbContext)
     : Repository<SchoolContact, FindInformationAcademiesTrustsContext>(dbContext), ISchoolContactRepository
 {
-    public async Task<SchoolContact?> GetSchoolContactAsync(int urn, SchoolContactRole role,
+    public async Task<SchoolContact?> GetSchoolContactAsync(int laCode, SchoolContactRole role,
         CancellationToken cancellationToken)
     {
         return await DbSet()
             .AsNoTracking()
-            .SingleOrDefaultAsync(c => c.Urn == urn && c.Role == role, cancellationToken);
+            .SingleOrDefaultAsync(c => c.LaCode == laCode && c.Role == role, cancellationToken);
     }
 }
