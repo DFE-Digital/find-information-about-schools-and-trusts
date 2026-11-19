@@ -63,7 +63,7 @@ public class GetTrustsTempTests
     }
 
     [Fact]
-    public async Task SearchTrusts_AddsCorrelationIdHeader()
+    public async Task SearchTrusts_PreservesFactoryCorrelationIdHeader()
     {
         // Arrange
         _httpClientServiceMock
@@ -72,14 +72,17 @@ public class GetTrustsTempTests
                 HttpStatusCode.OK,
                 new TrustListResponseTemp<TrustDto>()));
 
+        var correlationId = Guid.NewGuid().ToString();
+        _httpClient.DefaultRequestHeaders.Add("x-correlationId", correlationId);
         var sut = CreateSut();
 
         // Act
         await sut.SearchTrusts("Acme");
+        await sut.SearchTrusts("Acme");
 
         // Assert
         Assert.True(_httpClient.DefaultRequestHeaders.TryGetValues("x-correlationId", out var values));
-        Assert.True(Guid.TryParse(Assert.Single(values), out _));
+        Assert.Equal(correlationId, Assert.Single(values));
     }
 
     [Fact]
