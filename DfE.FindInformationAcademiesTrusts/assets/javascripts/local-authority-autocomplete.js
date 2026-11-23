@@ -34,14 +34,14 @@ export function loadLocalAuthorityAutocomplete (inputId, endpoint, defaultValue 
     name: 'keywords',
     defaultValue,
     source,
-    minLength: 2,
+    minLength: 3,
     autoselect: false,
     confirmOnBlur: false,
     displayMenu: 'overlay',
     showNoOptionsFound: true,
     templates: {
       inputValue: label,
-      suggestion: (la) => (la && typeof la !== 'string' ? `${la.name} (${la.code})` : la)
+      suggestion: (la) => (la && typeof la !== 'string' ? la.name : la)
     },
     onConfirm: (selected) => {
       if (selected) codeInput.value = selected.code
