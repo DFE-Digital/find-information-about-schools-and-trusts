@@ -1,6 +1,6 @@
 import accessibleAutocomplete from 'accessible-autocomplete'
 
-export function loadLocalAuthorityAutocomplete (inputId, endpoint, defaultValue = '') {
+export function loadLocalAuthorityAutocomplete (inputId, endpoint, defaultValue = '', placeholderText = '') {
   const template = document.getElementById(`${inputId}-js-autocomplete-template`)
   const noJsContainer = document.getElementById(`${inputId}-no-js-container`)
   noJsContainer.replaceWith(template.content.cloneNode(true))
@@ -33,6 +33,7 @@ export function loadLocalAuthorityAutocomplete (inputId, endpoint, defaultValue 
     id: inputId,
     name: 'keywords',
     defaultValue,
+    placeholder: placeholderText,
     source,
     minLength: 3,
     autoselect: false,
