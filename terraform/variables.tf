@@ -353,6 +353,24 @@ variable "enable_mssql_database" {
   type        = bool
 }
 
+variable "enable_mssql_audit_logs" {
+  description = "Enable MSSQL audit logs"
+  type        = bool
+  default     = false
+}
+
+variable "enable_mssql_security_audit_events" {
+  description = "Enable MSSQL Security Audit Event logs"
+  type        = bool
+  default     = false
+}
+
+variable "mssql_server_name_override" {
+  description = "Provide a value to conditionally override the default mssql server name (which is set to the resource prefix by default)"
+  type        = string
+  default     = ""
+}
+
 variable "mssql_server_admin_password" {
   description = "The administrator password for the MSSQL server. Must be set if `enable_mssql_database` is true"
   type        = string
