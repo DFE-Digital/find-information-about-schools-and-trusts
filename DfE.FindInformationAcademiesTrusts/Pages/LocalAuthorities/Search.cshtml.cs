@@ -29,7 +29,7 @@ public class SearchModel : BasePageModel, IPageSearchFormModel
         new("Explore Education Statistics (EES)", "Provides official statistics, downloadable files and the ability to create tables. Suitable for those who need a more detailed analysis.", "https://explore-education-statistics.service.gov.uk/"),
         new("Financial Benchmarking and Insights Tool (FBIT)", "Tool for viewing and comparing financial information at school, trust and local-authority level.", "https://financial-benchmarking-and-insights-tool.education.gov.uk/"),
         new("Association of Directors of Children’s Services (ADCS)", "Tool for finding for finding Directors and Assistant Directors of Children's Services.", "https://www.adcs.org.uk/"),
-        new("Data Tools", "Approved data tools, datasets, and guidance produced by the Data Analysis Unit (DAU).", "https://educationgovuk.sharepoint.com/sites/lvewp00299/SitePages/DAU%20Data%20Tools%20and%20Sources.aspx"),
+        new("Data tools", "Approved data tools, datasets, and guidance produced by the Data Analysis Unit (DAU).", "https://educationgovuk.sharepoint.com/sites/lvewp00299/SitePages/DAU%20Data%20Tools%20and%20Sources.aspx"),
     ];
 
     public IActionResult OnPost()
