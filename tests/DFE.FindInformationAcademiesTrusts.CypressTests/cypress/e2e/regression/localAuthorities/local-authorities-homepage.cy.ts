@@ -32,6 +32,6 @@ describe('User navigates to the Local authorities tab ', () => {
     it('displays the other tools and products links', () => {
         cy.contains('Other tools and products (links open in a new tab)')
             .should('be.visible');
-        localAuthoritiesPage.assertOtherToolsAndProductsLinksVisible();
+        localAuthoritiesPage.assertOtherToolsAndProductsCardsVisible();
     });
 });

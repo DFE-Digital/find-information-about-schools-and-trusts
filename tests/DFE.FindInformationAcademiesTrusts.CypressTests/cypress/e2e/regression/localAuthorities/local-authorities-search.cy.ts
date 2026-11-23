@@ -16,6 +16,7 @@ describe('Testing the main/home page search functionality', () => {
 
     it('returns a matching local authority when searching by name', () => {
       localAuthoritiesPage
+        .assertSearchInputVisible()
         .searchFor(localAuthorityName)
         .assertSearchResultsContain(localAuthorityName);
     });
@@ -43,9 +44,9 @@ describe('Testing the main/home page search functionality', () => {
         .assertNoResultsMessageVisible('nonla12345');
     });
 
-    it('displays a no-results message for an empty la search', () => {
+    it('displays sorry page on sql injection ', () => {
       localAuthoritiesPage
-        .assertNoResultsMessageVisible('');
+        .searchForSqlInjection('\'\' OR \'1\'=\'1');
     });
   });
 });
