@@ -65,7 +65,7 @@ public class ResultsModelTests
     {
         _sut.PageSearchFormInputId.Should().Be("la-search");
         _sut.LabelText.Should().Be("Search for a local authority ");
-        _sut.HintText.Should().Be("Search by LA code or name. Include any punctuation in names.");
+        _sut.HintText.Should().Be("Search by LA Code or name. Include any punctuation in names.");
         _sut.PlaceholderText.Should().Be("");
     }
 
