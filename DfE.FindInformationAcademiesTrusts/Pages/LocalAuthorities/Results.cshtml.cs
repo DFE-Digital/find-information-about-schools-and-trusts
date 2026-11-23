@@ -28,7 +28,7 @@ public class ResultsModel : ContentPageModel, IPageSearchFormModel, IPaginationM
 
     public string PageSearchFormInputId => "la-search";
     public string LabelText => "Search for a local authority ";
-    public string HintText => "Search by LA code or name. Include any punctuation in names.";
+    public string HintText => "Search by LA Code or name. Include any punctuation in names.";
     public string PlaceholderText => "";
 
     public string Title => PageStatus.TotalPages > 1
