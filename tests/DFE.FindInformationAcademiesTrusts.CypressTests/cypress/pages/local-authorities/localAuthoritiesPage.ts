@@ -54,7 +54,7 @@ class LocalAuthoritiesPage {
             /Explore Education Statistics\s+\(EES\)/,
             /Financial Benchmarking and Insights Tool\s+\(FBIT\)/,
           //  /Association of Directors of Children's Services\s+\(ADCS\)/, //skip as link is not correct atm
-            /Data Tools/,
+            /Data tools/,
         ];
 
         toolNames.forEach((name) => {

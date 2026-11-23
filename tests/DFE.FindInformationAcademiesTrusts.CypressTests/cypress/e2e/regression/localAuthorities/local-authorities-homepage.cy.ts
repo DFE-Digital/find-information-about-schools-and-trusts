@@ -26,7 +26,9 @@ describe('User navigates to the Local authorities tab ', () => {
     });
 
     it('displays an enabled search button', () => {
-        localAuthoritiesPage.assertSearchInputVisible();
+        localAuthoritiesPage
+          .assertSearchInputVisible()
+        
     });
 
     it('displays the other tools and products links', () => {
