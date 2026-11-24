@@ -59,14 +59,14 @@
     <partial name="_NotificationBanner"/>
     <partial name="_Header"/>
     <partial name="_ServiceInformation" />
-    <feature name="@FeatureFlags.TestFlag">
-        TEST FLAG IS ENABLED
-    </feature>
-
+    
     @RenderBody()
 
     <partial name="_Footer" />
-
+    
+    <feature name="@FeatureFlags.TestFlag">
+        TEST FLAG IS ENABLED
+    </feature>
     <script src="~/dist/main.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", false)
 </body>
