@@ -53,7 +53,7 @@ class LocalAuthoritiesPage {
             /Attainment Tool with Latest Available Schools Time-series\s+\(ATLAST\)/,
             /Explore Education Statistics\s+\(EES\)/,
             /Financial Benchmarking and Insights Tool\s+\(FBIT\)/,
-            /Association of Directors of Children's Services\s+\(ADCS\)/, 
+            /Association of Directors of Children’s Services\s+\(ADCS\)/, 
             /Data tools/,
         ];
 
