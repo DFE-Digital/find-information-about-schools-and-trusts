@@ -26,6 +26,7 @@ describe('User navigates to the Local authorities tab ', () => {
     });
 
     it('displays an enabled search button', () => {
+        cy.contains('Search for a local authority').should('be.visible');
         localAuthoritiesPage
           .assertSearchInputVisible()
         
