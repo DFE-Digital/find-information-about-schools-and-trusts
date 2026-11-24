@@ -10,6 +10,10 @@ namespace DfE.FindInformationAcademiesTrusts.Data.FiatDb.Migrations.FindInformat
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("ALTER TABLE [SchoolContacts] SET (SYSTEM_VERSIONING = OFF);");
+            migrationBuilder.Sql("TRUNCATE TABLE [SchoolContacts];");
+            migrationBuilder.Sql("TRUNCATE TABLE [SchoolContactsHistory];");
+            migrationBuilder.Sql("ALTER TABLE [SchoolContacts] SET (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [dbo].[SchoolContactsHistory], DATA_CONSISTENCY_CHECK = OFF));");
             
             migrationBuilder.DropColumn(
                 name: "Urn",
