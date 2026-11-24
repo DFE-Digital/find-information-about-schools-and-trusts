@@ -1,0 +1,6 @@
+@{
+    var highlightClass = ViewData["HighlightClass"] as string ?? "app-banner--highlight";
+}
+<h1 class="govuk-heading-xl app-banner--heading govuk-!-margin-bottom-3">
+    Find information about <br><span class="@highlightClass">@ViewData["Highlight"]</span>
+</h1>

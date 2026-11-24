@@ -20,7 +20,7 @@ public class SearchModel : BasePageModel, IPageSearchFormModel
     public string PageSearchFormInputId => "la-search";
     public string LabelText => "Search for a local authority ";
     public string HintText => "Search by LA Code or name. Include any punctuation in names.";
-    public string PlaceholderText => "e.g. leeds";
+    public string PlaceholderText => "e.g. leeds city council";
 
     public IReadOnlyList<ExternalServiceLink> ServiceLinks { get; } =
     [
