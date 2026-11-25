@@ -61,10 +61,6 @@
       border-left: 0;
       box-shadow: none;
 
-      .app-search__icon {
-        fill: govuk-colour("blue");
-      }
-
       &:hover {
         background-color: govuk-colour("light-grey");
       }
@@ -73,24 +69,12 @@
         background-color: $govuk-focus-colour;
         border-color: $govuk-focus-colour;
         outline: 3px solid transparent;
-
-        .app-search__icon {
-          fill: govuk-colour("black");
-        }
       }
     }
 
     .app-banner--heading {
       color: govuk-colour("white");
       text-transform: none;
-
-      .app-banner--highlight {
-        color: #ffe640;
-      }
-
-      .app-banner--highlight-teal {
-        color: #1fecd0;
-      }
     }
 
     .govuk-details__summary,
@@ -110,6 +94,22 @@
       color: govuk-colour("white");
     }
   }
+}
+
+.app-banner.app-banner--blue .app-search__button--blue .app-search__icon {
+  fill: govuk-colour("blue");
+}
+
+.app-banner.app-banner--blue .app-search__button--blue:focus .app-search__icon {
+  fill: govuk-colour("black");
+}
+
+.app-banner.app-banner--blue .app-banner--heading .app-banner--highlight {
+  color: #ffe640;
+}
+
+.app-banner.app-banner--blue .app-banner--heading .app-banner--highlight-teal {
+  color: #1fecd0;
 }
 
 .app-search-results-summary-list {
