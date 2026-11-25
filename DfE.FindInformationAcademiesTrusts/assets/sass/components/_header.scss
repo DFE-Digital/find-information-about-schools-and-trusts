@@ -47,7 +47,8 @@
   height: 59px;
 }
 
-.govuk-template--rebranded .govuk-service-navigation:not(.app-service-navigation--blue) {
+.govuk-template--rebranded
+  .govuk-service-navigation:not(.app-service-navigation--blue) {
   border-bottom: 0;
 
   .govuk-width-container {
@@ -64,7 +65,8 @@
   }
 }
 
-.govuk-template--rebranded .govuk-service-navigation.app-service-navigation--blue {
+.govuk-template--rebranded
+  .govuk-service-navigation.app-service-navigation--blue {
   background-color: govuk-colour("blue");
   border-bottom: 0;
 

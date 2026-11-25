@@ -18,7 +18,7 @@ public class IndexModelTests
 
         sut.PageSearchFormInputId.Should().Be("home-search");
         sut.LabelText.Should().Be("Search for a trust or school ");
-        sut.HintText.Should().Be("Search by URN (unique reference number), TRN (trust reference number) or name. Include any punctuation in names.");
+        sut.HintText.Should().Be("Enter a URN (unique reference number), TRN (trust reference number), or name. Include any punctuation in names.");
         sut.PlaceholderText.Should().Be("e.g. st mary's primary school");
     }
 }
