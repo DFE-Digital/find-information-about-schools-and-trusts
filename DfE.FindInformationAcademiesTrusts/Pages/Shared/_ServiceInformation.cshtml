@@ -9,12 +9,11 @@
     var currentPath = Context.Request.Path.Value ?? "";
     var isWatchlistActive = currentPath.StartsWith("/watchlist", StringComparison.OrdinalIgnoreCase);
     var isLocalAuthoritiesActive = currentPath.StartsWith("/localauthorities", StringComparison.OrdinalIgnoreCase);
-    var isBlueNav = isLocalAuthoritiesActive || currentPath == "/";
 
     var isDevelopment = HostEnvironment.IsDevelopment() || HostEnvironment.IsLocalDevelopment();
 }
 
-<section aria-label="Service information" class="govuk-service-navigation @(isBlueNav ? "app-service-navigation--blue" : "")" data-module="govuk-service-navigation">
+<section aria-label="Service information" class="govuk-service-navigation app-service-navigation--blue" data-module="govuk-service-navigation">
     <div class="govuk-width-container">
         <div class="govuk-service-navigation__container">
             <span class="govuk-service-navigation__service-name">
