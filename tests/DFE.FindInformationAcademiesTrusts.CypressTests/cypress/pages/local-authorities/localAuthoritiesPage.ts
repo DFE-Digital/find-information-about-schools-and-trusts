@@ -43,6 +43,10 @@ class LocalAuthoritiesPage {
     assertSearchInputVisible(): this {
         this.elements.laSearchBox().should('be.visible');
         this.elements.searchInput().should('be.visible');
+
+        cy.get('[data-testid="search"]')
+           .should('be.visible')
+           .and('be.enabled');
     
             return this;
     }
@@ -58,7 +62,7 @@ class LocalAuthoritiesPage {
         ];
 
         toolNames.forEach((name) => {
-            cy.contains('a', name)
+            cy.contains('a', name)                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
                 .should('be.visible')
                 .and('have.attr', 'target', '_blank');
         });

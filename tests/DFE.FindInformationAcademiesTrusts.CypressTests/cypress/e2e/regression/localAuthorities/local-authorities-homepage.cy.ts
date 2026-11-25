@@ -7,7 +7,7 @@ describe('User navigates to the Local authorities tab ', () => {
         cy.visit("/");
         homePage
             .verifyTrustAndSchoolTabIsDefault()
-            .verifyHeading('Find information about schools and trusts')
+            .verifyHeading('Find information about trusts and schools')
             .clickLocalAuthoritiesTab();
     });
 

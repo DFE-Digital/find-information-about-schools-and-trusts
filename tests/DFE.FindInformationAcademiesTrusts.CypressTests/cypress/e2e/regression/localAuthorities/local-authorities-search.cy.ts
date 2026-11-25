@@ -1,12 +1,12 @@
 import homePage from '../../../pages/homePage';
 import localAuthoritiesPage from '../../../pages/local-authorities/localAuthoritiesPage';
 
-describe('Testing the main/home page search functionality', () => {
+describe('User navigated to the LA homepage and performs searches', () => {
   beforeEach(() => {
     cy.visit("/");
     homePage
       .verifyTrustAndSchoolTabIsDefault()
-      .verifyHeading('Find information about schools and trusts')
+      .verifyHeading('Find information about trusts and schools')
       .clickLocalAuthoritiesTab();
   });
 
