@@ -21,8 +21,12 @@
                     Find information about schools and trusts
                 </a>
             </span>
-            <nav aria-label="Service navigation">
-                <ul class="govuk-service-navigation__list">
+            <nav aria-label="Service navigation" class="govuk-service-navigation__wrapper">
+                <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle"
+                        aria-controls="service-navigation-list" hidden>
+                    Menu
+                </button>
+                <ul class="govuk-service-navigation__list" id="service-navigation-list">
                     <li class="govuk-service-navigation__item @(!isWatchlistActive && !isLocalAuthoritiesActive ? "govuk-service-navigation__item--active" : "")">
                         <a href="/" class="govuk-service-navigation__link" aria-current="@(!isWatchlistActive && !isLocalAuthoritiesActive ? "page" : null)">
                             Trusts and schools

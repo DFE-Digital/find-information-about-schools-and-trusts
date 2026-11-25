@@ -43,8 +43,10 @@
   border: 0;
 }
 
-.govuk-template--rebranded .govuk-service-navigation {
-  height: 59px;
+@media (min-width: 48.0625em) {
+  .govuk-template--rebranded .govuk-service-navigation {
+    height: 59px;
+  }
 }
 
 .govuk-template--rebranded
@@ -67,8 +69,13 @@
   }
 
   .govuk-service-navigation__link,
+  .govuk-service-navigation__toggle,
   .govuk-service-navigation__service-name .govuk-service-navigation__link {
     color: govuk-colour("white");
+  }
+
+  .govuk-service-navigation__toggle:focus {
+    color: $govuk-focus-text-colour;
   }
 
   .govuk-service-navigation__item--active {
