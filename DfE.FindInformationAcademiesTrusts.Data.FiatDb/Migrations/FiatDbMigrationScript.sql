@@ -259,6 +259,42 @@ IF NOT EXISTS (
     WHERE [MigrationId] = N'20261113113338_RemovalOfUrnAndIndexToLaCodeAdded'
 )
 BEGIN
+    ALTER TABLE [SchoolContacts] SET (SYSTEM_VERSIONING = OFF);
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261113113338_RemovalOfUrnAndIndexToLaCodeAdded'
+)
+BEGIN
+    TRUNCATE TABLE [SchoolContacts];
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261113113338_RemovalOfUrnAndIndexToLaCodeAdded'
+)
+BEGIN
+    TRUNCATE TABLE [SchoolContactsHistory];
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261113113338_RemovalOfUrnAndIndexToLaCodeAdded'
+)
+BEGIN
+    ALTER TABLE [SchoolContacts] SET (SYSTEM_VERSIONING = ON (HISTORY_TABLE = [dbo].[SchoolContactsHistory], DATA_CONSISTENCY_CHECK = OFF));
+END;
+GO
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20261113113338_RemovalOfUrnAndIndexToLaCodeAdded'
+)
+BEGIN
     ALTER TABLE [SchoolContacts] SET (SYSTEM_VERSIONING = OFF)
 
 END;
