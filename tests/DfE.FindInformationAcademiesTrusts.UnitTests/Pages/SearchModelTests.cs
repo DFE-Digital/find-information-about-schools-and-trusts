@@ -204,7 +204,7 @@ public class SearchModelTests
     {
         _sut.PageSearchFormInputId.Should().Be("search");
         _sut.LabelText.Should().Be("Search for a trust or school ");
-        _sut.HintText.Should().Be("Search by URN (unique reference number), TRN (trust reference number) or name. Include any punctuation in names.");
+        _sut.HintText.Should().Be("Enter a URN (unique reference number), TRN (trust reference number), or name. Include any punctuation in names.");
         _sut.PlaceholderText.Should().Be("e.g. st mary's primary school");
     }
 
