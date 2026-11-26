@@ -7,6 +7,7 @@ class HomePage {
         mainSearchButton: () => cy.get('[data-testid="search"]'),
         watchlistTab: () => cy.get('a').contains('Watchlist'),
         trustAndSchoolTab: () => cy.get('a').contains('Trusts and schools'),
+        localAuthoritiesTab: () => cy.get('a').contains('Local authorities'),
 
         header: {
             manageProjectsAndCasesLink: () => cy.get('[data-testid="mpcHeaderLink"]')
@@ -40,6 +41,11 @@ class HomePage {
 
     public clickTrustAndSchoolTab(): this {
         this.elements.trustAndSchoolTab().click();
+        return this;
+    }
+
+    public clickLocalAuthoritiesTab(): this {
+        this.elements.localAuthoritiesTab().click();
         return this;
     }
 

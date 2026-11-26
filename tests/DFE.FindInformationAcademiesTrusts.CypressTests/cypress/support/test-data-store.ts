@@ -46,7 +46,7 @@ export class TestDataStore {
             },
         ];
 
-    public static readonly GetAllSchoolSubpagesForUrn = (urn: number, trn: string) =>
+    public static readonly GetAllSchoolSubpagesForUrn = (urn: number) =>
         [
             {
                 pageName: "Overview",
@@ -89,7 +89,7 @@ export class TestDataStore {
             },
         ];
 
-    public static readonly GetAllAcademySubpagesForUrn = (urn: number, trn: string) =>
+    public static readonly GetAllAcademySubpagesForUrn = (urn: number) =>
         [
             {
                 pageName: "Overview",
