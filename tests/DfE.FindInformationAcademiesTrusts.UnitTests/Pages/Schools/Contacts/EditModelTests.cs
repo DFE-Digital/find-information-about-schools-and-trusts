@@ -4,29 +4,35 @@ using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Queries;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Domain.Entities;
 using DfE.FindInformationAcademiesTrusts.Domain.Enums;
+using DfE.FindInformationAcademiesTrusts.HttpServices;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Services.School;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Contacts;
 
 public class EditModelTests
 {
     private const int Urn = 123456;
+    private const int LaCode = 123;
 
     private readonly EditModel _sut;
     private readonly IMediator _mockMediator = Substitute.For<IMediator>();
     private readonly ISchoolService _mockSchoolService = Substitute.For<ISchoolService>();
+    private readonly IGetEstablishmentsTemp _mockGetEstablishments = Substitute.For<IGetEstablishmentsTemp>();
 
     public EditModelTests()
     {
+        _mockGetEstablishments.GetEstablishment(Urn)
+            .Returns(new EstablishmentDto { LocalAuthorityCode = LaCode.ToString() });
         _mockSchoolService.GetSchoolSummaryAsync(Urn)
             .Returns(new SchoolSummaryServiceModel(Urn, "Cool school", "Community school",
                 SchoolCategory.LaMaintainedSchool));
 
-        _sut = new EditModel(_mockMediator, _mockSchoolService)
+        _sut = new EditModel(_mockMediator, _mockSchoolService, _mockGetEstablishments)
         {
             Urn = Urn, Role = SchoolContactRole.RegionsGroupLocalAuthorityLead,
             Name = "New Name", Email = "new.name@education.gov.uk"
@@ -36,10 +42,10 @@ public class EditModelTests
     [Fact]
     public async Task OnGetAsync_loads_the_contact_for_the_role()
     {
-        _mockMediator.Send(new GetSchoolContactQuery(Urn, SchoolContactRole.RegionsGroupLocalAuthorityLead))
+        _mockMediator.Send(new GetSchoolContactQuery(LaCode, SchoolContactRole.RegionsGroupLocalAuthorityLead))
             .Returns(new SchoolContact
             {
-                Urn = Urn, Role = SchoolContactRole.RegionsGroupLocalAuthorityLead, Name = "Existing Name",
+                LaCode = LaCode, Role = SchoolContactRole.RegionsGroupLocalAuthorityLead, Name = "Existing Name",
                 Email = "existing@education.gov.uk"
             });
 
@@ -79,12 +85,14 @@ public class EditModelTests
     public async Task OnPostAsync_updates_contact_and_redirects(bool nameUpdated, bool emailUpdated,
         string expectedMessage)
     {
-        _mockMediator.Send(new UpdateSchoolContactCommand(Urn, SchoolContactRole.RegionsGroupLocalAuthorityLead,
+        _mockMediator.Send(new UpdateSchoolContactCommand(LaCode, SchoolContactRole.RegionsGroupLocalAuthorityLead,
                 "New Name", "new.name@education.gov.uk"))
             .Returns(new ContactUpdated(nameUpdated, emailUpdated));
 
         var result = await _sut.OnPostAsync();
 
+        await _mockMediator.Received(1).Send(new UpdateSchoolContactCommand(LaCode,
+            SchoolContactRole.RegionsGroupLocalAuthorityLead, "New Name", "new.name@education.gov.uk"));
         _sut.ContactUpdatedMessage.Should().Be(expectedMessage);
         var redirect = result.Should().BeOfType<RedirectToPageResult>().Subject;
         redirect.PageName.Should().Be("/Schools/Contacts/InDfe");

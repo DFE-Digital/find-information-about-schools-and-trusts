@@ -20,6 +20,13 @@
               <legend class="govuk-!-padding-0">
                 <h1 class="govuk-heading-l">@Model.PageMetadata.PageName</h1>
               </legend>
+              <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                  <span class="govuk-visually-hidden">Warning</span>
+                  Changing these details will update the regions group local authority lead for all schools maintained by this local authority, not just this school.
+                </strong>
+              </div>
               <partial name="Shared/_ErrorSummary" model="@Model"/>
               <partial name="Shared/Contact/_EditContactForm" model="new EditContactForm(Model.Name, Model.Email, cancelUrl)"/>
             </fieldset>

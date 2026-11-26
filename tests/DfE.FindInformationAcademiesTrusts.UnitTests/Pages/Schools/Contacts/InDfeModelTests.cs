@@ -3,17 +3,21 @@ using DfE.FindInformationAcademiesTrusts.Application.ContactCommands.Queries;
 using DfE.FindInformationAcademiesTrusts.Data.Enums;
 using DfE.FindInformationAcademiesTrusts.Domain.Entities;
 using DfE.FindInformationAcademiesTrusts.Domain.Enums;
+using DfE.FindInformationAcademiesTrusts.HttpServices;
 using DfE.FindInformationAcademiesTrusts.Pages.Schools.Contacts;
 using DfE.FindInformationAcademiesTrusts.Pages.Shared.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.DataSource;
 using DfE.FindInformationAcademiesTrusts.Services.Trust;
 using MediatR;
+using GovUK.Dfe.CoreLibs.Contracts.Academies.V4.Establishments;
 
 namespace DfE.FindInformationAcademiesTrusts.UnitTests.Pages.Schools.Contacts;
 
 public class InDfeModelTests : BaseSchoolPageTests<InDfeModel>
 {
     private readonly IMediator _mockMediator = Substitute.For<IMediator>();
+    private readonly IGetEstablishmentsTemp _mockGetEstablishments = Substitute.For<IGetEstablishmentsTemp>();
+    private const int LaCode = 123;
 
     private static readonly DateTime LastModified = new(2025, 6, 1);
     private const string LastModifiedBy = "editor@education.gov.uk";
@@ -21,7 +25,7 @@ public class InDfeModelTests : BaseSchoolPageTests<InDfeModel>
     private readonly SchoolDfeContacts _contacts = new(
         new SchoolContact
         {
-            Urn = SchoolUrn, Role = SchoolContactRole.RegionsGroupLocalAuthorityLead, Name = "Regions Lead",
+            LaCode = LaCode, Role = SchoolContactRole.RegionsGroupLocalAuthorityLead, Name = "Regions Lead",
             Email = "rgl@education.gov.uk", LastModifiedAtTime = LastModified, LastModifiedByEmail = LastModifiedBy
         },
         new TrustContact
@@ -39,11 +43,15 @@ public class InDfeModelTests : BaseSchoolPageTests<InDfeModel>
 
     public InDfeModelTests()
     {
+        _mockGetEstablishments.GetEstablishment(SchoolUrn)
+            .Returns(new EstablishmentDto { LocalAuthorityCode = LaCode.ToString() });
+        _mockGetEstablishments.GetEstablishment(AcademyUrn)
+            .Returns(new EstablishmentDto { LocalAuthorityCode = LaCode.ToString() });
         _mockMediator.Send(Arg.Any<GetSchoolDfeContactsQuery>()).Returns(_contacts);
         MockTrustService.GetTrustSummaryAsync(AcademyUrn)
             .Returns(new TrustSummaryServiceModel("4321", "TR4321", "Some Trust", "Multi-academy trust", 1));
 
-        Sut = new InDfeModel(_mockMediator, MockDataSourceService, MockSchoolService, MockTrustService,
+        Sut = new InDfeModel(_mockMediator, MockDataSourceService, _mockGetEstablishments, MockSchoolService, MockTrustService,
             MockSchoolNavMenu) { Urn = SchoolUrn };
     }
 
@@ -62,7 +70,7 @@ public class InDfeModelTests : BaseSchoolPageTests<InDfeModel>
 
         await Sut.OnGetAsync();
 
-        await _mockMediator.Received(1).Send(new GetSchoolDfeContactsQuery(AcademyUrn, 4321));
+        await _mockMediator.Received(1).Send(new GetSchoolDfeContactsQuery(LaCode, 4321));
     }
 
     [Fact]
@@ -70,7 +78,7 @@ public class InDfeModelTests : BaseSchoolPageTests<InDfeModel>
     {
         await Sut.OnGetAsync();
 
-        await _mockMediator.Received(1).Send(new GetSchoolDfeContactsQuery(SchoolUrn, null));
+        await _mockMediator.Received(1).Send(new GetSchoolDfeContactsQuery(LaCode, null));
     }
 
     [Fact]

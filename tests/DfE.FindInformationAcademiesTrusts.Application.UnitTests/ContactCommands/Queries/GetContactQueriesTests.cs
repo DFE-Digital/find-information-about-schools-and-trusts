@@ -12,7 +12,7 @@ public class GetContactQueriesTests
     private readonly Mock<ITrustContactRepository> _mockTrustContactRepository = new();
 
     private readonly SchoolContact _regionsGroupLocalAuthorityLead = new()
-        { Urn = 123456, Role = SchoolContactRole.RegionsGroupLocalAuthorityLead, Name = "Lead", Email = "l@test.com" };
+        { LaCode = 123, Role = SchoolContactRole.RegionsGroupLocalAuthorityLead, Name = "Lead", Email = "l@test.com" };
 
     private readonly TrustContact _trustRelationshipManager = new()
         { Uid = 1234, Role = TrustContactRole.TrustRelationshipManager, Name = "TRM", Email = "trm@test.com" };

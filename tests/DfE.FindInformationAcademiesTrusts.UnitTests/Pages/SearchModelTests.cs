@@ -198,11 +198,14 @@ public class SearchModelTests
     {
         _sut.SearchResultType.Should().BeNull();
     }
-
+    
     [Fact]
-    public void InputId_should_have_a_fixed_value()
+    public void InputId_LabelText_HintText_and_PlaceholderText_should_have_fixed_values()
     {
         _sut.PageSearchFormInputId.Should().Be("search");
+        _sut.LabelText.Should().Be("Search for a trust or school ");
+        _sut.HintText.Should().Be("Search by URN (unique reference number), TRN (trust reference number) or name. Include any punctuation in names.");
+        _sut.PlaceholderText.Should().Be("e.g. st mary's primary school");
     }
 
     [Fact]
