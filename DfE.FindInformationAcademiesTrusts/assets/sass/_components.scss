@@ -11,10 +11,10 @@
 .app-banner {
   @include govuk-responsive-padding(3, "top");
   @include govuk-responsive-padding(3, "bottom");
-  background-color: $app-color-blue-light;
+  background-color: #f4f8fb;
 
   &.school {
-    background-color: $app-color-dfe-purple-light;
+    background-color: #f4f8fb;
   }
 
   .app-banner--heading {
@@ -23,6 +23,21 @@
 
   .app-banner--body {
     color: $govuk-secondary-text-colour;
+  }
+
+  [data-testid="trust-name-heading"],
+  [data-testid="school-name-heading"] {
+    display: inline-block;
+    border-left: 6px solid;
+    padding-left: 20px;
+  }
+
+  [data-testid="trust-name-heading"] {
+    border-left-color: #12807a;
+  }
+
+  [data-testid="school-name-heading"] {
+    border-left-color: #d53880;
   }
 
   &.app-banner--l {
