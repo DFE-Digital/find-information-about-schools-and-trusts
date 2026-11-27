@@ -6,13 +6,11 @@
 }
 
 <main id="main-content">
-  <div class="app-banner app-banner--l">
+  <div class="app-banner app-banner--blue govuk-!-padding-top-3 govuk-!-padding-bottom-5">
     <div class="govuk-width-container">
       <div class="govuk-grid-row">
-          <div class="govuk-grid-column-one-half">
-              <h1 class="govuk-heading-xl app-banner--heading govuk-!-margin-bottom-8">
-                  Find information about schools and trusts
-              </h1>
+          <div class="govuk-grid-column-two-thirds">
+              <partial name="_SearchBannerHeading" view-data='new ViewDataDictionary(ViewData) { { "Highlight", "trusts and schools" }, { "HighlightClass", "app-banner--highlight-teal" } }'/>
               <form class="govuk-form-group app-search govuk-!-margin-bottom-0" asp-page="Search" method="post" role="search" aria-label="sitewide">
                   <p class="govuk-body">Use this tool to find information on trusts and schools, including academies.</p>
                   <details class="govuk-details" data-module="govuk-details" data-testid="what-you-can-find-list">

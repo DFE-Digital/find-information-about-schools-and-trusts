@@ -140,6 +140,7 @@ public static class Dependencies
         builder.Services.AddScoped<IGetEstablishmentsTemp, GetEstablishmentsTemp>();
         builder.Services.AddScoped<IGetTrusts, GetTrusts>();
         builder.Services.AddScoped<IGetTrustsTemp, GetTrustsTemp>();
+        builder.Services.AddScoped<IGetLocalAuthorities, GetLocalAuthorities>();
         builder.Services.AddScoped<IDfeHttpClientFactory, DfeHttpClientFactory>();
         builder.Services.AddScoped<IDfeHttpClientFactoryTemp, DfeHttpClientFactoryTemp>();
         builder.Services.AddScoped<ICorrelationContext, CorrelationContext>();

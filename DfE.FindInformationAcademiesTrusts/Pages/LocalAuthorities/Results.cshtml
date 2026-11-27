@@ -1,0 +1,55 @@
+@page "/localauthorities/results"
+@model DfE.FindInformationAcademiesTrusts.Pages.LocalAuthorities.ResultsModel
+
+@{
+    Layout = "_ContentLayout";
+    ViewData["Title"] = Model.Title;
+}
+<div class="govuk-grid-row govuk-!-margin-bottom-6">
+    <div class="govuk-grid-column-one-half">
+        <form class="govuk-form-group app-search govuk-!-margin-bottom-0" role="search" aria-label="sitewide" method="post">
+            <h1 class="govuk-label-wrapper">
+                <label class="govuk-label govuk-label--l" for="@Model.PageSearchFormInputId">
+                    Search
+                </label>
+            </h1>
+            <partial name="_LocalAuthorityAutocomplete" model="Model" />
+        </form>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <section aria-labelledby="results-details" class="govuk-grid-column-three-quarters">
+        @if (Model.SearchResults.Any())
+        {
+            <h2 id="results-details" class="govuk-heading-m">Found @Model.PageStatus.TotalResults local authorities</h2>
+            <ul class="govuk-list">
+                @foreach (var result in Model.SearchResults)
+                {
+                    <li class="govuk-!-margin-bottom-6" data-testid="search-result">
+                        <a asp-page="/LocalAuthorities/Details" asp-route-laCode="@result.Code" class="govuk-!-font-weight-bold govuk-link govuk-!-font-size-24" data-testid="la-name">@result.Name</a>
+                        <dl class="govuk-summary-list govuk-summary-list--no-border app-search-results-summary-list">
+                            <div class="govuk-summary-list__row govuk-body app-search-results-summary-list__row">
+                                <dt class="govuk-summary-list__key app-search-results-summary-list__key app-search-results-summary-list__item">
+                                    LA code:
+                                </dt>
+                                <dd class="govuk-summary-list__value app-search-results-summary-list__item" data-testid="la-code">
+                                    @result.Code
+                                </dd>
+                            </div>
+                        </dl>
+                        <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-top-6">
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <h2 id="results-details" class="govuk-heading-m">No results for "@Model.KeyWords"</h2>
+            <p class="govuk-body">Check you've entered the name or code correctly and included any punctuation.</p>
+        }
+    </section>
+</div>
+@if (Model.PageStatus.TotalResults > 0)
+{
+    <partial name="Shared/_Pagination" />
+}

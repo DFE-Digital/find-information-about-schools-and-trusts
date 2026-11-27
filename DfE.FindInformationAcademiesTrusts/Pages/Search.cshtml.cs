@@ -31,7 +31,7 @@ public class SearchModel : ContentPageModel, IPageSearchFormModel, IPaginationMo
     public SearchResultsOverview ResultCount { get; set; } = new();
     
     public string LabelText => "Search for a trust or school ";
-    public string HintText => "Search by URN (unique reference number), TRN (trust reference number) or name. Include any punctuation in names.";
+    public string HintText => "Enter a URN (unique reference number), TRN (trust reference number), or name. Include any punctuation in names.";
     public string PlaceholderText => "e.g. st mary's primary school";
 
     public SearchModel(ISearchService searchService, ITrustService trustService, ISchoolService schoolService)

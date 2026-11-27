@@ -11,10 +11,10 @@
 .app-banner {
   @include govuk-responsive-padding(3, "top");
   @include govuk-responsive-padding(3, "bottom");
-  background-color: $app-color-blue-light;
+  background-color: #f4f8fb;
 
   &.school {
-    background-color: $app-color-dfe-purple-light;
+    background-color: #f4f8fb;
   }
 
   .app-banner--heading {
@@ -23,6 +23,21 @@
 
   .app-banner--body {
     color: $govuk-secondary-text-colour;
+  }
+
+  [data-testid="trust-name-heading"],
+  [data-testid="school-name-heading"] {
+    display: inline-block;
+    border-left: 6px solid;
+    padding-left: 20px;
+  }
+
+  [data-testid="trust-name-heading"] {
+    border-left-color: #12807a;
+  }
+
+  [data-testid="school-name-heading"] {
+    border-left-color: #d53880;
   }
 
   &.app-banner--l {
@@ -37,6 +52,78 @@
   &.app-banner--grey {
     background-color: #e7e7e6;
   }
+
+  &.app-banner--blue {
+    background-color: govuk-colour("blue");
+    color: govuk-colour("white");
+
+    .app-search__input,
+    .app-search__button {
+      border-radius: 0;
+    }
+
+    .app-search__wrapper > div {
+      position: relative;
+
+      &:focus-within {
+        z-index: 2;
+      }
+    }
+
+    .app-search__button--blue {
+      background-color: govuk-colour("white");
+      border: 2px solid govuk-colour("black");
+      box-shadow: none;
+
+      &:hover {
+        background-color: govuk-colour("light-grey");
+      }
+
+      &:focus {
+        background-color: $govuk-focus-colour;
+        border-color: $govuk-focus-colour;
+        outline: 3px solid transparent;
+      }
+    }
+
+    .app-banner--heading {
+      color: govuk-colour("white");
+      text-transform: none;
+    }
+
+    .govuk-details__summary,
+    .govuk-details__summary-text,
+    .govuk-details__text {
+      color: govuk-colour("white");
+    }
+
+    .govuk-details__text {
+      border-left-color: govuk-colour("white");
+    }
+
+    .govuk-body,
+    .govuk-hint,
+    .govuk-heading-m,
+    .govuk-label {
+      color: govuk-colour("white");
+    }
+  }
+}
+
+.app-banner.app-banner--blue .app-search__button--blue .app-search__icon {
+  fill: govuk-colour("blue");
+}
+
+.app-banner.app-banner--blue .app-search__button--blue:focus .app-search__icon {
+  fill: govuk-colour("black");
+}
+
+.app-banner.app-banner--blue .app-banner--heading .app-banner--highlight {
+  color: #ffe640;
+}
+
+.app-banner.app-banner--blue .app-banner--heading .app-banner--highlight-teal {
+  color: #1fecd0;
 }
 
 .app-search-results-summary-list {
